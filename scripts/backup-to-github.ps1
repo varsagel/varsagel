@@ -18,8 +18,9 @@ if (-not (Test-Path $gitPath)) {
 $gcmPath = "C:\Program Files\Git\mingw64\bin\git-credential-manager.exe"
 if (Test-Path $gcmPath) {
     & $gitPath config --global credential.helper "'$gcmPath'"
-    # Force browser usage where possible
-    & $gitPath config --global credential.provider generic
+    # FORCE BROWSER AUTHENTICATION
+    & $gitPath config --global credential.github.authMode browser
+    & $gitPath config --global --unset credential.provider 2>$null
 }
 
 Write-Host "=== Varsagel GitHub Yedekleme Aracı ===" -ForegroundColor Cyan
