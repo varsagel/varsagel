@@ -1,0 +1,192 @@
+// Prisma şeması: Varsagel
+// Geliştirme için SQLite, üretimde PostgreSQL'e taşınabilir.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ListingStatus {
+  OPEN
+  CLOSED
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String?  @unique
+  name         String?
+  image        String?
+  emailVerified DateTime?
+  passwordHash String?
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  listings     Listing[] @relation("UserListings")
+  offers       Offer[]   @relation("UserOffers")
+  favorites    Favorite[]
+  notifications Notification[]
+
+  accounts     Account[]
+  sessions     Session[]
+}
+
+model Category {
+  id        String        @id @default(cuid())
+  name      String
+  slug      String        @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  subcategories SubCategory[]
+  listings      Listing[]
+}
+
+model SubCategory {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  listings    Listing[]
+}
+
+model Listing {
+  id            String        @id @default(cuid())
+  code          String?       @unique
+  title         String
+  description   String
+  imagesJson    String?
+  attributesJson String?
+  budget        BigInt?
+  city          String?
+  district      String?
+  status        ListingStatus @default(OPEN)
+
+  categoryId    String
+  category      Category      @relation(fields: [categoryId], references: [id])
+
+  subCategoryId String?
+  subCategory   SubCategory?  @relation(fields: [subCategoryId], references: [id])
+
+  ownerId       String
+  owner         User          @relation("UserListings", fields: [ownerId], references: [id])
+
+  offers        Offer[]
+  messages      Message[]
+  favorites     Favorite[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([ownerId])
+}
+
+model Offer {
+  id        String      @id @default(cuid())
+  listingId String
+  listing   Listing     @relation(fields: [listingId], references: [id])
+  sellerId  String
+  seller    User        @relation("UserOffers", fields: [sellerId], references: [id])
+  price     BigInt
+  message   String
+  attributesJson String?
+  status    OfferStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([listingId])
+  @@index([sellerId])
+}
+
+// Auth.js (NextAuth) için gerekli tablolar
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @map("refresh_token")
+  access_token       String? @map("access_token")
+  expires_at         Int?    @map("expires_at")
+  token_type         String? @map("token_type")
+  scope              String?
+  id_token           String? @map("id_token")
+  session_state      String? @map("session_state")
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Message {
+  id           String   @id @default(cuid())
+  listingId    String
+  listing      Listing  @relation(fields: [listingId], references: [id])
+  fromUserId   String
+  toUserId     String
+  content      String
+  isRead       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model Favorite {
+  userId    String
+  listingId String
+  user      User    @relation(fields: [userId], references: [id])
+  listing   Listing @relation(fields: [listingId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@id([userId, listingId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  title     String
+  body      String?
+  dataJson  String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Sequence {
+  key   String  @id
+  value Int
+}

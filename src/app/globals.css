@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --brand: #2563eb;
+  --accent: #06b6d4;
+}
+
+@layer theme {
+  :root {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+
+    --color-primary: #2563eb;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #0f172a;
+    --color-secondary-foreground: #ffffff;
+    --color-accent: #06b6d4;
+    --color-accent-foreground: #0b1220;
+    --color-muted: #e2e8f0;
+    --color-muted-foreground: #334155;
+    --color-destructive: #dc2626;
+    --color-destructive-foreground: #ffffff;
+    --color-input: #cbd5e1;
+    --color-ring: #60a5fa;
+    --radius: 0.5rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1220;
+    --foreground: #e2e8f0;
+    --color-primary: #3b82f6;
+    --color-primary-foreground: #0b1220;
+    --color-secondary: #111827;
+    --color-secondary-foreground: #e5e7eb;
+    --color-accent: #22d3ee;
+    --color-accent-foreground: #0b1220;
+    --color-muted: #1f2937;
+    --color-muted-foreground: #9ca3af;
+    --color-destructive: #ef4444;
+    --color-destructive-foreground: #111827;
+    --color-input: #334155;
+    --color-ring: #93c5fd;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto,
+    Arial, Helvetica, sans-serif;
+}
+
+/* Grid background for hero section */
+.bg-grid-slate-200\/40 {
+  background-image: radial-gradient(circle, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+  background-size: 20px 20px;
+}

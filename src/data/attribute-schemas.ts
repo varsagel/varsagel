@@ -1,0 +1,142 @@
+export type AttrField = {
+  label: string
+  key?: string
+  type: 'text' | 'number' | 'select' | 'boolean' | 'range-number' | 'multiselect'
+  options?: string[]
+  minKey?: string
+  maxKey?: string
+  required?: boolean
+}
+
+export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
+  emlak: [
+    { label: 'Metrekare', key: 'metrekare', type: 'number', required: true },
+    { label: 'Oda Sayısı', key: 'odaSayisi', type: 'select', options: ['1+0','1+1','2+1','3+1','4+1','4+2','5+1'], required: true },
+    { label: 'Isıtma', key: 'isitma', type: 'select', options: ['Doğalgaz','Klima','Soba','Yerden Isıtma','Yok'] },
+    { label: 'Eşyalı', key: 'esyali', type: 'boolean' },
+    { label: 'Bina Yaşı', type: 'range-number', minKey: 'binaYasiMin', maxKey: 'binaYasiMax' },
+    { label: 'Kat Sayısı', type: 'range-number', minKey: 'katSayisiMin', maxKey: 'katSayisiMax' },
+    { label: 'Bulunduğu Kat', key: 'bulunduguKat', type: 'select', options: ['Giriş Kat','Ara Kat','En Üst Kat','Zemin','Bahçe Katı'] },
+    { label: 'Balkon', key: 'balkon', type: 'boolean' },
+    { label: 'Aidat', type: 'range-number', minKey: 'aidatMin', maxKey: 'aidatMax' },
+    { label: 'Krediye Uygun', key: 'krediyeUygun', type: 'boolean' },
+    { label: 'Tapu Durumu', key: 'tapuDurumu', type: 'select', options: ['Kat Mülkiyeti','Kat İrtifakı','Hisseli','Arsa Tapulu'] },
+    { label: 'Site İçi', key: 'siteIci', type: 'boolean' },
+    { label: 'Asansör', key: 'asansor', type: 'boolean' },
+    { label: 'Otopark', key: 'otopark', type: 'boolean' },
+    { label: 'Cephe', key: 'cephe', type: 'multiselect', options: ['Kuzey','Güney','Doğu','Batı','Kuzeydoğu','Kuzeybatı','Güneydoğu','Güneybatı'] },
+    { label: 'Banyo Sayısı', key: 'banyoSayisi', type: 'number' },
+    { label: 'Ebeveyn Banyosu', key: 'ebeveynBanyosu', type: 'boolean' },
+    { label: 'Isı Yalıtımı', key: 'isiYalitimi', type: 'boolean' },
+  ],
+  vasita: [
+    { label: 'Marka', key: 'marka', type: 'select', options: ['BMW','Mercedes','Audi','Volkswagen','Renault','Peugeot','Citroën','Toyota','Honda','Hyundai','Kia','Ford','Fiat','Opel','Skoda','Volvo','Nissan','Seat','Alfa Romeo','Subaru','Mazda','Mini','Land Rover','Porsche','Jaguar','Bentley','Rolls-Royce','Aston Martin','Ferrari','Lamborghini','Maserati','Dacia','Jeep','Mitsubishi','Isuzu','Tesla','BYD','Chery','MG','Geely','GWM','SsangYong','NIO','Rivian','TOGG','Cupra','Smart'], required: true },
+    { label: 'Model', key: 'model', type: 'text', required: true },
+    { label: 'Yıl', type: 'range-number', minKey: 'yilMin', maxKey: 'yilMax' },
+    { label: 'Kilometre', type: 'range-number', minKey: 'kmMin', maxKey: 'kmMax' },
+    { label: 'Yakıt', key: 'yakit', type: 'select', options: ['Benzin','Dizel','LPG','Elektrik','Hibrit'], required: true },
+    { label: 'Vites', key: 'vites', type: 'select', options: ['Manuel','Otomatik'], required: true },
+    { label: 'Kasa Tipi', key: 'kasaTipi', type: 'select', options: ['Sedan','Hatchback','SUV','Coupe','Cabrio','Pick-up'] },
+    { label: 'Renk', key: 'renk', type: 'text' },
+    { label: 'Çekiş', key: 'cekis', type: 'select', options: ['Önden Çekiş','Arkadan İtiş','4x4'] },
+    { label: 'Hasar Kaydı', key: 'hasarKaydi', type: 'boolean' },
+    { label: 'Motor Gücü (HP)', key: 'motorGucu', type: 'number' },
+  ],
+  'yedek-parca-aksesuar': [
+    { label: 'Parça Türü', key: 'parcaTuru', type: 'text', required: true },
+    { label: 'Uyumlu Araç', key: 'uyumluArac', type: 'text' },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'], required: true },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Bosch','Valeo','NGK','Brembo','MANN','Michelin','Pirelli','Continental'] },
+    { label: 'Orijinal', key: 'orijinal', type: 'boolean' },
+    { label: 'Tip', key: 'tip', type: 'select', options: ['OEM','Aftermarket'] },
+  ],
+  alisveris: [
+    { label: 'Ürün Durumu', key: 'urunDurumu', type: 'select', options: ['Sıfır','İkinci El'], required: true },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Apple','Samsung','Xiaomi','Huawei','LG','Sony','Bosch','Arçelik','Vestel','Philips'] },
+    { label: 'Garanti', key: 'garanti', type: 'boolean' },
+    { label: 'Renk', key: 'renk', type: 'text' },
+    { label: 'Garanti Süresi (Ay)', key: 'garantiSuresi', type: 'number' },
+    { label: 'Kargo Dahil', key: 'kargoDahil', type: 'boolean' },
+    { label: 'Stokta', key: 'stokta', type: 'boolean' },
+  ],
+  'is-makineleri-sanayi': [
+    { label: 'Makine Türü', key: 'makineTuru', type: 'text', required: true },
+    { label: 'Çalışma Saati', type: 'range-number', minKey: 'saatMin', maxKey: 'saatMax' },
+    { label: 'Güç/Kapasite', key: 'gucKapasite', type: 'text' },
+    { label: 'Yıl', key: 'yil', type: 'number' },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'], required: true },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Caterpillar','Komatsu','Hitachi','Volvo','Doosan','JCB','Liebherr','Hyundai'] },
+  ],
+  'is-ilanlari': [
+    { label: 'Çalışma Şekli', key: 'calismaSekli', type: 'select', options: ['Tam Zamanlı','Yarı Zamanlı','Uzaktan','Staj'], required: true },
+    { label: 'Deneyim (Yıl)', type: 'range-number', minKey: 'deneyimMin', maxKey: 'deneyimMax' },
+    { label: 'Maaş Beklentisi', type: 'range-number', minKey: 'maasMin', maxKey: 'maasMax' },
+    { label: 'Sektör', key: 'sektor', type: 'text' },
+    { label: 'Seviye', key: 'seviye', type: 'select', options: ['Junior','Mid','Senior','Lead'] },
+    { label: 'Yan Haklar', key: 'yanHaklar', type: 'multiselect', options: ['Yemek','Servis','Özel Sağlık','Prim','Esnek Saatler'] },
+  ],
+  'hayvanlar-alemi': [
+    { label: 'Tür', key: 'tur', type: 'text', required: true },
+    { label: 'Yaş', type: 'range-number', minKey: 'yasMin', maxKey: 'yasMax' },
+    { label: 'Cinsiyet', key: 'cinsiyet', type: 'select', options: ['Erkek','Dişi'] },
+    { label: 'Aşılı', key: 'asili', type: 'boolean' },
+    { label: 'Irk', key: 'irk', type: 'text' },
+    { label: 'Sağlık Raporu', key: 'saglikRaporu', type: 'boolean' },
+    { label: 'Kısır', key: 'kisir', type: 'boolean' },
+  ],
+  elektronik: [
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Apple','Samsung','Xiaomi','Huawei','Sony','LG','Asus','HP','Dell','Lenovo'], required: true },
+    { label: 'Model', key: 'model', type: 'text', required: true },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'] },
+    { label: 'Garanti', key: 'garanti', type: 'boolean' },
+    { label: 'Depolama (GB)', key: 'depolama', type: 'number' },
+    { label: 'RAM (GB)', key: 'ram', type: 'number' },
+    { label: 'Renk', key: 'renk', type: 'text' },
+  ],
+  'ev-bahce': [
+    { label: 'Malzeme', key: 'malzeme', type: 'text' },
+    { label: 'Renk', key: 'renk', type: 'text' },
+    { label: 'Ölçü', key: 'olcu', type: 'text' },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'] },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['IKEA','Koçtaş','Bauhaus','Fiskars','Bosch','Black+Decker'] },
+  ],
+  moda: [
+    { label: 'Beden', key: 'beden', type: 'select', options: ['XS','S','M','L','XL','XXL'] },
+    { label: 'Renk', key: 'renk', type: 'text' },
+    { label: 'Cinsiyet', key: 'cinsiyet', type: 'select', options: ['Kadın','Erkek','Unisex','Çocuk'] },
+    { label: 'Sezon', key: 'sezon', type: 'select', options: ['Yaz','Kış','İlkbahar','Sonbahar','4 Mevsim'] },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Nike','Adidas','Puma','LC Waikiki','Zara','H&M','Mavi'] },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'] },
+  ],
+  spor: [
+  { label: 'Ürün Türü', key: 'urunTuru', type: 'text', required: true },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Nike','Adidas','Puma','Decathlon','Under Armour','Reebok'] },
+    { label: 'Kondisyon', key: 'kondisyon', type: 'select', options: ['Sıfır','Az Kullanılmış','İyi','Yıpranmış'], required: true },
+    { label: 'Garanti', key: 'garanti', type: 'boolean' },
+  ],
+  ofis: [
+  { label: 'Ürün Türü', key: 'urunTuru', type: 'text', required: true },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['HP','Canon','Epson','Brother','Logitech','Microsoft','Lenovo'] },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'], required: true },
+    { label: 'Garanti', key: 'garanti', type: 'boolean' },
+  ],
+  bebek: [
+  { label: 'Yaş (Ay)', type: 'range-number', minKey: 'yasAyMin', maxKey: 'yasAyMax' },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Chicco','Fisher-Price','BabyBjörn','Kraft','Ebebek','Jungle','Mam'] },
+    { label: 'Renk', key: 'renk', type: 'text' },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'] },
+    { label: 'Garanti', key: 'garanti', type: 'boolean' },
+  ],
+  tarim: [
+  { label: 'Ekipman Türü', key: 'ekipmanTuru', type: 'text' },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['John Deere','New Holland','Massey Ferguson','Case IH','Kubota','Deutz-Fahr'] },
+    { label: 'Güç/Kapasite', key: 'gucKapasite', type: 'text' },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'] },
+    { label: 'Yıl', key: 'yil', type: 'number' },
+  ],
+  hobi: [
+  { label: 'Hobi Türü', key: 'hobiTuru', type: 'text' },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['DJI','Lego','Tamiya','Fender','Yamaha','Canon','Nikon'] },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El'] },
+  ],
+}
