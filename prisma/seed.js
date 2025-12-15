@@ -52,16 +52,31 @@ async function main() {
   const catVasita = await upsertCategory('vasita', 'Vasıta')
   const subOto = await upsertSub(catVasita.id, 'otomobil', 'Otomobil')
 
-  const catAlis = await upsertCategory('alisveris', 'Alışveriş')
+  const catAlis = await upsertCategory('alisveris', 'İkinci El ve Sıfır Alışveriş')
   const subPhone = await upsertSub(catAlis.id, 'cep-telefonu', 'Cep Telefonu')
   const subTV = await upsertSub(catAlis.id, 'televizyon', 'Televizyon')
   const subPC = await upsertSub(catAlis.id, 'bilgisayar', 'Bilgisayar')
 
+  const catYedek = await upsertCategory('yedek-parca-aksesuar-donanim-tuning', 'Yedek Parça, Aksesuar, Donanım & Tuning')
+  await upsertSub(catYedek.id, 'otomotiv-ekipmanlari', 'Otomotiv Ekipmanları')
+  
+  const catIsMakineleri = await upsertCategory('is-makineleri-sanayi', 'İş Makineleri & Sanayi')
+  await upsertSub(catIsMakineleri.id, 'is-makineleri', 'İş Makineleri')
+
+  const catUstalar = await upsertCategory('ustalar-hizmetler', 'Ustalar ve Hizmetler')
+  await upsertSub(catUstalar.id, 'ev-tadilat-dekorasyon', 'Ev Tadilat & Dekorasyon')
+
+  const catOzelDers = await upsertCategory('ozel-ders-verenler', 'Özel Ders Verenler')
+  await upsertSub(catOzelDers.id, 'lise-universite-hazirlik', 'Lise & Üniversite Hazırlık')
+
   const catIs = await upsertCategory('is-ilanlari', 'İş İlanları')
-  const subUzaktan = await upsertSub(catIs.id, 'uzaktan', 'Uzaktan')
+  const subUzaktan = await upsertSub(catIs.id, 'it-ve-yazilim-gelistirme', 'IT ve Yazılım Geliştirme')
+
+  const catYardimci = await upsertCategory('yardimci-arayanlar', 'Yardımcı Arayanlar')
+  await upsertSub(catYardimci.id, 'bebek-cocuk-bakicisi', 'Bebek & Çocuk Bakıcısı')
 
   const catHayvan = await upsertCategory('hayvanlar-alemi', 'Hayvanlar Alemi')
-  const subKedi = await upsertSub(catHayvan.id, 'pet', 'Pet')
+  const subKedi = await upsertSub(catHayvan.id, 'evcil-hayvanlar', 'Evcil Hayvanlar')
 
   // Emlak (2)
   await makeListing({
@@ -195,7 +210,7 @@ async function main() {
     code: 'ALB002',
   })
 
-  // İş ilanları (2)
+  // İş Talepleri (2)
   await makeListing({
     title: 'Uzaktan React Geliştirici',
     description: 'Senior, maaş beklentisi esnek.',

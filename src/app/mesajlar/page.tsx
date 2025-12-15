@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-type Message = { id: string; listingId: string; fromUserId: string; toUserId: string; content: string; createdAt: string };
+type Message = { id: string; listingId: string; senderId: string; toUserId: string; content: string; createdAt: string };
 
 export default function MessagesIndexPage() {
   const { data: session, status } = useSession();
@@ -28,13 +28,23 @@ export default function MessagesIndexPage() {
     return () => { active = false; };
   }, []);
 
-  // Grup by listingId, latest message
-  const groups = useMemo(() => Object.values(messages.reduce((acc: Record<string, any>, m) => {
-    const g = acc[m.listingId] || { listingId: m.listingId, latest: m };
-    if (new Date(m.createdAt).getTime() > new Date(g.latest.createdAt).getTime()) g.latest = m;
-    acc[m.listingId] = g;
-    return acc;
-  }, {})), [messages]);
+  // Grup by listingId AND conversation partner
+  const groups = useMemo(() => {
+    if (!session?.user?.id) return [];
+    const myId = session.user.id;
+    
+    const grouped = messages.reduce((acc: Record<string, any>, m) => {
+      const otherId = m.senderId === myId ? m.toUserId : m.senderId;
+      const key = `${m.listingId}-${otherId}`;
+      
+      const g = acc[key] || { listingId: m.listingId, otherUserId: otherId, latest: m };
+      if (new Date(m.createdAt).getTime() > new Date(g.latest.createdAt).getTime()) g.latest = m;
+      acc[key] = g;
+      return acc;
+    }, {});
+    
+    return Object.values(grouped).sort((a: any, b: any) => new Date(b.latest.createdAt).getTime() - new Date(a.latest.createdAt).getTime());
+  }, [messages, session?.user?.id]);
 
   useEffect(() => {
     const run = async () => {
@@ -42,7 +52,7 @@ export default function MessagesIndexPage() {
       const missing = ids.filter(id => !listingInfo[id]);
       if (!missing.length) return;
       try {
-        const results = await Promise.all(missing.map(id => fetch(`/api/listing?id=${id}`).then(r => r.ok ? r.json() : null).catch(() => null)));
+        const results = await Promise.all(missing.map(id => fetch(`/api/talep?id=${id}`).then(r => r.ok ? r.json() : null).catch(() => null)));
         const map: Record<string, any> = {};
         missing.forEach((id, idx) => { if (results[idx]) map[id] = results[idx]; });
         if (Object.keys(map).length) setListingInfo(prev => ({ ...prev, ...map }));
@@ -53,38 +63,93 @@ export default function MessagesIndexPage() {
   }, [groups]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gray-50 pb-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-white mb-4">Mesajlar</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Mesajlar</h1>
         {loading ? (
-          <div className="text-gray-300">Yükleniyor...</div>
+          <div className="text-gray-500 flex items-center justify-center py-12">
+            <div className="w-6 h-6 border-2 border-cyan-600 border-t-transparent rounded-full animate-spin mr-2"></div>
+            Yükleniyor...
+          </div>
         ) : groups.length === 0 ? (
-          <div className="text-gray-300">Henüz mesajınız yok</div>
+          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">ğŸ’¬</span>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Henüz mesajınız yok</h3>
+            <p className="text-gray-500 mt-1">Taleplere teklif vererek veya soru sorarak mesajlaşmaya başlayabilirsiniz.</p>
+          </div>
         ) : (
           <div className="space-y-3">
             {groups.map((g: any) => (
-              <Link key={g.listingId} href={`/mesajlar/${g.listingId}`} className="block bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 hover:bg-white/15">
+              <Link key={`${g.listingId}-${g.otherUserId}`} href={`/mesajlar/${g.listingId}?to=${g.otherUserId}`} className="block bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 group">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-white font-medium line-clamp-1">{listingInfo[g.listingId]?.title || `İlan #${g.listingId}`}</div>
-                  {listingInfo[g.listingId]?.acceptedOffer && (
-                    <span className="text-xs bg-green-600 text-white px-2 py-1 rounded">Kabul edildi</span>
-                  )}
-                </div>
-                <div className="text-white/80 text-sm line-clamp-1">{g.latest.content}</div>
-                <div className="text-white/60 text-xs mt-1">{new Date(g.latest.createdAt).toLocaleString('tr-TR')}</div>
-                <div className="mt-2 flex items-center justify-between">
-                  <div className="text-white/70 text-xs">
-                    {listingInfo[g.listingId]?.location?.city}
-                    {listingInfo[g.listingId]?.location?.district ? `, ${listingInfo[g.listingId]?.location?.district}` : ''}
-                    {listingInfo[g.listingId]?.category?.name ? ` • ${listingInfo[g.listingId]?.category?.name}` : ''}
+                  <div className="font-bold text-gray-900 line-clamp-1 group-hover:text-cyan-600 transition-colors">
+                    {listingInfo[g.listingId]?.title || `Talep #${g.listingId}`}
+                    <span className="ml-2 text-sm font-normal text-gray-500">
+                      (Konuşulan: {g.otherUserId === listingInfo[g.listingId]?.owner?.id ? 'Talep Sahibi' : 'Kullanıcı'})
+                    </span>
                   </div>
-                  {typeof listingInfo[g.listingId]?.price === 'number' && (
-                    <div className="text-blue-300 text-xs font-semibold">₺{listingInfo[g.listingId].price.toLocaleString('tr-TR')}</div>
+                  {listingInfo[g.listingId]?.acceptedOffer && (
+                    <span className="text-xs bg-lime-100 text-lime-700 px-2 py-1 rounded-full font-medium">Kabul edildi</span>
                   )}
                 </div>
-                {Array.isArray(listingInfo[g.listingId]?.images) && listingInfo[g.listingId].images.length > 0 && (
-                  <img src={listingInfo[g.listingId].images[0]} alt="" className="mt-2 w-full h-24 object-cover rounded" onError={(e)=> (e.currentTarget.src='/images/placeholder-1.svg')} />
-                )}
+                <div className="text-gray-600 text-sm line-clamp-1 mb-2">{g.latest.content}</div>
+                <div className="flex items-center justify-between pt-2 border-t border-gray-50 mt-2">
+                  <div className="flex flex-wrap gap-2 text-xs text-gray-400">
+                    <span>{new Date(g.latest.createdAt).toLocaleString('tr-TR')}</span>
+                    {listingInfo[g.listingId]?.location?.city && (
+                      <>
+                        <span>â€¢</span>
+                        <span>{listingInfo[g.listingId]?.location?.city}/{listingInfo[g.listingId]?.location?.district}</span>
+                      </>
+                    )}
+                  </div>
+                  
+                  {(() => {
+                    const l = listingInfo[g.listingId];
+                    if (!l) return null;
+
+                    const minP = l.attributes?.minPrice ? Number(l.attributes.minPrice) : 0;
+                    const maxPAttr = l.attributes?.maxPrice ? Number(l.attributes.maxPrice) : 0;
+                    const budget = typeof l.price === 'number' ? l.price : 0;
+
+                    const hasMin = minP > 0;
+                    const hasMax = maxPAttr > 0;
+                    const hasBudget = budget > 0;
+
+                    let from = 0;
+                    let to = 0;
+
+                    if (hasMin && hasMax) {
+                      from = minP;
+                      to = maxPAttr;
+                    } else if (hasMin && hasBudget) {
+                      from = minP;
+                      to = budget;
+                    } else if (hasMin) {
+                      return (
+                        <div className="text-cyan-600 text-xs font-bold">
+                          {minP.toLocaleString('tr-TR')} - ∞
+                        </div>
+                      );
+                    } else if (hasMax) {
+                      from = 0;
+                      to = maxPAttr;
+                    } else if (hasBudget) {
+                      from = 0;
+                      to = budget;
+                    } else {
+                      return null;
+                    }
+
+                    return (
+                      <div className="text-cyan-600 text-xs font-bold">
+                        {from.toLocaleString('tr-TR')} - {to.toLocaleString('tr-TR')}
+                      </div>
+                    );
+                  })()}
+                </div>
               </Link>
             ))}
           </div>

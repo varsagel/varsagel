@@ -23,6 +23,17 @@
 # misc
 .DS_Store
 *.pem
+*.exe
+
+# local files and secrets
+server.key
+server.crt
+logs/
+auth-debug.log
+*.log
+cookie.txt
+cookies.txt
+public/uploads/
 
 # debug
 npm-debug.log*

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export async function POST(request: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Oturum açmanız gerekiyor" }, { status: 401 });
-  const fromUserId = session.user.id as string;
+  const senderId = session.user.id as string;
   try {
     const body = await request.json();
     const listingId = String(body.listingId || "");
@@ -14,18 +14,17 @@ export async function POST(request: NextRequest) {
     if (!listingId || !toUserId || !content) return NextResponse.json({ error: "Geçersiz alanlar" }, { status: 400 });
 
     const listing = await prisma.listing.findUnique({ where: { id: listingId }, select: { ownerId: true } });
-    if (!listing) return NextResponse.json({ error: "İlan bulunamadı" }, { status: 404 });
+    if (!listing) return NextResponse.json({ error: "Talep bulunamadı" }, { status: 404 });
 
-    const accepted = await prisma.offer.findFirst({ where: { listingId, status: "ACCEPTED" }, select: { sellerId: true } });
-    if (!accepted) return NextResponse.json({ error: "Mesajlaşma aktif değil" }, { status: 403 });
+    // Talep sahibi ile herkes mesajlaşabilir (soru sorma)
+    // Veya talep sahibi başkasına cevap verebilir
+    const ownerId = listing.ownerId;
+    const isAuthorized = (senderId === ownerId) || (toUserId === ownerId);
+    
+    if (!isAuthorized) return NextResponse.json({ error: "Yetkisiz: Sadece talep sahibi ile mesajlaşabilirsiniz" }, { status: 403 });
 
-    const partyA = listing.ownerId;
-    const partyB = accepted.sellerId;
-    const isAuthorized = (fromUserId === partyA && toUserId === partyB) || (fromUserId === partyB && toUserId === partyA);
-    if (!isAuthorized) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
-
-    const msg = await prisma.message.create({ data: { listingId, fromUserId, toUserId, content } });
-    await prisma.notification.create({ data: { userId: toUserId, type: "message", title: "Yeni mesaj", body: content.slice(0, 120), dataJson: JSON.stringify({ listingId, messageId: msg.id }) } });
+    const msg = await prisma.message.create({ data: { listingId, senderId, toUserId, content, read: false } });
+    await prisma.notification.create({ data: { userId: toUserId, type: "message", title: "Yeni mesaj", body: content.slice(0, 120), dataJson: JSON.stringify({ listingId, messageId: msg.id }), read: false } });
     return NextResponse.json({ ok: true, messageId: msg.id });
   } catch {
     return NextResponse.json({ error: "Mesaj gönderilirken hata" }, { status: 500 });
@@ -39,10 +38,27 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const listingId = searchParams.get('listingId') || undefined;
-    const where: any = {
-      OR: [{ fromUserId: userId }, { toUserId: userId }],
-    };
-    if (listingId) where.listingId = listingId;
+    const contactId = searchParams.get('contactId') || undefined;
+
+    const where: any = {};
+
+    if (contactId) {
+      // Specific conversation between me and contactId
+      where.AND = [
+        { listingId },
+        {
+          OR: [
+            { senderId: userId, toUserId: contactId },
+            { senderId: contactId, toUserId: userId }
+          ]
+        }
+      ];
+    } else {
+      // All my messages (optionally filtered by listingId)
+      where.OR = [{ senderId: userId }, { toUserId: userId }];
+      if (listingId) where.listingId = listingId;
+    }
+    
     const messages = await prisma.message.findMany({
       where,
       orderBy: { createdAt: 'desc' },

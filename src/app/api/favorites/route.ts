@@ -17,6 +17,15 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const listingId = (body?.listingId as string || '').trim()
   if (!listingId) return NextResponse.json({ error: 'listingId gerekli' }, { status: 400 })
+
+  const listing = await prisma.listing.findUnique({ where: { id: listingId }, select: { ownerId: true, status: true } });
+  if (listing?.ownerId === userId) {
+    return NextResponse.json({ error: 'Kendi talebinizi favoriye ekleyemezsiniz' }, { status: 403 });
+  }
+  if (!listing || listing.status !== "OPEN") {
+    return NextResponse.json({ error: 'Bu talep henüz yayında değil' }, { status: 403 });
+  }
+
   await prisma.favorite.create({ data: { userId, listingId } }).catch(() => {})
   return NextResponse.json({ ok: true })
 }

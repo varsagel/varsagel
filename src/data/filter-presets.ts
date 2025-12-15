@@ -11,15 +11,14 @@ export const FILTER_PRESETS: Record<string, FilterPreset[]> = {
   ],
   'vasita/otomobil': [
     { name: 'Sedan • Benzin • Otomatik', params: { kasaTipi: 'Sedan', yakit: 'Benzin', vites: 'Otomatik' } },
-    { name: 'SUV • Dizel • 4x4', params: { kasaTipi: 'SUV', yakit: 'Dizel', cekis: '4x4' } },
+    { name: 'SUV • Dizel', params: { kasaTipi: 'SUV', yakit: 'Dizel' } },
     { name: 'BMW • 3 Serisi', params: { marka: 'BMW', model: '3 Serisi' } },
     { name: 'Mercedes • C‑Serisi', params: { marka: 'Mercedes', model: 'C-Serisi' } },
     { name: 'Audi • A4', params: { marka: 'Audi', model: 'A4' } },
     { name: 'Elektrik • Otomatik', params: { yakit: 'Elektrik', vites: 'Otomatik' } },
     { name: 'Hibrit • Otomatik', params: { yakit: 'Hibrit', vites: 'Otomatik' } },
     { name: 'Dizel • Manuel', params: { yakit: 'Dizel', vites: 'Manuel' } },
-    { name: 'Sedan • Önden Çekiş', params: { kasaTipi: 'Sedan', cekis: 'Önden Çekiş' } },
-    { name: 'SUV • 4x4 • Benzin', params: { kasaTipi: 'SUV', cekis: '4x4', yakit: 'Benzin' } },
+    { name: 'SUV • Benzin', params: { kasaTipi: 'SUV', yakit: 'Benzin' } },
     { name: 'Elektrik • SUV', params: { yakit: 'Elektrik', kasaTipi: 'SUV' } },
     { name: 'Hibrit • Otomatik • SUV', params: { yakit: 'Hibrit', vites: 'Otomatik', kasaTipi: 'SUV' } },
     { name: 'Volvo • XC60', params: { marka: 'Volvo', model: 'XC60' } },
@@ -38,10 +37,10 @@ export const FILTER_PRESETS: Record<string, FilterPreset[]> = {
     { name: 'Renault • Zoe', params: { marka: 'Renault', model: 'Zoe' } },
   ],
   'vasita/suv-pickup': [
-    { name: 'Hilux • 4x4', params: { marka: 'Toyota', model: 'Hilux', cekis: '4x4' } },
+    { name: 'Hilux', params: { marka: 'Toyota', model: 'Hilux' } },
     { name: 'Amarok • Dizel', params: { marka: 'Volkswagen', model: 'Amarok', yakit: 'Dizel' } },
-    { name: 'Land Rover Defender • 4x4', params: { marka: 'Land Rover', model: 'Defender', cekis: '4x4' } },
-    { name: 'SUV • 4x4 • Dizel', params: { kasaTipi: 'SUV', cekis: '4x4', yakit: 'Dizel' } },
+    { name: 'Land Rover Defender', params: { marka: 'Land Rover', model: 'Defender' } },
+    { name: 'SUV • Dizel', params: { kasaTipi: 'SUV', yakit: 'Dizel' } },
     { name: 'RAV4 • Benzin', params: { marka: 'Toyota', model: 'RAV4', yakit: 'Benzin' } },
   ],
   'alisveris/cep-telefonu': [
@@ -70,10 +69,10 @@ export const FILTER_PRESETS: Record<string, FilterPreset[]> = {
     { name: 'Arçelik • Buzdolabı • A++', params: { marka: 'Arçelik', model: 'Buzdolabı', enerjiSinifi: 'A++' } },
     { name: 'Bosch • Bulaşık • A+', params: { marka: 'Bosch', model: 'Bulaşık Makinesi', enerjiSinifi: 'A+' } },
   ],
-  'is-ilanlari/uzaktan': [
+  'is-talepleri/uzaktan': [
     { name: 'Uzaktan • Esnek Saatler', params: { calismaSekli: 'Uzaktan', esnekSaatler: 'true' } },
   ],
-  'is-ilanlari/tam-zamanli': [
+  'is-talepleri/tam-zamanli': [
     { name: 'Junior • Tam Zamanlı', params: { seviye: 'Junior', calismaSekli: 'Tam Zamanlı' } },
   ],
   'hayvanlar-alemi/kedi': [

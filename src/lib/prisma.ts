@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-// Hot-reload sırasında tek bir PrismaClient instance’ı kullanmak için global tutuyoruz
+// Force TS re-evaluation
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 export const prisma =

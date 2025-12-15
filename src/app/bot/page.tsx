@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 
 export default function BotPage() {
@@ -229,7 +229,7 @@ export default function BotPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="flex items-center gap-4">
-        <svg width="64" height="64" viewBox="0 0 64 64" className="text-blue-600">
+        <svg width="64" height="64" viewBox="0 0 64 64" className="text-cyan-600">
           <rect x="10" y="18" width="44" height="30" rx="6" fill="currentColor" opacity="0.15" />
           <circle cx="24" cy="33" r="5" fill="currentColor" />
           <circle cx="40" cy="33" r="5" fill="currentColor" />
@@ -238,12 +238,12 @@ export default function BotPage() {
         </svg>
         <div>
           <h1 className="text-2xl font-semibold">Veri Botu</h1>
-          <p className="text-slate-600">Otomobil → Marka → Model → Seri/Motor → Donanım/Paket</p>
+          <p className="text-slate-600">Otomobil â†’ Marka â†’ Model â†’ Seri/Motor â†’ Donanım/Paket</p>
         </div>
       </div>
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <button onClick={runScrape} disabled={running} className="rounded-md bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 disabled:opacity-50">
+        <button onClick={runScrape} disabled={running} className="rounded-md bg-cyan-600 text-white px-4 py-2 hover:bg-cyan-700 disabled:opacity-50">
           {running ? "Bot çalışıyor..." : "Botu Çalıştır"}
         </button>
         <button onClick={stopScrape} className="rounded-md bg-red-600 text-white px-4 py-2 hover:bg-red-700">
@@ -255,8 +255,8 @@ export default function BotPage() {
         <button onClick={runAllBrands} className="rounded-md bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700">
           Bütün Markalar
         </button>
-        <a href="/api/scraper/csv" className="rounded-md bg-teal-600 text-white px-4 py-2 text-center hover:bg-teal-700">CSV’yi İndir</a>
-        <a href="/api/scraper/xlsx" className="rounded-md bg-emerald-600 text-white px-4 py-2 text-center hover:bg-emerald-700">Excel’i İndir</a>
+        <a href="/api/scraper/csv" className="rounded-md bg-teal-600 text-white px-4 py-2 text-center hover:bg-teal-700">CSVâ€™yi İndir</a>
+        <a href="/api/scraper/xlsx" className="rounded-md bg-emerald-600 text-white px-4 py-2 text-center hover:bg-emerald-700">Excelâ€™i İndir</a>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={watchHeadful} onChange={(e)=> setWatchHeadful(e.target.checked)} />
           Adımları görsel izleme
@@ -269,8 +269,8 @@ export default function BotPage() {
             <div>Model sayısı: {status?.models ?? 0}</div>
             <div>Seri sayısı: {status?.series ?? 0}</div>
             <div>Paket sayısı: {status?.trims ?? 0}</div>
-            <div>Çalışma: {status?.running?.scrape || status?.running?.import ? "Aktif" : "—"}</div>
-            <div>Son güncelleme: {status?.updatedAt ? new Date(status.updatedAt).toLocaleString() : "—"}</div>
+            <div>Çalışma: {status?.running?.scrape || status?.running?.import ? "Aktif" : "â€”"}</div>
+            <div>Son güncelleme: {status?.updatedAt ? new Date(status.updatedAt).toLocaleString() : "â€”"}</div>
           </div>
         </div>
         <div className="rounded-xl border bg-white p-6">
@@ -297,7 +297,7 @@ export default function BotPage() {
           </div>
           <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
             {brands.filter(b=> b.toLowerCase().includes(filter.toLowerCase())).map((b)=> (
-              <button key={b} onClick={()=> { runBrand(b); loadRaw(b); }} className={`text-left rounded-md border px-3 py-2 hover:bg-slate-50 ${selectedBrand===b ? 'bg-blue-50 border-blue-200' : ''}`}>
+              <button key={b} onClick={()=> { runBrand(b); loadRaw(b); }} className={`text-left rounded-md border px-3 py-2 hover:bg-slate-50 ${selectedBrand===b ? 'bg-cyan-50 border-cyan-200' : ''}`}>
                 {b}
               </button>
             ))}
@@ -348,10 +348,10 @@ export default function BotPage() {
         <div className="rounded-xl border bg-white p-6 md:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-medium">Ham CSV Satırları</h2>
-            {selectedBrand && <button onClick={()=> loadRaw(selectedBrand)} className="rounded-md bg-slate-900 text-white px-3 py-1 text-sm">CSV’yi Yenile</button>}
+            {selectedBrand && <button onClick={()=> loadRaw(selectedBrand)} className="rounded-md bg-slate-900 text-white px-3 py-1 text-sm">CSVâ€™yi Yenile</button>}
           </div>
           {selectedBrand && (
-            <div className="mt-2 text-sm text-slate-700">Marka: <span className="font-medium">{selectedBrand}</span> • Satır: {rawRows.length}</div>
+            <div className="mt-2 text-sm text-slate-700">Marka: <span className="font-medium">{selectedBrand}</span> â€¢ Satır: {rawRows.length}</div>
           )}
           <div className="mt-3 max-h-64 overflow-auto text-xs">
             {rawRows.length ? (
@@ -365,7 +365,7 @@ export default function BotPage() {
                 </thead>
                 <tbody>
                   {rawRows.slice(0, 60).map((r, i)=> (
-                    <tr key={i} className="border-t">
+                    <tr key={`${r.model}-${r.series}-${r.trim}-${i}`} className="border-t">
                       <td className="px-2 py-1">{r.model}</td>
                       <td className="px-2 py-1">{r.series}</td>
                       <td className="px-2 py-1">{r.trim}</td>

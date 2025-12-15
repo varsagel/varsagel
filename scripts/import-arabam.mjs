@@ -87,20 +87,41 @@ function loadLocalInput(fp) {
         const header = lines.shift()
         const cols = (header || '').split(',').map(s=> s.trim().toLowerCase())
         const colIdx = {
+          category: cols.indexOf('category'),
           brand: cols.indexOf('brand'),
           model: cols.indexOf('model'),
           series: cols.indexOf('series'),
           trim: cols.indexOf('trim'),
         }
-        const ms = {}
-        const st = {}
+        
+        const ms = {} // Structure: { "vasita/otomobil": { Brand: { Model: [Series] } } }
+        const st = {} // Structure: { "vasita/otomobil": { Brand: { Model: { Series: [Trim] } } } }
+        
+        const CAT_MAP = {
+          'Otomobil': 'vasita/otomobil',
+          'SUV & Pickup': 'vasita/suv-pickup',
+          'Motosiklet': 'vasita/motosiklet',
+          'Ticari Araçlar': 'vasita/ticari-arac',
+          'Minivan & Panelvan': 'vasita/ticari-arac', // Map both to ticari-arac if desired
+          'Elektrikli Araç': 'vasita/elektrikli-arac',
+          'Kamyon': 'vasita/kamyon',
+          'Otobüs': 'vasita/otobus',
+          'Minibüs': 'vasita/minibus',
+          'Traktör': 'vasita/traktor'
+        }
+
         for (const line of lines) {
           if (line.startsWith('#')) continue
           const parts = parseCsvLine(line).map(s=> s.trim())
+          
+          const catName = colIdx.category >= 0 ? parts[colIdx.category] : 'Otomobil'
           const brand = parts[colIdx.brand] || ''
           const model = parts[colIdx.model] || ''
           const series = parts[colIdx.series] || ''
           const trim = parts[colIdx.trim] || ''
+          
+          const catKey = CAT_MAP[catName] || 'vasita/otomobil'
+          
           const lowBrand = brand.toLowerCase()
           const lowModel = model.toLowerCase()
           const lowSeries = series.toLowerCase()
@@ -119,21 +140,26 @@ function loadLocalInput(fp) {
           // If series is just a year, maybe it's noise, or maybe valid? Let's trust the scraper data more.
           const isNoise = (s)=> !s || noise.some(n=> s.includes(n)) 
           
-          ms[brand] = ms[brand] || {}
-          ms[brand][model] = ms[brand][model] || []
+          // Initialize category structure
+          ms[catKey] = ms[catKey] || {}
+          st[catKey] = st[catKey] || {}
+          
+          ms[catKey][brand] = ms[catKey][brand] || {}
+          ms[catKey][brand][model] = ms[catKey][brand][model] || []
+          
           // Add series even if it's empty to ensure brand/model exists
           if (series && !isNoise(lowSeries)) {
-            if (!ms[brand][model].includes(series)) ms[brand][model].push(series)
+            if (!ms[catKey][brand][model].includes(series)) ms[catKey][brand][model].push(series)
           }
           if (series && trim && !isNoise(lowSeries) && !isNoise(lowTrim)) {
-            st[brand] = st[brand] || {}
-            st[brand][model] = st[brand][model] || {}
-            st[brand][model][series] = st[brand][model][series] || []
-            if (!st[brand][model][series].includes(trim)) st[brand][model][series].push(trim)
+            st[catKey][brand] = st[catKey][brand] || {}
+            st[catKey][brand][model] = st[catKey][brand][model] || {}
+            st[catKey][brand][model][series] = st[catKey][brand][model][series] || []
+            if (!st[catKey][brand][model][series].includes(trim)) st[catKey][brand][model][series].push(trim)
           }
         }
         // After loop, ensure we return the populated object, not a merged empty one if we want fresh data
-        return { modelSeries: { 'vasita/otomobil': ms }, seriesTrims: { 'vasita/otomobil': st } }
+        return { modelSeries: ms, seriesTrims: st }
       }
     }
   } catch {}
@@ -143,7 +169,7 @@ function loadLocalInput(fp) {
 function mergeGenerated(prev, next) {
   // Return next data directly to ensure we only use what we just scraped
   // This completely replaces the old behavior of merging
-  if (next && next.modelSeries && next.modelSeries['vasita/otomobil']) {
+  if (next && next.modelSeries) {
     return next
   }
   return { modelSeries: { 'vasita/otomobil': {} }, seriesTrims: { 'vasita/otomobil': {} } }

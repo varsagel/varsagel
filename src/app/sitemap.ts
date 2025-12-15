@@ -2,10 +2,15 @@ import type { MetadataRoute } from 'next'
 import { CATEGORIES } from '@/data/categories'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com'
   const pages: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: new Date() },
-    { url: `${base}/ilan-ver`, lastModified: new Date() },
+    { url: `${base}/talep-olustur`, lastModified: new Date() },
+    { url: `${base}/iletisim`, lastModified: new Date() },
+    { url: `${base}/sss`, lastModified: new Date() },
+    { url: `${base}/kurumsal/gizlilik-politikasi`, lastModified: new Date() },
+    { url: `${base}/kurumsal/kullanim-kosullari`, lastModified: new Date() },
+    { url: `${base}/kurumsal/kvkk`, lastModified: new Date() },
   ]
 
   CATEGORIES.forEach(cat => {

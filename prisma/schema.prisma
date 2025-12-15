@@ -1,140 +1,58 @@
-// Prisma şeması: Varsagel
-// Geliştirme için SQLite, üretimde PostgreSQL'e taşınabilir.
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum ListingStatus {
-  OPEN
-  CLOSED
-}
-
-enum OfferStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-}
-
 model User {
-  id           String   @id @default(cuid())
-  email        String?  @unique
-  name         String?
-  image        String?
-  emailVerified DateTime?
-  passwordHash String?
-  role         Role     @default(USER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String         @id @default(cuid())
+  email           String?        @unique
+  name            String?
+  image           String?
+  emailVerified   DateTime?
+  passwordHash    String?
+  role            String         @default("USER") // Should be Enum Role in Postgres
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  phone           String?
+  preferencesJson String?
+  accounts        Account[]
+  favorites       Favorite[]
+  listings        Listing[]      @relation("UserListings")
+  notifications   Notification[]
+  offers          Offer[]        @relation("UserOffers")
+  questions       Question[]
+  reports         Report[]
+  sessions        Session[]
+  visits          Visit[]
+  sentMessages    Message[]      @relation("UserMessages")
+  receivedMessages Message[]     @relation("UserReceivedMessages")
+  savedSearches   SavedSearch[]
 
-  listings     Listing[] @relation("UserListings")
-  offers       Offer[]   @relation("UserOffers")
-  favorites    Favorite[]
-  notifications Notification[]
-
-  accounts     Account[]
-  sessions     Session[]
+  @@index([email])
 }
 
-model Category {
-  id        String        @id @default(cuid())
-  name      String
-  slug      String        @unique
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-
-  subcategories SubCategory[]
-  listings      Listing[]
-}
-
-model SubCategory {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  listings    Listing[]
-}
-
-model Listing {
-  id            String        @id @default(cuid())
-  code          String?       @unique
-  title         String
-  description   String
-  imagesJson    String?
-  attributesJson String?
-  budget        BigInt?
-  city          String?
-  district      String?
-  status        ListingStatus @default(OPEN)
-
-  categoryId    String
-  category      Category      @relation(fields: [categoryId], references: [id])
-
-  subCategoryId String?
-  subCategory   SubCategory?  @relation(fields: [subCategoryId], references: [id])
-
-  ownerId       String
-  owner         User          @relation("UserListings", fields: [ownerId], references: [id])
-
-  offers        Offer[]
-  messages      Message[]
-  favorites     Favorite[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-
-  @@index([categoryId])
-  @@index([subCategoryId])
-  @@index([ownerId])
-}
-
-model Offer {
-  id        String      @id @default(cuid())
-  listingId String
-  listing   Listing     @relation(fields: [listingId], references: [id])
-  sellerId  String
-  seller    User        @relation("UserOffers", fields: [sellerId], references: [id])
-  price     BigInt
-  message   String
-  attributesJson String?
-  status    OfferStatus @default(PENDING)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-
-  @@index([listingId])
-  @@index([sellerId])
-}
-
-// Auth.js (NextAuth) için gerekli tablolar
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String? @map("refresh_token")
-  access_token       String? @map("access_token")
-  expires_at         Int?    @map("expires_at")
-  token_type         String? @map("token_type")
-  scope              String?
-  id_token           String? @map("id_token")
-  session_state      String? @map("session_state")
-  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -143,6 +61,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -153,40 +73,200 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Message {
-  id           String   @id @default(cuid())
-  listingId    String
-  listing      Listing  @relation(fields: [listingId], references: [id])
-  fromUserId   String
-  toUserId     String
-  content      String
-  isRead       Boolean  @default(false)
-  createdAt    DateTime @default(now())
+model Category {
+  id            String        @id @default(cuid())
+  name          String
+  slug          String        @unique
+  icon          String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  listings      Listing[]
+  subcategories SubCategory[]
+
+  @@index([slug])
+}
+
+model SubCategory {
+  id         String    @id @default(cuid())
+  name       String
+  slug       String    @unique
+  categoryId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  listings   Listing[]
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([slug])
+}
+
+model Listing {
+  id             String    @id @default(cuid())
+  code           String?   @unique
+  title          String
+  description    String
+  imagesJson     String?
+  attributesJson String?
+  budget         BigInt?
+  city           String?
+  district       String?
+  status         String    @default("PENDING") // Should be Enum ListingStatus in Postgres
+  reminderSentAt DateTime?
+  viewCount      Int       @default(0)
+  categoryId     String
+  subCategoryId  String?
+  ownerId        String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  favorites      Favorite[]
+  owner          User      @relation("UserListings", fields: [ownerId], references: [id], onDelete: Cascade)
+  subCategory    SubCategory? @relation(fields: [subCategoryId], references: [id])
+  category       Category  @relation(fields: [categoryId], references: [id])
+  messages       Message[]
+  offers         Offer[]
+  questions      Question[]
+  reports        Report[]
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([ownerId])
+  @@index([city, district])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Offer {
+  id              String   @id @default(cuid())
+  listingId       String
+  sellerId        String
+  price           BigInt
+  body            String
+  attributesJson  String?
+  status          String   @default("PENDING") // Should be Enum OfferStatus in Postgres
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  imagesJson      String?
+  rejectionReason String?
+  seller          User     @relation("UserOffers", fields: [sellerId], references: [id], onDelete: Cascade)
+  listing         Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([sellerId])
+  @@index([status])
 }
 
 model Favorite {
+  id        String   @id @default(cuid())
   userId    String
   listingId String
-  user      User    @relation(fields: [userId], references: [id])
-  listing   Listing @relation(fields: [listingId], references: [id])
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
-  @@id([userId, listingId])
+  @@unique([userId, listingId])
+  @@index([userId])
+  @@index([listingId])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  toUserId  String
+  listingId String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  sender    User     @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver  User     @relation("UserReceivedMessages", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([senderId])
+  @@index([toUserId])
 }
 
 model Notification {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  type      String
   title     String
-  body      String?
+  body      String
+  type      String
+  read      Boolean  @default(false)
+  link      String?
   dataJson  String?
-  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+}
+
+enum SavedSearchMatchMode {
+  TITLE
+  CATEGORY
+  FILTERS
+}
+
+model SavedSearch {
+  id           String                @id @default(cuid())
+  userId       String
+  query        String
+  categorySlug String?
+  matchMode    SavedSearchMatchMode  @default(TITLE)
+  filtersJson  Json?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  user         User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([query])
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  body      String
+  userId    String?
+  listingId String
+  answer    String?
+  answeredAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([userId])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  reason      String
+  description String?
+  userId      String
+  listingId   String
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([status])
+}
+
+model Visit {
+  id        String   @id @default(cuid())
+  userId    String?
+  path      String
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([path])
 }
 
 model Sequence {
-  key   String  @id
+  key   String @id
   value Int
 }
