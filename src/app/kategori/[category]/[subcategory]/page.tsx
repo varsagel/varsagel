@@ -17,29 +17,37 @@ export async function generateMetadata(
   if (!category || !subcategory) {
     return {
       title: 'Kategori Bulunamadı | Varsagel',
-      description: 'Aradığınız kategori bulunamadı.'
+      description: 'Aradığınız kategori bulunamadı.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
   const title = `${subcategory.name} Talepleri - ${category.name} | Varsagel`;
   const description = `${subcategory.name} kategorisindeki en güncel talepleri inceleyin. ${category.name} dünyasındaki fırsatları kaçırmayın. Varsagel ile güvenli alışveriş.`;
+  const path = `/kategori/${category.slug}/${subcategory.slug}`;
 
   return {
     title,
     description,
     alternates: {
-      canonical: `/kategori/${category.slug}/${subcategory.slug}`,
+      canonical: path,
     },
     openGraph: {
       title,
       description,
       type: 'website',
+      url: path,
       siteName: 'Varsagel',
+      locale: 'tr_TR',
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      creator: '@varsagel',
     }
   };
 }

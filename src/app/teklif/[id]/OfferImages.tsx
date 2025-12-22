@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface OfferImagesProps {
@@ -40,11 +41,13 @@ export default function OfferImages({ images }: OfferImagesProps) {
             onClick={() => openImage(i)}
             className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group hover:ring-2 hover:ring-cyan-500 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500"
           >
-            <img 
-              src={img} 
-              alt={`Teklif görseli ${i + 1}`} 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-            />
+          <Image 
+            src={img} 
+            alt={`Teklif görseli ${i + 1}`} 
+            fill
+            sizes="(max-width: 768px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-300" 
+          />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
           </button>
         ))}
@@ -81,11 +84,16 @@ export default function OfferImages({ images }: OfferImagesProps) {
               </>
             )}
             
-            <img 
-              src={images[selectedIndex]} 
-              alt={`Tam boy ${selectedIndex + 1}`} 
-              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
-            />
+            <div className="relative w-full h-[85vh]">
+              <Image 
+                src={images[selectedIndex]} 
+                alt={`Tam boy ${selectedIndex + 1}`} 
+                fill
+                sizes="100vw"
+                className="object-contain rounded-lg shadow-2xl"
+                priority
+              />
+            </div>
             
             <div className="absolute -bottom-8 left-0 right-0 text-center text-white/70 text-sm">
               {selectedIndex + 1} / {images.length}

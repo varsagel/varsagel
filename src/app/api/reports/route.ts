@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { auth, getAdminUserId } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
@@ -59,5 +59,39 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Report error:', error);
     return NextResponse.json({ error: 'Bir hata oluştu' }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const adminId = await getAdminUserId();
+    if (!adminId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const body = await req.json().catch(() => ({}));
+    const id = String(body?.id || "");
+    const status = String(body?.status || "");
+    if (!id) return NextResponse.json({ error: "ID gerekli" }, { status: 400 });
+    if (status.toUpperCase() !== "RESOLVED") return NextResponse.json({ error: "Geçersiz durum" }, { status: 400 });
+
+    await prisma.report.update({ where: { id }, data: { status: "RESOLVED" } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Şikayet güncellenirken hata" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const adminId = await getAdminUserId();
+    if (!adminId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { searchParams } = new URL(req.url);
+    const id = (searchParams.get("id") || "").trim();
+    if (!id) return NextResponse.json({ error: "ID gerekli" }, { status: 400 });
+
+    await prisma.report.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Şikayet silinirken hata" }, { status: 500 });
   }
 }

@@ -123,8 +123,8 @@ export const CATEGORIES: Category[] = [
     ],
   },
   {
-    name: "Özel Ders Verenler",
-    slug: "ozel-ders-verenler",
+    name: "Özel Ders Arayanlar",
+    slug: "ozel-ders-arayanlar",
     icon: "📚",
     subcategories: [
       { name: "Lise & Üniversite Hazırlık", slug: "lise-universite-hazirlik" },

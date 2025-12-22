@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useState, useCallback, memo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { CATEGORIES as STATIC_CATEGORIES, Category, SubCategory } from "@/data/categories";
+import Image from "next/image";
+import { Category, SubCategory } from "@/data/categories";
 import { TURKEY_PROVINCES, getProvinceByName, getDistrictsByProvince } from "@/data/turkey-locations";
 import { toast } from "@/components/ui/use-toast";
 import { ATTR_SCHEMAS, AttrField } from '@/data/attribute-schemas';
-import { ATTR_SUBSCHEMAS, BRAND_MODELS, MODEL_SERIES, SERIES_TRIMS, SERIES_TRIMS_EX, MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA } from '@/data/attribute-overrides';
+import { ATTR_SUBSCHEMAS, MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA } from '@/data/attribute-overrides';
 import BRAND_LOGOS from '@/data/brand-logos.json';
 import { 
   List, 
@@ -57,30 +58,127 @@ type FormData = {
 type AttrFieldLocal = AttrField;
 const ATTRS: Record<string, AttrFieldLocal[]> = ATTR_SCHEMAS;
 
-const CategoryAttributes = memo(function CategoryAttributes({ category, subcategory, attributes, errors, onChange }: { category: string; subcategory: string; attributes: Record<string, any>; errors: Record<string, string>; onChange: (key: string, val: any) => void }) {
+const CategoryAttributes = memo(function CategoryAttributes({ category, subcategory, attributes, errors, onChange, dynamicAttributes }: { category: string; subcategory: string; attributes: Record<string, any>; errors: Record<string, string>; onChange: (key: string, val: any) => void; dynamicAttributes?: any[] }) {
   const [manualModes, setManualModes] = useState<Record<string, boolean>>({});
-  const overrideKey = `${category}/${subcategory || ''}`;
-  const combined = [
-    ...((ATTRS[category] ?? [])),
-    ...((ATTR_SUBSCHEMAS[overrideKey] ?? [])),
-  ];
-  const fieldMap = new Map<string, AttrFieldLocal>();
-  combined.forEach((f) => {
-    const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
-    fieldMap.set(id, f);
-  });
+  const [models, setModels] = useState<string[]>([]);
+  const [series, setSeries] = useState<string[]>([]);
+  const [trims, setTrims] = useState<string[]>([]);
+
+  const brand = String(attributes['marka'] || '').trim();
+  const modelVal = String(attributes['model'] || '').trim();
+  const seriesVal = String(attributes['seri'] || '').trim();
+  const overrideKeyLocal = `${category}/${subcategory || ''}`;
+
+  useEffect(() => {
+    if (!brand || !['vasita', 'alisveris'].includes(category)) {
+      setModels([]);
+      return;
+    }
+    fetch(`/api/vehicle-data?type=models&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}`)
+      .then(res => res.json())
+      .then(data => {
+         const extra = Object.keys(((MODEL_SERIES_EXTRA[overrideKeyLocal] || {})[brand] || {}));
+         const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+         setModels(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
+      })
+      .catch(() => setModels([]));
+  }, [brand, category, overrideKeyLocal]);
+
+  useEffect(() => {
+    if (!brand || !modelVal) {
+      setSeries([]);
+      return;
+    }
+    fetch(`/api/vehicle-data?type=series&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(modelVal)}`)
+      .then(res => res.json())
+      .then(data => {
+        const seriesExtra = (MODEL_SERIES_EXTRA[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
+        const brandSeries = seriesExtra[brand] || {};
+        const extra = brandSeries[modelVal] || [];
+        
+        const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+        const sorted = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
+        setSeries(sorted);
+      })
+      .catch(() => setSeries([]));
+  }, [brand, modelVal, overrideKeyLocal]);
+
+  useEffect(() => {
+    if (!brand || !modelVal || !seriesVal) {
+      setTrims([]);
+      return;
+    }
+    fetch(`/api/vehicle-data?type=trims&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(modelVal)}&series=${encodeURIComponent(seriesVal)}`)
+      .then(res => res.json())
+      .then(data => {
+         const arr = Array.isArray(data) ? data : [];
+         setTrims(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
+      })
+      .catch(() => setTrims([]));
+  }, [brand, modelVal, seriesVal, overrideKeyLocal]);
   
-  const PRIORITY_KEYS = ['marka', 'model', 'seri', 'paket'];
-  const fields = Array.from(fieldMap.values()).sort((a, b) => {
-    const aKey = a.key || '';
-    const bKey = b.key || '';
-    const aIndex = PRIORITY_KEYS.indexOf(aKey);
-    const bIndex = PRIORITY_KEYS.indexOf(bKey);
-    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-    if (aIndex !== -1) return -1;
-    if (bIndex !== -1) return 1;
-    return 0;
-  });
+  const fields = useMemo(() => {
+    if (dynamicAttributes && dynamicAttributes.length > 0) {
+      const withScope = dynamicAttributes.filter((attr: any) => {
+        // Filter by showInRequest
+        if (attr.showInRequest === false) return false;
+
+        if (!attr.subCategoryId) return true;
+        if (!attr.subCategory) return false;
+        if (!subcategory) return false;
+        return attr.subCategory.slug === subcategory;
+      });
+
+      const source = withScope.length > 0 ? withScope : dynamicAttributes.filter((attr: any) => !attr.subCategoryId && attr.showInRequest !== false);
+
+      if (source.length > 0) {
+        return source.map((attr: any) => {
+          let options: string[] = [];
+          try {
+            if (attr.optionsJson) {
+              const parsed = JSON.parse(attr.optionsJson);
+              if (Array.isArray(parsed)) {
+                options = parsed;
+              }
+            }
+          } catch (e) { console.error('Error parsing options', e); }
+
+          const generatedMinKey = attr.minKey || (attr.type === 'range-number' ? `${attr.slug || attr.id}Min` : undefined);
+          const generatedMaxKey = attr.maxKey || (attr.type === 'range-number' ? `${attr.slug || attr.id}Max` : undefined);
+
+          if (attr.type === 'range-number' && (!attr.slug && !attr.id)) {
+            console.warn('Attribute missing slug and id', attr);
+          }
+
+          return {
+            key: attr.slug,
+            label: attr.name,
+            type: attr.type === 'checkbox' ? 'boolean' : attr.type, // Map DB types to UI types
+            required: attr.required,
+            options: options.length ? options : undefined,
+            minKey: generatedMinKey,
+            maxKey: generatedMaxKey,
+            min: attr.min,
+            max: attr.max,
+            minLabel: attr.minLabel,
+            maxLabel: attr.maxLabel
+          } as AttrFieldLocal;
+        });
+      }
+    }
+
+    // 2. Fallback to Static Schemas
+    const overrideKey = `${category}/${subcategory || ''}`;
+    if (ATTR_SUBSCHEMAS[overrideKey]) {
+       return ATTR_SUBSCHEMAS[overrideKey];
+    }
+    if (ATTR_SCHEMAS[category]) {
+       return ATTR_SCHEMAS[category];
+    }
+
+    return [];
+  }, [category, subcategory, dynamicAttributes, models, series, trims]); // Updated dependencies
+
   if (!fields.length) return null;
   return (
     <div className="space-y-6 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
@@ -94,7 +192,7 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
           const isManual = f.key ? manualModes[f.key] : false;
 
           return (
-          <div key={id}>
+          <div key={id} className={f.type === 'range-number' ? 'md:col-span-2' : ''}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {f.label} {f.required && <span className="text-red-500">*</span>}
             </label>
@@ -122,50 +220,27 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                   >
                     <option value="">Seçiniz</option>
                     {(() => {
-                      const brand = String(attributes['marka'] || '').trim();
-                      const overrideKeyLocal = `${category}/${subcategory || ''}`;
                       let opts = f.options ? [...f.options] : [];
-                      if (f.key === 'marka' && overrideKeyLocal === 'vasita/otomobil') {
-                        // Use default options
+                      
+                      // Explicitly sort brands if they are not sorted
+                      if (f.key === 'marka') {
+                         opts.sort((a, b) => {
+                             if (a === 'Farketmez') return 1;
+                             if (b === 'Farketmez') return -1;
+                             return a.localeCompare(b, 'tr');
+                         });
                       }
-                      if (f.key === 'model' && brand && BRAND_MODELS[overrideKeyLocal]) {
-                        const base = BRAND_MODELS[overrideKeyLocal][brand] || [];
-                        const extra = Object.keys(((MODEL_SERIES_EXTRA[overrideKeyLocal] || {})[brand] || {}));
-                        const arr = [...base, ...extra];
-                        opts = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
+
+                      if (f.key === 'model' && brand) {
+                        opts = models;
                       } else if (f.key === 'seri') {
-                        const modelVal = String(attributes['model'] || '').trim();
-                        const seriesBase = (MODEL_SERIES[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
-                        const seriesExtra = (MODEL_SERIES_EXTRA[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
-                        const brandSeries: Record<string, string[]> = { ...(seriesBase[brand] || {}), ...(seriesExtra[brand] || {}) };
-                        if (brand && modelVal && brandSeries && brandSeries[modelVal]) {
-                          const arr: string[] = brandSeries[modelVal] || [];
-                          const sorted = Array.from(new Set<string>(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
-                          opts = sorted.length ? sorted : ['Standart'];
-                        } else {
-                          opts = ['Standart'];
-                        }
+                        opts = series;
                       } else if (f.key === 'paket') {
-                        const modelVal = String(attributes['model'] || '').trim();
-                        const seriesVal = String(attributes['seri'] || '').trim();
-                        let trimOpts: string[] | undefined;
-                        if (overrideKeyLocal === 'vasita/otomobil') {
-                          const trimsBase = SERIES_TRIMS['vasita/otomobil'] || {};
-                          const trimsExtra = SERIES_TRIMS_EXTRA['vasita/otomobil'] || {};
-                          const brandMap: Record<string, Record<string, string[]>> = { ...(trimsBase[brand] || {}), ...(trimsExtra[brand] || {}) };
-                          const modelMap: Record<string, string[]> = { ...(brandMap[modelVal] || {}) };
-                          trimOpts = modelMap[seriesVal];
+                        if (trims.length > 0) {
+                          opts = trims;
                         } else {
-                          const exMap = SERIES_TRIMS_EX[`vasita/${subcategory || ''}`];
-                          trimOpts = (((exMap || {})[brand] || {})[modelVal] || {})[seriesVal];
-                        }
-                        const arr = trimOpts && trimOpts.length ? trimOpts : [];
-                        const sorted = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
-                        if (sorted.length) {
-                          opts = sorted;
-                        } else {
-                          const defaultPaket = (ATTR_SUBSCHEMAS['vasita/otomobil'] || []).find((ff)=> ff.key === 'paket')?.options || ['Base','Comfort','Elegance','Premium','Sport','AMG Line','M Sport','S-Line','Trendline','Highline'];
-                          opts = defaultPaket;
+                           const defaultPaket = (ATTR_SUBSCHEMAS[overrideKeyLocal] || []).find((ff)=> ff.key === 'paket')?.options || [];
+                           opts = defaultPaket;
                         }
                       }
                       return opts.map((o) => (
@@ -573,7 +648,7 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
           <label className="block text-sm font-medium text-gray-700 mb-2">Ayırdığınız Bütçe (TL) <span className="text-red-500">*</span></label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">Minimum Bütçe</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">EN DÜŞÜK BÜTÇE</span>
               <input
                 type="number"
                 min="0"
@@ -584,12 +659,12 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('minBudget', val);
                   }
                 }}
-                className={`w-full pl-32 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.minBudget ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full pl-40 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.minBudget ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="0"
               />
             </div>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">Maksimum Bütçe</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">EN YÜKSEK BÜTÇE</span>
               <input
                 key="budget-input"
                 type="number"
@@ -601,7 +676,7 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('budget', val);
                   }
                 }}
-                className={`w-full pl-36 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.budget ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full pl-40 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.budget ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="0"
               />
             </div>
@@ -633,6 +708,18 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
   const selectedSubcategory = selectedCategory?.subcategories.find((s: any) => s.slug === formData.subcategory);
   const attrs = formData.attributes || {};
   const pairs: Record<string, { min?: any; max?: any }> = {};
+  
+  // Build attribute label map from dynamic attributes
+  const attrLabelMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if ((selectedCategory as any)?.attributes) {
+      (selectedCategory as any)?.attributes?.forEach((attr: any) => {
+        map.set(attr.slug, attr.name);
+      });
+    }
+    return map;
+  }, [selectedCategory]);
+
   Object.keys(attrs).forEach((k) => {
     if (k.endsWith('Min')) {
       const base = k.slice(0, -3);
@@ -643,7 +730,16 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
     }
   });
   const entries = Object.entries(attrs).filter(([k]) => !k.endsWith('Min') && !k.endsWith('Max'));
+  
   const label = (key: string) => {
+    // Check dynamic map first
+    if (attrLabelMap.has(key)) return attrLabelMap.get(key)!;
+    
+    // Check dynamic map for range base keys (if they exist as slugs)
+    // Sometimes range base key matches a slug (e.g. 'price' -> 'priceMin', 'priceMax')
+    // But usually in our schema 'yilMin' comes from 'yil' (year).
+    if (attrLabelMap.has(key)) return attrLabelMap.get(key)!;
+
     const map: Record<string, string> = { 
       marka: 'Marka', 
       model: 'Model', 
@@ -682,11 +778,14 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
           {formData.images && formData.images.length > 0 && (
             <div className="flex justify-center mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src={formData.images[0]} 
-                alt="Referans Görsel" 
-                className="h-32 w-auto object-contain mix-blend-multiply" 
-              />
+              <div className="relative h-32 w-full">
+                <Image 
+                  src={formData.images[0]} 
+                  alt="Referans Görsel" 
+                  fill
+                  className="object-contain mix-blend-multiply" 
+                />
+              </div>
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -774,7 +873,7 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
 
 function TalepOlusturPage() {
   const sp = useSearchParams();
-  const [categories, setCategories] = useState<any[]>(STATIC_CATEGORIES);
+  const [categories, setCategories] = useState<any[]>([]);
   const defaultCategory = sp.get("category") ?? "";
   const defaultSubcategory = sp.get("subcategory") ?? "";
 
@@ -856,12 +955,80 @@ function TalepOlusturPage() {
   useEffect(() => {
     const valid = subcats.some((s: SubCategory) => s.slug === formData.subcategory);
     if (!valid) {
-      setFormData(prev => ({ ...prev, subcategory: subcats[0]?.slug ?? "" }));
+      const newValue = subcats[0]?.slug ?? "";
+      if (formData.subcategory !== newValue) {
+        setFormData(prev => ({ ...prev, subcategory: newValue }));
+      }
+    }
+
+    // Generic default image logic
+    if (formData.subcategory) {
+      setFormData(prev => {
+        const defaultPath = `/images/defaults/${formData.subcategory}.webp`;
+        
+        // Case 1: No images -> Set default
+        if (prev.images.length === 0) {
+          return { ...prev, images: [defaultPath] };
+        }
+        
+        // Case 2: Has images, check if it's a default image (starts with /images/defaults/)
+        // If so, update it to the new subcategory's default
+        const firstImage = prev.images[0];
+        if (firstImage.startsWith('/images/defaults/') && firstImage !== defaultPath) {
+           return { ...prev, images: [defaultPath, ...prev.images.slice(1)] };
+        }
+        
+        return prev;
+      });
     }
   }, [formData.category, formData.subcategory, subcats]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [errorSummary, setErrorSummary] = useState<string[]>([]);
+
+  const buildAttributeFields = useCallback((): AttrField[] => {
+    const currentCategory = categories.find((c: any) => c.slug === formData.category);
+    const dynamic = currentCategory?.attributes || [];
+    if (Array.isArray(dynamic) && dynamic.length > 0) {
+      const withScope = dynamic.filter((attr: any) => {
+        if (!attr.subCategoryId) return true;
+        if (!attr.subCategory) return false;
+        if (!formData.subcategory) return false;
+        return attr.subCategory.slug === formData.subcategory;
+      });
+      const source = withScope.length > 0 ? withScope : dynamic.filter((attr: any) => !attr.subCategoryId);
+      if (source.length > 0) {
+        return source.map((attr: any) => {
+          let options: string[] = [];
+          try {
+            if (attr.optionsJson) {
+              options = JSON.parse(attr.optionsJson);
+            }
+          } catch (e) {}
+          return {
+            key: attr.slug,
+            label: attr.name,
+            type: attr.type === "checkbox" ? "boolean" : attr.type,
+            required: attr.required,
+            options: options.length ? options : undefined,
+            minKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Min` : undefined,
+            maxKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Max` : undefined,
+          } as AttrField;
+        });
+      }
+    }
+
+    // Fallback logic
+    const overrideKey = `${formData.category}/${formData.subcategory || ''}`;
+    if (ATTR_SUBSCHEMAS[overrideKey]) {
+       return ATTR_SUBSCHEMAS[overrideKey];
+    }
+    if (ATTR_SCHEMAS[formData.category]) {
+       return ATTR_SCHEMAS[formData.category];
+    }
+    
+    return [];
+  }, [categories, formData.category, formData.subcategory]);
 
   const validateStep = useCallback((step: number): boolean => {
     const newErrors: Record<string, string> = {};
@@ -877,11 +1044,7 @@ function TalepOlusturPage() {
       if (!formData.description.trim()) newErrors.description = 'Açıklama girmelisiniz';
       if (formData.description.trim().length < 20) newErrors.description = 'Açıklama en az 20 karakter olmalı';
 
-      const overrideKey = `${formData.category}/${formData.subcategory || ''}`;
-      const combined = [
-        ...((ATTR_SCHEMAS[formData.category] ?? [])),
-        ...((ATTR_SUBSCHEMAS[overrideKey] ?? [])),
-      ];
+      const combined = buildAttributeFields();
       const fieldMap = new Map<string, AttrField>();
       combined.forEach((f) => {
         const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
@@ -893,8 +1056,13 @@ function TalepOlusturPage() {
           const a = attrs[f.minKey];
           const b = attrs[f.maxKey];
           if (f.required) {
-             if (a === undefined || String(a) === '') newErrors[f.minKey] = 'Zorunlu';
-             if (b === undefined || String(b) === '') newErrors[f.maxKey] = 'Zorunlu';
+             // Range-number alanlar için en az bir değer (min veya max) girilmiş olmalı
+             const hasA = a !== undefined && String(a) !== '';
+             const hasB = b !== undefined && String(b) !== '';
+             if (!hasA && !hasB) {
+               newErrors[f.minKey] = 'Zorunlu';
+               newErrors[f.maxKey] = 'Zorunlu';
+             }
           }
           if (f.min !== undefined || f.max !== undefined) {
              if (a !== undefined && String(a) !== '') {
@@ -906,6 +1074,15 @@ function TalepOlusturPage() {
                  const val = Number(b);
                  if (f.min !== undefined && val < f.min) newErrors[f.maxKey] = `En az ${f.min}`;
                  if (f.max !== undefined && val > f.max) newErrors[f.maxKey] = `En çok ${f.max}`;
+             }
+             // Eğer hem min hem max değerleri girilmişse, min <= max olmalı
+             if (a !== undefined && String(a) !== '' && b !== undefined && String(b) !== '') {
+                 const minVal = Number(a);
+                 const maxVal = Number(b);
+                 if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
+                     newErrors[f.minKey] = 'Minimum maksimumdan büyük olamaz';
+                     newErrors[f.maxKey] = 'Maksimum minimumdan küçük olamaz';
+                 }
              }
           }
         } else if (f.key) {
@@ -966,11 +1143,7 @@ function TalepOlusturPage() {
         newErrors.budget = 'En yüksek, En düşük’ten küçük olamaz';
       }
     }
-    const overrideKey = `${formData.category}/${formData.subcategory || ''}`;
-    const combined = [
-      ...((ATTR_SCHEMAS[formData.category] ?? [])),
-      ...((ATTR_SUBSCHEMAS[overrideKey] ?? [])),
-    ];
+    const combined = buildAttributeFields();
     const fieldMap = new Map<string, AttrField>();
     combined.forEach((f) => {
       const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
@@ -979,26 +1152,38 @@ function TalepOlusturPage() {
     const attrs = formData.attributes || {};
     fieldMap.forEach((f) => {
       if (f.type === 'range-number' && f.minKey && f.maxKey) {
-        const a = attrs[f.minKey];
-        const b = attrs[f.maxKey];
-        const hasA = a !== undefined && String(a) !== '';
-        const hasB = b !== undefined && String(b) !== '';
-        if (f.required) {
-          if (!hasA) newErrors[f.minKey] = 'Zorunlu';
-          if (!hasB) newErrors[f.maxKey] = 'Zorunlu';
-        }
-        if (f.min !== undefined || f.max !== undefined) {
-             if (hasA) {
-                 const val = Number(a);
-                 if (f.min !== undefined && val < f.min) newErrors[f.minKey] = `En az ${f.min}`;
-                 if (f.max !== undefined && val > f.max) newErrors[f.minKey] = `En çok ${f.max}`;
-             }
-             if (hasB) {
-                 const val = Number(b);
-                 if (f.min !== undefined && val < f.min) newErrors[f.maxKey] = `En az ${f.min}`;
-                 if (f.max !== undefined && val > f.max) newErrors[f.maxKey] = `En çok ${f.max}`;
-             }
-        }
+          const a = attrs[f.minKey];
+          const b = attrs[f.maxKey];
+          const hasA = a !== undefined && String(a) !== '';
+          const hasB = b !== undefined && String(b) !== '';
+          if (f.required) {
+            // Range-number alanlar için en az bir değer (min veya max) girilmiş olmalı
+            if (!hasA && !hasB) {
+              newErrors[f.minKey] = 'Zorunlu';
+              newErrors[f.maxKey] = 'Zorunlu';
+            }
+          }
+          if (f.min !== undefined || f.max !== undefined) {
+               if (hasA) {
+                   const val = Number(a);
+                   if (f.min !== undefined && val < f.min) newErrors[f.minKey] = `En az ${f.min}`;
+                   if (f.max !== undefined && val > f.max) newErrors[f.minKey] = `En çok ${f.max}`;
+               }
+               if (hasB) {
+                   const val = Number(b);
+                   if (f.min !== undefined && val < f.min) newErrors[f.maxKey] = `En az ${f.min}`;
+                   if (f.max !== undefined && val > f.max) newErrors[f.maxKey] = `En çok ${f.max}`;
+               }
+               // Eğer hem min hem max değerleri girilmişse, min <= max olmalı
+               if (hasA && hasB) {
+                   const minVal = Number(a);
+                   const maxVal = Number(b);
+                   if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
+                       newErrors[f.minKey] = 'Minimum maksimumdan büyük olamaz';
+                       newErrors[f.maxKey] = 'Maksimum minimumdan küçük olamaz';
+                   }
+               }
+          }
       } else if (f.key) {
         const v = attrs[f.key];
         const present = f.type === 'boolean' ? (f.key in attrs) : (v !== undefined && String(v).trim() !== '');
@@ -1126,8 +1311,9 @@ const getBrandLogo = (brand: string) => {
           variant: "success",
         });
         
+        const callbackUrl = sp.get('callbackUrl');
         if (editId) {
-          router.push('/profil');
+          router.push(callbackUrl || '/profil');
         } else {
           router.push('/');
         }
@@ -1163,6 +1349,7 @@ const getBrandLogo = (brand: string) => {
       case 1:
         return <CategorySelection formData={formData} errors={errors} updateFormData={updateFormData} subcats={subcats} categories={categories} />;
       case 2:
+        const currentCategory = categories.find((c: any) => c.slug === formData.category);
         return (
           <>
             <DetailsStep formData={formData} errors={errors} updateFormData={updateFormData} />
@@ -1173,6 +1360,7 @@ const getBrandLogo = (brand: string) => {
                 attributes={formData.attributes}
                 errors={errors}
                 onChange={handleAttributeChange}
+                dynamicAttributes={currentCategory?.attributes}
               />
             </div>
           </>

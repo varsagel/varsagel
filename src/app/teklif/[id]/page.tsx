@@ -3,12 +3,43 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
-import { formatDistanceToNow } from 'date-fns';
-import { tr } from 'date-fns/locale';
-import { User, Clock, MessageSquare, Check, X, AlertCircle, ArrowLeft, MapPin, FileText, Tag } from 'lucide-react';
+import { User, AlertCircle, ArrowLeft, MapPin, FileText, Tag } from 'lucide-react';
 import OfferActions from './OfferActions';
 import OfferImages from './OfferImages';
 import SafetyTips from '@/components/talep/SafetyTips';
+
+const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
+
+function formatTimeAgoTR(date: Date) {
+  const diffMs = date.getTime() - Date.now();
+  const diffSeconds = Math.round(diffMs / 1000);
+  const absSeconds = Math.abs(diffSeconds);
+
+  if (absSeconds < 60) return rtf.format(diffSeconds, "second");
+
+  const diffMinutes = Math.round(diffSeconds / 60);
+  const absMinutes = Math.abs(diffMinutes);
+  if (absMinutes < 60) return rtf.format(diffMinutes, "minute");
+
+  const diffHours = Math.round(diffMinutes / 60);
+  const absHours = Math.abs(diffHours);
+  if (absHours < 24) return rtf.format(diffHours, "hour");
+
+  const diffDays = Math.round(diffHours / 24);
+  const absDays = Math.abs(diffDays);
+  if (absDays < 7) return rtf.format(diffDays, "day");
+
+  const diffWeeks = Math.round(diffDays / 7);
+  const absWeeks = Math.abs(diffWeeks);
+  if (absWeeks < 5) return rtf.format(diffWeeks, "week");
+
+  const diffMonths = Math.round(diffDays / 30);
+  const absMonths = Math.abs(diffMonths);
+  if (absMonths < 12) return rtf.format(diffMonths, "month");
+
+  const diffYears = Math.round(diffDays / 365);
+  return rtf.format(diffYears, "year");
+}
 
 export default async function OfferDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -79,8 +110,8 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
         
         {/* Listing Info Card */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+          <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+            <div className="w-full sm:w-auto">
               <p className="text-sm text-gray-500 mb-1">Talep</p>
               <Link href={`/talep/${offer.listing.id}`} className="text-lg font-bold text-gray-900 hover:text-cyan-600 transition-colors line-clamp-1">
                 {offer.listing.title}
@@ -90,7 +121,7 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
                 <span>{offer.listing.city}, {offer.listing.district}</span>
               </div>
             </div>
-            <div className="text-right shrink-0">
+            <div className="text-left sm:text-right shrink-0 w-full sm:w-auto border-t sm:border-t-0 border-gray-100 pt-4 sm:pt-0 mt-2 sm:mt-0">
               <p className="text-sm text-gray-500 mb-1">Talep Bütçesi</p>
               <p className="text-lg font-bold text-gray-900">{Number(offer.listing.budget).toLocaleString('tr-TR')}</p>
             </div>
@@ -125,7 +156,7 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
                   {offer.seller.name}
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {formatDistanceToNow(new Date(offer.createdAt), { addSuffix: true, locale: tr })}
+                  {formatTimeAgoTR(new Date(offer.createdAt))}
                 </div>
               </div>
             </div>
@@ -185,7 +216,7 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
           )}
         </div>
 
-        <SafetyTips listingId={offer.listing.id} listingTitle={offer.listing.title} />
+        <SafetyTips listingId={offer.listing.id} listingTitle={offer.listing.title} isAuthenticated={true} />
       </div>
     </div>
   );

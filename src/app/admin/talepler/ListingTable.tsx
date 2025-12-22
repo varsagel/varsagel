@@ -1,23 +1,69 @@
 "use client";
 
 import { useState } from "react";
-import { approveListing, rejectListing, deleteListing } from "../actions";
-import { Check, X, Trash2, Eye, Filter, Search } from "lucide-react";
+import { Check, X, Trash2, Eye, Filter, Search, Edit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function ListingTable({ listings, statusFilter }: { listings: any[], statusFilter: string }) {
   const router = useRouter();
+  const { toast } = useToast();
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  const handleAction = async (id: string, action: typeof approveListing) => {
+  const handleAction = async (id: string, action: "approve" | "reject" | "delete") => {
     if (!confirm("Emin misiniz?")) return;
     setLoadingId(id);
     try {
-      await action(id);
+      if (action === "approve") {
+        const res = await fetch(`/api/talep?id=${encodeURIComponent(id)}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "OPEN" }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error || "İşlem başarısız");
+        }
+        toast({
+          title: "Başarılı",
+          description: "Talep onaylandı.",
+          variant: "default",
+        });
+      } else if (action === "reject") {
+        const res = await fetch(`/api/talep?id=${encodeURIComponent(id)}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "REJECTED" }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error || "İşlem başarısız");
+        }
+        toast({
+          title: "Başarılı",
+          description: "Talep reddedildi.",
+          variant: "default",
+        });
+      } else {
+        const res = await fetch(`/api/talep?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error || "İşlem başarısız");
+        }
+        toast({
+          title: "Başarılı",
+          description: "Talep silindi.",
+          variant: "default",
+        });
+      }
       router.refresh();
     } catch (e) {
-      alert("İşlem başarısız");
+      toast({
+        title: "Hata",
+        description: e instanceof Error ? e.message : "İşlem başarısız",
+        variant: "destructive",
+      });
     } finally {
       setLoadingId(null);
     }
@@ -77,10 +123,13 @@ export default function ListingTable({ listings, statusFilter }: { listings: any
                   <Link href={`/talep/${l.id}`} target="_blank" className="inline-flex p-2 text-gray-500 hover:bg-gray-100 rounded-lg" title="Görüntüle">
                     <Eye className="w-4 h-4" />
                   </Link>
+                  <Link href={`/talep-olustur?editId=${l.id}&callbackUrl=/admin/talepler`} className="inline-flex p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="Düzenle">
+                    <Edit className="w-4 h-4" />
+                  </Link>
                   {l.status === 'PENDING' && (
                     <>
                       <button 
-                        onClick={() => handleAction(l.id, approveListing)}
+                        onClick={() => handleAction(l.id, "approve")}
                         disabled={loadingId === l.id}
                         className="inline-flex p-2 text-lime-600 hover:bg-lime-50 rounded-lg disabled:opacity-50" 
                         title="Onayla"
@@ -88,7 +137,7 @@ export default function ListingTable({ listings, statusFilter }: { listings: any
                         <Check className="w-4 h-4" />
                       </button>
                       <button 
-                        onClick={() => handleAction(l.id, rejectListing)}
+                        onClick={() => handleAction(l.id, "reject")}
                         disabled={loadingId === l.id}
                         className="inline-flex p-2 text-orange-600 hover:bg-orange-50 rounded-lg disabled:opacity-50" 
                         title="Reddet"
@@ -98,7 +147,7 @@ export default function ListingTable({ listings, statusFilter }: { listings: any
                     </>
                   )}
                   <button 
-                    onClick={() => handleAction(l.id, deleteListing)}
+                    onClick={() => handleAction(l.id, "delete")}
                     disabled={loadingId === l.id}
                     className="inline-flex p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50" 
                     title="Sil"

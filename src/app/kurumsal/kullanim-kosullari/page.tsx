@@ -1,6 +1,16 @@
 import React from 'react';
 import SozlesmeLayout from '@/components/layout/SozlesmeLayout';
 import { FileText } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Kullanım Koşulları | Varsagel",
+  description:
+    "Varsagel platformunun kullanım koşullarını, üyelik şartlarını ve tarafların hak ve yükümlülüklerini inceleyin.",
+  alternates: {
+    canonical: "/kurumsal/kullanim-kosullari",
+  },
+};
 
 export default function TermsPage() {
   return (

@@ -1,23 +1,54 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
-import { toggleUserRole, deleteUser } from "../actions";
 import { Shield, ShieldOff, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function UserTable({ users }: { users: any[] }) {
   const router = useRouter();
+  const { toast } = useToast();
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  const handleAction = async (id: string, action: typeof toggleUserRole) => {
+  const handleAction = async (id: string, action: "toggleRole" | "delete", currentRole?: string) => {
     if (!confirm("Bu işlemden emin misiniz?")) return;
     setLoadingId(id);
     try {
-      const res = await action(id);
-      if (!res.success) alert(res.error);
-      else router.refresh();
-    } catch {
-      alert("İşlem başarısız");
+      if (action === "toggleRole") {
+        const nextRole = String(currentRole || "").toUpperCase() === "ADMIN" ? "USER" : "ADMIN";
+        const res = await fetch(`/api/admin/users/${encodeURIComponent(id)}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: nextRole }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error || "İşlem başarısız");
+        }
+        toast({
+          title: "Başarılı",
+          description: `Kullanıcı rolü ${nextRole} olarak güncellendi.`,
+          variant: "default",
+        });
+      } else {
+        const res = await fetch(`/api/admin/users/${encodeURIComponent(id)}`, { method: "DELETE" });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error || "İşlem başarısız");
+        }
+        toast({
+          title: "Başarılı",
+          description: "Kullanıcı silindi.",
+          variant: "default",
+        });
+      }
+      router.refresh();
+    } catch (e) {
+      toast({
+        title: "Hata",
+        description: e instanceof Error ? e.message : "İşlem başarısız",
+        variant: "destructive",
+      });
     } finally {
       setLoadingId(null);
     }
@@ -57,7 +88,7 @@ export default function UserTable({ users }: { users: any[] }) {
                 </td>
                 <td className="px-6 py-4 text-right space-x-2">
                   <button 
-                    onClick={() => handleAction(u.id, toggleUserRole)}
+                    onClick={() => handleAction(u.id, "toggleRole", u.role)}
                     disabled={loadingId === u.id}
                     className="inline-flex p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg disabled:opacity-50" 
                     title={u.role === 'ADMIN' ? "Admin Yetkisini Al" : "Admin Yap"}
@@ -65,7 +96,7 @@ export default function UserTable({ users }: { users: any[] }) {
                     {u.role === 'ADMIN' ? <ShieldOff className="w-4 h-4" /> : <Shield className="w-4 h-4" />}
                   </button>
                   <button 
-                    onClick={() => handleAction(u.id, deleteUser)}
+                    onClick={() => handleAction(u.id, "delete")}
                     disabled={loadingId === u.id}
                     className="inline-flex p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50" 
                     title="Kullanıcıyı Sil"

@@ -1,5 +1,4 @@
 import { AttrField } from './attribute-schemas'
-import generatedAutomobil from './generated-automobil.json'
 import { EXTRA_BRAND_MODELS } from './extra-brands'
 
 const BUILDING_ATTRIBUTES: AttrField[] = [
@@ -69,18 +68,22 @@ export const ATTR_SUBSCHEMAS: Record<string, AttrField[]> = {
   'vasita/motosiklet': [
     { label: 'Silindir Hacmi (cc)', type: 'number', key: 'silindirHacmi' },
     { label: 'Tip', type: 'select', key: 'tip', options: ['Scooter','Naked','Enduro','Cross','Cruiser','Sport','Touring','Chopper','Commuter'] },
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/motosiklet'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/motosiklet'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
+    { label: 'Motor/Seri', type: 'select', key: 'seri' },
+    { label: 'Donanım/Paket', type: 'select', key: 'paket' },
   ],
   'vasita/elektrikli-araclar': [
     { label: 'Batarya Sağlığı (%)', type: 'number', key: 'bataryaSagligi' },
     { label: 'Menzil (km)', type: 'number', key: 'menzil' },
     { label: 'Şarj Tipi', type: 'select', key: 'sarjTipi', options: ['AC','DC'] },
-    { label: 'Marka', type: 'select', key: 'marka', options: ['Tesla','Renault','Nissan','Hyundai','BMW','Mercedes','Volkswagen','Audi','BYD','MG','NIO','Rivian','Polestar','Lucid'] },
+    { label: 'Marka', type: 'select', key: 'marka', options: ['Audi','BMW','BYD','Citroën','Hyundai','Lucid','Mercedes','MG','NIO','Nissan','Polestar','Renault','Rivian','Tesla','Togg','Volkswagen'].sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
+    { label: 'Motor/Seri', type: 'select', key: 'seri' },
+    { label: 'Donanım/Paket', type: 'select', key: 'paket' },
   ],
   'vasita/otomobil': [
-    { label: 'Marka', type: 'select', key: 'marka', options: ['BMW','Mercedes','Audi','Volkswagen','Renault','Peugeot','Citroën','Toyota','Honda','Hyundai','Kia','Ford','Fiat','Opel','Skoda','Volvo','Nissan','Seat','Alfa Romeo','Subaru','Mazda','Mini','Land Rover','Porsche','Jaguar','Bentley','Rolls-Royce','Aston Martin','Ferrari','Lamborghini','Maserati','Dacia','Tesla','BYD','Chery','MG','Geely','GWM','SsangYong','Jeep','Mitsubishi','TOGG','Chevrolet','Chrysler','Dodge','Infiniti','Cadillac','Lincoln','Proton','Rover','Lexus','DS Automobiles','Lada','Lotus','Polestar','Tofaş','Anadol','Suzuki','Daihatsu','Tata','Daewoo','Lancia','Saab','Smart','Cupra','Alpine','Fisker','Leapmotor','Ikco','Abarth','ZAZ','Moskvich','Pontiac','Buick','Mercury','Oldsmobile','Plymouth'] },
+    { label: 'Marka', type: 'select', key: 'marka', options: ['Abarth','Alfa Romeo','Alpine','Anadol','Aston Martin','Audi','Bentley','BMW','Buick','BYD','Cadillac','Chery','Chevrolet','Chrysler','Citroën','Cupra','Dacia','Daewoo','Daihatsu','Dodge','DS Automobiles','Ferrari','Fiat','Fisker','Ford','Geely','GWM','Honda','Hyundai','Ikco','Infiniti','Jaguar','Jeep','Kia','Lada','Lamborghini','Lancia','Land Rover','Leapmotor','Lexus','Lincoln','Lotus','Maserati','Mazda','McLaren','Mercedes','Mercury','MG','Mini','Mitsubishi','Moskvich','Nissan','Oldsmobile','Opel','Peugeot','Plymouth','Polestar','Pontiac','Porsche','Proton','Renault','Rolls-Royce','Rover','Saab','Seat','Skoda','Smart','SsangYong','Subaru','Suzuki','Tata','Tesla','Tofaş','TOGG','Toyota','Volkswagen','Volvo','ZAZ'].sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Motor/Seri', type: 'select', key: 'seri' },
     { label: 'Donanım/Paket', type: 'select', key: 'paket', options: ['Base','Comfort','Elegance','Premium','Sport','AMG Line','M Sport','S-Line','Trendline','Highline'] },
@@ -88,47 +91,49 @@ export const ATTR_SUBSCHEMAS: Record<string, AttrField[]> = {
   'vasita/ticari-araclar': [
     { label: 'Yük Kapasitesi (kg)', type: 'number', key: 'yukKapasitesi' },
     { label: 'Belge Durumu', type: 'select', key: 'belgeDurumu', options: ['SRC','K Belgesi','Şirket','Bireysel'] },
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/minivan-panelvan'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/minivan-panelvan'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
+    { label: 'Motor/Seri', type: 'select', key: 'seri' },
     { label: 'Donanım/Paket', type: 'select', key: 'paket', options: ['Standart','Konfor','Lüks'] },
   ],
   'vasita/arazi-suv-pickup': [
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/arazi-suv-pickup'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/arazi-suv-pickup'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Motor/Seri', type: 'select', key: 'seri' },
     { label: 'Donanım/Paket', type: 'select', key: 'paket', options: ['Base','Comfort','Elegance','Premium','Sport'] },
   ],
   'vasita/kamyon-cekici': [
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/kamyon-cekici'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/kamyon-cekici'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Motor/Seri', type: 'select', key: 'seri' },
     { label: 'Donanım/Paket', type: 'select', key: 'paket', options: ['Standart','Konfor','Lüks'] },
   ],
   'vasita/otobus': [
-    { label: 'Marka', type: 'select', key: 'marka', options: ['Mercedes','MAN','Neoplan','Temsa','Otokar','Setra','Isuzu','Karsan','BMC','Volvo','Scania','Güleryüz'] },
+    { label: 'Marka', type: 'select', key: 'marka', options: ['BMC','Güleryüz','Isuzu','Karsan','MAN','Mercedes','Neoplan','Otokar','Scania','Setra','Temsa','Volvo'].sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Motor/Seri', type: 'select', key: 'seri' },
     { label: 'Donanım/Paket', type: 'select', key: 'paket', options: ['Standart','Konfor','Lüks'] },
   ],
   'vasita/minivan-panelvan': [
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/minivan-panelvan'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/minivan-panelvan'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Motor/Seri', type: 'select', key: 'seri' },
     { label: 'Donanım/Paket', type: 'select', key: 'paket', options: ['Standart','Konfor','Lüks'] },
   ],
   'vasita/minibus-midibus': [
-    { label: 'Marka', type: 'select', key: 'marka', options: ['Ford','Mercedes','Volkswagen','Iveco','Renault','Peugeot','Citroën','Fiat','Karsan','Otokar','Isuzu','Hyundai','Gaz','BMC','Toyota','Opel'] },
+    { label: 'Marka', type: 'select', key: 'marka', options: ['BMC','Citroën','Fiat','Ford','Gaz','Hyundai','Isuzu','Iveco','Karsan','Mercedes','Opel','Otokar','Peugeot','Renault','Toyota','Volkswagen'].sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Motor/Seri', type: 'select', key: 'seri' },
     { label: 'Donanım/Paket', type: 'select', key: 'paket', options: ['Standart','Konfor','Lüks'] },
   ],
   'vasita/traktor': [
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/traktor'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['vasita/traktor'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Motor/Seri', type: 'select', key: 'seri' },
+    { label: 'Donanım/Paket', type: 'select', key: 'paket' },
   ],
   'alisveris/cep-telefonu': [
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['alisveris/cep-telefonu'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['alisveris/cep-telefonu'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
     { label: 'Depolama (GB)', type: 'number', key: 'depolama' },
     { label: 'RAM (GB)', type: 'number', key: 'ram' },
@@ -141,13 +146,13 @@ export const ATTR_SUBSCHEMAS: Record<string, AttrField[]> = {
     { label: 'Depolama (GB)', type: 'number', key: 'depolama' },
     { label: 'Ekran Boyutu (inch)', type: 'number', key: 'ekranBoyutu' },
     { label: 'Ekran Kartı', type: 'text', key: 'gpu' },
-    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['alisveris/bilgisayar'] || {}).sort() },
+    { label: 'Marka', type: 'select', key: 'marka', options: Object.keys(EXTRA_BRAND_MODELS['alisveris/bilgisayar'] || {}).sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
   ],
   'alisveris/beyaz-esya': [
     { label: 'Enerji Sınıfı', type: 'select', key: 'enerjiSinifi', options: ['A+++','A++','A+','A','B','C'] },
     { label: 'Garanti', type: 'boolean', key: 'garanti' },
-    { label: 'Marka', type: 'select', key: 'marka', options: ['Arçelik','Beko','Vestel','Bosch','Siemens','Samsung','LG','Profilo','Altus','Regal','Windsor','Grundig','Indesit','Hotpoint-Ariston','Electrolux','AEG','Miele','Hoover','Candy','Franke','Teka','Silverline','Kumtel','Simfer','Uğur','Liebherr','Sharp','Gorenje','Smeg','Esty','Ferre','Luxell'] },
+    { label: 'Marka', type: 'select', key: 'marka', options: ['AEG','Altus','Arçelik','Beko','Bosch','Candy','Electrolux','Esty','Ferre','Franke','Gorenje','Grundig','Hoover','Hotpoint-Ariston','Indesit','Kumtel','LG','Liebherr','Luxell','Miele','Profilo','Regal','Samsung','Sharp','Siemens','Silverline','Simfer','Smeg','Teka','Uğur','Vestel','Windsor'].sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
   ],
   'alisveris/mobilya': [
@@ -160,7 +165,7 @@ export const ATTR_SUBSCHEMAS: Record<string, AttrField[]> = {
     { label: 'Çözünürlük', type: 'select', key: 'cozunurluk', options: ['HD','Full HD','2K','4K','8K'] },
     { label: 'Smart TV', type: 'boolean', key: 'smartTv' },
     { label: 'HDR', type: 'boolean', key: 'hdr' },
-    { label: 'Marka', type: 'select', key: 'marka', options: ['Samsung','LG','Sony','Philips','Vestel','Toshiba','Arçelik','Beko','Grundig','Altus','Regal','Axen','Sunny','Dijitsu','Onvo','TCL','Hisense','Saba','Nordmende','Awox','Woon','Elton','Hi-Level','Seg','Techwood','Telefunken','JVC','Hitachi','Sharp','Skytech','Navitech','Next'] },
+    { label: 'Marka', type: 'select', key: 'marka', options: ['Altus','Arçelik','Awox','Axen','Beko','Dijitsu','Elton','Grundig','Hi-Level','Hisense','Hitachi','JVC','LG','Navitech','Next','Nordmende','Onvo','Philips','Regal','Saba','Samsung','Seg','Sharp','Skytech','Sony','Sunny','TCL','Techwood','Telefunken','Toshiba','Vestel','Woon'].sort((a,b)=> a.localeCompare(b,'tr')) },
     { label: 'Model', type: 'select', key: 'model' },
   ],
 }
@@ -181,42 +186,14 @@ type JsonPrimitive = string | number | boolean | null
 type Json = JsonPrimitive | Json[] | { [key: string]: Json }
 type SeriesTrimsMap = Record<string, Json>
 
-const generatedBrandModels: BrandModelsMap = {};
-
-const automobilData = generatedAutomobil as {
-  modelSeries?: ModelSeriesMap;
-  MODEL_SERIES?: ModelSeriesMap;
-  seriesTrims?: SeriesTrimsMap;
-  SERIES_TRIMS?: SeriesTrimsMap;
-  seriesTrimsEx?: SeriesTrimsMap;
-  SERIES_TRIMS_EX?: SeriesTrimsMap;
-};
-
-const modelSeriesData = automobilData.modelSeries || automobilData.MODEL_SERIES;
-
-if (modelSeriesData) {
-  for (const category in modelSeriesData) {
-    generatedBrandModels[category] = {};
-    for (const brand in modelSeriesData[category]) {
-      generatedBrandModels[category][brand] = Object.keys(modelSeriesData[category][brand]);
-    }
-  }
-}
-
-// Merge generated data with extra data
+// EXPORT EMPTY OBJECTS FOR COMPATIBILITY - Logic moved to API
 export const BRAND_MODELS: BrandModelsMap = {
-  ...generatedBrandModels,
   ...EXTRA_BRAND_MODELS
 }
 
-// Map lowercase keys to exported uppercase constants if needed
-export const MODEL_SERIES: ModelSeriesMap =
-  automobilData.modelSeries || automobilData.MODEL_SERIES || {}
-export const SERIES_TRIMS: SeriesTrimsMap =
-  automobilData.seriesTrims || automobilData.SERIES_TRIMS || {}
-export const SERIES_TRIMS_EX: SeriesTrimsMap =
-  automobilData.seriesTrimsEx || automobilData.SERIES_TRIMS_EX || {}
+export const MODEL_SERIES: ModelSeriesMap = {}
+export const SERIES_TRIMS: SeriesTrimsMap = {}
+export const SERIES_TRIMS_EX: SeriesTrimsMap = {}
 
-// Manual overrides for brands/models not in the generated file
-export const MODEL_SERIES_EXTRA: ModelSeriesMap = {}
-export const SERIES_TRIMS_EXTRA: SeriesTrimsMap = {}
+export const MODEL_SERIES_EXTRA: ModelSeriesMap = EXTRA_MODEL_SERIES
+export const SERIES_TRIMS_EXTRA: SeriesTrimsMap = EXTRA_SERIES_TRIMS

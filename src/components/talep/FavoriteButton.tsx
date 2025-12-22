@@ -1,13 +1,27 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import { Heart } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function FavoriteButton({ listingId, initial }: { listingId: string; initial: boolean }) {
   const [fav, setFav] = useState(initial);
   const [busy, setBusy] = useState(false);
+  const { data: session } = useSession();
+  const { toast } = useToast();
 
   const toggle = async () => {
     if (busy) return;
+
+    if (!session) {
+      toast({
+        title: "Giriş Yapmalısınız",
+        description: "Lütfen üye olun veya giriş yapın.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setBusy(true);
     try {
       if (fav) {

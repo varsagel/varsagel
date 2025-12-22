@@ -1,5 +1,5 @@
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Heart } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -22,18 +22,18 @@ export default function Footer() {
               Güvenilir, hızlı ve modern aracı platformu.
             </p>
             <div className="flex items-center gap-4">
-              <Link href="https://www.facebook.com/profile.php?id=100077108139724" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-cyan-50 hover:text-cyan-600 transition-all duration-300" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.facebook.com/profile.php?id=100077108139724" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-cyan-50 hover:text-cyan-600 transition-all duration-300" target="_blank" rel="noopener noreferrer">
                 <Facebook className="w-5 h-5" />
-              </Link>
-              <Link href="https://x.com/varsagelcom" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-cyan-50 hover:text-cyan-400 transition-all duration-300" target="_blank" rel="noopener noreferrer">
+              </a>
+              <a href="https://x.com/varsagelcom" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-cyan-50 hover:text-cyan-400 transition-all duration-300" target="_blank" rel="noopener noreferrer">
                 <Twitter className="w-5 h-5" />
-              </Link>
-              <Link href="https://www.instagram.com/varsagel.com.offical/" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-pink-50 hover:text-pink-600 transition-all duration-300" target="_blank" rel="noopener noreferrer">
+              </a>
+              <a href="https://www.instagram.com/varsagel.com.offical/" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-pink-50 hover:text-pink-600 transition-all duration-300" target="_blank" rel="noopener noreferrer">
                 <Instagram className="w-5 h-5" />
-              </Link>
-              <Link href="https://www.linkedin.com" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-300" target="_blank" rel="noopener noreferrer">
+              </a>
+              <a href="https://www.linkedin.com" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-cyan-50 hover:text-cyan-700 transition-all duration-300" target="_blank" rel="noopener noreferrer">
                 <Linkedin className="w-5 h-5" />
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -45,7 +45,7 @@ export default function Footer() {
                 <Link href="/" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Ana Sayfa</Link>
               </li>
               <li>
-                <Link href="/talep-olustur" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Talep Oluştur</Link>
+                <Link href="/talep-olustur" prefetch={false} className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Talep Oluştur</Link>
               </li>
               <li>
                 <Link href="/#kategoriler" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Kategoriler</Link>
@@ -61,13 +61,13 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-6">Destek & Yardım</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="#" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Nasıl Çalışır?</Link>
+                <a href="#" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Nasıl Çalışır?</a>
               </li>
               <li>
                 <Link href="/sss" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Sıkça Sorulan Sorular</Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Güvenlik İpuçları</Link>
+                <a href="#" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">Güvenlik İpuçları</a>
               </li>
               <li>
                 <Link href="/iletisim" className="text-gray-500 hover:text-cyan-600 hover:pl-1 transition-all duration-200">İletişim</Link>
@@ -103,10 +103,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-400 flex items-center gap-1">
-            Â© {new Date().getFullYear()} Varsagel. 
-            <span className="hidden sm:inline">Sevgiyle geliştirildi</span>
-            <Heart className="w-3 h-3 text-red-400 inline mx-0.5" />
-            <span className="hidden sm:inline">kullanıcılarımız için.</span>
+            &copy; {new Date().getFullYear()} Varsagel. Tüm hakları saklıdır.
           </p>
           <div className="flex gap-6 text-sm text-gray-400">
             <Link href="/kurumsal/gizlilik-politikasi" className="hover:text-gray-600 transition-colors">Gizlilik Politikası</Link>

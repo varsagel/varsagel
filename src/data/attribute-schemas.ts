@@ -27,9 +27,6 @@ export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
     { label: 'Vites', key: 'vites', type: 'select', options: ['Manuel','Otomatik','Yarı Otomatik'], required: true },
     { label: 'Kasa Tipi', key: 'kasaTipi', type: 'select', options: ['Sedan','Hatchback','SUV','Coupe','Cabrio','Pick-up','Station Wagon','MPV'] },
     { label: 'Renk', key: 'renk', type: 'select', options: ['Beyaz','Siyah','Gri','Gümüş Gri','Kırmızı','Mavi','Lacivert','Yeşil','Sarı','Turuncu','Kahverengi','Bej','Bordo','Mor','Pembe','Turkuaz','Şampanya','Altın','Bronz','Füme'] },
-    { label: 'Motor Gücü (HP)', type: 'range-number', minKey: 'motorGucuMin', maxKey: 'motorGucuMax' },
-    { label: 'Motor Hacmi (cc)', type: 'range-number', minKey: 'motorHacmiMin', maxKey: 'motorHacmiMax' },
-    { label: 'Çekiş', key: 'cekis', type: 'select', options: ['Önden Çekiş','Arkadan İtiş','4WD (Sürekli)','AWD (Elektronik)'] },
     { label: 'Ağır Hasar Kayıtlı', key: 'agirHasarKayitli', type: 'boolean' },
   ],
   'yedek-parca-aksesuar-donanim-tuning': [
@@ -80,7 +77,7 @@ export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
     { label: 'Garanti Veriyor mu?', key: 'garanti', type: 'boolean' },
     { label: '7/24 Hizmet', key: '724Hizmet', type: 'boolean' },
   ],
-  'ozel-ders-verenler': [
+  'ozel-ders-arayanlar': [
     { label: 'Ders Alanı', key: 'dersAlani', type: 'text', required: true },
     { label: 'Ders Yeri', key: 'dersYeri', type: 'multiselect', options: ['Öğrenci Evi','Öğretmen Evi','Online','Etüt Merkezi'] },
     { label: 'Birebir/Grup', key: 'birebirGrup', type: 'select', options: ['Birebir','Grup'] },

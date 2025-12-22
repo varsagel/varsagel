@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -239,7 +240,13 @@ export default function ChatPage() {
                 <div className="space-y-4">
                    {Array.isArray(listing.images) && listing.images.length > 0 ? (
                     <div className="aspect-video w-full relative rounded-xl overflow-hidden border border-gray-100">
-                      <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover" onError={(e)=> (e.currentTarget.src='/images/placeholder-1.svg')} />
+                      <Image 
+                        src={listing.images[0]} 
+                        alt={listing.title} 
+                        fill 
+                        sizes="(max-width: 768px) 100vw, 300px"
+                        className="object-cover" 
+                      />
                     </div>
                   ) : (
                     <div className="aspect-video w-full bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">

@@ -6,7 +6,17 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api', '/_next'],
+      disallow: [
+        '/api',
+        '/_next',
+        '/giris',
+        '/kayit',
+        '/profil',
+        '/mesajlar',
+        '/teklif-ver',
+        '/teklif',
+        '/admin',
+      ],
     },
     sitemap: `${base}/sitemap.xml`,
   }

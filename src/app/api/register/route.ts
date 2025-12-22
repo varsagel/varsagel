@@ -21,40 +21,56 @@ export async function POST(request: Request) {
     }
     const { name, email, password } = parsed.data;
 
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return NextResponse.json({ message: "Bu e-posta zaten kayıtlı" }, { status: 409 });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-    
-    // Create user
-    await prisma.user.create({
-      data: { name, email, passwordHash },
-    });
-
-    // Create verification token
+    // Always create verification token to prevent user enumeration
     const token = randomUUID();
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    await prisma.verificationToken.create({
-      data: {
-        identifier: email,
-        token,
-        expires,
-      },
-    });
-
-    // Send email
     try {
+      // Check if user exists
+      const existing = await prisma.user.findUnique({ where: { email } });
+      
+      if (existing) {
+        // User already exists, but still send email to prevent enumeration
+        // This makes it impossible to distinguish between new and existing users
+        await sendVerificationEmail(email, token);
+        return NextResponse.json({ 
+          message: "Kayıt işlemi başlatıldı. Lütfen e-postanızı kontrol edin.",
+          ok: true 
+        }, { status: 201 });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 10);
+      
+      // Create user
+      await prisma.user.create({
+        data: { name, email, passwordHash },
+      });
+
+      // Create verification token
+      await prisma.verificationToken.create({
+        data: {
+          identifier: email,
+          token,
+          expires,
+        },
+      });
+
+      // Send verification email
       await sendVerificationEmail(email, token);
+
+      return NextResponse.json({ 
+        message: "Kayıt işlemi başlatıldı. Lütfen e-postanızı kontrol edin.",
+        ok: true 
+      }, { status: 201 });
+
     } catch (emailError) {
       console.error("Email sending failed:", emailError);
-      // Continue even if email fails, but maybe warn? 
-      // For now, we assume it works or user can request resend later (feature for later)
+      // Still return success to prevent enumeration
+      return NextResponse.json({ 
+        message: "Kayıt işlemi başlatıldı. Lütfen e-postanızı kontrol edin.",
+        ok: true 
+      }, { status: 201 });
     }
-
-    return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ message: "Beklenmeyen bir hata oluştu" }, { status: 500 });

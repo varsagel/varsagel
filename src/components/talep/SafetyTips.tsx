@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Shield, Flag } from 'lucide-react';
 import ReportModal from './ReportModal';
 
-export default function SafetyTips({ listingId, listingTitle }: { listingId: string, listingTitle: string }) {
+export default function SafetyTips({ listingId, listingTitle, isAuthenticated }: { listingId: string, listingTitle: string, isAuthenticated: boolean }) {
   const [isReportOpen, setIsReportOpen] = useState(false);
 
   return (
@@ -21,7 +21,9 @@ export default function SafetyTips({ listingId, listingTitle }: { listingId: str
         </ul>
         <button 
           onClick={() => setIsReportOpen(true)}
-          className="mt-4 text-red-600 text-sm font-semibold flex items-center gap-1 hover:underline transition-colors"
+          disabled={!isAuthenticated}
+          className="mt-4 text-red-600 text-sm font-semibold flex items-center gap-1 hover:underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          title={!isAuthenticated ? "Şikayet etmek için giriş yapmanız gerekiyor" : ""}
         >
           <Flag className="w-4 h-4" /> Talebi Şikayet Et
         </button>

@@ -7,16 +7,16 @@ async function fixBudgetValues() {
     // Tüm listing'leri getir
     const listings = await prisma.listing.findMany();
     
-    console.log(`Toplam ${listings.length} ilan bulundu.`);
+    console.log(`Toplam ${listings.length} talep bulundu.`);
     
     // Büyük budget değerlerini kontrol et
     const problematicListings = listings.filter(listing => 
       listing.budget && (listing.budget > 2147483647 || listing.budget < 0)
     );
     
-    console.log(`Problem ${problematicListings.length} ilan bulundu:`);
+    console.log(`Sorunlu ${problematicListings.length} talep bulundu:`);
     problematicListings.forEach(listing => {
-      console.log(`ID: ${listing.id}, Başlık: ${listing.title}, Budget: ${listing.budget}`);
+      console.log(`ID: ${listing.id}, Başlık: ${listing.title}, Bütçe: ${listing.budget}`);
     });
     
     // Problematik değerleri düzelt
@@ -25,10 +25,10 @@ async function fixBudgetValues() {
         where: { id: listing.id },
         data: { budget: 10000 } // Güvenli bir değer
       });
-      console.log(`İlan ${listing.id} budget değeri düzeltildi.`);
+      console.log(`Talep ${listing.id} bütçe değeri düzeltildi.`);
     }
     
-    console.log('Tüm budget değerleri düzeltildi.');
+    console.log('Tüm bütçe değerleri düzeltildi.');
     
   } catch (error) {
     console.error('Hata:', error);

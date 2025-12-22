@@ -19,7 +19,7 @@ function getRandomInt(min, max) {
 
 async function main() {
   // 1. Get the user
-  const user = await prisma.user.findUnique({
+  let user = await prisma.user.findUnique({
     where: { email: OWNER_EMAIL },
   });
 

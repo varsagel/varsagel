@@ -6,7 +6,8 @@ import { useSession } from "next-auth/react";
 type Message = { id: string; listingId: string; senderId: string; toUserId: string; content: string; createdAt: string };
 
 export default function MessagesIndexPage() {
-  const { data: session, status } = useSession();
+  const sessionData = useSession();
+  const { data: session, status } = sessionData || { data: null, status: "loading" };
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [listingInfo, setListingInfo] = useState<Record<string, any>>({});
@@ -129,9 +130,9 @@ export default function MessagesIndexPage() {
                       to = budget;
                     } else if (hasMin) {
                       return (
-                        <div className="text-cyan-600 text-xs font-bold">
-                          {minP.toLocaleString('tr-TR')} - ∞
-                        </div>
+                        <div className="text-cyan-600 text-[11px] sm:text-xs font-bold">
+                        {minP.toLocaleString('tr-TR')} - ∞
+                      </div>
                       );
                     } else if (hasMax) {
                       from = 0;
@@ -144,7 +145,7 @@ export default function MessagesIndexPage() {
                     }
 
                     return (
-                      <div className="text-cyan-600 text-xs font-bold">
+                      <div className="text-cyan-600 text-[11px] sm:text-xs font-bold">
                         {from.toLocaleString('tr-TR')} - {to.toLocaleString('tr-TR')}
                       </div>
                     );

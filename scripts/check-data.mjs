@@ -23,7 +23,7 @@ async function main() {
         data: {
             email: 'talepsahibi@gmail.com',
             name: 'Talep Sahibi',
-            password: hashedPassword,
+            passwordHash: hashedPassword,
             role: 'USER',
             phone: '5555555555'
         }

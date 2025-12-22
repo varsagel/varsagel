@@ -1,23 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import { resolveReport, deleteReport } from "../actions";
-import { Check, Trash2, Eye } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function ReportTable({ reports }: { reports: any[] }) {
   const router = useRouter();
+  const { toast } = useToast();
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  const handleAction = async (id: string, action: typeof resolveReport) => {
+  const handleAction = async (id: string, action: "resolve" | "delete") => {
     if (!confirm("Emin misiniz?")) return;
     setLoadingId(id);
     try {
-      await action(id);
+      if (action === "resolve") {
+        const res = await fetch(`/api/reports`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, status: "RESOLVED" }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error || "İşlem başarısız");
+        }
+        toast({
+          title: "Başarılı",
+          description: "Şikayet çözüldü olarak işaretlendi.",
+          variant: "default",
+        });
+      } else {
+        const res = await fetch(`/api/reports?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error || "İşlem başarısız");
+        }
+        toast({
+          title: "Başarılı",
+          description: "Şikayet silindi.",
+          variant: "default",
+        });
+      }
       router.refresh();
-    } catch {
-      alert("İşlem başarısız");
+    } catch (e) {
+      toast({
+        title: "Hata",
+        description: e instanceof Error ? e.message : "İşlem başarısız",
+        variant: "destructive",
+      });
     } finally {
       setLoadingId(null);
     }
@@ -68,7 +99,7 @@ export default function ReportTable({ reports }: { reports: any[] }) {
                 <td className="px-6 py-4 text-right space-x-2">
                   {r.status !== 'RESOLVED' && (
                     <button 
-                      onClick={() => handleAction(r.id, resolveReport)}
+                      onClick={() => handleAction(r.id, "resolve")}
                       disabled={loadingId === r.id}
                       className="inline-flex p-2 text-lime-600 hover:bg-lime-50 rounded-lg disabled:opacity-50" 
                       title="Çözüldü İşaretle"
@@ -77,7 +108,7 @@ export default function ReportTable({ reports }: { reports: any[] }) {
                     </button>
                   )}
                   <button 
-                    onClick={() => handleAction(r.id, deleteReport)}
+                    onClick={() => handleAction(r.id, "delete")}
                     disabled={loadingId === r.id}
                     className="inline-flex p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50" 
                     title="Sil"
@@ -93,4 +124,3 @@ export default function ReportTable({ reports }: { reports: any[] }) {
     </div>
   );
 }
-

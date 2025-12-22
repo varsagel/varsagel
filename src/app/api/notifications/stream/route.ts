@@ -8,10 +8,6 @@ export async function GET(_req: NextRequest) {
   try {
     const session = await auth()
     const userId = session?.user?.id as string | undefined
-    if (!userId) {
-      return new Response('Yetkisiz', { status: 401 })
-    }
-
     const encoder = new TextEncoder()
     let timer: NodeJS.Timeout
     let heartbeat: NodeJS.Timeout
@@ -35,6 +31,14 @@ export async function GET(_req: NextRequest) {
         // Clean up on client disconnect
         if (_req.signal) {
           _req.signal.addEventListener('abort', cleanup)
+        }
+
+        if (!userId) {
+          try {
+            controller.enqueue(encoder.encode(`event: count\ndata: ${JSON.stringify({ unread: 0 })}\n\n`))
+          } catch {}
+          cleanup()
+          return
         }
 
         const send = async () => {

@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -25,6 +25,7 @@ import {
   Clock, 
   MapPin,
   ChevronRight,
+  ChevronDown,
   User,
   Mail,
   Phone,
@@ -34,9 +35,28 @@ import {
 } from "lucide-react";
 
 import { toast } from "@/components/ui/use-toast";
+import { SavedSearchesTab } from "@/components/profile/SavedSearchesTab";
 
 // Tür tanımlamaları
-type TabType = "ozet" | "taleplerim" | "verdigim-teklifler" | "aldigim-teklifler" | "favoriler" | "kayitli-aramalar" | "mesajlar" | "bildirimler" | "istatistikler" | "ayarlar";
+type TabType =
+  | "ozet"
+  | "taleplerim"
+  | "verdigim-teklifler"
+  | "aldigim-teklifler"
+  | "favoriler"
+  | "kayitli-aramalar"
+  | "mesajlar"
+  | "bildirimler"
+  | "istatistikler"
+  | "ayarlar";
+
+type Attributes = {
+  marka?: string;
+  model?: string;
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  [key: string]: string | number | boolean | null | undefined;
+};
 
 type Talep = {
   id: string;
@@ -48,7 +68,7 @@ type Talep = {
   fiyat: number;
   aciklama: string;
   konum: string;
-  attributes?: Record<string, any>;
+  attributes?: Attributes;
 };
 
 type Teklif = {
@@ -62,7 +82,7 @@ type Teklif = {
   kullanici: string;
   telefon: string;
   email: string;
-  rejectionReason?: string;
+  rejectionReason?: string | null;
 };
 
 type Favori = {
@@ -72,8 +92,50 @@ type Favori = {
   fiyat: number;
   konum: string;
   tarih: string;
-  attributes?: Record<string, any>;
+  attributes?: Attributes;
 };
+
+type RawListing = {
+  id: string;
+  title: string;
+  category?: string | null;
+  status?: string;
+  createdAt: string;
+  price: number;
+  description: string;
+  location?: {
+    city?: string | null;
+    district?: string | null;
+  };
+  attributes?: Attributes;
+};
+
+type ApiOffer = {
+  id: string;
+  listingId?: string;
+  listingTitle: string;
+  price: number;
+  message: string;
+  status: string;
+  createdAt: string;
+  counterpartName?: string | null;
+  counterpartEmail?: string | null;
+  rejectionReason?: string | null;
+};
+
+type ApiSavedSearch = {
+  id: string;
+  query: string;
+  categorySlug: string | null;
+  createdAt: string;
+  matchMode?: "TITLE" | "CATEGORY" | "FILTERS";
+  filtersJson?: SavedSearchFilters | null;
+};
+
+type SavedSearchFilters = Record<
+  string,
+  string | number | boolean | null | undefined
+>;
 
 type KayitliArama = {
   id: string;
@@ -81,15 +143,28 @@ type KayitliArama = {
   categorySlug: string | null;
   tarih: string;
   matchMode?: "TITLE" | "CATEGORY" | "FILTERS";
-  filters?: Record<string, any> | null;
+  filters?: SavedSearchFilters | null;
 };
 
-// İkon bileşenleri
-const IconWrapper = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <div className={`inline-flex items-center justify-center rounded-lg bg-cyan-50 p-2 text-cyan-600 ${className}`}>
-    {children}
-  </div>
-);
+type Mesaj = {
+  id: string;
+  listingId: string;
+  senderName?: string | null;
+  content: string;
+  createdAt: string;
+  read: boolean;
+};
+
+type Bildirim = {
+  id: string;
+  type?: string;
+  title: string;
+  body?: string;
+  dataJson?: string;
+  read: boolean;
+  createdAt: string;
+  link?: string;
+};
 
 const StatCard = ({ title, value, icon, change, loading, trend }: { title: string; value: string; icon: React.ReactNode; change?: string; loading?: boolean; trend?: 'up' | 'down' | 'neutral' }) => (
   <div className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-sm transition-all hover:shadow-md border border-gray-100">
@@ -137,7 +212,8 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
+  const sessionData = useSession();
+  const { data: session, status } = sessionData || { data: null, status: "loading" };
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("ozet");
   const searchParams = useSearchParams();
@@ -162,11 +238,53 @@ export default function ProfilePage() {
   const [favoriler, setFavoriler] = useState<Favori[]>([]);
   const [isLoadingFavoriler, setIsLoadingFavoriler] = useState(false);
   const [kayitliAramalar, setKayitliAramalar] = useState<KayitliArama[]>([]);
-  const [isLoadingKayitliAramalar, setIsLoadingKayitliAramalar] = useState(false);
-  const [mesajlar, setMesajlar] = useState<any[]>([]);
+  const [isLoadingKayitliAramalar, setIsLoadingKayitliAramalar] =
+    useState(false);
+  const [mesajlar, setMesajlar] = useState<Mesaj[]>([]);
   const [isLoadingMesajlar, setIsLoadingMesajlar] = useState(false);
-  const [bildirimler, setBildirimler] = useState<any[]>([]);
+  const [bildirimler, setBildirimler] = useState<Bildirim[]>([]);
   const [isLoadingBildirimler, setIsLoadingBildirimler] = useState(false);
+
+  const fetchUserListings = useCallback(async () => {
+    if (!session?.user?.id) return;
+
+    setIsLoadingTalepler(true);
+    try {
+      const response = await fetch(`/api/talepler?userId=${session.user.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        const rawListings = (Array.isArray(data) ? data : data.data || []) as RawListing[];
+        const formattedListings: Talep[] = rawListings.map((listing) => {
+          const durum =
+            listing.status === "active"
+              ? "aktif"
+              : listing.status === "pending"
+              ? "beklemede"
+              : "tamamlandi";
+
+          return {
+            id: listing.id,
+            baslik: listing.title,
+            kategori: listing.category || "Belirtilmemiş",
+            durum,
+            tarih: new Date(listing.createdAt).toLocaleDateString("tr-TR"),
+            teklifSayisi: 0,
+            fiyat: listing.price,
+            aciklama: listing.description,
+            konum: `${listing.location?.city || ""}, ${listing.location?.district || ""}`,
+            attributes: listing.attributes,
+          };
+        });
+        setTaleplerim(formattedListings);
+      } else {
+        console.error("Talepler yüklenemedi:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Talepler yüklenirken hata:", error);
+    } finally {
+      setIsLoadingTalepler(false);
+    }
+  }, [session?.user?.id]);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -174,31 +292,31 @@ export default function ProfilePage() {
       router.push("/");
       return;
     }
-    
+
     fetchUserListings();
-  }, [session, status, router]);
+  }, [session, status, router, fetchUserListings]);
 
   useEffect(() => {
     if (!session) return;
-    if (activeTab === 'verdigim-teklifler') {
+    if (activeTab === "verdigim-teklifler") {
       fetchVerdigimTeklifler();
-    } else if (activeTab === 'aldigim-teklifler') {
+    } else if (activeTab === "aldigim-teklifler") {
       fetchAldigimTeklifler();
-    } else if (activeTab === 'favoriler') {
+    } else if (activeTab === "favoriler") {
       fetchFavoriler();
-    } else if (activeTab === 'kayitli-aramalar') {
+    } else if (activeTab === "kayitli-aramalar") {
       fetchKayitliAramalar();
-    } else if (activeTab === 'mesajlar') {
+    } else if (activeTab === "mesajlar") {
       fetchMesajlar();
-    } else if (activeTab === 'bildirimler') {
+    } else if (activeTab === "bildirimler") {
       fetchBildirimler();
-    } else if (activeTab === 'ozet') {
+    } else if (activeTab === "ozet") {
       fetchUserListings();
       fetchVerdigimTeklifler();
       fetchAldigimTeklifler();
       fetchBildirimler();
     }
-  }, [activeTab, session]);
+  }, [activeTab, session, fetchUserListings]);
   
   const [isProfileSaving, setIsProfileSaving] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -215,10 +333,10 @@ export default function ProfilePage() {
     if (activeTab === "ayarlar") {
       // Fetch user data
       fetch("/api/user")
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (data.name) {
-            setProfileData(prev => ({
+            setProfileData((prev) => ({
               ...prev,
               name: data.name,
               phone: data.phone || "",
@@ -230,7 +348,7 @@ export default function ProfilePage() {
             }));
           }
         })
-        .catch(err => console.error("Profil yüklenemedi", err));
+        .catch((err) => console.error("Profil yüklenemedi", err));
     }
   }, [activeTab]);
 
@@ -250,7 +368,7 @@ export default function ProfilePage() {
         description: "Profil bilgileriniz güncellendi.",
         variant: "success",
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Hata",
         description: "Profil güncellenirken bir sorun oluştu.",
@@ -308,54 +426,13 @@ export default function ProfilePage() {
     }
   };
 
-  const fetchUserListings = async () => {
-    if (!session?.user?.id) return;
-    
-    setIsLoadingTalepler(true);
-    try {
-      const response = await fetch(`/api/talepler?userId=${session.user.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        const rawListings = Array.isArray(data) ? data : (data.data || []);
-        const formattedListings: Talep[] = rawListings.map((listing: any) => {
-          const durum =
-            listing.status === 'active'
-              ? 'aktif'
-              : listing.status === 'pending'
-              ? 'beklemede'
-              : 'tamamlandi';
-
-          return {
-            id: listing.id,
-            baslik: listing.title,
-            kategori: listing.category || 'Belirtilmemiş',
-            durum,
-            tarih: new Date(listing.createdAt).toLocaleDateString('tr-TR'),
-            teklifSayisi: 0,
-            fiyat: listing.price,
-            aciklama: listing.description,
-            konum: `${listing.location?.city || ''}, ${listing.location?.district || ''}`,
-            attributes: listing.attributes,
-          };
-        });
-        setTaleplerim(formattedListings);
-      } else {
-        console.error('Talepler yüklenemedi:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Talepler yüklenirken hata:', error);
-    } finally {
-      setIsLoadingTalepler(false);
-    }
-  };
-
   const fetchVerdigimTeklifler = async () => {
     setIsLoadingVerdigim(true);
     try {
       const res = await fetch(`/api/offers?type=given`);
       if (res.ok) {
-        const data = await res.json();
-        const mapped: Teklif[] = data.map((o: any) => ({
+        const data: ApiOffer[] = await res.json();
+        const mapped: Teklif[] = data.map((o) => ({
           id: o.id,
           listingId: o.listingId,
           talepBaslik: o.listingTitle,
@@ -366,7 +443,7 @@ export default function ProfilePage() {
           kullanici: o.counterpartName || '',
           telefon: '',
           email: o.counterpartEmail || '',
-          rejectionReason: o.rejectionReason
+          rejectionReason: o.rejectionReason ?? null
         }))
         setVerdigimTeklifler(mapped)
       }
@@ -382,8 +459,8 @@ export default function ProfilePage() {
     try {
       const res = await fetch(`/api/offers?type=received`);
       if (res.ok) {
-        const data = await res.json();
-        const mapped: Teklif[] = data.map((o: any) => ({
+        const data: ApiOffer[] = await res.json();
+        const mapped: Teklif[] = data.map((o) => ({
           id: o.id,
           listingId: o.listingId,
           talepBaslik: o.listingTitle,
@@ -419,8 +496,8 @@ export default function ProfilePage() {
           const listRes = await fetch(`/api/talepler?ids=${ids.join(',')}`)
           if (listRes.ok) {
             const data = await listRes.json()
-            const rawListings = Array.isArray(data) ? data : (data.data || []);
-            const mapped: Favori[] = rawListings.map((l: any) => ({
+            const rawListings = (Array.isArray(data) ? data : (data.data || [])) as RawListing[];
+            const mapped: Favori[] = rawListings.map((l) => ({
               id: l.id,
               baslik: l.title,
               kategori: l.category || '',
@@ -435,7 +512,7 @@ export default function ProfilePage() {
           }
         }
       }
-    } catch (e) {
+    } catch {
       setFavoriler([])
     } finally {
       setIsLoadingFavoriler(false)
@@ -447,8 +524,8 @@ export default function ProfilePage() {
     try {
       const res = await fetch('/api/saved-searches')
       if (res.ok) {
-        const data = await res.json()
-        const mapped: KayitliArama[] = data.map((item: any) => ({
+        const data: ApiSavedSearch[] = await res.json()
+        const mapped: KayitliArama[] = data.map((item) => ({
           id: item.id,
           query: item.query,
           categorySlug: item.categorySlug,
@@ -525,7 +602,7 @@ export default function ProfilePage() {
     }
 
     try {
-      const body: any = { offerId, action };
+      const body = { offerId, action };
       const res = await fetch('/api/offers', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       if (res.ok) {
         fetchAldigimTeklifler()
@@ -827,8 +904,8 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-gray-50 gap-4">
-                      <div className="flex gap-4 text-sm text-gray-600 w-full sm:w-auto justify-between sm:justify-start">
-                        <span className="flex items-center gap-1 font-medium text-cyan-600">
+                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-600 w-full sm:w-auto items-start sm:items-center">
+                        <span className="flex items-center gap-1 font-medium text-cyan-600 text-base sm:text-sm">
                           <Tag className="w-4 h-4" />
                           {(() => {
                           const minP = talep.attributes?.minPrice ? Number(talep.attributes.minPrice) : 0;
@@ -901,7 +978,7 @@ export default function ProfilePage() {
                   </div>
                   
                   <div className="bg-gray-50 rounded-lg p-3 mb-4 text-gray-700 text-sm border border-gray-100">
-                    "{teklif.mesaj}"
+                    &quot;{teklif.mesaj}&quot;
                   </div>
                   
                   {teklif.durum === 'red' && teklif.rejectionReason && (
@@ -913,11 +990,11 @@ export default function ProfilePage() {
                     </div>
                   )}
 
-                  <div className="flex justify-between items-center">
-                    <div className="text-lg font-bold text-cyan-600 bg-cyan-50 px-3 py-1 rounded-lg border border-cyan-100">
+                  <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+                    <div className="w-full sm:w-auto text-center sm:text-left text-lg font-bold text-cyan-600 bg-cyan-50 px-3 py-1 rounded-lg border border-cyan-100">
                     {teklif.teklifTutari.toLocaleString()}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
                       <button onClick={() => router.push(`/talep/${teklif.listingId || ''}`)} className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors">
                         Talep Detayı
                       </button>
@@ -968,7 +1045,7 @@ export default function ProfilePage() {
                   </div>
                   
                   <div className="bg-gray-50 rounded-lg p-3 mb-4 text-gray-700 text-sm border border-gray-100">
-                    "{teklif.mesaj}"
+                    &quot;{teklif.mesaj}&quot;
                   </div>
                   
                   {teklif.durum === 'red' && teklif.rejectionReason && (
@@ -1075,7 +1152,7 @@ export default function ProfilePage() {
                         }
                       })()}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
                       <button onClick={() => router.push(`/talep/${favori.id}`)} className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors">
                         Detaylar
                       </button>
@@ -1091,113 +1168,7 @@ export default function ProfilePage() {
         );
 
       case "kayitli-aramalar":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">Kayıtlı Aramalarım</h2>
-            
-            {isLoadingKayitliAramalar ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-cyan-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Aramalarınız yükleniyor...</p>
-              </div>
-            ) : kayitliAramalar.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
-                <div className="text-gray-400 mb-4">
-                  <Search className="w-16 h-16 mx-auto opacity-20" />
-                </div>
-                <p className="text-gray-500">Henüz kayıtlı aramanız yok.</p>
-              </div>
-            ) : (
-              <div className="grid gap-4">
-              {kayitliAramalar.map((arama) => (
-                <div key={arama.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {arama.matchMode === "CATEGORY"
-                          ? "Kategori bazlı alarm"
-                          : arama.matchMode === "FILTERS"
-                          ? "Filtre bazlı alarm"
-                          : `"${arama.query}"`}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 mt-1">
-                        {arama.categorySlug && (
-                          <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 text-xs">
-                            Kategori: {arama.categorySlug}
-                          </span>
-                        )}
-                        {arama.matchMode && (
-                          <span className="bg-cyan-50 px-2 py-0.5 rounded text-cyan-700 text-xs border border-cyan-100">
-                            {arama.matchMode === "TITLE"
-                              ? "Başlığa göre"
-                              : arama.matchMode === "CATEGORY"
-                              ? "Sadece kategoriye göre"
-                              : "Filtrelere göre"}
-                          </span>
-                        )}
-                        <span className="flex items-center gap-1 text-xs text-gray-500">
-                          <Clock className="w-3 h-3" /> {arama.tarih}
-                        </span>
-                      </div>
-                      {arama.filters && Object.keys(arama.filters).length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-600">
-                          {Object.entries(arama.filters).slice(0, 6).map(([key, value]) => (
-                            <span
-                              key={key}
-                              className="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-50 border border-gray-200"
-                            >
-                              <span className="font-medium mr-1">
-                                {key === "city"
-                                  ? "Şehir"
-                                  : key === "district"
-                                  ? "İlçe"
-                                  : key === "minPrice"
-                                  ? "Min"
-                                  : key === "maxPrice"
-                                  ? "Max"
-                                  : key}
-                                :
-                              </span>
-                              <span>
-                                {typeof value === "number"
-                                  ? key === "minPrice" || key === "maxPrice"
-                                    ? value.toLocaleString("tr-TR")
-                                    : value
-                                  : String(value)}
-                              </span>
-                            </span>
-                          ))}
-                          {Object.keys(arama.filters).length > 6 && (
-                            <span className="text-gray-400">
-                              +{Object.keys(arama.filters).length - 6} filtre daha
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      <p className="text-xs text-gray-500 mt-2">
-                        Bu arama ile eşleşen yeni bir talep açıldığında bildirim alacaksınız.
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                        <button 
-                          onClick={() => router.push(`/?q=${encodeURIComponent(arama.query)}${arama.categorySlug ? `&category=${arama.categorySlug}` : ''}`)}
-                          className="px-3 py-1.5 text-sm border border-cyan-200 text-cyan-600 rounded-lg hover:bg-cyan-50 transition-colors flex items-center gap-1"
-                        >
-                           <Search className="w-3.5 h-3.5" /> Aramaya Git
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteSavedSearch(arama.id)} 
-                          className="px-3 py-1.5 text-sm border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-1"
-                        >
-                           <Trash2 className="w-3.5 h-3.5" /> Sil
-                        </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>)}
-          </div>
-        );
+        return <SavedSearchesTab />;
 
       case "mesajlar":
         return (
@@ -1437,8 +1408,48 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row font-sans">
+      {/* Mobile Navigation */}
+      <div className="md:hidden bg-white p-4 border-b border-gray-200 sticky top-16 z-20 shadow-sm">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="relative inline-block">
+            {user?.image ? (
+              <Image
+                src={user.image}
+                alt="Profil"
+                width={48}
+                height={48}
+                className="rounded-full border-2 border-white shadow-md object-cover"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-50 to-indigo-50 flex items-center justify-center text-lg font-bold text-cyan-600 shadow-inner border border-cyan-100">
+                {user?.name?.charAt(0).toUpperCase() || "U"}
+              </div>
+            )}
+          </div>
+          <div>
+            <h2 className="font-bold text-gray-900">{user?.name}</h2>
+            <p className="text-xs text-gray-500">{user?.email}</p>
+          </div>
+        </div>
+        
+        <div className="relative">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value as TabType)}
+            className="w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 pr-10 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-cyan-500 transition-colors font-medium"
+          >
+            {tabs.map((tab) => (
+              <option key={tab.id} value={tab.id}>{tab.label}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+            <ChevronDown className="h-5 w-5" />
+          </div>
+        </div>
+      </div>
+
       {/* Sidebar */}
-      <aside className="w-full md:w-72 bg-white shadow-xl shadow-gray-200/50 md:min-h-screen md:sticky md:top-0 h-fit z-20 border-r border-gray-100">
+      <aside className="hidden md:block w-72 bg-white shadow-xl shadow-gray-200/50 md:min-h-screen md:sticky md:top-0 h-fit z-20 border-r border-gray-100">
         <div className="p-6 sticky top-0">
           {/* Profil Header */}
           <div className="text-center mb-8 pb-8 border-b border-gray-100">

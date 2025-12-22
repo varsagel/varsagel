@@ -1,34 +1,80 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { revalidatePath } from "next/cache";
+import { sendEmail, emailTemplates } from "@/lib/email";
 
 export async function GET(request: NextRequest) {
   try {
+    const parseJsonArray = (text: string | null) => {
+      try {
+        const parsed = text ? JSON.parse(text) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const parseJsonObject = (text: string | null) => {
+      try {
+        const parsed = text ? JSON.parse(text) : {};
+        return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+      } catch {
+        return {};
+      }
+    };
+
     const { searchParams } = new URL(request.url)
     const slug = (searchParams.get('id') || '').trim()
     if (!slug) return NextResponse.json({ error: 'id gerekli' }, { status: 400 })
+    
     const isCode = /^\d{6}$/.test(slug)
-  const listing = await prisma.listing.findFirst({
-      where: isCode ? { code: slug, status: 'OPEN' } : { id: slug, status: 'OPEN' },
+    const session = await auth();
+
+    const listing = await prisma.listing.findFirst({
+      where: isCode ? { code: slug } : { id: slug },
       include: {
         category: true,
         subCategory: true,
-        owner: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true } },
         offers: {
-          select: { id: true, price: true, body: true, createdAt: true, status: true, sellerId: true, seller: { select: { name: true, email: true } } },
+          select: { id: true, price: true, body: true, createdAt: true, status: true, sellerId: true, seller: { select: { name: true } } },
           orderBy: { createdAt: 'desc' },
           take: 5,
         },
       },
     })
+
     if (!listing) return NextResponse.json({ error: 'Bulunamadı' }, { status: 404 })
-    const accepted = await prisma.offer.findFirst({ where: { listingId: listing.id, status: 'ACCEPTED' }, include: { seller: { select: { id: true, name: true, email: true } } }, orderBy: { updatedAt: 'desc' } })
-    const images = listing.imagesJson ? JSON.parse(listing.imagesJson) : []
+
+    // If not OPEN, check permissions
+    if (listing.status !== 'OPEN') {
+       let authorized = false;
+       if (session?.user?.id) {
+          if (listing.ownerId === session.user.id) {
+             authorized = true;
+          } else {
+             const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { role: true } });
+             if ((user?.role || '').toUpperCase() === 'ADMIN') {
+                authorized = true;
+             }
+          }
+       }
+       
+       if (!authorized) {
+          return NextResponse.json({ error: 'Bulunamadı' }, { status: 404 });
+       }
+    }
+
+    const accepted = await prisma.offer.findFirst({ where: { listingId: listing.id, status: 'ACCEPTED' }, include: { seller: { select: { id: true, name: true } } }, orderBy: { updatedAt: 'desc' } })
+    const images = parseJsonArray(listing.imagesJson)
     const price = listing.budget ? Number(listing.budget as any) : null
-    const attributes = listing.attributesJson ? JSON.parse(listing.attributesJson) : {}
+    const attributes = parseJsonObject(listing.attributesJson)
     return NextResponse.json({
       id: listing.id,
       code: listing.code,
+      status: listing.status,
+      currentUserId: session?.user?.id || null,
       title: listing.title,
       description: listing.description,
       price,
@@ -39,8 +85,8 @@ export async function GET(request: NextRequest) {
       createdAt: listing.createdAt,
       images,
       attributes,
-      offers: listing.offers.map((o: any) => ({ id: o.id, price: Number(o.price as any), message: o.body, createdAt: o.createdAt, status: o.status, sellerId: o.sellerId, sellerName: o.seller?.name || 'Teklif Veren', sellerEmail: o.seller?.email || '' })),
-      acceptedOffer: accepted ? { id: accepted.id, price: Number(accepted.price as any), message: accepted.body, createdAt: accepted.createdAt, sellerId: accepted.sellerId, sellerName: accepted.seller?.name || 'Teklif Veren', sellerEmail: accepted.seller?.email || '', attributes: accepted.attributesJson ? JSON.parse(accepted.attributesJson) : {} } : null,
+      offers: listing.offers.map((o: any) => ({ id: o.id, price: Number(o.price as any), message: o.body, createdAt: o.createdAt, status: o.status, sellerId: o.sellerId, sellerName: o.seller?.name || 'Teklif Veren' })),
+      acceptedOffer: accepted ? { id: accepted.id, price: Number(accepted.price as any), message: accepted.body, createdAt: accepted.createdAt, sellerId: accepted.sellerId, sellerName: accepted.seller?.name || 'Teklif Veren', attributes: parseJsonObject(accepted.attributesJson || null) } : null,
     })
   } catch (e) {
     console.error('Talep detay hatası:', e);
@@ -62,7 +108,13 @@ export async function DELETE(request: NextRequest) {
     const listing = await prisma.listing.findUnique({ where: { id } });
     if (!listing) return NextResponse.json({ error: 'Talep bulunamadı' }, { status: 404 });
 
-    if (listing.ownerId !== session.user.id) {
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true }
+    });
+    const isAdmin = (currentUser?.role || '').toUpperCase() === 'ADMIN';
+
+    if (listing.ownerId !== session.user.id && !isAdmin) {
       return NextResponse.json({ error: 'Bu talebi silme yetkiniz yok' }, { status: 403 });
     }
 
@@ -98,12 +150,28 @@ export async function PATCH(request: NextRequest) {
     const listing = await prisma.listing.findUnique({ where: { id } });
     if (!listing) return NextResponse.json({ error: 'Talep bulunamadı' }, { status: 404 });
 
-    if (listing.ownerId !== session.user.id) {
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true }
+    });
+    const isAdmin = (currentUser?.role || '').toUpperCase() === 'ADMIN';
+
+    if (listing.ownerId !== session.user.id && !isAdmin) {
       return NextResponse.json({ error: 'Bu talebi düzenleme yetkiniz yok' }, { status: 403 });
     }
 
     // Prepare update data
     const updateData: any = {};
+    if (typeof body.status === "string") {
+      if (!isAdmin) {
+        return NextResponse.json({ error: 'Bu durumu değiştirme yetkiniz yok' }, { status: 403 });
+      }
+      const nextStatus = body.status.toUpperCase();
+      if (!["OPEN", "REJECTED", "PENDING"].includes(nextStatus)) {
+        return NextResponse.json({ error: 'Geçersiz durum' }, { status: 400 });
+      }
+      updateData.status = nextStatus;
+    }
     if (body.title) updateData.title = body.title;
     if (body.description) updateData.description = body.description;
     
@@ -179,10 +247,28 @@ export async function PATCH(request: NextRequest) {
     
     if (body.images) updateData.imagesJson = JSON.stringify(body.images);
 
-    await prisma.listing.update({
+    const updated = await prisma.listing.update({
       where: { id },
       data: updateData,
     });
+
+    if (isAdmin && updateData.status === "OPEN") {
+      const owner = await prisma.user.findUnique({
+        where: { id: updated.ownerId },
+        select: { name: true, email: true },
+      });
+      if (owner?.email) {
+        await sendEmail({
+          to: owner.email,
+          subject: `Talebiniz Yayında: ${updated.title}`,
+          html: emailTemplates.listingPublished(owner.name || "Kullanıcı", updated.title, updated.id),
+        });
+      }
+      revalidatePath("/admin/talepler");
+      revalidatePath("/");
+    } else if (isAdmin && typeof updateData.status === "string") {
+      revalidatePath("/admin/talepler");
+    }
 
     return NextResponse.json({ success: true });
   } catch (e: any) {

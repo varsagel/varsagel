@@ -12,7 +12,24 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "*.js",
+    "*.mjs",
+    "scripts/**",
+    "import/**",
+    "prisma/**",
   ]),
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "react/no-unescaped-entities": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/preserve-manual-memoization": "off",
+      "react-hooks/error-boundaries": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

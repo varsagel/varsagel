@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function fixBudgetWithRawSQL() {
   try {
-    console.log('Budget değerleri düzeltiliyor...');
+    console.log('Bütçe değerleri düzeltiliyor...');
     
     // Önce raw SQL ile büyük değerleri kontrol et
     const problematicRows = await prisma.$queryRaw`
@@ -13,9 +13,9 @@ async function fixBudgetWithRawSQL() {
       WHERE budget > 2147483647 OR budget < 0
     `;
     
-    console.log(`Problem ${problematicRows.length} ilan bulundu:`);
+    console.log(`Sorunlu ${problematicRows.length} talep bulundu:`);
     problematicRows.forEach(row => {
-      console.log(`ID: ${row.id}, Başlık: ${row.title}, Budget: ${row.budget}`);
+      console.log(`ID: ${row.id}, Başlık: ${row.title}, Bütçe: ${row.budget}`);
     });
     
     // Büyük değerleri güvenli bir değere ayarla
@@ -34,7 +34,7 @@ async function fixBudgetWithRawSQL() {
       WHERE budget > 2147483647 OR budget < 0
     `;
     
-    console.log(`Kalan problem: ${remaining[0].count}`);
+    console.log(`Kalan sorun: ${remaining[0].count}`);
     
   } catch (error) {
     console.error('Hata:', error);

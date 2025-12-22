@@ -1,14 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
+import { auth } from "@/auth";
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const data = await request.formData();
     const file: File | null = data.get('file') as unknown as File;
 
     if (!file) {
       return NextResponse.json({ success: false, error: 'No file uploaded' }, { status: 400 });
+    }
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    if (!validTypes.includes(file.type)) {
+       return NextResponse.json({ success: false, error: 'Invalid file type. Only images are allowed.' }, { status: 400 });
+    }
+
+    // Validate file size (e.g. 5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+       return NextResponse.json({ success: false, error: 'File too large. Max 5MB.' }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();

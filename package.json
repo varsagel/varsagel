@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node server.js",
-    "build": "next build",
+    "dev": "cross-env NODE_ENV=development FORCE_VARSAGEL_DOMAIN=true node server.js",
+    "build": "cross-env NODE_ENV=production next build --webpack",
     "start": "cross-env NODE_ENV=production node server.js",
     "lint": "eslint",
     "cleanup": "powershell -ExecutionPolicy Bypass -File cleanup-next.ps1",
@@ -18,11 +18,13 @@
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-radio-group": "^1.3.8",
+    "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-toast": "^1.2.15",
     "acme-client": "^5.4.0",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "critters": "^0.0.25",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.553.0",
@@ -32,7 +34,9 @@
     "prisma": "^5.22.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.4.0",
+    "winston": "^3.19.0",
     "xlsx": "^0.18.5",
     "zod": "^4.1.12"
   },
@@ -43,6 +47,7 @@
     "@types/nodemailer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.9.11",
     "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
@@ -51,8 +56,12 @@
     "typescript": "5.9.3"
   },
   "browserslist": [
-    "defaults",
-    "not IE 11",
-    "maintained node versions"
-  ]
+    "last 2 Chrome versions",
+    "last 2 Edge versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions"
+  ],
+  "overrides": {
+    "@peculiar/x509": "1.12.3"
+  }
 }

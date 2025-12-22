@@ -5,7 +5,8 @@ import { Bell, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Header() {
-  const { data: session } = useSession();
+  const sessionData = useSession();
+  const session = sessionData?.data;
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

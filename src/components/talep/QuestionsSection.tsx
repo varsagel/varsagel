@@ -14,7 +14,8 @@ interface Question {
 }
 
 export default function QuestionsSection({ listingId, isOwner = false }: { listingId: string; isOwner?: boolean }) {
-  const { status } = useSession();
+  const session = useSession();
+  const status = session?.status || "loading";
   const { toast } = useToast();
   const [items, setItems] = useState<Question[]>([]);
   const [text, setText] = useState("");

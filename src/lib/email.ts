@@ -51,7 +51,7 @@ export const emailTemplates = {
     <h2>Yeni Teklif Aldınız!</h2>
     <p>Merhaba ${ownerName},</p>
     <p>"<strong>${listingTitle}</strong>" talebiniz için <strong>${offerPrice.toLocaleString('tr-TR')} TL</strong> tutarında yeni bir teklif aldınız.</p>
-    <p>Teklifi incelemek ve yanıtlamak için profilinize gidin.</p>
+    <p>Teklifi incelemek ve yanıtlamak için talep sayfasına gidin: <a href="${SITE_URL}/talep/${listingId}">Talebe Git</a></p>
     <br>
     <p>Varsagel Ekibi</p>
   `,
@@ -76,8 +76,16 @@ export const emailTemplates = {
     <h2>E-posta Adresinizi Doğrulayın</h2>
     <p>Merhaba,</p>
     <p>Varsagel hesabınızı doğrulamak için lütfen aşağıdaki bağlantıya tıklayın:</p>
-    <p><a href="${SITE_URL}/auth/verify?token=${token}">E-postamı Doğrula</a></p>
+    <p><a href="${SITE_URL}/dogrula?token=${token}">E-postamı Doğrula</a></p>
     <p>Bu bağlantı 24 saat geçerlidir.</p>
+    <br>
+    <p>Varsagel Ekibi</p>
+  `,
+  passwordReset: (token: string) => `
+    <h2>Şifre Sıfırlama</h2>
+    <p>Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın:</p>
+    <p><a href="${SITE_URL}/sifremi-sifirla?token=${token}">Şifremi Sıfırla</a></p>
+    <p>Bu bağlantı 1 saat geçerlidir.</p>
     <br>
     <p>Varsagel Ekibi</p>
   `
@@ -86,5 +94,11 @@ export const emailTemplates = {
 export async function sendVerificationEmail(to: string, token: string) {
   const subject = "E-posta Adresinizi Doğrulayın";
   const html = emailTemplates.verificationEmail(to, token);
+  await sendEmail({ to, subject, html });
+}
+
+export async function sendPasswordResetEmail(to: string, token: string) {
+  const subject = "Şifre Sıfırlama";
+  const html = emailTemplates.passwordReset(token);
   await sendEmail({ to, subject, html });
 }

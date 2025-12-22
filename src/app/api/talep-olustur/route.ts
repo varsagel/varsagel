@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
     let session;
     try {
       session = await auth();
-      console.log('Session:', session);
     } catch (authError) {
       console.error('Auth hatası:', authError);
       return NextResponse.json(
@@ -28,7 +27,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log('Request body:', body);
     const { title, description, category, subcategory, city, district, budget, images } = body;
 
     // Validasyon - detaylı kontrol
@@ -52,8 +50,22 @@ export async function POST(request: NextRequest) {
         const b = attrs[f.maxKey];
         const hasA = a !== undefined && String(a) !== '';
         const hasB = b !== undefined && String(b) !== '';
-        if (!hasA) missingFields.push(f.minKey);
-        if (!hasB) missingFields.push(f.maxKey);
+        // Range-number alanlar için en az bir değer (min veya max) girilmiş olmalı
+        if (!hasA && !hasB) {
+          missingFields.push(f.minKey);
+          missingFields.push(f.maxKey);
+        }
+        // Eğer hem min hem max değerleri girilmişse, min <= max olmalı
+        if (hasA && hasB) {
+          const minVal = Number(a);
+          const maxVal = Number(b);
+          if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
+            return NextResponse.json(
+              { error: `${f.label} için minimum değer maksimum değerden büyük olamaz` },
+              { status: 400 }
+            );
+          }
+        }
       } else if (f.key) {
         const v = attrs[f.key];
         const present = f.type === 'boolean' ? (f.key in attrs) : (v !== undefined && String(v).trim() !== '');
@@ -63,7 +75,6 @@ export async function POST(request: NextRequest) {
     if (String(attrs['marka'] || '').trim() && !String(attrs['model'] || '').trim()) missingFields.push('model');
     
     if (missingFields.length > 0) {
-      console.log('Validation failed. Missing fields:', missingFields);
       return NextResponse.json(
         { error: `Eksik alanlar: ${missingFields.join(', ')}` },
         { status: 400 }
@@ -75,7 +86,6 @@ export async function POST(request: NextRequest) {
     if (minPrice !== undefined && maxPrice !== undefined) {
       const a = Number(minPrice); const b = Number(maxPrice);
       if (!Number.isNaN(a) && !Number.isNaN(b) && a > b) {
-        console.log('Validation failed. Min price > Max price');
         return NextResponse.json(
           { error: 'Minimum fiyat, maksimum fiyattan büyük olamaz' },
           { status: 400 }
@@ -112,7 +122,6 @@ export async function POST(request: NextRequest) {
     });
 
     if (!categoryRecord) {
-      console.log(`Category not found in DB: ${category}`);
       return NextResponse.json(
         { error: 'Geçersiz kategori' },
         { status: 400 }
@@ -165,6 +174,7 @@ export async function POST(request: NextRequest) {
 
       const relevantSavedSearches = await prisma.savedSearch.findMany({
         where: {
+          isAlarm: true,
           OR: [
             { categorySlug: category },
             { categorySlug: null }
@@ -240,7 +250,7 @@ export async function POST(request: NextRequest) {
         const effectiveMode: 'TITLE' | 'CATEGORY' | 'FILTERS' =
           mode === 'CATEGORY' || mode === 'FILTERS' ? mode : 'TITLE';
 
-        const queryLower = search.query.toLocaleLowerCase('tr');
+        const queryLower = (search.query || '').toLocaleLowerCase('tr');
 
         let isMatch = false;
 
@@ -257,16 +267,25 @@ export async function POST(request: NextRequest) {
 
         if (!isMatch) continue;
 
-        notificationsToCreate.push({
-          userId: search.userId,
-          type: 'SAVED_SEARCH_MATCH',
-          title: 'Aradığınız ürün için yeni talep!',
-          body: `"${search.query}" aramanızla eşleşen yeni bir talep açıldı: ${title}`,
-          link: `/talep/${newListing.id}`,
-          dataJson: JSON.stringify({ listingId: newListing.id, searchId: search.id })
-        });
+        // Alarm sıklığı kontrolü - Şimdilik sadece ANLIK bildirimleri işliyoruz
+        const freq = (search as any).frequency || 'INSTANT';
+        if (freq !== 'INSTANT') continue;
 
-        if (search.user.email) {
+        const isSite = (search as any).siteNotification !== false; // Default true
+        const isEmail = (search as any).emailNotification === true;
+
+        if (isSite) {
+          notificationsToCreate.push({
+            userId: search.userId,
+            type: 'SAVED_SEARCH_MATCH',
+            title: 'Aradığınız ürün için yeni talep!',
+            body: `"${search.query || 'Aramanız'}" aramanızla eşleşen yeni bir talep açıldı: ${title}`,
+            link: `/talep/${newListing.id}`,
+            dataJson: JSON.stringify({ listingId: newListing.id, searchId: search.id })
+          });
+        }
+
+        if (isEmail && search.user.email) {
           await sendEmail({
             to: search.user.email,
             subject: `Yeni İlan Alarmı: "${search.query}"`,

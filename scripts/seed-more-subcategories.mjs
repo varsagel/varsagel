@@ -54,13 +54,24 @@ function getRandomInt(min, max) {
 
 async function main() {
   // 1. Get the user
-  const user = await prisma.user.findUnique({
+  let user = await prisma.user.findUnique({
     where: { email: OWNER_EMAIL },
   });
 
   if (!user) {
-    console.error(`Kullanıcı ${OWNER_EMAIL} bulunamadı! Lütfen check-data.mjs çalıştırın veya kullanıcının var olduğundan emin olun.`);
-    process.exit(1);
+    console.log('Kullanıcı talepsahibi@gmail.com bulunamadı, oluşturuluyor...');
+    // Create the user if missing
+    // Simple mock password hash or just placeholder
+    const hashedPassword = '$2b$10$mockhashmockhashmockhash';
+    user = await prisma.user.create({
+      data: {
+        email: OWNER_EMAIL,
+        name: 'Talep Sahibi',
+        passwordHash: hashedPassword,
+        role: 'USER',
+        phone: '5555555555'
+      }
+    });
   }
   console.log(`Kullanıcı seçildi: ${user.name} (${user.id})`);
 

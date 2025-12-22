@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import TalepCard from '@/components/home/TalepCard';
+import TalepCard from '@/components/home/TalepCardOptimized';
 import FavoriteButton from '@/components/talep/FavoriteButton';
 import QuestionsSection from '@/components/talep/QuestionsSection';
 import ShareListing from '@/components/talep/ShareListing';
@@ -7,15 +7,48 @@ import ListingActionButtons from '@/components/talep/ListingActionButtons';
 import SafetyTips from '@/components/talep/SafetyTips';
 import { prisma } from '@/lib/prisma';
 import { getListings } from '@/lib/services/listingService';
-import { formatDistanceToNow } from 'date-fns';
-import { tr } from 'date-fns/locale';
 import { ArrowLeft, Calendar, CheckCircle2, Eye, MapPin, ShieldCheck, User, Edit, Trash2 } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
-// Metadata generation
+const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com';
+
+const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
+
+function formatTimeAgoTR(date: Date) {
+  const diffMs = date.getTime() - Date.now();
+  const diffSeconds = Math.round(diffMs / 1000);
+  const absSeconds = Math.abs(diffSeconds);
+
+  if (absSeconds < 60) return rtf.format(diffSeconds, "second");
+
+  const diffMinutes = Math.round(diffSeconds / 60);
+  const absMinutes = Math.abs(diffMinutes);
+  if (absMinutes < 60) return rtf.format(diffMinutes, "minute");
+
+  const diffHours = Math.round(diffMinutes / 60);
+  const absHours = Math.abs(diffHours);
+  if (absHours < 24) return rtf.format(diffHours, "hour");
+
+  const diffDays = Math.round(diffHours / 24);
+  const absDays = Math.abs(diffDays);
+  if (absDays < 7) return rtf.format(diffDays, "day");
+
+  const diffWeeks = Math.round(diffDays / 7);
+  const absWeeks = Math.abs(diffWeeks);
+  if (absWeeks < 5) return rtf.format(diffWeeks, "week");
+
+  const diffMonths = Math.round(diffDays / 30);
+  const absMonths = Math.abs(diffMonths);
+  if (absMonths < 12) return rtf.format(diffMonths, "month");
+
+  const diffYears = Math.round(diffDays / 365);
+  return rtf.format(diffYears, "year");
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const listing = await prisma.listing.findUnique({
@@ -26,27 +59,52 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!listing) {
     return {
       title: 'Talep Bulunamadı | Varsagel',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  const description =
+    (listing.description || '').substring(0, 160) ||
+    `${listing.title} için açılmış alım talebini Varsagel üzerinde inceleyin.`;
+
+  let images: string[] = [];
+  try {
+    const parsed = listing.imagesJson ? JSON.parse(listing.imagesJson) : [];
+    if (Array.isArray(parsed)) images = parsed;
+  } catch {}
+  
+  const primaryImage = images[0];
+  const path = `/talep/${listing.id}`;
+
   return {
     title: `${listing.title} | Varsagel`,
-    description: listing.description.substring(0, 160),
+    description,
+    alternates: {
+      canonical: path,
+    },
     openGraph: {
-      images: listing.imagesJson ? JSON.parse(listing.imagesJson)[0] : undefined
-    }
+      title: `${listing.title} | Varsagel`,
+      description,
+      type: 'article',
+      url: path,
+      siteName: 'Varsagel',
+      images: primaryImage ? [primaryImage] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${listing.title} | Varsagel`,
+      description,
+      images: primaryImage ? [primaryImage] : undefined,
+    },
   };
 }
 
 export default async function ListingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await auth();
-
-  // Increment view count
-  await prisma.listing.update({
-    where: { id },
-    data: { viewCount: { increment: 1 } }
-  });
 
   const listing = await prisma.listing.findUnique({
     where: { id },
@@ -73,9 +131,30 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
   if (!listing) return notFound();
 
+  // Increment view count only if listing exists
+  try {
+    await prisma.listing.update({
+      where: { id },
+      data: { viewCount: { increment: 1 } }
+    });
+  } catch (error) {
+    // Log error but don't break the page - view count is not critical
+    console.warn('Failed to increment view count:', error);
+  }
+
   const isOwner = session?.user?.email === listing.owner.email;
-  const images = listing.imagesJson ? JSON.parse(listing.imagesJson) : [];
-  const attributes = listing.attributesJson ? JSON.parse(listing.attributesJson) : {};
+  
+  let images: string[] = [];
+  try {
+    const parsed = listing.imagesJson ? JSON.parse(listing.imagesJson) : [];
+    if (Array.isArray(parsed)) images = parsed;
+  } catch {}
+
+  let attributes: Record<string, any> = {};
+  try {
+    const parsed = listing.attributesJson ? JSON.parse(listing.attributesJson) : {};
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) attributes = parsed;
+  } catch {}
 
   // Fetch similar listings
   const { data: similarListings } = await getListings({
@@ -101,8 +180,103 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
     hasAcceptedOffer = !!acceptedOffer;
   }
 
+  const budget =
+    typeof listing.budget === 'bigint'
+      ? Number(listing.budget)
+      : Number(listing.budget || 0);
+
+  const imageUrl = images[0]
+    ? images[0].startsWith('http')
+      ? images[0]
+      : `${baseUrl}${images[0]}`
+    : undefined;
+
+  const demandJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Demand",
+    name: listing.title,
+    description: listing.description,
+    url: `${baseUrl}/talep/${listing.id}`,
+    itemOffered: {
+      "@type": "Product",
+      name: listing.title,
+      category: listing.subCategory
+        ? `${listing.category.name} / ${listing.subCategory.name}`
+        : listing.category.name,
+    },
+    areaServed: listing.city
+      ? listing.district
+        ? `${listing.city}, ${listing.district}`
+        : listing.city
+      : undefined,
+    priceSpecification:
+      budget > 0
+        ? {
+            "@type": "PriceSpecification",
+            priceCurrency: "TRY",
+            price: budget,
+          }
+        : undefined,
+    datePosted: listing.createdAt.toISOString(),
+    image: imageUrl ? [imageUrl] : undefined,
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Ana Sayfa",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: listing.category.name,
+        item: `${baseUrl}/kategori/${listing.category.slug}`,
+      },
+      listing.subCategory
+        ? {
+            "@type": "ListItem",
+            position: 3,
+            name: listing.subCategory.name,
+            item: `${baseUrl}/kategori/${listing.category.slug}/${listing.subCategory.slug}`,
+          }
+        : {
+            "@type": "ListItem",
+            position: 3,
+            name: listing.title,
+            item: `${baseUrl}/talep/${listing.id}`,
+          },
+      listing.subCategory
+        ? {
+            "@type": "ListItem",
+            position: 4,
+            name: listing.title,
+            item: `${baseUrl}/talep/${listing.id}`,
+          }
+        : null,
+    ].filter(Boolean),
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(demandJsonLd),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd),
+        }}
+      />
       {/* Breadcrumb & Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -140,19 +314,19 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
                     src={images[0]}
                     alt={listing.title}
                     fill
-                    className="object-cover"
+                    className={images[0].startsWith('/images/brands/') ? "object-contain p-12" : "object-cover"}
                     priority
                   />
                 </div>
                 {images.length > 1 && (
-                  <div className="grid grid-cols-4 gap-2 p-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2">
                     {images.slice(1).map((img: string, i: number) => (
                       <div key={i} className="aspect-video relative rounded-lg overflow-hidden">
                         <Image
                           src={img}
                           alt={`${listing.title} - ${i + 2}`}
                           fill
-                          className="object-cover hover:scale-110 transition-transform duration-300"
+                          className={`${img.startsWith('/images/brands/') ? 'object-contain p-2' : 'object-cover'} hover:scale-110 transition-transform duration-300`}
                         />
                       </div>
                     ))}
@@ -174,53 +348,62 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
                   </div>
                 </div>
               )}
-              <div className="flex items-start justify-between gap-4 mb-4">
-                <h1 className="text-2xl font-bold text-gray-900">{listing.title}</h1>
-                <div className="text-right shrink-0">
-                  <p className="text-sm text-gray-500 mb-1">Talep Bütçesi</p>
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 break-words">{listing.title}</h1>
+                <div className="w-full md:w-auto flex flex-row md:flex-col justify-between md:justify-start items-center md:items-end md:text-right shrink-0 bg-gray-50 md:bg-transparent p-3 md:p-0 rounded-lg md:rounded-none border md:border-none border-gray-100">
+                  <p className="text-sm text-gray-500 mb-0 md:mb-1">Talep Bütçesi</p>
                   {(() => {
-                    const minP = attributes?.minPrice ? Number(attributes.minPrice) : 0;
-                    const maxPAttr = attributes?.maxPrice ? Number(attributes.maxPrice) : 0;
-                    const budget = typeof listing.budget === 'bigint' ? Number(listing.budget) : Number(listing.budget || 0);
+                    try {
+                      const minP = attributes?.minPrice ? Number(attributes.minPrice) : 0;
+                      const maxPAttr = attributes?.maxPrice ? Number(attributes.maxPrice) : 0;
+                      const budget = typeof listing.budget === 'bigint' ? Number(listing.budget) : Number(listing.budget || 0);
 
-                    const hasMin = minP > 0;
-                    const hasMax = maxPAttr > 0;
-                    const hasBudget = budget > 0;
+                      const hasMin = minP > 0;
+                      const hasMax = maxPAttr > 0;
+                      const hasBudget = budget > 0;
 
-                    let from = 0;
-                    let to = 0;
+                      let from = 0;
+                      let to = 0;
 
-                    if (hasMin && hasMax) {
-                      from = minP;
-                      to = maxPAttr;
-                    } else if (hasMin && hasBudget) {
-                      from = minP;
-                      to = budget;
-                    } else if (hasMin) {
+                      if (hasMin && hasMax) {
+                        from = minP;
+                        to = maxPAttr;
+                      } else if (hasMin && hasBudget) {
+                        from = minP;
+                        to = budget;
+                      } else if (hasMin) {
+                        return (
+                          <p className="text-xl md:text-2xl font-bold text-cyan-600">
+                            {minP.toLocaleString('tr-TR')} - ∞
+                          </p>
+                        );
+                      } else if (hasMax) {
+                        from = 0;
+                        to = maxPAttr;
+                      } else if (hasBudget) {
+                        from = 0;
+                        to = budget;
+                      } else {
+                        return (
+                          <p className="text-xl md:text-2xl font-bold text-gray-400">
+                            Belirtilmemiş
+                          </p>
+                        );
+                      }
+
                       return (
-                        <p className="text-2xl font-bold text-cyan-600">
-                          {minP.toLocaleString('tr-TR')} - ∞
+                        <p className="text-xl md:text-2xl font-bold text-cyan-600">
+                          {from.toLocaleString('tr-TR')} - {to.toLocaleString('tr-TR')}
                         </p>
                       );
-                    } else if (hasMax) {
-                      from = 0;
-                      to = maxPAttr;
-                    } else if (hasBudget) {
-                      from = 0;
-                      to = budget;
-                    } else {
+                    } catch (error) {
+                      console.error('Bütçe hesaplama hatası:', error);
                       return (
-                        <p className="text-2xl font-bold text-gray-400">
+                        <p className="text-xl md:text-2xl font-bold text-gray-400">
                           Belirtilmemiş
                         </p>
                       );
                     }
-
-                    return (
-                      <p className="text-2xl font-bold text-cyan-600">
-                        {from.toLocaleString('tr-TR')} - {to.toLocaleString('tr-TR')}
-                      </p>
-                    );
                   })()}
                 </div>
               </div>
@@ -232,7 +415,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Calendar className="w-4 h-4" />
-                  {formatDistanceToNow(new Date(listing.createdAt), { addSuffix: true, locale: tr })}
+                  {formatTimeAgoTR(new Date(listing.createdAt))}
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Eye className="w-4 h-4" />
@@ -322,7 +505,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
               )}
             </div>
 
-            <SafetyTips listingId={listing.id} listingTitle={listing.title} />
+            <SafetyTips listingId={listing.id} listingTitle={listing.title} isAuthenticated={!!session?.user} />
 
           </div>
 

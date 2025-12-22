@@ -15,14 +15,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!category) {
     return {
       title: 'Kategori Bulunamadı | Varsagel',
+      description: 'Aradığınız kategori bulunamadı.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  const title = `${category.name} Talepleri | Varsagel`;
+  const description = `${category.name} kategorisindeki en güncel talepleri inceleyin. Varsagel ile güvenli alışveriş.`;
+  const path = `/kategori/${category.slug}`;
+
   return {
-    title: `${category.name} Talepleri | Varsagel`,
-    description: `${category.name} kategorisindeki en güncel talepleri inceleyin. Varsagel ile güvenli alışveriş.`,
+    title,
+    description,
     alternates: {
-      canonical: `/kategori/${category.slug}`,
+      canonical: path,
+    },
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: path,
+      siteName: 'Varsagel',
+      locale: 'tr_TR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      creator: '@varsagel',
     },
   };
 }

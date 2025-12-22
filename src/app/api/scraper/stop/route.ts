@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import fs from 'node:fs'
 import path from 'node:path'
+import { getAdminUserId } from '@/auth'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -22,6 +23,9 @@ function killPid(pid: number): boolean {
 }
 
 export async function POST() {
+  const adminId = await getAdminUserId()
+  if (!adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const scrapePidFile = path.join(process.cwd(), 'import', 'scrape.pid')
   const importPidFile = path.join(process.cwd(), 'import', 'import.pid')
   const scrapePid = readPid(scrapePidFile)

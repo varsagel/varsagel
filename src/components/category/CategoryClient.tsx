@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import TalepCard from '@/components/home/TalepCard';
+import { useParams, useSearchParams } from 'next/navigation';
+import TalepCard from '@/components/home/TalepCardOptimized';
 import { CATEGORIES } from '@/data/categories';
 import { TURKEY_PROVINCES } from '@/data/turkey-locations';
-import { ATTR_SCHEMAS } from '@/data/attribute-schemas';
-import { ATTR_SUBSCHEMAS, BRAND_MODELS, MODEL_SERIES, SERIES_TRIMS, SERIES_TRIMS_EX, MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA } from '@/data/attribute-overrides';
-import { Bell, BellRing, Check, Loader2 } from 'lucide-react';
+import { ATTR_SCHEMAS, AttrField } from '@/data/attribute-schemas';
+import { ATTR_SUBSCHEMAS, BRAND_MODELS, MODEL_SERIES, SERIES_TRIMS } from '@/data/attribute-overrides';
+import { BellRing, Check, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from '@/components/ui/use-toast';
+import { SavedSearchModal } from '@/components/talep/SavedSearchModal';
 
 interface Talep {
   id: string;
@@ -29,11 +30,13 @@ interface Talep {
     rating: number;
   };
   createdAt: string;
-  status: "active" | "sold";
+  status: "active" | "pending" | "sold";
   viewCount: number;
   isFavorited: boolean;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, string | number | boolean>;
 }
+
+type FilterAttrs = Record<string, string | number>;
 
 const FilterSelect = ({ 
   label, 
@@ -153,7 +156,6 @@ const FilterRange = ({
 
 export default function CategoryClient() {
   const params = useParams();
-  const router = useRouter();
   const sp = useSearchParams();
   const categorySlug = params.category as string;
   const subcategorySlug = params.subcategory as string | undefined;
@@ -161,7 +163,6 @@ export default function CategoryClient() {
   const [listings, setListings] = useState<Talep[]>([]);
   const [filteredListings, setFilteredListings] = useState<Talep[]>([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   
   // Common Filters
@@ -173,7 +174,7 @@ export default function CategoryClient() {
   const [showFilters, setShowFilters] = useState(false);
   
   // Dynamic Filters
-  const [filterAttrs, setFilterAttrs] = useState<Record<string, any>>({});
+  const [filterAttrs, setFilterAttrs] = useState<FilterAttrs>({});
   
   useEffect(() => {
     setFavorites(new Set(listings.filter(l => l.isFavorited).map(l => l.id)));
@@ -184,16 +185,16 @@ export default function CategoryClient() {
   
   const overrideKey = subcategorySlug ? `${categorySlug}/${subcategorySlug}` : categorySlug;
   
-  const combinedSchema = React.useMemo(() => {
+  const combinedSchema = React.useMemo<AttrField[]>(() => {
     const base = ATTR_SCHEMAS[categorySlug] || [];
     const sub = subcategorySlug ? (ATTR_SUBSCHEMAS[overrideKey] || []) : [];
     
-    const map = new Map();
-    base.forEach(f => {
+    const map = new Map<string, AttrField>();
+    base.forEach((f) => {
       const id = f.key || (f.minKey && f.maxKey ? `${f.minKey}-${f.maxKey}` : f.label);
       map.set(id, f);
     });
-    sub.forEach(f => {
+    sub.forEach((f) => {
       const id = f.key || (f.minKey && f.maxKey ? `${f.minKey}-${f.maxKey}` : f.label);
       map.set(id, f);
     });
@@ -203,8 +204,8 @@ export default function CategoryClient() {
     // Custom reordering for 'vasita'
     if (categorySlug === 'vasita') {
       const priorityKeys = ['marka', 'model', 'seri', 'paket'];
-      const prioritized: any[] = [];
-      const others: any[] = [];
+      const prioritized: AttrField[] = [];
+      const others: AttrField[] = [];
       
       // Separate priority items
       priorityKeys.forEach(key => {
@@ -230,8 +231,11 @@ export default function CategoryClient() {
   // URL -> State Sync
   useEffect(() => {
     const get = (k: string) => sp.get(k) || '';
-    const num = (k: string) => {
-      const v = sp.get(k); if (!v) return '' as any; const n = Number(v); return Number.isNaN(n) ? '' as any : n;
+    const num = (k: string): number | '' => {
+      const v = sp.get(k);
+      if (!v) return '';
+      const n = Number(v);
+      return Number.isNaN(n) ? '' : n;
     };
     
     const s = sp.get('sort'); if (s) setSortBy(s);
@@ -239,9 +243,9 @@ export default function CategoryClient() {
     const cityQ = get('city'); if (cityQ) setSelectedCity(cityQ);
     const distQ = get('district'); if (distQ) setSelectedDistrict(distQ);
     const minP = num('minPrice'); const maxP = num('maxPrice'); 
-    if (minP!=='' || maxP!=='') setPriceRange([minP||0, maxP||10000000]);
+    if (minP !== '' || maxP !== '') setPriceRange([minP || 0, maxP || 10000000]);
 
-    const nextAttrs: Record<string, any> = {};
+    const nextAttrs: FilterAttrs = {};
     combinedSchema.forEach(f => {
       if (f.type === 'range-number') {
         const minVal = sp.get(f.minKey!);
@@ -254,9 +258,9 @@ export default function CategoryClient() {
       }
     });
     setFilterAttrs(nextAttrs);
-  }, [sp, categorySlug, subcategorySlug]);
+  }, [sp, categorySlug, subcategorySlug, combinedSchema]);
 
-  const handleFilterChange = (key: string, value: any) => {
+  const handleFilterChange = (key: string, value: string | number) => {
     setFilterAttrs(prev => {
       const next = { ...prev, [key]: value };
       
@@ -276,7 +280,7 @@ export default function CategoryClient() {
     });
   };
 
-  const fetchListings = async () => {
+  const fetchListings = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -336,11 +340,51 @@ export default function CategoryClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    categorySlug,
+    subcategorySlug,
+    searchTerm,
+    selectedCity,
+    selectedDistrict,
+    priceRange,
+    sortBy,
+    filterAttrs,
+    combinedSchema,
+  ]);
 
   useEffect(() => {
     fetchListings();
-  }, [searchTerm, selectedCity, selectedDistrict, priceRange, sortBy, filterAttrs]);
+  }, [fetchListings]);
+
+  const { data: session } = useSession();
+  const [isAlarmLoading, setIsAlarmLoading] = useState(false);
+  const [hasAlarm, setHasAlarm] = useState(false);
+
+  useEffect(() => {
+    const checkAlarm = async () => {
+      if (!session?.user?.id) return;
+
+      const baseQuery = subcategory ? subcategory.name : category?.name;
+      const query = searchTerm || baseQuery;
+      if (!query) return;
+
+      try {
+        const params = new URLSearchParams();
+        params.set('query', query);
+        if (categorySlug) params.set('categorySlug', categorySlug);
+
+        const res = await fetch(`/api/saved-searches?${params.toString()}`);
+        if (res.ok) {
+          const savedSearches = await res.json();
+          setHasAlarm(savedSearches.length > 0);
+        }
+      } catch (error) {
+        console.error('Error checking alarm:', error);
+      }
+    };
+    
+    checkAlarm();
+  }, [session, categorySlug, searchTerm, subcategory, category]);
 
   if (!category) {
     return (
@@ -368,22 +412,22 @@ export default function CategoryClient() {
     } catch {}
   };
 
-  const getFieldOptions = (field: any) => {
-      const brand = filterAttrs['marka'];
-      const model = filterAttrs['model'];
-      const series = filterAttrs['seri'];
+  const getFieldOptions = (field: AttrField) => {
+      const brand = typeof filterAttrs['marka'] === 'string' ? filterAttrs['marka'] : undefined;
+      const model = typeof filterAttrs['model'] === 'string' ? filterAttrs['model'] : undefined;
+      const series = typeof filterAttrs['seri'] === 'string' ? filterAttrs['seri'] : undefined;
 
       if (field.key === 'model' && brand) {
-          const map = BRAND_MODELS[overrideKey] || BRAND_MODELS['vasita/otomobil']; 
-          return map?.[brand] || [];
+          const map = (BRAND_MODELS[overrideKey] || BRAND_MODELS['vasita/otomobil']) as Record<string, any>; 
+          return (map?.[brand] as string[] | undefined) || [];
       }
       if (field.key === 'seri' && brand && model) {
-          const map = MODEL_SERIES[overrideKey] || MODEL_SERIES['vasita/otomobil'];
-          return map?.[brand]?.[model] || [];
+          const map = (MODEL_SERIES[overrideKey] || MODEL_SERIES['vasita/otomobil']) as Record<string, any>;
+          return (map?.[brand]?.[model] as string[] | undefined) || [];
       }
       if (field.key === 'paket' && brand && model && series) {
-          const map = SERIES_TRIMS[overrideKey] || SERIES_TRIMS['vasita/otomobil'];
-          return map?.[brand]?.[model]?.[series] || [];
+          const map = (SERIES_TRIMS[overrideKey] || SERIES_TRIMS['vasita/otomobil']) as Record<string, any>;
+          return (map?.[brand]?.[model]?.[series] as string[] | undefined) || [];
       }
 
       return field.options || [];
@@ -401,6 +445,22 @@ export default function CategoryClient() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200"
+        />
+      </div>
+
+      <div className="mb-6">
+        <SavedSearchModal
+          searchParams={{
+            query: searchTerm,
+            categorySlug,
+            subcategorySlug,
+            minPrice: priceRange[0],
+            maxPrice: priceRange[1],
+            city: selectedCity,
+            district: selectedDistrict,
+            filtersJson: filterAttrs
+          }}
+          onSave={() => toast({ title: "Başarılı", description: "Arama kaydedildi." })}
         />
       </div>
       
@@ -541,36 +601,6 @@ export default function CategoryClient() {
     </div>
   );
 
-  const { data: session } = useSession();
-  const [isAlarmLoading, setIsAlarmLoading] = useState(false);
-  const [hasAlarm, setHasAlarm] = useState(false);
-
-  useEffect(() => {
-    // Check if user has an alarm for this category/search
-    const checkAlarm = async () => {
-      if (!session?.user?.id) return;
-      
-      const query = searchTerm || (subcategory ? subcategory.name : category.name);
-      if (!query) return;
-
-      try {
-        const params = new URLSearchParams();
-        params.set('query', query);
-        if (categorySlug) params.set('categorySlug', categorySlug);
-
-        const res = await fetch(`/api/saved-searches?${params.toString()}`);
-        if (res.ok) {
-          const savedSearches = await res.json();
-          setHasAlarm(savedSearches.length > 0);
-        }
-      } catch (error) {
-        console.error('Error checking alarm:', error);
-      }
-    };
-    
-    checkAlarm();
-  }, [session, categorySlug, searchTerm, subcategory, category]);
-
   const handleCreateAlarm = async () => {
     if (!session) {
       toast({
@@ -583,7 +613,7 @@ export default function CategoryClient() {
 
     const query = searchTerm || (subcategory ? subcategory.name : category.name);
 
-    const filters: Record<string, any> = {};
+    const filters: FilterAttrs = {};
     if (selectedCity) filters.city = selectedCity;
     if (selectedDistrict) filters.district = selectedDistrict;
     if (priceRange[0] > 0) filters.minPrice = priceRange[0];
@@ -636,10 +666,11 @@ export default function CategoryClient() {
         variant: "success",
       });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Bilinmeyen bir hata oluştu';
       toast({
         title: "Hata",
-        description: error.message,
+        description: message,
         variant: "destructive"
       });
     } finally {
@@ -741,7 +772,7 @@ export default function CategoryClient() {
                       ...listing,
                       isFavorited: favorites.has(listing.id)
                     }}
-                    onToggleFavorite={toggleFavorite}
+                    onToggleFavorite={session ? toggleFavorite : undefined}
                   />
                 ))}
               </div>

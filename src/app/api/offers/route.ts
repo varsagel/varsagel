@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { auth } from '@/auth'
+import { auth, getAdminUserId } from '@/auth'
 import { sendEmail, emailTemplates } from "@/lib/email";
+import { z } from 'zod';
+
+const patchSchema = z.object({
+  offerId: z.string().min(1),
+  action: z.enum(['accept', 'reject', 'withdraw']), // Added specific actions
+  rejectionReason: z.string().optional(),
+});
 
 // Force TS re-evaluation
 
@@ -65,10 +72,15 @@ export async function PATCH(request: NextRequest) {
     const session = await auth()
     if (!session?.user?.id) return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 })
     const userId = session.user.id as string
+    
     const body = await request.json()
-    const offerId = String(body.offerId || '')
-    const action = String(body.action || '')
-    if (!offerId || !action) return NextResponse.json({ error: 'offerId ve action gerekli' }, { status: 400 })
+    const validation = patchSchema.safeParse(body);
+
+    if (!validation.success) {
+       return NextResponse.json({ error: 'Geçersiz veri', details: validation.error.flatten() }, { status: 400 })
+    }
+
+    const { offerId, action, rejectionReason } = validation.data;
 
     const offer = await prisma.offer.findUnique({
       where: { id: offerId },
@@ -151,7 +163,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ ok: true, status: updated.status })
     }
 
-    if (action === 'update') {
+    if (action === 'withdraw') {
       if (offer.sellerId !== userId) return NextResponse.json({ error: 'Yetkisiz' }, { status: 403 })
       const newPriceNum = Number(body.price)
       const newMessage = String(body.message || offer.body)
@@ -189,5 +201,21 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Desteklenmeyen işlem' }, { status: 400 })
   } catch (e) {
     return NextResponse.json({ error: 'Teklif güncellenirken hata' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const adminId = await getAdminUserId();
+    if (!adminId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { searchParams } = new URL(request.url);
+    const offerId = (searchParams.get("offerId") || searchParams.get("id") || "").trim();
+    if (!offerId) return NextResponse.json({ error: "offerId gerekli" }, { status: 400 });
+
+    await prisma.offer.delete({ where: { id: offerId } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Teklif silinirken hata" }, { status: 500 });
   }
 }

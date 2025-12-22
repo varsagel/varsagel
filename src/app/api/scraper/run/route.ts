@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { spawn } from 'node:child_process'
 import path from 'node:path'
 import fs from 'node:fs'
+import { getAdminUserId } from '@/auth'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -19,6 +20,9 @@ async function run(cmd: string, args: string[], env: Record<string,string> = {},
 
 export async function POST(req: Request) {
   try {
+    const adminId = await getAdminUserId()
+    if (!adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
     const logPath = path.join(process.cwd(), 'import', 'scraper.log')
     try { fs.writeFileSync(logPath, '') } catch {}
     try { fs.appendFileSync(logPath, `[API ${new Date().toISOString()}] Run requested\n`) } catch {}

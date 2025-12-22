@@ -1,0 +1,49 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fishGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06B6D4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891B2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="tankGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E0F2FE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#BAE6FD;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="4" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="400" height="300" fill="#F0FDFF"/>
+  
+  <!-- Aquarium Tank -->
+  <rect x="50" y="40" width="300" height="220" rx="15" fill="url(#tankGrad)" stroke="#0EA5E9" stroke-width="3" filter="url(#shadow)"/>
+  
+  <!-- Fish 1 - Orange -->
+  <ellipse cx="120" cy="100" rx="25" ry="15" fill="#FB923C" filter="url(#shadow)"/>
+  <polygon points="95,100 85,90 85,110" fill="#FB923C"/>
+  <circle cx="135" cy="95" r="3" fill="#000"/>
+  <path d="M 120 100 Q 130 105 140 95" stroke="#EA580C" stroke-width="2" fill="none"/>
+  
+  <!-- Fish 2 - Yellow -->
+  <ellipse cx="280" cy="150" rx="20" ry="12" fill="#FDE047" filter="url(#shadow)"/>
+  <polygon points="260,150 250,140 250,160" fill="#FDE047"/>
+  <circle cx="295" cy="145" r="2" fill="#000"/>
+  <path d="M 280 150 Q 290 155 300 145" stroke="#EAB308" stroke-width="2" fill="none"/>
+  
+  <!-- Fish 3 - Blue -->
+  <ellipse cx="180" cy="200" rx="22" ry="13" fill="#38BDF8" filter="url(#shadow)"/>
+  <polygon points="158,200 148,190 148,210" fill="#38BDF8"/>
+  <circle cx="195" cy="195" r="2.5" fill="#000"/>
+  <path d="M 180 200 Q 190 205 200 195" stroke="#0284C7" stroke-width="2" fill="none"/>
+  
+  <!-- Seaweed -->
+  <path d="M 80 240 Q 85 200 90 160 Q 95 200 100 240" stroke="#16A34A" stroke-width="4" fill="none"/>
+  <path d="M 320 250 Q 325 210 330 170 Q 335 210 340 250" stroke="#16A34A" stroke-width="4" fill="none"/>
+  <path d="M 220 250 Q 225 220 230 190 Q 235 220 240 250" stroke="#16A34A" stroke-width="3" fill="none"/>
+  
+  <!-- Bubbles -->
+  <circle cx="150" cy="80" r="4" fill="#E0F2FE" opacity="0.7"/>
+  <circle cx="200" cy="70" r="3" fill="#E0F2FE" opacity="0.6"/>
+  <circle cx="250" cy="85" r="5" fill="#E0F2FE" opacity="0.8"/>
+  <circle cx="100" cy="120" r="2" fill="#E0F2FE" opacity="0.5"/>
+  <circle cx="300" cy="110" r="3" fill="#E0F2FE" opacity="0.6"/>
+</svg>

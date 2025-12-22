@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
 import { sendPasswordResetEmail } from "@/lib/email";
 
+const PASSWORD_RESET_PREFIX = "password-reset:";
+
 export async function POST(request: Request) {
   try {
     const { email } = await request.json();
@@ -22,27 +24,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Bu e-posta adresi ile kayıtlı kullanıcı bulunamadı" }, { status: 404 });
     }
 
-    // Check if there is already a valid token
-    const existingToken = await prisma.passwordResetToken.findFirst({
-      where: { identifier: user.email! },
-    });
-
-    if (existingToken) {
-      await prisma.passwordResetToken.delete({
-        where: { identifier_token: { identifier: existingToken.identifier, token: existingToken.token } }
-      });
+    const identifier = `${PASSWORD_RESET_PREFIX}${user.email!}`;
+    const existingTokens = await prisma.verificationToken.findMany({ where: { identifier } });
+    if (existingTokens.length) {
+      await prisma.verificationToken.deleteMany({ where: { identifier } });
     }
 
     const token = randomUUID();
     const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    await prisma.passwordResetToken.create({
-      data: {
-        identifier: user.email!,
-        token,
-        expires,
-      },
-    });
+    await prisma.verificationToken.create({ data: { identifier, token, expires } });
 
     await sendPasswordResetEmail(user.email!, token);
 

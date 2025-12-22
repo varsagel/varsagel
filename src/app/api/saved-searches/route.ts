@@ -1,6 +1,23 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+
+const createSchema = z.object({
+  name: z.string().optional(),
+  query: z.string().optional(),
+  categorySlug: z.string().optional().nullable(),
+  subcategorySlug: z.string().optional().nullable(),
+  minPrice: z.number().optional().nullable(),
+  maxPrice: z.number().optional().nullable(),
+  city: z.string().optional().nullable(),
+  district: z.string().optional().nullable(),
+  filtersJson: z.any().optional(),
+  isAlarm: z.boolean().optional(),
+  emailNotification: z.boolean().optional(),
+  siteNotification: z.boolean().optional(),
+  frequency: z.enum(["INSTANT", "DAILY", "WEEKLY"]).optional(),
+});
 
 export async function POST(req: Request) {
   try {
@@ -10,51 +27,26 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const rawQuery = (body?.query ?? "") as string;
-    const categorySlug = (body?.categorySlug ?? null) as string | null;
-    const matchModeRaw = (body?.matchMode ?? "TITLE") as string;
-    const filters = (body?.filters ?? null) as any;
+    const validation = createSchema.safeParse(body);
 
-    const filtersObject =
-      filters && typeof filters === "object" ? filters : null;
-    const hasFilters =
-      !!filtersObject && Object.keys(filtersObject).length > 0;
-
-    const matchMode: "TITLE" | "CATEGORY" | "FILTERS" =
-      matchModeRaw === "CATEGORY"
-        ? "CATEGORY"
-        : matchModeRaw === "FILTERS"
-        ? "FILTERS"
-        : "TITLE";
-
-    const query = rawQuery ? rawQuery.trim() : "";
-
-    if (!query && matchMode === "TITLE") {
+    if (!validation.success) {
       return NextResponse.json(
-        { error: "Arama terimi en az 3 karakter olmalıdır" },
+        { error: "Geçersiz veri", details: validation.error.flatten() },
         { status: 400 }
       );
     }
 
-    if (matchMode === "TITLE" && query.length < 3) {
-      return NextResponse.json(
-        { error: "Arama terimi en az 3 karakter olmalıdır" },
-        { status: 400 }
-      );
-    }
+    const data = validation.data;
+    const name = data.name || (data.query ? `"${data.query}" Araması` : (data.categorySlug ? `${data.categorySlug} Kategorisi` : "Kaydedilmiş Arama"));
 
-    const existing = await prisma.savedSearch.findFirst({
-      where: {
-        userId: session.user.id,
-        query,
-        categorySlug: categorySlug || null,
-        // matchMode is not a valid field in SavedSearchWhereInput, skip it here
-      },
+    // Check limit (max 10 saved searches per user)
+    const count = await prisma.savedSearch.count({
+      where: { userId: session.user.id },
     });
 
-    if (existing) {
+    if (count >= 10) {
       return NextResponse.json(
-        { error: "Bu arama zaten kayıtlı" },
+        { error: "En fazla 10 arama kaydedebilirsiniz." },
         { status: 400 }
       );
     }
@@ -62,18 +54,28 @@ export async function POST(req: Request) {
     const savedSearch = await prisma.savedSearch.create({
       data: {
         userId: session.user.id,
-        query,
-        categorySlug: categorySlug || null,
-// matchMode is not a valid field in SavedSearchCreateInput, skip it here
-        // filters field does not exist in SavedSearchCreateInput; omit it
+        name,
+        query: data.query || null,
+        categorySlug: data.categorySlug || null,
+        subcategorySlug: data.subcategorySlug || null,
+        minPrice: data.minPrice || null,
+        maxPrice: data.maxPrice || null,
+        city: data.city || null,
+        district: data.district || null,
+        filtersJson: data.filtersJson || null,
+        isAlarm: data.isAlarm ?? false,
+        emailNotification: data.emailNotification ?? false,
+        siteNotification: data.siteNotification ?? true,
+        frequency: data.frequency || "INSTANT",
+        matchMode: data.filtersJson ? "FILTERS" : (data.categorySlug ? "CATEGORY" : "TITLE"),
       },
     });
 
     return NextResponse.json(savedSearch);
   } catch (error: any) {
-    console.error("SavedSearch error:", error);
+    console.error("SavedSearch create error:", error);
     return NextResponse.json(
-      { error: "Bir hata oluştu: " + (error?.message || "Bilinmeyen hata") },
+      { error: "Bir hata oluştu" },
       { status: 500 }
     );
   }
@@ -86,75 +88,14 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const query = searchParams.get("query");
-    const categorySlug = searchParams.get("categorySlug");
-
-    const where: any = {
-      userId: session.user.id,
-    };
-
-    if (query) {
-      where.query = query;
-    }
-
-    if (categorySlug) {
-      where.categorySlug = categorySlug;
-    }
-
     const savedSearches = await prisma.savedSearch.findMany({
-      where,
-      orderBy: {
-        createdAt: "desc",
-      },
+      where: { userId: session.user.id },
+      orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json(savedSearches);
   } catch (error) {
-    console.error("SavedSearch error:", error);
-    return NextResponse.json(
-      { error: "Bir hata oluştu" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(req: Request) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json({ error: "ID gerekli" }, { status: 400 });
-    }
-
-    const savedSearch = await prisma.savedSearch.findUnique({
-      where: { id },
-    });
-
-    if (!savedSearch) {
-      return NextResponse.json({ error: "Kayıt bulunamadı" }, { status: 404 });
-    }
-
-    if (savedSearch.userId !== session.user.id) {
-      return NextResponse.json({ error: "Yetkisiz işlem" }, { status: 403 });
-    }
-
-    await prisma.savedSearch.delete({
-      where: { id },
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("SavedSearch delete error:", error);
-    return NextResponse.json(
-      { error: "Bir hata oluştu" },
-      { status: 500 }
-    );
+    console.error("SavedSearch list error:", error);
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }

@@ -1,23 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { deleteOffer } from "../actions";
 import { Trash2, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function OfferTable({ offers }: { offers: any[] }) {
   const router = useRouter();
+  const { toast } = useToast();
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  const handleAction = async (id: string, action: typeof deleteOffer) => {
+  const handleAction = async (id: string) => {
     if (!confirm("Emin misiniz?")) return;
     setLoadingId(id);
     try {
-      await action(id);
+      const res = await fetch(`/api/offers?offerId=${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "İşlem başarısız");
+      }
+      toast({
+        title: "Başarılı",
+        description: "Teklif silindi.",
+        variant: "default",
+      });
       router.refresh();
-    } catch {
-      alert("İşlem başarısız");
+    } catch (e) {
+      toast({
+        title: "Hata",
+        description: e instanceof Error ? e.message : "İşlem başarısız",
+        variant: "destructive",
+      });
     } finally {
       setLoadingId(null);
     }
@@ -72,7 +86,7 @@ export default function OfferTable({ offers }: { offers: any[] }) {
                     <Eye className="w-4 h-4" />
                   </Link>
                   <button 
-                    onClick={() => handleAction(o.id, deleteOffer)}
+                    onClick={() => handleAction(o.id)}
                     disabled={loadingId === o.id}
                     className="inline-flex p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50" 
                     title="Sil"

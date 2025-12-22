@@ -66,7 +66,7 @@ async function main() {
   const catUstalar = await upsertCategory('ustalar-hizmetler', 'Ustalar ve Hizmetler')
   await upsertSub(catUstalar.id, 'ev-tadilat-dekorasyon', 'Ev Tadilat & Dekorasyon')
 
-  const catOzelDers = await upsertCategory('ozel-ders-verenler', 'Özel Ders Verenler')
+  const catOzelDers = await upsertCategory('ozel-ders-arayanlar', 'Özel Ders Arayanlar')
   await upsertSub(catOzelDers.id, 'lise-universite-hazirlik', 'Lise & Üniversite Hazırlık')
 
   const catIs = await upsertCategory('is-ilanlari', 'İş İlanları')

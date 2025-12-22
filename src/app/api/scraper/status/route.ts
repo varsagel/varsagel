@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server'
 import fs from 'node:fs'
 import path from 'node:path'
+import { getAdminUserId } from '@/auth'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
+    const adminId = await getAdminUserId()
+    if (!adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
     const fp = path.join(process.cwd(), 'src', 'data', 'generated-automobil.json')
     const raw = fs.existsSync(fp) ? fs.readFileSync(fp, 'utf-8') : '{}'
     const json = JSON.parse(raw || '{}')

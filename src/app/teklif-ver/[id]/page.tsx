@@ -1,11 +1,11 @@
 "use client";
-import { useState, useCallback, memo, useEffect, type ComponentType } from "react";
+import { useState, useCallback, memo, useEffect, useMemo, type ComponentType } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
-import { ATTR_SCHEMAS, AttrField } from '@/data/attribute-schemas';
-import { CATEGORIES } from "@/data/categories";
-import { ATTR_SUBSCHEMAS, BRAND_MODELS, MODEL_SERIES, SERIES_TRIMS, SERIES_TRIMS_EX, MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA } from '@/data/attribute-overrides';
+import { AttrField } from "@/data/attribute-schemas";
+import { MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA } from "@/data/attribute-overrides";
 import { 
   Upload, X, Image as ImageIcon, Check, AlertCircle, ChevronRight, 
   ChevronLeft, FileText, Send, MapPin, 
@@ -33,7 +33,6 @@ type FormData = { price: string; message: string; images: string[] };
 
 // CategoryAttributes definitions
 type AttrFieldLocal = AttrField;
-const ATTRS: Record<string, AttrFieldLocal[]> = ATTR_SCHEMAS;
 
 const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, error }: { images: string[]; updateImages: (imgs: string[]) => void; error?: string }) {
   const [uploading, setUploading] = useState(false);
@@ -97,7 +96,13 @@ const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, er
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {images.map((img, idx) => (
             <div key={`${img}-${idx}`} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
-              <img src={img} alt={`Uploaded ${idx}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+              <Image 
+                src={img} 
+                alt={`Uploaded ${idx}`} 
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-110" 
+              />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button
                   type="button"
@@ -138,30 +143,126 @@ const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, er
   );
 });
 
-const CategoryAttributes = memo(function CategoryAttributes({ category, subcategory, attributes, errors, onChange, listingAttributes }: { category: string; subcategory: string; attributes: Record<string, any>; errors: Record<string, string>; onChange: (key: string, val: any) => void; listingAttributes?: Record<string, any> }) {
+const CategoryAttributes = memo(function CategoryAttributes({ category, subcategory, attributes, errors, onChange, listingAttributes, dynamicAttributes }: { category: string; subcategory: string; attributes: Record<string, any>; errors: Record<string, string>; onChange: (key: string, val: any) => void; listingAttributes?: Record<string, any>; dynamicAttributes?: any[] }) {
   const [manualModes, setManualModes] = useState<Record<string, boolean>>({});
-  const overrideKey = `${category}/${subcategory || ''}`;
-  const combined = [
-    ...((ATTRS[category] ?? [])),
-    ...((ATTR_SUBSCHEMAS[overrideKey] ?? [])),
-  ];
-  const fieldMap = new Map<string, AttrFieldLocal>();
-  combined.forEach((f) => {
-    const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
-    fieldMap.set(id, f);
-  });
-  
-  const PRIORITY_KEYS = ['marka', 'model', 'seri', 'paket'];
-  const fields = Array.from(fieldMap.values()).sort((a, b) => {
-    const aKey = a.key || '';
-    const bKey = b.key || '';
-    const aIndex = PRIORITY_KEYS.indexOf(aKey);
-    const bIndex = PRIORITY_KEYS.indexOf(bKey);
-    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-    if (aIndex !== -1) return -1;
-    if (bIndex !== -1) return 1;
-    return 0;
-  });
+  const [models, setModels] = useState<string[]>([]);
+  const [series, setSeries] = useState<string[]>([]);
+  const [trims, setTrims] = useState<string[]>([]);
+
+  const brand = String(attributes['marka'] || '').trim();
+  const modelVal = String(attributes['model'] || '').trim();
+  const seriesVal = String(attributes['seri'] || '').trim();
+  const overrideKeyLocal = `${category}/${subcategory || ''}`;
+
+  useEffect(() => {
+    if (!brand || !['vasita', 'alisveris'].includes(category)) {
+      setModels([]);
+      return;
+    }
+    fetch(`/api/vehicle-data?type=models&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}`)
+      .then(res => res.json())
+      .then(data => {
+         const extra = Object.keys(((MODEL_SERIES_EXTRA[overrideKeyLocal] || {})[brand] || {}));
+         const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+         setModels(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
+      })
+      .catch(() => setModels([]));
+  }, [brand, category, overrideKeyLocal]);
+
+  useEffect(() => {
+    if (!brand || !modelVal) {
+      setSeries([]);
+      return;
+    }
+    fetch(`/api/vehicle-data?type=series&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(modelVal)}`)
+      .then(res => res.json())
+      .then(data => {
+        const seriesExtra = (MODEL_SERIES_EXTRA[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
+        const brandSeries = seriesExtra[brand] || {};
+        const extra = brandSeries[modelVal] || [];
+        
+        const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+        const sorted = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
+        setSeries(sorted.length ? sorted : ['Standart']);
+      })
+      .catch(() => setSeries(['Standart']));
+  }, [brand, modelVal, overrideKeyLocal]);
+
+  useEffect(() => {
+    if (!brand || !modelVal || !seriesVal) {
+      setTrims([]);
+      return;
+    }
+    fetch(`/api/vehicle-data?type=trims&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(modelVal)}&series=${encodeURIComponent(seriesVal)}`)
+      .then(res => res.json())
+      .then(data => {
+         const arr = Array.isArray(data) ? data : [];
+         setTrims(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
+      })
+      .catch(() => setTrims([]));
+  }, [brand, modelVal, seriesVal, overrideKeyLocal]);
+
+  const fields = useMemo(() => {
+    const PRIORITY_KEYS = ['marka', 'model', 'seri', 'paket'];
+
+    const sortFields = (items: AttrFieldLocal[]) => {
+      return items.slice().sort((a, b) => {
+        const aKey = a.key || '';
+        const bKey = b.key || '';
+        const aIndex = PRIORITY_KEYS.indexOf(aKey);
+        const bIndex = PRIORITY_KEYS.indexOf(bKey);
+        if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+        if (aIndex !== -1) return -1;
+        if (bIndex !== -1) return 1;
+        return 0;
+      });
+    };
+
+    if (Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0) {
+      const withScope = dynamicAttributes.filter((attr: any) => {
+        if (!attr) return false;
+        // Filter by showInOffer
+        if (attr.showInOffer === false) return false;
+
+        if (!attr.subCategoryId) return true;
+        if (!attr.subCategory) return false;
+        if (!subcategory) return false;
+        return attr.subCategory.slug === subcategory;
+      });
+
+      const source = withScope.length > 0 ? withScope : dynamicAttributes.filter((attr: any) => attr && !attr.subCategoryId && attr.showInOffer !== false);
+
+      const mapped = source.map((attr: any) => {
+        if (!attr) return null;
+        let options: string[] = [];
+        try {
+          if (attr.optionsJson) {
+            const parsed = JSON.parse(attr.optionsJson);
+            if (Array.isArray(parsed)) {
+              options = parsed;
+            }
+          }
+        } catch {}
+
+        return {
+          key: attr.slug,
+          label: attr.name,
+          type: attr.type === 'checkbox' ? 'boolean' : attr.type,
+          required: attr.required,
+          options: Array.isArray(options) && options.length > 0 ? options : undefined,
+          minKey: attr.type === 'range-number' ? `${attr.slug}Min` : undefined,
+          maxKey: attr.type === 'range-number' ? `${attr.slug}Max` : undefined,
+          minLabel: attr.type === 'range-number' ? 'En az' : undefined,
+          maxLabel: attr.type === 'range-number' ? 'En çok' : undefined,
+        } as AttrFieldLocal;
+      }).filter((item): item is AttrFieldLocal => !!item);
+
+      return sortFields(mapped);
+    }
+
+    // REMOVED: Static Fallback
+    return [];
+  }, [category, subcategory, dynamicAttributes, models, series, trims]);
   
   if (!fields.length) return (
     <div className="flex flex-col items-center justify-center py-12 text-center bg-white rounded-2xl border border-gray-200 shadow-sm">
@@ -272,56 +373,23 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                     >
                       <option value="">Seçiniz</option>
                       {(() => {
-                        const brand = String(attributes['marka'] || '').trim();
-                        const overrideKeyLocal = `${category}/${subcategory || ''}`;
                         let opts = f.options ? [...f.options] : [];
+                        
                         if (f.key === 'marka' && overrideKeyLocal === 'vasita/otomobil') {
                           // Use default options
                         }
-                        if (f.key === 'model' && brand && BRAND_MODELS[overrideKeyLocal]) {
-                          const base = BRAND_MODELS[overrideKeyLocal][brand] || [];
-                          const extra = Object.keys(((MODEL_SERIES_EXTRA[overrideKeyLocal] || {})[brand] || {}));
-                          const arr = [...base, ...extra];
-                          opts = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
+                        
+                        if (f.key === 'model' && brand) {
+                           opts = models;
                         } else if (f.key === 'seri') {
-                          const modelVal = String(attributes['model'] || '').trim();
-                          const seriesBase = (MODEL_SERIES[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
-                          const seriesExtra = (MODEL_SERIES_EXTRA[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
-                          const brandSeries = { ...(seriesBase[brand] || {}), ...(seriesExtra[brand] || {}) } as Record<string, string[]>;
-                          if (brand && modelVal && brandSeries && brandSeries[modelVal]) {
-                            const arr: string[] = brandSeries[modelVal] || [];
-                            const sorted = Array.from(new Set<string>(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
-                            opts = sorted.length ? sorted : ['Standart'];
-                          } else {
-                            opts = ['Standart'];
-                          }
+                           opts = series;
                         } else if (f.key === 'paket') {
-                          const modelVal = String(attributes['model'] || '').trim();
-                          const seriesVal = String(attributes['seri'] || '').trim();
-                          let trimOpts: string[] | undefined;
-                          if (overrideKeyLocal === 'vasita/otomobil') {
-                            type TrimTree = Record<string, Record<string, Record<string, string[]>>>;
-                            const trimsBase = (SERIES_TRIMS['vasita/otomobil'] || {}) as TrimTree;
-                            const trimsExtra = (SERIES_TRIMS_EXTRA['vasita/otomobil'] || {}) as TrimTree;
-                            const brandMap = {
-                              ...(trimsBase[brand] || {}),
-                              ...(trimsExtra[brand] || {}),
-                            } as Record<string, Record<string, string[]>>;
-                            const modelMap = brandMap[modelVal] || {};
-                            trimOpts = modelMap[seriesVal];
-                          } else {
-                            type TrimTree = Record<string, Record<string, Record<string, string[]>>>;
-                            const exMap = SERIES_TRIMS_EX[`vasita/${subcategory || ''}`] as TrimTree | undefined;
-                            trimOpts = exMap?.[brand]?.[modelVal]?.[seriesVal];
-                          }
-                          const arr = trimOpts && trimOpts.length ? trimOpts : [];
-                          const sorted = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
-                          if (sorted.length) {
-                            opts = sorted;
-                          } else {
-                            const defaultPaket = (ATTR_SUBSCHEMAS['vasita/otomobil'] || []).find((ff)=> ff.key === 'paket')?.options || ['Base','Comfort','Elegance','Premium','Sport','AMG Line','M Sport','S-Line','Trendline','Highline'];
-                            opts = defaultPaket;
-                          }
+                           if (trims.length > 0) {
+                              opts = trims;
+                           } else {
+                              const defaultPaket = ['Base','Comfort','Elegance','Premium','Sport','AMG Line','M Sport','S-Line','Trendline','Highline'];
+                              opts = defaultPaket;
+                           }
                         }
                         return opts.map((o) => (
                           <option key={o} value={o}>{o}</option>
@@ -490,6 +558,7 @@ const PricingStep = memo(function PricingStep({ formData, errors, updateFormData
             <input
               type="number"
               min="0"
+              step="1"
               value={formData.price}
               onChange={(e) => {
                 const val = e.target.value;
@@ -561,7 +630,20 @@ const PricingStep = memo(function PricingStep({ formData, errors, updateFormData
   );
 });
 
-const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, errors }: { formData: FormData, attrs: any, updateFormData: (field: keyof FormData, value: any) => void, errors: Partial<Record<keyof FormData, string>> }) {
+const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, errors, dynamicAttributes }: { formData: FormData, attrs: any, updateFormData: (field: keyof FormData, value: any) => void, errors: Partial<Record<keyof FormData, string>>, dynamicAttributes: any[] | null }) {
+  
+  const attrLabelMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if (Array.isArray(dynamicAttributes)) {
+      dynamicAttributes.forEach((attr: any) => {
+        if (attr) {
+          map.set(attr.slug, attr.name);
+        }
+      });
+    }
+    return map;
+  }, [dynamicAttributes]);
+
   return (
   <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -598,8 +680,14 @@ const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, e
             </h4>
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
               {formData.images.map((img, i) => (
-                <div key={`${img}-${i}`} className="aspect-square rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition-all">
-                  <img src={img} alt={`Teklif görseli ${i+1}`} className="w-full h-full object-cover" />
+                <div key={`${img}-${i}`} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition-all">
+                  <Image 
+                    src={img} 
+                    alt={`Teklif görseli ${i+1}`} 
+                    fill
+                    sizes="(max-width: 768px) 25vw, 20vw"
+                    className="object-cover" 
+                  />
                 </div>
               ))}
             </div>
@@ -617,7 +705,9 @@ const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, e
               {Object.entries(attrs).map(([k, v]: any) => {
                 const s = String(v);
                 const parts = s.split(',').map(p => p.trim()).filter(Boolean);
-                const label = k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').trim();
+                
+                // Use dynamic map first, then fallback to title case
+                const label = attrLabelMap.get(k) || k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').trim();
                 
                 return (
                   <div key={k} className="flex flex-col bg-gray-50 p-3 rounded-xl border border-gray-100 hover:border-gray-300 transition-colors">
@@ -652,7 +742,7 @@ const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, e
               className={`w-full px-5 py-4 border rounded-2xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none ${errors.message ? 'border-red-300 focus:ring-red-200 bg-red-50' : 'border-gray-200 bg-gray-50 focus:bg-white'}`}
             />
             <div className="absolute bottom-4 right-4 text-xs text-gray-400 font-medium bg-white/80 px-2 py-1 rounded-full backdrop-blur-sm border border-gray-100 shadow-sm">
-              {formData.message.length} karakter
+              {(formData.message || '').length} karakter
             </div>
           </div>
           {errors.message && (
@@ -671,19 +761,10 @@ const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, e
 const ListingDetailsCard = memo(function ListingDetailsCard({ listing }: { listing: any }) {
   if (!listing) return null;
 
-  const getCategoryName = (slug: string) => {
-    const cat = CATEGORIES.find(c => c.slug === slug);
-    return cat ? cat.name : slug;
-  };
-  
-  const getSubCategoryName = (catSlug: string, subSlug: string) => {
-    const cat = CATEGORIES.find(c => c.slug === catSlug);
-    const sub = cat?.subcategories.find(s => s.slug === subSlug);
-    return sub ? sub.name : subSlug;
-  };
-
-  const categoryName = listing.category?.name || (listing.category?.slug ? getCategoryName(listing.category.slug) : 'Kategori');
-  const subCategoryName = listing.subCategory?.name || (listing.subCategory?.slug ? getSubCategoryName(listing.category?.slug, listing.subCategory.slug) : 'Alt Kategori');
+  const categoryName =
+    listing.category?.name || listing.category?.slug || "Kategori";
+  const subCategoryName =
+    listing.subCategory?.name || listing.subCategory?.slug || "Alt Kategori";
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden sticky top-8">
@@ -729,11 +810,11 @@ const ListingDetailsCard = memo(function ListingDetailsCard({ listing }: { listi
               to = budget;
             } else if (hasMin) {
               return (
-                <div className="flex items-center justify-between bg-cyan-50 px-4 py-3 rounded-xl border border-cyan-100">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 bg-cyan-50 px-4 py-3 rounded-xl border border-cyan-100">
                   <span className="text-xs font-bold text-cyan-600 uppercase tracking-wider flex items-center gap-1">
                     <Tag className="w-3 h-3" /> Bütçe
                   </span>
-                  <span className="text-lg font-bold text-cyan-700">
+                  <span className="text-lg font-bold text-cyan-700 text-right sm:text-left">
                     {minP.toLocaleString('tr-TR')} - ∞
                   </span>
                 </div>
@@ -749,11 +830,11 @@ const ListingDetailsCard = memo(function ListingDetailsCard({ listing }: { listi
             }
 
             return (
-              <div className="flex items-center justify-between bg-cyan-50 px-4 py-3 rounded-xl border border-cyan-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 bg-cyan-50 px-4 py-3 rounded-xl border border-cyan-100">
                 <span className="text-xs font-bold text-cyan-600 uppercase tracking-wider flex items-center gap-1">
                   <Tag className="w-3 h-3" /> Bütçe
                 </span>
-                <span className="text-lg font-bold text-cyan-700">
+                <span className="text-lg font-bold text-cyan-700 text-right sm:text-left">
                   {from.toLocaleString('tr-TR')} - {to.toLocaleString('tr-TR')}
                 </span>
               </div>
@@ -838,10 +919,12 @@ export default function TeklifVerPage() {
   const [formData, setFormData] = useState<FormData>({ price: "", message: "", images: [] });
   const [listing, setListing] = useState<any>(null);
   const [attributes, setAttributes] = useState<any>({});
+  const [dynamicAttributes, setDynamicAttributes] = useState<any[] | null>(null);
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>> & { images?: string }>({});
   const [attributeErrors, setAttributeErrors] = useState<Record<string, string>>({});
   const [missingRequiredFields, setMissingRequiredFields] = useState<string[]>([]);
+  const [blockedReason, setBlockedReason] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState("");
@@ -857,12 +940,42 @@ export default function TeklifVerPage() {
         if (category) {
            const overrideKey = `${category}/${subcategory || ''}`;
            const labelMap: Record<string, string> = {};
-           const combined = [
-             ...((ATTRS[category] ?? [])),
-             ...((ATTR_SUBSCHEMAS[overrideKey] ?? [])),
-           ];
+           let fieldsForValidation: AttrField[] = [];
+
+           if (Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0) {
+             const withScope = dynamicAttributes.filter((attr: any) => {
+               if (!attr) return false;
+               if (!attr.subCategoryId) return true;
+               if (!attr.subCategory) return false;
+               if (!subcategory) return false;
+               return attr.subCategory.slug === subcategory;
+             });
+             const source = withScope.length > 0 ? withScope : dynamicAttributes.filter((attr: any) => attr && !attr.subCategoryId);
+             fieldsForValidation = source.map((attr: any) => {
+               if (!attr) return null;
+               let options: string[] = [];
+               try {
+                 if (attr.optionsJson) {
+                   const parsed = JSON.parse(attr.optionsJson);
+                   if (Array.isArray(parsed)) {
+                     options = parsed;
+                   }
+                 }
+               } catch {}
+               return {
+                 key: attr.slug,
+                 label: attr.name,
+                 type: attr.type === 'checkbox' ? 'boolean' : attr.type,
+                 required: attr.required,
+                 options: Array.isArray(options) && options.length > 0 ? options : undefined,
+                 minKey: attr.type === 'range-number' ? `${attr.slug}Min` : undefined,
+                 maxKey: attr.type === 'range-number' ? `${attr.slug}Max` : undefined,
+               } as AttrField;
+             }).filter((item): item is AttrField => !!item);
+           }
+
            const fieldMap = new Map<string, AttrField>();
-           combined.forEach((f) => {
+           fieldsForValidation.forEach((f) => {
              const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
              fieldMap.set(id, f);
              if (f.key) {
@@ -922,7 +1035,7 @@ export default function TeklifVerPage() {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData, attributes, listing]);
+  }, [formData, attributes, listing, dynamicAttributes]);
 
   const updateFormData = useCallback((field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -954,11 +1067,12 @@ export default function TeklifVerPage() {
   }, []);
 
   const nextStep = useCallback(() => {
+    if (blockedReason) return;
     if (validateStep(currentStep) && currentStep < STEPS.length) {
       setCurrentStep(prev => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [validateStep, currentStep]);
+  }, [validateStep, currentStep, blockedReason]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
@@ -970,35 +1084,63 @@ export default function TeklifVerPage() {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
+    if (blockedReason) {
+      toast({ title: 'Hata', description: blockedReason, variant: 'destructive' });
+      return;
+    }
     
     if (currentStep < STEPS.length) {
       nextStep();
       return;
     }
 
+    if (listing?.status && listing.status !== 'OPEN') {
+      const msg = 'Bu talep henüz yayında değil.';
+      setSubmitError(msg);
+      toast({ title: 'Hata', description: msg, variant: 'destructive' });
+      return;
+    }
     if (!validateStep(currentStep)) return;
     try {
       setIsSubmitting(true);
       setSubmitError("");
       setSubmitSuccess("");
+      const listingId =
+        (listing?.id as string | undefined) ||
+        (typeof params?.id === "string"
+          ? params.id
+          : Array.isArray(params?.id)
+            ? params?.id[0]
+            : "");
       const res = await fetch('/api/teklif-ver', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          listingId: params?.id,
+          listingId,
           price: formData.price,
           message: formData.message,
           attributes,
           images: formData.images,
         }),
       });
-      const data = await res.json();
+      if (res.status === 401) {
+        const callbackUrl = `/teklif-ver/${listingId || params?.id || ''}`;
+        toast({ title: 'Oturum Gerekli', description: 'Teklif vermek için tekrar giriş yapmalısınız.', variant: 'destructive' });
+        router.push(`/giris?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+        return;
+      }
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
       if (res.ok) {
         toast({ title: 'Başarılı!', description: 'Teklifiniz gönderildi', variant: 'success' });
         setSubmitSuccess('Teklifiniz başarıyla gönderildi');
         setTimeout(() => { router.push(`/talep/${params?.id}`); }, 1500);
       } else {
-        const msg = data?.error || 'Teklif gönderilemedi';
+        const msg = data?.error || `Teklif gönderilemedi (HTTP ${res.status})`;
         setSubmitError(msg);
         toast({ title: 'Hata', description: msg, variant: 'destructive' });
       }
@@ -1009,7 +1151,7 @@ export default function TeklifVerPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, params?.id, currentStep, validateStep, router, attributes, isSubmitting]);
+  }, [formData, params?.id, currentStep, validateStep, router, attributes, isSubmitting, listing?.id, listing?.status, nextStep, blockedReason]);
 
   useEffect(() => {
     let active = true;
@@ -1020,8 +1162,41 @@ export default function TeklifVerPage() {
           const data = await res.json();
           if (!active) return;
           setListing(data);
+          if (data?.status && data.status !== 'OPEN') {
+            setBlockedReason('Bu talep henüz yayında değil.');
+          } else if (data?.currentUserId && Array.isArray(data?.offers)) {
+            const hasPending = data.offers.some((o: any) => o && o.sellerId === data.currentUserId && o.status === 'PENDING');
+            if (hasPending) {
+              setBlockedReason('Bu talep için zaten bekleyen bir teklifiniz var. Talep sahibi yanıtlayana kadar yeni teklif veremezsiniz.');
+            } else {
+              setBlockedReason('');
+            }
+          } else {
+            setBlockedReason('');
+          }
           if (!formData.price && typeof data.price === 'number') {
             setFormData(prev => ({ ...prev, price: String(Math.max(1, Math.floor(data.price * 0.9))) }));
+          }
+
+          const catSlug = data?.category?.slug;
+          if (catSlug) {
+            try {
+              console.log("Fetching categories for slug:", catSlug);
+              const catRes = await fetch('/api/categories');
+              if (catRes.ok) {
+                const cats = await catRes.json();
+                if (!active) return;
+                if (Array.isArray(cats)) {
+                  const cat = cats.find((c: any) => c.slug === catSlug);
+                  console.log("Found category:", cat ? cat.name : "None", "Attributes:", cat?.attributes?.length);
+                  if (cat && Array.isArray(cat.attributes)) {
+                    setDynamicAttributes(cat.attributes);
+                  }
+                }
+              }
+            } catch (err) {
+              console.error("Error fetching categories:", err);
+            }
           }
         }
       } catch {}
@@ -1040,6 +1215,7 @@ export default function TeklifVerPage() {
             errors={attributeErrors}
             onChange={handleAttributeChange}
             listingAttributes={listing?.attributes}
+            dynamicAttributes={dynamicAttributes || []}
           />
         );
       case 2:
@@ -1047,7 +1223,7 @@ export default function TeklifVerPage() {
       case 3:
         return <ImageUploadStep images={formData.images} updateImages={updateImages} error={errors.images} />;
       case 4:
-        return <ReviewStep formData={formData} attrs={attributes} updateFormData={updateFormData} errors={errors} />;
+        return <ReviewStep formData={formData} attrs={attributes} updateFormData={updateFormData} errors={errors} dynamicAttributes={dynamicAttributes} />;
       default:
         return null;
     }
@@ -1101,6 +1277,15 @@ export default function TeklifVerPage() {
                   </div>
                 </div>
               )}
+              {blockedReason && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3 text-red-700 animate-in fade-in slide-in-from-top-2">
+                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-sm">Teklif Verilemedi</h4>
+                    <p className="text-sm mt-1">{blockedReason}</p>
+                  </div>
+                </div>
+              )}
               {submitSuccess && (
                 <div className="mb-6 p-4 bg-lime-50 border border-lime-100 rounded-xl flex items-start gap-3 text-lime-700 animate-in fade-in slide-in-from-top-2">
                   <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
@@ -1135,7 +1320,12 @@ export default function TeklifVerPage() {
                     <button
                       type="button"
                       onClick={nextStep}
-                      className="flex items-center gap-2 px-8 py-3 bg-cyan-600 text-white rounded-xl font-bold hover:bg-cyan-700 transition-all shadow-lg shadow-cyan-200 hover:shadow-cyan-300 transform hover:-translate-y-0.5"
+                      disabled={!!blockedReason}
+                      className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold transition-all shadow-lg transform hover:-translate-y-0.5 ${
+                        blockedReason
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-gray-100'
+                          : 'bg-cyan-600 text-white hover:bg-cyan-700 shadow-cyan-200 hover:shadow-cyan-300'
+                      }`}
                     >
                       Devam Et
                       <ArrowRight className="w-4 h-4" />
@@ -1143,10 +1333,10 @@ export default function TeklifVerPage() {
                   ) : (
                     <button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !!blockedReason}
                       className={`
                         flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-white transition-all shadow-lg transform hover:-translate-y-0.5
-                        ${isSubmitting 
+                        ${isSubmitting || blockedReason
                           ? 'bg-gray-400 cursor-not-allowed' 
                           : 'bg-lime-600 hover:bg-lime-700 shadow-lime-200 hover:shadow-lime-300'
                         }

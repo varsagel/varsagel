@@ -19,6 +19,33 @@ export interface ListingSearchParams {
   [key: string]: string | number | boolean | string[] | undefined;
 }
 
+export type ListingCardStatus = 'active' | 'pending' | 'sold'
+
+export interface ListingCardItem {
+  id: string
+  title: string
+  description: string
+  price: number
+  category: string
+  subcategory?: string
+  location: { city: string; district: string }
+  images: string[]
+  attributes: Record<string, any>
+  buyer: { name: string; rating: number }
+  createdAt: string
+  status: ListingCardStatus
+  viewCount: number
+  isFavorited: boolean
+}
+
+type ListingWithRelations = Prisma.ListingGetPayload<{
+  include: {
+    category: true
+    subCategory: true
+    owner: { select: { id: true; name: true } }
+  }
+}>
+
 export async function getListings(params: ListingSearchParams) {
   const page = Math.max(1, params.page || 1);
   const limit = Math.max(1, Math.min(50, params.limit || 20));
@@ -33,8 +60,19 @@ export async function getListings(params: ListingSearchParams) {
     whereClause.id = { in: params.ids };
   }
 
+  // Map status to Prisma Enum
+  const statusMap: Record<string, 'OPEN' | 'PENDING' | 'SOLD'> = {
+    'active': 'OPEN',
+    'pending': 'PENDING',
+    'sold': 'SOLD',
+    'OPEN': 'OPEN',
+    'PENDING': 'PENDING',
+    'SOLD': 'SOLD'
+  };
+
   if (params.status) {
-    whereClause.status = params.status;
+    const mapped = statusMap[params.status];
+    if (mapped) whereClause.status = mapped;
   } else if (!params.userId && (!params.ids || params.ids.length === 0)) {
     whereClause.status = 'OPEN';
   }
@@ -44,15 +82,15 @@ export async function getListings(params: ListingSearchParams) {
 
   if (params.q) {
     whereClause.OR = [
-      { title: { contains: params.q } },
-      { description: { contains: params.q } },
-      { city: { contains: params.q } },
-      { district: { contains: params.q } },
-      { category: { name: { contains: params.q } } },
-      { subCategory: { name: { contains: params.q } } },
-      { attributesJson: { contains: params.q } },
-      { owner: { name: { contains: params.q } } },
-      { code: { contains: params.q } },
+      { title: { contains: params.q, mode: 'insensitive' } },
+      { description: { contains: params.q, mode: 'insensitive' } },
+      { city: { contains: params.q, mode: 'insensitive' } },
+      { district: { contains: params.q, mode: 'insensitive' } },
+      { category: { name: { contains: params.q, mode: 'insensitive' } } },
+      { subCategory: { name: { contains: params.q, mode: 'insensitive' } } },
+      { attributesJson: { contains: params.q, mode: 'insensitive' } },
+      { owner: { name: { contains: params.q, mode: 'insensitive' } } },
+      { code: { contains: params.q, mode: 'insensitive' } },
     ];
   }
 
@@ -61,8 +99,8 @@ export async function getListings(params: ListingSearchParams) {
   if (params.maxPrice !== undefined) priceFilter.lte = BigInt(params.maxPrice);
   if (priceFilter.gte !== undefined || priceFilter.lte !== undefined) whereClause.budget = priceFilter;
 
-  if (params.city) whereClause.city = { contains: params.city };
-  if (params.district) whereClause.district = { contains: params.district };
+  if (params.city) whereClause.city = { contains: params.city, mode: 'insensitive' };
+  if (params.district) whereClause.district = { contains: params.district, mode: 'insensitive' };
 
   let orderBy: Prisma.ListingOrderByWithRelationInput = { createdAt: 'desc' };
   const sort = params.sort || 'newest';
@@ -73,33 +111,63 @@ export async function getListings(params: ListingSearchParams) {
   else if (sort === 'buyer') orderBy = { owner: { name: 'asc' } };
 
   // Handle Attribute Filtering
-  // Identify attribute keys (keys not in standard list)
-  const baseKeys = new Set(['userId','category','subcategory','q','minPrice','maxPrice','city','district','status','sort','ids', 'page', 'limit']);
+  const baseKeys = new Set(['userId', 'category', 'subcategory', 'q', 'minPrice', 'maxPrice', 'city', 'district', 'status', 'sort', 'ids', 'page', 'limit']);
   const attrKeys = Object.keys(params).filter(k => !baseKeys.has(k));
   const hasAttrFilters = attrKeys.length > 0;
 
-  let listings;
+  let listings: ListingWithRelations[] = [];
   let totalCount = 0;
 
   if (hasAttrFilters) {
-    // Fetch more for in-memory filtering
-    const allMatches = await prisma.listing.findMany({
+    // Pre-filtering: Add 'contains' checks for string values to reduce DB fetch size
+    // This assumes attributesJson stores values in a way that 'contains' can match (e.g. JSON string)
+    const attrConditions: Prisma.ListingWhereInput[] = [];
+    for (const k of attrKeys) {
+      const v = params[k];
+      if (!v) continue;
+      // Skip range keys for simple string matching
+      if (k.endsWith('Min') || k.endsWith('Max')) continue;
+      
+      if (typeof v === 'string') {
+        // We search for the value in the JSON string. 
+        // This is heuristic and might return false positives, but strict JS filtering below fixes it.
+        attrConditions.push({ attributesJson: { contains: v, mode: 'insensitive' } });
+      }
+    }
+
+    if (attrConditions.length > 0) {
+      if (!whereClause.AND) whereClause.AND = [];
+      if (Array.isArray(whereClause.AND)) {
+        whereClause.AND.push(...attrConditions);
+      } else {
+        whereClause.AND = [whereClause.AND as Prisma.ListingWhereInput, ...attrConditions];
+      }
+    }
+
+    // Optimized Strategy:
+    // 1. Fetch lightweight data (ID + attributesJson) for a larger set
+    // We only select ID and attributesJson to minimize memory usage and allow higher limits
+    const candidates = await prisma.listing.findMany({
       where: whereClause,
-      include: {
-        category: true,
-        subCategory: true,
-        owner: { select: { id: true, name: true, email: true } },
+      select: {
+        id: true,
+        attributesJson: true,
       },
       orderBy,
-      take: 500 
+      take: 2500 // Increased from 1000 to 2500 for better recall
     });
 
     const safeParse = (text: string | null) => {
       if (!text) return {};
-      try { return JSON.parse(text); } catch { return {}; }
+      try {
+        const parsed = JSON.parse(text);
+        return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+      } catch {
+        return {};
+      }
     };
 
-    const filtered = allMatches.filter((l) => {
+    const filteredIds = candidates.filter((l) => {
       const attrs = safeParse(l.attributesJson);
       for (const k of attrKeys) {
         const v = params[k];
@@ -113,19 +181,41 @@ export async function getListings(params: ListingSearchParams) {
           if (actual !== undefined && Number(actual) > Number(v)) return false;
         } else {
           const actual = attrs[k];
-          if (actual === undefined) continue;
+          if (actual === undefined) return false; // Strict: if filter exists, attribute must exist
+          
           const reqParts = String(v).split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
           const actParts = String(actual).split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+          
           if (reqParts.length === 0) continue;
+          
+          // Check if ANY requested part matches ANY actual part (OR logic within field)
           const matches = reqParts.some(rp => actParts.includes(rp));
           if (!matches) return false;
         }
       }
       return true;
-    });
+    }).map(l => l.id);
 
-    totalCount = filtered.length;
-    listings = filtered.slice(skip, skip + limit);
+    totalCount = filteredIds.length;
+    const pageIds = filteredIds.slice(skip, skip + limit);
+
+    if (pageIds.length > 0) {
+      // 2. Fetch full data only for the current page
+      const pageListings = await prisma.listing.findMany({
+        where: { id: { in: pageIds } },
+        include: {
+          category: true,
+          subCategory: true,
+          owner: { select: { id: true, name: true } },
+        },
+      });
+      
+      // Re-order to match the original sort (since 'IN' query doesn't preserve order)
+      const listingMap = new Map(pageListings.map(l => [l.id, l]));
+      listings = pageIds.map(id => listingMap.get(id)!).filter(Boolean);
+    } else {
+      listings = [];
+    }
   } else {
     totalCount = await prisma.listing.count({ where: whereClause });
     listings = await prisma.listing.findMany({
@@ -133,7 +223,7 @@ export async function getListings(params: ListingSearchParams) {
       include: {
         category: true,
         subCategory: true,
-        owner: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true } },
       },
       orderBy,
       take: limit,
@@ -152,21 +242,37 @@ export async function getListings(params: ListingSearchParams) {
     favoriteIds = new Set(favs.map((f) => f.listingId));
   }
 
-  const formattedListings = listings.map((listing) => {
-    const images = (() => { try { return listing.imagesJson ? JSON.parse(listing.imagesJson) : []; } catch { return []; } })();
+  const formattedListings: ListingCardItem[] = listings.map((listing) => {
+    const images = (() => {
+      try {
+        const parsed = listing.imagesJson ? JSON.parse(listing.imagesJson) : [];
+        return Array.isArray(parsed) ? (parsed as string[]) : [];
+      } catch {
+        return [];
+      }
+    })();
+    const attributes = (() => {
+      try {
+        const parsed = listing.attributesJson ? JSON.parse(listing.attributesJson) : {};
+        return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+      } catch {
+        return {};
+      }
+    })();
+    const status: ListingCardStatus = listing.status === 'OPEN' ? 'active' : listing.status === 'PENDING' ? 'pending' : 'sold';
     return {
       id: listing.id,
       title: listing.title,
       description: listing.description,
       price: listing.budget ? Number(listing.budget) : 0,
       category: listing.category?.slug || '',
-      subcategory: listing.subCategory?.slug || '',
+      subcategory: listing.subCategory?.slug,
       location: { city: listing.city || '', district: listing.district || '' },
       images,
-      attributes: listing.attributesJson ? JSON.parse(listing.attributesJson) : {},
+      attributes,
       buyer: { name: listing.owner?.name || 'Anonim', rating: 4.5 },
       createdAt: listing.createdAt.toISOString(),
-      status: listing.status === 'OPEN' ? 'active' : listing.status === 'PENDING' ? 'pending' : 'sold',
+      status,
       viewCount: listing.viewCount || 0,
       isFavorited: sessionUserId ? favoriteIds.has(listing.id) : false,
     };

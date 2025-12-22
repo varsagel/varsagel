@@ -1,0 +1,73 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bikeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#DC2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EF4444;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9CA3AF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6B7280;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="4" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="#FEF2F2"/>
+  
+  <!-- Road -->
+  <rect x="0" y="200" width="400" height="100" fill="#374151"/>
+  <rect x="0" y="240" width="400" height="4" fill="#FCD34D"/>
+  <rect x="50" y="242" width="30" height="4" fill="#FCD34D"/>
+  <rect x="120" y="242" width="30" height="4" fill="#FCD34D"/>
+  <rect x="190" y="242" width="30" height="4" fill="#FCD34D"/>
+  <rect x="260" y="242" width="30" height="4" fill="#FCD34D"/>
+  <rect x="330" y="242" width="30" height="4" fill="#FCD34D"/>
+  
+  <!-- Motorcycle Body -->
+  <g transform="translate(150, 140)">
+    <!-- Main body -->
+    <ellipse cx="50" cy="30" rx="40" ry="15" fill="url(#bikeGrad)" filter="url(#shadow)"/>
+    
+    <!-- Engine -->
+    <rect x="30" y="35" width="40" height="25" rx="5" fill="#1F2937"/>
+    
+    <!-- Wheels -->
+    <circle cx="20" cy="70" r="12" fill="url(#chromeGrad)"/>
+    <circle cx="80" cy="70" r="12" fill="url(#chromeGrad)"/>
+    <circle cx="20" cy="70" r="6" fill="#374151"/>
+    <circle cx="80" cy="70" r="6" fill="#374151"/>
+    
+    <!-- Handlebars -->
+    <line x1="15" y1="20" x2="25" y2="10" stroke="#1F2937" stroke-width="4"/>
+    <line x1="75" y1="20" x2="85" y2="10" stroke="#1F2937" stroke-width="4"/>
+    <line x1="25" y1="10" x2="85" y2="10" stroke="#1F2937" stroke-width="3"/>
+    
+    <!-- Headlight -->
+    <circle cx="85" cy="15" r="5" fill="#FCD34D"/>
+    
+    <!-- Seat -->
+    <rect x="35" y="15" width="30" height="8" rx="4" fill="#1F2937"/>
+    
+    <!-- Exhaust -->
+    <rect x="5" y="45" width="20" height="4" rx="2" fill="#6B7280"/>
+  </g>
+  
+  <!-- For Sale Sign -->
+  <g transform="translate(50, 50)">
+    <rect x="0" y="0" width="80" height="40" rx="8" fill="#EF4444" filter="url(#shadow)"/>
+    <text x="40" y="25" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">SAHİBİNDEN</text>
+  </g>
+  
+  <!-- Background elements -->
+  <g>
+    <!-- Clouds -->
+    <ellipse cx="80" cy="40" rx="20" ry="10" fill="#F3F4F6" opacity="0.8"/>
+    <ellipse cx="320" cy="30" rx="25" ry="12" fill="#F3F4F6" opacity="0.8"/>
+    <ellipse cx="280" cy="60" rx="18" ry="9" fill="#F3F4F6" opacity="0.8"/>
+    
+    <!-- Sun -->
+    <circle cx="350" cy="50" r="20" fill="#FCD34D" opacity="0.6"/>
+  </g>
+</svg>

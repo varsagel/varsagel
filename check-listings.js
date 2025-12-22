@@ -3,9 +3,9 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    console.log('Tüm ilanlar kontrol ediliyor...');
+    console.log('Tüm talepler kontrol ediliyor...');
     
-    // Tüm ilanları getir
+    // Tüm talepleri getir
     const listings = await prisma.listing.findMany({
       include: {
         category: true,
@@ -17,13 +17,13 @@ async function main() {
       }
     });
     
-    console.log(`Toplam ilan sayısı: ${listings.length}`);
+    console.log(`Toplam talep sayısı: ${listings.length}`);
     
     if (listings.length === 0) {
-      console.log('Henüz hiç ilan yok.');
+      console.log('Henüz hiç talep yok.');
     } else {
       listings.forEach((listing, index) => {
-        console.log(`\n--- İlan ${index + 1} ---`);
+        console.log(`\n--- Talep ${index + 1} ---`);
         console.log(`ID: ${listing.id}`);
         console.log(`Başlık: ${listing.title}`);
         console.log(`Açıklama: ${listing.description}`);

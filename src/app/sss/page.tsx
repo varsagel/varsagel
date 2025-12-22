@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
@@ -30,11 +30,31 @@ const faqs = [
   }
 ];
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com';
+
 export default function SSSPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.answer,
+      },
+    })),
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen pb-20">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="bg-cyan-600 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">Sıkça Sorulan Sorular</h1>

@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 // @ts-ignore
 import bcrypt from "bcrypt";
 
+const PASSWORD_RESET_PREFIX = "password-reset:";
+
 export async function POST(request: Request) {
   try {
     const { token, password } = await request.json();
@@ -11,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Token ve şifre gereklidir" }, { status: 400 });
     }
 
-    const resetToken = await prisma.passwordResetToken.findUnique({
+    const resetToken = await prisma.verificationToken.findUnique({
       where: { token },
     });
 
@@ -19,13 +21,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Geçersiz veya süresi dolmuş token" }, { status: 400 });
     }
 
+    if (!resetToken.identifier.startsWith(PASSWORD_RESET_PREFIX)) {
+      return NextResponse.json({ message: "Geçersiz veya süresi dolmuş token" }, { status: 400 });
+    }
+
     if (new Date() > resetToken.expires) {
-      await prisma.passwordResetToken.delete({ where: { token } });
+      await prisma.verificationToken.delete({ where: { token } });
       return NextResponse.json({ message: "Token süresi dolmuş" }, { status: 400 });
     }
 
+    const email = resetToken.identifier.slice(PASSWORD_RESET_PREFIX.length);
+
     const user = await prisma.user.findUnique({
-      where: { email: resetToken.identifier },
+      where: { email },
     });
 
     if (!user) {
@@ -39,7 +47,7 @@ export async function POST(request: Request) {
       data: { passwordHash },
     });
 
-    await prisma.passwordResetToken.delete({ where: { token } });
+    await prisma.verificationToken.delete({ where: { token } });
 
     return NextResponse.json({ ok: true, message: "Şifreniz başarıyla güncellendi" });
   } catch (error) {

@@ -17,7 +17,8 @@ type Notification = {
 };
 
 export default function NotificationsPage() {
-  const { status } = useSession();
+  const session = useSession();
+  const status = session?.status || "loading";
   const router = useRouter();
   const [list, setList] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);

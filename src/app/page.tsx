@@ -1,12 +1,44 @@
 import { getListings } from '@/lib/services/listingService';
 import HeroSection from '@/components/home/HeroSection';
-import ListingCard from '@/components/home/TalepCard';
-import Link from 'next/link';
+import HomeListingCard, { ListingItem } from '@/components/home/ListingCard';
 import { CATEGORIES } from '@/data/categories';
-import { ArrowRight, ChevronRight } from 'lucide-react';
-import React from 'react';
+import { ArrowRight, ChevronRight, Heart, X } from 'lucide-react';
+import type { Metadata } from 'next';
+import BRAND_LOGOS from "@/data/brand-logos.json";
+import { Fragment, useMemo } from "react";
+import Link from "next/link";
+import { auth } from '@/auth';
+import { getSubcategoryImage } from '@/data/subcategory-images';
+import FavoriteButton from '@/components/ui/FavoriteButton';
 
-export const dynamic = 'force-dynamic';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com';
+
+export const metadata: Metadata = {
+  title: "Varsagel | Türkiye'nin İlk Alım Platformu",
+  description:
+    "Bütçene göre alım talebini oluştur, güvenilir satıcılardan rekabetçi teklifler al. Türkiye'nin ilk alım platformu Varsagel ile ihtiyacını yaz, onlar sana gelsin.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Varsagel | Türkiye'nin İlk Alım Platformu",
+    description:
+      "Aktif alım taleplerini incele, kendi talebini oluştur veya güvenilir satıcılardan teklifler al.",
+    type: "website",
+    url: baseUrl,
+    siteName: "Varsagel",
+    locale: "tr_TR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Varsagel | Türkiye'nin İlk Alım Platformu",
+    description:
+      "Bütçene göre alım talebini oluştur, satıcılar sana teklif versin.",
+    creator: "@varsagel",
+  },
+};
+
+export const revalidate = 60; // Cache for 1 minute
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -26,10 +58,14 @@ export default async function Home({ searchParams }: PageProps) {
   const district = typeof params.district === 'string' ? params.district : undefined;
   const sort = typeof params.sort === 'string' ? params.sort : 'newest';
 
+  // Get user session
+  const session = await auth();
+  const isAuthenticated = !!session?.user;
+
   // Fetch listings
   const { data: listings, pagination } = await getListings({
     page,
-    limit: 20,
+    limit: 12,
     q,
     category,
     subcategory,
@@ -40,6 +76,21 @@ export default async function Home({ searchParams }: PageProps) {
     sort,
     status: 'OPEN'
   });
+
+  // Construct pagination URL helper
+  const createPageUrl = (newPage: number) => {
+    const newParams = new URLSearchParams();
+    if (q) newParams.set('q', q);
+    if (category) newParams.set('category', category);
+    if (subcategory) newParams.set('subcategory', subcategory);
+    if (minPrice) newParams.set('minPrice', String(minPrice));
+    if (maxPrice) newParams.set('maxPrice', String(maxPrice));
+    if (city) newParams.set('city', city);
+    if (district) newParams.set('district', district);
+    if (sort) newParams.set('sort', sort);
+    newParams.set('page', String(newPage));
+    return `/?${newParams.toString()}`;
+  };
 
   return (
     <div className="min-h-dvh bg-gray-50 pb-20">
@@ -63,7 +114,7 @@ export default async function Home({ searchParams }: PageProps) {
             
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {CATEGORIES.slice(0, 12).map((cat) => (
-                <Link 
+                <Link
                   key={cat.slug} 
                   href={`/kategori/${cat.slug}`}
                   className="group flex flex-col items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300"
@@ -106,9 +157,14 @@ export default async function Home({ searchParams }: PageProps) {
 
         {/* Listings Grid */}
         {listings.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {listings.map((listing: any) => (
-              <ListingCard key={listing.id} listing={listing} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-3">
+            {listings.map((listing, index) => (
+              <HomeListingCard
+                key={listing.id}
+                listing={listing as ListingItem}
+                priority={index < 4}
+                isAuthenticated={isAuthenticated}
+              />
             ))}
           </div>
         ) : (
@@ -134,7 +190,7 @@ export default async function Home({ searchParams }: PageProps) {
           <div className="mt-16 flex items-center justify-center gap-2">
             {page > 1 && (
               <Link
-                href={`/?${new URLSearchParams({ ...params as any, page:String(page - 1) }).toString()}`}
+                href={createPageUrl(page - 1)}
                 className="flex items-center gap-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 text-gray-700 font-medium transition-all"
               >
                 <span className="rotate-180"><ArrowRight className="w-4 h-4" /></span>
@@ -146,10 +202,10 @@ export default async function Home({ searchParams }: PageProps) {
               {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
                 .filter(p => p === 1 || p === pagination.totalPages || Math.abs(p - page) <= 1)
                 .map((p, i, arr) => (
-                  <React.Fragment key={p}>
+                  <Fragment key={p}>
                     {i > 0 && arr[i-1] !== p - 1 && <span className="text-gray-400">...</span>}
                     <Link
-                      href={`/?${new URLSearchParams({ ...params as any, page:String(p) }).toString()}`}
+                      href={createPageUrl(p)}
                       className={`
                         w-10 h-10 flex items-center justify-center rounded-xl font-medium transition-all
                         ${p === page 
@@ -159,7 +215,7 @@ export default async function Home({ searchParams }: PageProps) {
                     >
                       {p}
                     </Link>
-                  </React.Fragment>
+                  </Fragment>
                 ))}
             </div>
             {/* Mobile Pagination Simple */}
@@ -169,7 +225,7 @@ export default async function Home({ searchParams }: PageProps) {
 
             {page < pagination.totalPages && (
               <Link
-                href={`/?${new URLSearchParams({ ...params as any, page:String(page + 1) }).toString()}`}
+                href={createPageUrl(page + 1)}
                 className="flex items-center gap-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 text-gray-700 font-medium transition-all"
               >
                 Sonraki
@@ -182,4 +238,3 @@ export default async function Home({ searchParams }: PageProps) {
     </div>
   );
 }
-

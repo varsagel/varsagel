@@ -3,6 +3,7 @@ const path = require('path');
 const acme = require('acme-client');
 
 (async () => {
+  console.log('Script basliyor...');
   try {
     const domain = 'varsagel.com';
     const altNames = ['www.varsagel.com'];

@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com';
+
 export default function IletisimPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,6 @@ export default function IletisimPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     setLoading(false);
@@ -28,9 +29,34 @@ export default function IletisimPage() {
     (e.target as HTMLFormElement).reset();
   };
 
+  const contactJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    url: `${baseUrl}/iletisim`,
+    name: "Varsagel İletişim",
+    description: "Varsagel ekibiyle iletişime geçin.",
+    publisher: {
+      "@type": "Organization",
+      name: "Varsagel",
+      url: baseUrl,
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          telephone: "+90-850-123-45-67",
+          contactType: "customer support",
+          availableLanguage: ["tr-TR"],
+        },
+      ],
+    },
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen pb-20">
-      {/* Header Banner */}
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
+      />
       <div className="bg-cyan-600 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">İletişim</h1>
@@ -42,7 +68,6 @@ export default function IletisimPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Contact Info Cards */}
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
               <div className="w-12 h-12 bg-cyan-50 rounded-lg flex items-center justify-center text-cyan-600 mb-4">
@@ -81,7 +106,6 @@ export default function IletisimPage() {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className="lg:col-span-2">
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 h-full">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Bize Mesaj Gönderin</h2>
@@ -130,4 +154,3 @@ export default function IletisimPage() {
     </div>
   );
 }
-
