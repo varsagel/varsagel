@@ -90,11 +90,14 @@ export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
     { label: 'Orijinal', key: 'orijinal', type: 'boolean' },
   ],
   alisveris: [
-    { label: 'Marka', key: 'marka', type: 'select', options: ['Apple','Samsung','Xiaomi','Huawei','LG','Sony','Bosch','Arçelik','Vestel','Philips','Diğer'] },
+    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır', 'İkinci El', 'Yenilenmiş', 'Sıfır Ayarında', 'Az Kullanılmış'], required: true },
+    { label: 'Marka', key: 'marka', type: 'select', options: ['Apple', 'Samsung', 'Xiaomi', 'Huawei', 'LG', 'Sony', 'Bosch', 'Arçelik', 'Vestel', 'Philips', 'Beko', 'Siemens', 'Grundig', 'Canon', 'Nikon', 'Dell', 'HP', 'Lenovo', 'Asus', 'Acer', 'MSI', 'Diğer'] },
     { label: 'Garanti', key: 'garanti', type: 'boolean' },
-    { label: 'Renk', key: 'renk', type: 'select', options: ['Beyaz','Siyah','Gri','Gümüş','Altın','Mavi','Kırmızı','Yeşil','Sarı','Turuncu','Kahverengi','Mor','Pembe','Diğer'] },
     { label: 'Garanti Süresi (Ay)', key: 'garantiSuresi', type: 'number' },
-    { label: 'Durum', key: 'durum', type: 'select', options: ['Sıfır','İkinci El','Yenilenmiş'], required: true },
+    { label: 'Renk', key: 'renk', type: 'select', options: ['Beyaz', 'Siyah', 'Gri', 'Gümüş', 'Altın', 'Rose Gold', 'Mavi', 'Kırmızı', 'Yeşil', 'Sarı', 'Turuncu', 'Kahverengi', 'Mor', 'Pembe', 'Lacivert', 'Turkuaz', 'Diğer'] },
+    { label: 'Takas', key: 'takas', type: 'boolean' },
+    { label: 'Fatura', key: 'fatura', type: 'select', options: ['Var', 'Yok'] },
+    { label: 'Kimden', key: 'kimden', type: 'select', options: ['Sahib inden', 'Firmalansan'] },
   ],
   'is-makineleri-sanayi': [
     { label: 'Makine Türü', key: 'makineTuru', type: 'text', required: true },
