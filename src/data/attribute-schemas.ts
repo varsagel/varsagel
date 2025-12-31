@@ -15,7 +15,7 @@ export type AttrField = {
   max?: number
 }
 
-export const ATTR_SCHEMAS_COMPLETE: Record<string, AttrField[]> = {
+export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
   // ============= EMLAK =============
   emlak: [
     // Temel Bilgiler
