@@ -14,8 +14,36 @@ export type AttrField = {
 
 export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
   emlak: [
+    // Temel Bilgiler
+    { label: 'İlan No', key: 'ilanNo', type: 'text' },
+    { label: 'İlan Tarihi', key: 'ilanTarihi', type: 'select', options: ['Son 1 gün', 'Son 7 gün', 'Son 30 gün', 'Tümü'] },
+    { label: 'Oda Sayısı', key: 'odaSayisi', type: 'select', options: ['1+0', '1+1', '2+1', '3+1', '4+1', '5+1', '6+1', '7+1', '8+1', '9+1', '10+ '], required: true },
+    { label: 'Net m²', type: 'range-number', minKey: 'm2Min', maxKey: 'm2Max', minLabel: 'Min m²', maxLabel: 'Max m²', required: true },
+    { label: 'Brüt m²', type: 'range-number', minKey: 'brutM2Min', maxKey: 'brutM2Max' },
+    { label: 'Bina Yaşı', key: 'binaYasi', type: 'select', options: ['0 (Yeni)', '1-5', '6-10', '11-15', '16-20', '21-25', '26-30', '31 ve üzeri'] },
+    { label: 'Kat Sayısı', key: 'katSayisi', type: 'select', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'] },
+    { label: 'Bulunduğu Kat', key: 'bulunduguKat', type: 'select', options: ['Bodrum Kat', 'Zemin Kat', '1. Kat', '2. Kat', '3. Kat', '4. Kat', '5. Kat', '6. Kat', '7. Kat', '8. Kat', '9. Kat', '10. Kat', '11-15. Kat', '16-20. Kat', '21-25. Kat', '26-30. Kat', '31 ve üzeri'] },
+    
+    // Isınma & Yakıt
+    { label: 'Isınma Tipi', key: 'isinmaTipi', type: 'select', options: ['Yok', 'Soba', 'Doğalgaz (Kombi)', 'Doğalgaz (Kat Kaloriferi)', 'Doğalgaz (Merkezi)', 'Merkezi (Pay Ölçer)', 'Yerden Isıtma', 'Klima', 'Fancoil Ünitesi', 'Güneş Enerjisi', 'Elektrikli Radyatör', 'Jeotermal', 'Şömine', 'VRV', 'Isı Pompası'] },
+    
+    // Özellikler
+    { label: 'Banyo Sayısı', key: 'banyoSayisi', type: 'select', options: ['1', '2', '3', '4', '5+'] },
+    { label: 'Balkon', key: 'balkon', type: 'boolean' },
+    { label: 'Asansör', key: 'asansor', type: 'boolean' },
+    { label: 'Otopark', key: 'otopark', type: 'select', options: ['Yok', 'Açık', 'Kapalı'] },
+    { label: 'Eşyalı', key: 'esyali', type: 'boolean' },
+    { label: 'Kullanım Durumu', key: 'kullanimDurumu', type: 'select', options: ['Boş', 'Dolu', 'Kiracılı', 'Mülk Sahibi'] },
+    { label: 'Site İçerisinde', key: 'siteIcinde', type: 'boolean' },
+    { label: 'Yapı Tipi', key: 'yapiTipi', type: 'select', options: ['Betonarme', 'Ahşap', 'Çelik', 'Briket', 'Karkas', 'Diğer'] },
+    { label: 'Yapının Durumu', key:'yapininDurumu', type: 'select', options: ['Sıfır Bina', 'İkinci El', 'Yapım Aşamasında'] },
+    { label: 'Cephe', key: 'cephe', type: 'select', options: ['Kuzey', 'Güney', 'Doğu', 'Batı', 'Güneydoğu', 'Güneybatı', 'Kuzeydoğu', 'Kuzeybatı'] },
+    
+    // Ek Özellikler
+    { label: 'Aidat (₺)', type: 'range-number', minKey: 'aidatMin', maxKey: 'aidatMax' },
     { label: 'Krediye Uygun', key: 'krediyeUygun', type: 'boolean' },
     { label: 'Takas', key: 'takas', type: 'boolean' },
+    { label: 'Tapu Durumu', key: 'tapuDurumu', type: 'select', options: ['Kat Mülkiyetli', 'Kat İrtifaklı', 'Arsa', 'Hisseli'] },
   ],
   vasita: [
     { label: 'Marka', key: 'marka', type: 'select', options: ['BMW','Mercedes','Audi','Volkswagen','Renault','Peugeot','Citroën','Toyota','Honda','Hyundai','Kia','Ford','Fiat','Opel','Skoda','Volvo','Nissan','Seat','Alfa Romeo','Subaru','Mazda','Mini','Land Rover','Porsche','Jaguar','Bentley','Rolls-Royce','Aston Martin','Ferrari','Lamborghini','Maserati','Dacia','Jeep','Mitsubishi','Isuzu','Tesla','BYD','Chery','MG','Geely','GWM','SsangYong','NIO','Rivian','TOGG','Cupra','Smart'], required: true },
