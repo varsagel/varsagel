@@ -164,7 +164,7 @@ model Offer {
   price           BigInt
   body            String
   attributesJson  String?
-  manualAttributeKeys String[] @default([])
+  manualAttributeKeys String? // JSON array as string
   status          String   @default("PENDING")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
