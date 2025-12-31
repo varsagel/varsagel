@@ -46,15 +46,41 @@ export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
     { label: 'Tapu Durumu', key: 'tapuDurumu', type: 'select', options: ['Kat Mülkiyetli', 'Kat İrtifaklı', 'Arsa', 'Hisseli'] },
   ],
   vasita: [
+    // Temel Bilgiler
     { label: 'Marka', key: 'marka', type: 'select', options: ['BMW','Mercedes','Audi','Volkswagen','Renault','Peugeot','Citroën','Toyota','Honda','Hyundai','Kia','Ford','Fiat','Opel','Skoda','Volvo','Nissan','Seat','Alfa Romeo','Subaru','Mazda','Mini','Land Rover','Porsche','Jaguar','Bentley','Rolls-Royce','Aston Martin','Ferrari','Lamborghini','Maserati','Dacia','Jeep','Mitsubishi','Isuzu','Tesla','BYD','Chery','MG','Geely','GWM','SsangYong','NIO','Rivian','TOGG','Cupra','Smart'], required: true },
+    { label: 'Seri', key: 'seri', type: 'text' },
     { label: 'Model', key: 'model', type: 'text', required: true },
     { label: 'Yıl', type: 'range-number', minKey: 'yilMin', maxKey: 'yilMax', min: 1950, max: 2026 },
     { label: 'Kilometre', type: 'range-number', minKey: 'kmMin', maxKey: 'kmMax' },
-    { label: 'Yakıt', key: 'yakit', type: 'select', options: ['Benzin','Dizel','LPG','Elektrik','Hibrit'], required: true },
-    { label: 'Vites', key: 'vites', type: 'select', options: ['Manuel','Otomatik','Yarı Otomatik'], required: true },
-    { label: 'Kasa Tipi', key: 'kasaTipi', type: 'select', options: ['Sedan','Hatchback','SUV','Coupe','Cabrio','Pick-up','Station Wagon','MPV'] },
+    
+    // Motor & Yakıt
+    { label: 'Yakıt', key: 'yakit', type: 'select', options: ['Benzin','Dizel','LPG & Benzin','Benzin & LPG','Hibrit','Elektrik','Dizel & LPG','Dizel & Elektrik','Benzin & Elektrik','Hidrojen'], required: true },
+    { label: 'Vites', key: 'vites', type: 'select', options: ['Manuel','Otomatik','Yarı Otomatik','Düz Vites'], required: true },
+    { label: 'Motor Gücü (HP)', type: 'range-number', minKey: 'motorGucuMin', maxKey: 'motorGucuMax' },
+    { label: 'Motor Hacmi (cm³)', type: 'range-number', minKey: 'motorHacmiMin', maxKey: 'motorHacmiMax' },
+    { label: 'Çekiş', key: 'cekis', type: 'select', options: ['Önden Çekiş', 'Arkadan İtiş', '4WD (Sürekli)', 'AWD (Elektronik)'] },
+    
+    // Dış Özellikler
+    { label: 'Kasa Tipi', key: 'kasaTipi', type: 'select', options: ['Sedan','Hatchback','SUV','Coupe','Cabrio','Pick-up','Station Wagon','MPV','Minivan','Van','Panelvan'] },
     { label: 'Renk', key: 'renk', type: 'select', options: ['Beyaz','Siyah','Gri','Gümüş Gri','Kırmızı','Mavi','Lacivert','Yeşil','Sarı','Turuncu','Kahverengi','Bej','Bordo','Mor','Pembe','Turkuaz','Şampanya','Altın','Bronz','Füme'] },
+    { label: 'Boyasız', key: 'boyasiz', type: 'boolean' },
+    { label: 'Boyalı', key: 'boyali', type: 'select', options: ['Değişen Yok', 'Boyalı', 'Lokal Boyalı', 'Boyalı (Detay Belirtilmemiş)'] },
+    { label: 'Değişen', key: 'degisen', type: 'select', options: ['Değişen Yok', 'Değişen Var', 'Detay Belirtilmemiş'] },
+    { label: 'Tramer (Hasar) Kayıtlı', key: 'tramerKayitli', type: 'boolean' },
     { label: 'Ağır Hasar Kayıtlı', key: 'agirHasarKayitli', type: 'boolean' },
+    
+    // İç Özellikler
+    { label: 'Koltuk Sayısı', key: 'koltukSayisi', type: 'select', options: ['2', '4', '5', '6', '7', '8', '9+'] },
+    { label: 'Klima', key: 'klima', type: 'select', options: ['Yok', 'Manuel', 'Otomatik', 'Çift Bölge'] },
+    { label: 'Donanım Paketi', key: 'donanimPaketi', type: 'text' },
+    
+    // Garanti & Durum
+    { label: 'Garanti', key: 'garanti', type: 'boolean' },
+    { label: 'Garanti Tipi', key: 'garantiTipi', type: 'select', options: ['Yok', 'Bayi Garantili', 'Fabrika Garantili', 'İkinci El Garantili'] },
+    { label: 'Kimden', key: 'kimden', type: 'select', options: ['Sahibinden', 'Galeriden', 'Yetkili Bayiden'] },
+    { label: 'Plaka / Uyruk', key: 'plakaUyruk', type: 'select', options: ['TR', 'Yabancı Plakalı'] },
+    { label: 'Takas', key: 'takas', type: 'boolean' },
+    { label: 'Kredi', key: 'kredi', type: 'boolean' },
   ],
   'yedek-parca-aksesuar-donanim-tuning': [
     { label: 'Parça Türü', key: 'parcaTuru', type: 'text', required: true },
