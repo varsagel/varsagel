@@ -1,0 +1,149 @@
+SİTEDEKİ VARSAYILAN RESİMLERİ DEĞİŞTİRME REHBERİ
+================================================
+
+Aşağıdaki listede yer alan her bir kategori için "public/images/defaults" klasörüne 
+ilgili isme sahip bir resim dosyası (webp formatında) eklemeniz gerekmektedir.
+
+Örneğin "Satılık Daire" için "satilik-daire.webp" dosyasını eklediğinizde, 
+resim yüklenmeyen taleplerde otomatik olarak bu resim görünecektir.
+
+KLASÖR YOLU: public/images/defaults/
+DOSYA FORMATI: .webp (Önerilen boyut: 800x600 veya 4:3 oranında)
+
+GEREKLİ DOSYA İSİMLERİ LİSTESİ:
+-------------------------------
+
+EMLAK KATEGORİSİ
+- satilik-daire.webp
+- kiralik-daire.webp
+- satilik-isyeri.webp
+- kiralik-isyeri.webp
+- satilik-arsa.webp
+- kiralik-arsa.webp
+- satilik-bina.webp
+- satilik-yazlik.webp
+- kiralik-yazlik.webp
+- satilik-villa.webp
+- kiralik-villa.webp
+- devren-satilik.webp
+- turistik-tesis.webp
+
+VASITA KATEGORİSİ
+- otomobil.webp
+- arazi-suv-pickup.webp
+- motosiklet.webp
+- minivan-panelvan.webp
+- ticari-araclar.webp
+- kamyon-cekici.webp
+- otobus.webp
+- minibus-midibus.webp
+- traktor.webp
+- kiralik-araclar.webp
+- hasarli-araclar.webp
+- klasik-araclar.webp
+- elektrikli-araclar.webp
+- deniz-araclari.webp
+- hava-araclari.webp
+- atv-utv.webp
+- karavan.webp
+- engelli-plakali-araclar.webp
+
+YEDEK PARÇA KATEGORİSİ
+- otomotiv-ekipmanlari.webp
+- motosiklet-ekipmanlari.webp
+- deniz-araci-ekipmanlari.webp
+- kask-kiyafet-ekipman.webp
+- ses-goruntu-sistemleri.webp
+
+ALIŞVERİŞ KATEGORİSİ
+- bilgisayar.webp
+- cep-telefonu.webp
+- fotograf-kamera.webp
+- ev-dekorasyon.webp
+- ev-elektronigi.webp
+- elektrikli-ev-aletleri.webp
+- giyim-aksesuar.webp
+- saat.webp
+- anne-bebek.webp
+- kisisel-bakim-kozmetik.webp
+- hobi-oyuncak.webp
+- oyun-konsol.webp
+- kitap-dergi-film.webp
+- spor-outdoor.webp
+- muzik-enstrumanlari.webp
+- ofis-kirtasiye.webp
+- bahce-yapi-market.webp
+- teknik-elektronik.webp
+- diger-her-sey.webp
+
+İŞ MAKİNELERİ KATEGORİSİ
+- is-makineleri.webp
+- tarim-makineleri.webp
+- sanayi.webp
+- elektrik-enerji.webp
+
+USTALAR VE HİZMETLER KATEGORİSİ
+- ev-tadilat-dekorasyon.webp
+- nakliye.webp
+- arac-servis-bakim.webp
+- temizlik-hizmetleri.webp
+- bilisim-yazilim.webp
+- dugun-etkinlik.webp
+- fotograf-video.webp
+- guzellik-bakim.webp
+- hukuk-mali-musavirlik.webp
+
+ÖZEL DERS KATEGORİSİ
+- lise-universite-hazirlik.webp
+- ilkogretim-takviye.webp
+- yabanci-dil.webp
+- ozel-ders-bilgisayar.webp
+- muzik-enstruman.webp
+- ozel-ders-spor.webp
+- sanat.webp
+- direksiyon.webp
+- kisisel-gelisim.webp
+
+İŞ İLANLARI KATEGORİSİ
+- avukatlik-hukuki-danismanlik.webp
+- egitim.webp
+- eglence-ve-aktiviteler.webp
+- guzellik-ve-bakim.webp
+- it-ve-yazilim-gelistirme.webp
+- insan-kaynaklari.webp
+- insaat-ve-yapi.webp
+- isletme-ve-stratejik-yonetim.webp
+- lojistik-ve-tasima.webp
+- magazacilik-ve-perakendecilik.webp
+- musteri-hizmetleri.webp
+- muhasebe-finans-ve-bankacilik.webp
+- muhendislik.webp
+- pazarlama-ve-urun-yonetimi.webp
+- restoran-ve-konaklama.webp
+- saglik-hizmetleri.webp
+- satis.webp
+- sekreterlik-ve-idari-asistanlik.webp
+- tamir-ve-bakim.webp
+- tarim-ve-sarapcilik.webp
+- tasarim-ve-yaraticilik.webp
+- tekstil-ve-konfeksiyon.webp
+- is-ilanlari-temizlik.webp
+- uretim-ve-imalat.webp
+- yari-zamanli-ve-ogrenci-isleri.webp
+
+YARDIMCI ARAYANLAR KATEGORİSİ
+- bebek-cocuk-bakicisi.webp
+- yasli-hasta-bakicisi.webp
+- temizlikci-ev-islerine-yardimci.webp
+
+HAYVANLAR ALEMİ KATEGORİSİ
+- evcil-hayvanlar.webp
+- akvaryum-baliklari.webp
+- aksesuarlar.webp
+- yem-mama.webp
+- kumes-hayvanlari.webp
+- buyukbas-hayvanlar.webp
+- kucukbas-hayvanlar.webp
+- deniz-canlilari.webp
+- surungenler.webp
+- bocekler.webp

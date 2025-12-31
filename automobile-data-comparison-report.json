@@ -1,0 +1,12 @@
+{
+  "totalExcelRecords": 6125,
+  "totalExcelBrands": 68,
+  "totalCurrentBrands": 68,
+  "missingBrands": [],
+  "missingModels": 0,
+  "extraModels": 0,
+  "emptyFields": {
+    "marka": 0,
+    "model": 63
+  }
+}

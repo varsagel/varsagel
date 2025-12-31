@@ -1,0 +1,23 @@
+import type { MetadataRoute } from 'next'
+
+export default function robots(): MetadataRoute.Robots {
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com'
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: [
+        '/api',
+        '/_next',
+        '/giris',
+        '/kayit',
+        '/profil',
+        '/mesajlar',
+        '/teklif-ver',
+        '/teklif',
+        '/admin',
+      ],
+    },
+    sitemap: `${base}/sitemap.xml`,
+  }
+}

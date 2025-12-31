@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subcategory Images Test</title>
+    <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .image-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        .image-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        .image-card h3 {
+            margin: 10px 0 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .image-card p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+        .status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status.exists { background: #d4edda; color: #155724; }
+        .status.missing { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Subcategory Images Test</h1>
+    <div class="image-grid" id="imageGrid">
+        <!-- Images will be loaded here -->
+    </div>
+
+    <script>
+        const images = [
+            // Emlak
+            { name: 'Satılık Daire', path: '/images/subcategories/satilik-daire.svg' },
+            { name: 'Kiralık Daire', path: '/images/subcategories/kiralik-daire.svg' },
+            { name: 'Satılık İşyeri', path: '/images/subcategories/satilik-isyeri.svg' },
+            { name: 'Kiralık İşyeri', path: '/images/subcategories/kiralik-isyeri.svg' },
+            { name: 'Satılık Arsa', path: '/images/subcategories/satilik-arsa.svg' },
+            { name: 'Kiralık Arsa', path: '/images/subcategories/kiralik-arsa.svg' },
+            
+            // Vasıta
+            { name: 'Otomobil Sahibinden', path: '/images/subcategories/otomobil-sahibinden.svg' },
+            { name: 'Otomobil Galeriden', path: '/images/subcategories/otomobil-galeriden.svg' },
+            { name: 'Arazi SUV Pickup', path: '/images/subcategories/arazi-suv-pickup.svg' },
+            { name: 'Motosiklet', path: '/images/subcategories/motosiklet.svg' },
+            
+            // Alışveriş
+            { name: 'Bilgisayar', path: '/images/subcategories/bilgisayar.svg' },
+            { name: 'Cep Telefonu', path: '/images/subcategories/cep-telefonu.svg' },
+            { name: 'Ayakkabı (Giyim)', path: '/images/subcategories/ayakkabi.svg' },
+            { name: 'Mobilya', path: '/images/subcategories/mobilya.svg' },
+            
+            // Missing images (for comparison)
+            { name: 'Aksesuarlar', path: '/images/subcategories/aksesuarlar.svg' },
+            { name: 'Akvaryum Balıkları', path: '/images/subcategories/akvaryum-baliklari.svg' },
+            { name: 'Default', path: '/images/subcategories/default.svg' },
+        ];
+
+        const grid = document.getElementById('imageGrid');
+        
+        images.forEach(({ name, path }) => {
+            const card = document.createElement('div');
+            card.className = 'image-card';
+            
+            const img = document.createElement('img');
+            img.src = path;
+            img.alt = name;
+            img.loading = 'lazy';
+            
+            const title = document.createElement('h3');
+            title.textContent = name;
+            
+            const pathText = document.createElement('p');
+            pathText.textContent = path;
+            
+            const status = document.createElement('span');
+            status.className = 'status';
+            
+            img.onload = function() {
+                status.textContent = 'EXISTS';
+                status.classList.add('exists');
+            };
+            
+            img.onerror = function() {
+                status.textContent = 'MISSING';
+                status.classList.add('missing');
+                img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzVMMTI1IDEwMEgxMDBWMTAwVjc1WiIgZmlsbD0iI0Q2RDZENiIvPgo8cGF0aCBkPSJNMTAwIDc1TDc1IDEwMEgxMDBWMTAwVjc1WiIgZmlsbD0iI0Q2RDZENiIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSI1MCIgcj0iMTAiIGZpbGw9IiNENkQ2RDYiLz4KPHN2Zz4K'; // Placeholder
+            };
+            
+            card.appendChild(img);
+            card.appendChild(title);
+            card.appendChild(pathText);
+            card.appendChild(status);
+            grid.appendChild(card);
+        });
+    </script>
+</body>
+</html>

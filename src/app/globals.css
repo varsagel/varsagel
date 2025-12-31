@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --brand: #0891b2;
+  --accent: #f59e0b;
+}
+
+@layer theme {
+  :root {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+
+    --color-primary: #0891b2;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #0f172a;
+    --color-secondary-foreground: #ffffff;
+    --color-accent: #f59e0b;
+    --color-accent-foreground: #0b1220;
+    --color-muted: #e2e8f0;
+    --color-muted-foreground: #334155;
+    --color-destructive: #dc2626;
+    --color-destructive-foreground: #ffffff;
+    --color-input: #cbd5e1;
+    --color-ring: #22d3ee;
+    --radius: 0.5rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1220;
+    --foreground: #e2e8f0;
+    --color-primary: #06b6d4;
+    --color-primary-foreground: #0b1220;
+    --color-secondary: #111827;
+    --color-secondary-foreground: #e5e7eb;
+    --color-accent: #fbbf24;
+    --color-accent-foreground: #0b1220;
+    --color-muted: #1f2937;
+    --color-muted-foreground: #9ca3af;
+    --color-destructive: #ef4444;
+    --color-destructive-foreground: #111827;
+    --color-input: #334155;
+    --color-ring: #67e8f9;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+/* Selection Color */
+::selection {
+  background-color: #a5f3fc; /* cyan-200 */
+  color: #155e75; /* cyan-900 */
+}
+
+/* Grid background for hero section */
+.bg-grid-slate-200\/40 {
+  background-image: radial-gradient(circle, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Utilities */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 3s ease infinite;
+  }
+}
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

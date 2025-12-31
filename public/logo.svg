@@ -1,0 +1,42 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Speed Lines -->
+  <path d="M12 30 H 32" stroke="#1e293b" stroke-width="6" stroke-linecap="round"/>
+  <path d="M4 48 H 28" stroke="#1e293b" stroke-width="6" stroke-linecap="round"/>
+  <path d="M12 66 H 32" stroke="#1e293b" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Handle -->
+  <line x1="76" y1="70" x2="90" y2="84" stroke="#1e293b" stroke-width="10" stroke-linecap="round" />
+  
+  <!-- Rim -->
+  <circle cx="58" cy="48" r="30" stroke="#1e293b" stroke-width="6" fill="white"/>
+
+  <!-- Inner Icons -->
+  <g fill="#3b82f6">
+    <!-- Motorcycle -->
+    <path d="M46 36 C46 36 48 32 52 32 H54 L52 36 M46 38 A3 3 0 1 0 46 44 A3 3 0 1 0 46 38 M58 38 A3 3 0 1 0 58 44 A3 3 0 1 0 58 38" stroke="#3b82f6" stroke-width="2" fill="none"/>
+    <path d="M46 38 L58 38" stroke="#3b82f6" stroke-width="2"/>
+
+    <!-- Phone -->
+    <rect x="66" y="28" width="10" height="16" rx="2" fill="#3b82f6"/>
+    <rect x="68" y="30" width="6" height="10" fill="white"/>
+    <circle cx="71" cy="42" r="1" fill="white"/>
+
+    <!-- Building -->
+    <rect x="42" y="50" width="10" height="14" fill="#3b82f6"/>
+    <rect x="44" y="52" width="2" height="2" fill="white"/>
+    <rect x="48" y="52" width="2" height="2" fill="white"/>
+    <rect x="44" y="56" width="2" height="2" fill="white"/>
+    <rect x="48" y="56" width="2" height="2" fill="white"/>
+    <rect x="44" y="60" width="2" height="2" fill="white"/>
+    <rect x="48" y="60" width="2" height="2" fill="white"/>
+
+    <!-- Car -->
+    <path d="M64 54 L66 50 H76 L78 54 V60 H64 V54 Z" fill="#3b82f6"/>
+    <circle cx="68" cy="60" r="2.5" fill="#3b82f6"/>
+    <circle cx="74" cy="60" r="2.5" fill="#3b82f6"/>
+
+    <!-- Wrench -->
+    <path d="M54 64 L56 62 L64 70 L62 72 Z" fill="#3b82f6"/>
+    <path d="M52 60 A4 4 0 1 0 58 66" fill="none" stroke="#3b82f6" stroke-width="3"/>
+  </g>
+</svg>

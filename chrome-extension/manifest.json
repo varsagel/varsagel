@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Varsagel Sahibinden Botu",
+  "version": "1.0",
+  "description": "Marka > Model > Seri > Paket hiyerarşisinde veri toplar.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://www.sahibinden.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Botu Aç"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.sahibinden.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { width: 300px; padding: 10px; font-family: sans-serif; background: #222; color: #fff; }
+    h3 { margin-top: 0; color: #f1c40f; border-bottom: 1px solid #444; padding-bottom: 5px; }
+    button { width: 100%; padding: 10px; margin-bottom: 5px; cursor: pointer; border: none; font-weight: bold; }
+    #btn-start { background: #27ae60; color: white; }
+    #btn-stop { background: #e74c3c; color: white; }
+    #btn-export { background: #3498db; color: white; }
+    #btn-reset { background: #95a5a6; color: white; font-size: 11px; padding: 5px; }
+    .stat { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; color: #ccc; }
+    .val { font-weight: bold; color: #fff; }
+    #status { color: #f39c12; font-size: 11px; margin-bottom: 10px; height: 30px; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <h3>Varsagel Bot v1.0</h3>
+  <div id="status">Hazır</div>
+  
+  <div style="margin-bottom: 10px; border: 1px solid #444; padding: 5px;">
+    <div class="stat">Kuyruk: <span id="q-len" class="val">0</span></div>
+    <div class="stat">Toplanan Veri: <span id="res-len" class="val">0</span></div>
+    <div class="stat">Son İşlem: <span id="last-action" class="val">-</span></div>
+  </div>
+
+  <div style="max-height: 150px; overflow-y: auto; background: #333; margin-bottom: 10px; padding: 5px; font-size: 10px; border: 1px solid #555;">
+    <strong>Son Eklenenler:</strong>
+    <ul id="data-list" style="padding-left: 15px; margin: 5px 0;"></ul>
+  </div>
+
+  <button id="btn-start">BAŞLAT (Kaldığı Yerden)</button>
+  <button id="btn-stop">DURDUR</button>
+  <button id="btn-export">EXCEL İNDİR (.CSV)</button>
+  <button id="btn-reset">Sıfırla ve Baştan Başla</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

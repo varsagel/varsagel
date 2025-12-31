@@ -1,0 +1,343 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String         @id @default(cuid())
+  email            String?        @unique
+  name             String?
+  image            String?
+  emailVerified    DateTime?
+  passwordHash     String?
+  role             String         @default("USER")
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  phone            String?
+  preferencesJson  String?
+  accounts         Account[]
+  favorites        Favorite[]
+  listings         Listing[]      @relation("UserListings")
+  sentMessages     Message[]      @relation("UserMessages")
+  receivedMessages Message[]      @relation("UserReceivedMessages")
+  notifications    Notification[]
+  offers           Offer[]        @relation("UserOffers")
+  questions        Question[]
+  reports          Report[]
+  savedSearches    SavedSearch[]
+  sessions         Session[]
+  visits           Visit[]
+
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Category {
+  id            String              @id @default(cuid())
+  name          String
+  slug          String              @unique
+  icon          String?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  attributes    CategoryAttribute[]
+  listings      Listing[]
+  subcategories SubCategory[]
+
+  @@index([slug])
+}
+
+model SubCategory {
+  id         String              @id @default(cuid())
+  name       String
+  slug       String              @unique
+  categoryId String
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  attributes CategoryAttribute[]
+  listings   Listing[]
+  category   Category            @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([slug])
+}
+
+model CategoryAttribute {
+  id            String       @id @default(cuid())
+  categoryId    String
+  name          String
+  slug          String
+  type          String
+  optionsJson   String?
+  required      Boolean      @default(false)
+  order         Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  subCategoryId String?
+  showInOffer   Boolean      @default(true)
+  showInRequest Boolean      @default(true)
+  category      Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id])
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+}
+
+model Listing {
+  id             String       @id @default(cuid())
+  code           String?      @unique
+  title          String
+  description    String
+  imagesJson     String?
+  attributesJson String?
+  budget         BigInt?
+  city           String?
+  district       String?
+  status         String       @default("PENDING")
+  reminderSentAt DateTime?
+  viewCount      Int          @default(0)
+  categoryId     String
+  subCategoryId  String?
+  ownerId        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  favorites      Favorite[]
+  category       Category     @relation(fields: [categoryId], references: [id])
+  owner          User         @relation("UserListings", fields: [ownerId], references: [id], onDelete: Cascade)
+  subCategory    SubCategory? @relation(fields: [subCategoryId], references: [id])
+  messages       Message[]
+  offers         Offer[]
+  questions      Question[]
+  reports        Report[]
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([ownerId])
+  @@index([city, district])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Offer {
+  id              String   @id @default(cuid())
+  listingId       String
+  sellerId        String
+  price           BigInt
+  body            String
+  attributesJson  String?
+  manualAttributeKeys String[] @default([])
+  status          String   @default("PENDING")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  imagesJson      String?
+  rejectionReason String?
+  listing         Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  seller          User     @relation("UserOffers", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([sellerId])
+  @@index([status])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, listingId])
+  @@index([userId])
+  @@index([listingId])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  toUserId  String
+  listingId String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  sender    User     @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver  User     @relation("UserReceivedMessages", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([senderId])
+  @@index([toUserId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String
+  type      String
+  read      Boolean  @default(false)
+  link      String?
+  dataJson  String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+}
+
+model SavedSearch {
+  id                String                @id @default(cuid())
+  userId            String
+  query             String?
+  categorySlug      String?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  filtersJson       Json?
+  matchMode         SavedSearchMatchMode  @default(FILTERS)
+  city              String?
+  district          String?
+  emailNotification Boolean               @default(false)
+  frequency         NotificationFrequency @default(INSTANT)
+  isAlarm           Boolean               @default(false)
+  lastCheckAt       DateTime              @default(now())
+  maxPrice          Float?
+  minPrice          Float?
+  name              String                @default("Aramam")
+  siteNotification  Boolean               @default(true)
+  subcategorySlug   String?
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isAlarm])
+}
+
+model Question {
+  id         String    @id @default(cuid())
+  userId     String?
+  listingId  String
+  answer     String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  answeredAt DateTime?
+  body       String
+  listing    Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([userId])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  reason      String
+  description String?
+  userId      String
+  listingId   String
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([status])
+}
+
+model Visit {
+  id        String   @id @default(cuid())
+  userId    String?
+  path      String
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([path])
+}
+
+model Sequence {
+  key   String @id
+  value Int
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SystemSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model ErrorLog {
+  id        String   @id @default(cuid())
+  message   String
+  stack     String?
+  source    String   @default("unknown") // frontend, backend, boundary
+  url       String?
+  method    String?  // GET, POST, vb.
+  userId    String?
+  context   Json?    // Ekstra bilgiler (body, params, browser info)
+  createdAt DateTime @default(now())
+  
+  @@index([createdAt])
+  @@index([source])
+}
+
+enum SavedSearchMatchMode {
+  TITLE
+  CATEGORY
+  FILTERS
+}
+
+enum NotificationFrequency {
+  INSTANT
+  DAILY
+  WEEKLY
+}
