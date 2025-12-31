@@ -231,7 +231,7 @@ model SavedSearch {
   categorySlug      String?
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
-  filtersJson       Json?
+  filtersJson       String?
   matchMode         String  @default("FILTERS")
   city              String?
   district          String?
@@ -323,7 +323,7 @@ model ErrorLog {
   url       String?
   method    String?  // GET, POST, vb.
   userId    String?
-  context   Json?    // Ekstra bilgiler (body, params, browser info)
+  context   String?    // Ekstra bilgiler (body, params, browser info)
   createdAt DateTime @default(now())
   
   @@index([createdAt])
