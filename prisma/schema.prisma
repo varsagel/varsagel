@@ -330,14 +330,6 @@ model ErrorLog {
   @@index([source])
 }
 
-enum SavedSearchMatchMode {
-  TITLE
-  CATEGORY
-  FILTERS
-}
-
-enum NotificationFrequency {
-  INSTANT
-  DAILY
-  WEEKLY
-}
+// SQLite doesn't support enums, using String instead
+// SavedSearchMatchMode: TITLE, CATEGORY, FILTERS
+// NotificationFrequency: INSTANT, DAILY, WEEKLY
