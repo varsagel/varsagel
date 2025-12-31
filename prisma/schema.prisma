@@ -232,11 +232,11 @@ model SavedSearch {
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
   filtersJson       Json?
-  matchMode         SavedSearchMatchMode  @default(FILTERS)
+  matchMode         String  @default("FILTERS")
   city              String?
   district          String?
   emailNotification Boolean               @default(false)
-  frequency         NotificationFrequency @default(INSTANT)
+  frequency         String @default("INSTANT")
   isAlarm           Boolean               @default(false)
   lastCheckAt       DateTime              @default(now())
   maxPrice          Float?
