@@ -14,7 +14,6 @@ export type AttrField = {
 
 export const ATTR_SCHEMAS: Record<string, AttrField[]> = {
   emlak: [
-    { label: 'Metrekare (m²)', type: 'range-number', minKey: 'm2Min', maxKey: 'm2Max', required: true },
     { label: 'Krediye Uygun', key: 'krediyeUygun', type: 'boolean' },
     { label: 'Takas', key: 'takas', type: 'boolean' },
   ],

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth, getAdminUserId } from "@/auth";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   // @ts-ignore
   if (session?.user?.role !== "ADMIN") {
@@ -11,7 +12,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
   try {
     const category = await prisma.category.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         attributes: {
           orderBy: { order: "asc" },
@@ -31,15 +32,15 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
     try {
       const baseCategory = await prisma.category.findUnique({
-        where: { id: params.id },
+        where: { id },
       });
 
       if (!baseCategory) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
       const [subcategories, attributes] = await Promise.all([
-        prisma.subCategory.findMany({ where: { categoryId: params.id } }),
+        prisma.subCategory.findMany({ where: { categoryId: id } }),
         prisma.categoryAttribute.findMany({
-          where: { categoryId: params.id },
+          where: { categoryId: id },
         }),
       ]);
 
@@ -55,7 +56,8 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   // @ts-ignore
   if (session?.user?.role !== "ADMIN") {
@@ -67,7 +69,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const { name, slug, icon } = body;
 
     const category = await prisma.category.update({
-      where: { id: params.id },
+      where: { id },
       data: { name, slug, icon }
     });
 
@@ -77,7 +79,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const userId = await getAdminUserId();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -85,7 +88,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
   try {
     await prisma.category.delete({
-      where: { id: params.id }
+      where: { id }
     });
     return NextResponse.json({ success: true });
   } catch (error) {

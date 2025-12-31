@@ -7,8 +7,8 @@ import TalepCard from '@/components/home/TalepCardOptimized';
 import { CATEGORIES } from '@/data/categories';
 import { TURKEY_PROVINCES } from '@/data/turkey-locations';
 import { ATTR_SCHEMAS, AttrField } from '@/data/attribute-schemas';
-import { ATTR_SUBSCHEMAS, BRAND_MODELS, MODEL_SERIES, SERIES_TRIMS } from '@/data/attribute-overrides';
-import { BellRing, Check, Loader2 } from 'lucide-react';
+import { ATTR_SUBSCHEMAS, BRAND_MODELS, MODEL_SERIES, SERIES_TRIMS, PACKAGE_EQUIPMENT } from '@/data/attribute-overrides';
+import { BellRing, Check, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from '@/components/ui/use-toast';
 import { SavedSearchModal } from '@/components/talep/SavedSearchModal';
@@ -175,6 +175,7 @@ export default function CategoryClient() {
   
   // Dynamic Filters
   const [filterAttrs, setFilterAttrs] = useState<FilterAttrs>({});
+  const [isSubcategoriesOpen, setIsSubcategoriesOpen] = useState(true);
   
   useEffect(() => {
     setFavorites(new Set(listings.filter(l => l.isFavorited).map(l => l.id)));
@@ -203,7 +204,7 @@ export default function CategoryClient() {
 
     // Custom reordering for 'vasita'
     if (categorySlug === 'vasita') {
-      const priorityKeys = ['marka', 'model', 'seri', 'paket'];
+      const priorityKeys = ['marka', 'model', 'seri', 'paket', 'donanim'];
       const prioritized: AttrField[] = [];
       const others: AttrField[] = [];
       
@@ -269,11 +270,16 @@ export default function CategoryClient() {
         delete next['model'];
         delete next['seri'];
         delete next['paket'];
+        delete next['donanim'];
       } else if (key === 'model') {
         delete next['seri'];
         delete next['paket'];
+        delete next['donanim'];
       } else if (key === 'seri') {
         delete next['paket'];
+        delete next['donanim'];
+      } else if (key === 'paket') {
+        delete next['donanim'];
       }
       
       return next;
@@ -308,7 +314,7 @@ export default function CategoryClient() {
       const response = await fetch(`/api/talepler?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        const rawListings = Array.isArray(data) ? data : (data.data || []);
+        const rawListings = Array.isArray(data) ? data : (data?.data || []);
         setListings(rawListings);
         
         // Generic client-side filtering
@@ -376,7 +382,7 @@ export default function CategoryClient() {
         const res = await fetch(`/api/saved-searches?${params.toString()}`);
         if (res.ok) {
           const savedSearches = await res.json();
-          setHasAlarm(savedSearches.length > 0);
+          setHasAlarm(Array.isArray(savedSearches) && savedSearches.length > 0);
         }
       } catch (error) {
         console.error('Error checking alarm:', error);
@@ -416,6 +422,7 @@ export default function CategoryClient() {
       const brand = typeof filterAttrs['marka'] === 'string' ? filterAttrs['marka'] : undefined;
       const model = typeof filterAttrs['model'] === 'string' ? filterAttrs['model'] : undefined;
       const series = typeof filterAttrs['seri'] === 'string' ? filterAttrs['seri'] : undefined;
+      const paket = typeof filterAttrs['paket'] === 'string' ? filterAttrs['paket'] : undefined;
 
       if (field.key === 'model' && brand) {
           const map = (BRAND_MODELS[overrideKey] || BRAND_MODELS['vasita/otomobil']) as Record<string, any>; 
@@ -428,6 +435,10 @@ export default function CategoryClient() {
       if (field.key === 'paket' && brand && model && series) {
           const map = (SERIES_TRIMS[overrideKey] || SERIES_TRIMS['vasita/otomobil']) as Record<string, any>;
           return (map?.[brand]?.[model]?.[series] as string[] | undefined) || [];
+      }
+      if (field.key === 'donanim' && brand && model && series && paket) {
+          const map = (PACKAGE_EQUIPMENT[overrideKey] || PACKAGE_EQUIPMENT['vasita/otomobil']) as Record<string, any>;
+          return (map?.[brand]?.[model]?.[series]?.[paket] as string[] | undefined) || [];
       }
 
       return field.options || [];
@@ -466,27 +477,38 @@ export default function CategoryClient() {
       
       <div className="space-y-6">
         {/* Subcategories Filter */}
-        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-             <h3 className="text-gray-900 text-sm font-semibold mb-3 opacity-90">Alt Kategoriler</h3>
-             <div className="space-y-2">
-                <Link 
-                    href={`/kategori/${categorySlug}`}
-                    className={`flex items-center justify-between group ${!subcategorySlug ? 'text-cyan-600 font-bold' : 'text-gray-600 hover:text-cyan-600'}`}
-                >
-                    <span className="text-sm">Tümü</span>
-                    {!subcategorySlug && <span className="w-2 h-2 bg-cyan-600 rounded-full"></span>}
-                </Link>
-                {category?.subcategories.map(sub => (
-                    <Link
-                        key={sub.slug}
-                        href={`/kategori/${categorySlug}/${sub.slug}`}
-                        className={`flex items-center justify-between group ${subcategorySlug === sub.slug ? 'text-cyan-600 font-bold' : 'text-gray-600 hover:text-cyan-600'}`}
-                    >
-                        <span className="text-sm">{sub.name}</span>
-                        {subcategorySlug === sub.slug && <span className="w-2 h-2 bg-cyan-600 rounded-full"></span>}
-                    </Link>
-                ))}
-             </div>
+        <div className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+             <button 
+                onClick={() => setIsSubcategoriesOpen(!isSubcategoriesOpen)}
+                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+             >
+                 <h3 className="text-gray-900 text-sm font-semibold opacity-90">Alt Kategoriler</h3>
+                 {isSubcategoriesOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+             </button>
+             
+             {isSubcategoriesOpen && (
+                 <div className="p-4 pt-0 space-y-2 border-t border-gray-200 bg-white">
+                    <div className="pt-2 space-y-2">
+                        <Link 
+                            href={`/kategori/${categorySlug}`}
+                            className={`flex items-center justify-between group ${!subcategorySlug ? 'text-cyan-600 font-bold' : 'text-gray-600 hover:text-cyan-600'}`}
+                        >
+                            <span className="text-sm">Tümü</span>
+                            {!subcategorySlug && <span className="w-2 h-2 bg-cyan-600 rounded-full"></span>}
+                        </Link>
+                        {category?.subcategories?.map(sub => (
+                            <Link
+                                key={sub.slug}
+                                href={`/kategori/${categorySlug}/${sub.slug}`}
+                                className={`flex items-center justify-between group ${subcategorySlug === sub.slug ? 'text-cyan-600 font-bold' : 'text-gray-600 hover:text-cyan-600'}`}
+                            >
+                                <span className="text-sm">{sub.name}</span>
+                                {subcategorySlug === sub.slug && <span className="w-2 h-2 bg-cyan-600 rounded-full"></span>}
+                            </Link>
+                        ))}
+                    </div>
+                 </div>
+             )}
         </div>
 
         {/* Standard Filters */}
@@ -504,7 +526,7 @@ export default function CategoryClient() {
               onChange={setSelectedDistrict}
               placeholder="Tüm İlçeler"
               disabled={!selectedCity}
-              options={selectedCity ? (TURKEY_PROVINCES.find(p => p.name === selectedCity)?.districts.map(d => d.name) || []) : []}
+              options={selectedCity ? (TURKEY_PROVINCES.find(p => p.name === selectedCity)?.districts?.map(d => d.name) || []) : []}
             />
             <FilterRange
               label={`Fiyat: ${priceRange[0].toLocaleString('tr-TR')} - ${priceRange[1].toLocaleString('tr-TR')} TL`}
@@ -521,9 +543,29 @@ export default function CategoryClient() {
             <h3 className="text-gray-900 text-sm font-semibold mb-2 opacity-90">Detaylı Filtreler</h3>
             {combinedSchema.map((field, i) => {
                 let isDisabled = false;
+                
+                // Hiyerarşik alanlar için özel görünürlük ve disabled mantığı
+                const isVasitaOto = categorySlug === 'vasita' || overrideKey.startsWith('vasita/');
+                const hierarchicalKeys = ['model', 'seri', 'paket', 'donanim'];
+                
+                if (isVasitaOto && hierarchicalKeys.includes(field.key!)) {
+                    const options = getFieldOptions(field);
+                    
+                    // Eğer seçenek yoksa ve parent seçiliyse (veya parent gerekmiyorsa), bu alanı GİZLE.
+                    // Marka seçili değilse Model boş gelir ama disabled görünmeli mi yoksa gizlenmeli mi?
+                    // Kullanıcı "tek tek kontrol et, fazla veri seçmeyelim" dediği için, 
+                    // eğer parent seçili olduğu halde child seçenekleri boşsa (yani zincir bittiyse), o child GİZLENMELİ.
+                    // Ancak parent seçili değilse child disabled olarak kalabilir veya gizlenebilir.
+                    // Mevcut davranışta parent seçili değilse options boş dönüyor.
+                    // Bu durumda parent seçilmeden child'ı göstermemek daha temiz bir UI sağlar.
+                    
+                    if (options.length === 0) return null;
+                }
+
                 if (field.key === 'model' && !filterAttrs['marka']) isDisabled = true;
                 if (field.key === 'seri' && !filterAttrs['model']) isDisabled = true;
                 if (field.key === 'paket' && !filterAttrs['seri']) isDisabled = true;
+                if (field.key === 'donanim' && !filterAttrs['paket']) isDisabled = true;
 
                 if (field.type === 'select') {
                      return (
@@ -691,7 +733,7 @@ export default function CategoryClient() {
             </Link>
             <div>
               <h1 className="text-xl font-bold text-gray-900">{subcategory ? subcategory.name : category.name}</h1>
-              <p className="text-sm text-gray-500">{filteredListings.length} talep</p>
+              <p className="text-sm text-gray-500">{filteredListings?.length || 0} talep</p>
             </div>
           </div>
 
@@ -732,7 +774,7 @@ export default function CategoryClient() {
           {/* Listings Grid - Left */}
           <div className="flex-1">
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                 {[1,2,3,4,5,6].map(i => (
                   <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse">
                     <div className="h-48 bg-gray-200" />
@@ -744,7 +786,7 @@ export default function CategoryClient() {
                   </div>
                 ))}
               </div>
-            ) : filteredListings.length === 0 ? (
+            ) : (filteredListings?.length || 0) === 0 ? (
               <div className="bg-white rounded-2xl p-12 text-center shadow-sm">
                 <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -764,7 +806,7 @@ export default function CategoryClient() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                 {filteredListings.map((listing) => (
                   <TalepCard 
                     key={listing.id} 

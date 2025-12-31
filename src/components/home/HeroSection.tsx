@@ -1,68 +1,67 @@
-import { Search, TrendingUp } from "lucide-react";
+"use client";
+
 import Link from "next/link";
+import { Search, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection({ initialSearch }: { initialSearch: string }) {
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/?q=${encodeURIComponent(searchQuery)}#ilanlar`);
+    }
+  };
+
   return (
-    <div className="relative bg-gradient-to-b from-cyan-900 to-cyan-800 text-white pt-20 pb-24 overflow-hidden">
-      {/* Abstract Background Shapes */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
-        <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
-        <div className="absolute top-1/2 right-0 w-64 h-64 rounded-full bg-purple-500 blur-3xl"></div>
-      </div>
+    <div className="relative bg-[#0047AB] text-white pt-32 pb-40 overflow-hidden">
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0047AB] to-[#003380] z-0"></div>
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className="flex flex-col items-center text-center">
+          
+          {/* Badge Pill */}
+          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <Sparkles className="w-4 h-4 text-white" />
+            <span className="text-sm font-medium text-white">Talep oluştur, satıcılardan teklifleri topla</span>
+          </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-        <div className="inline-flex items-center gap-2 bg-cyan-800/50 backdrop-blur-sm px-3 py-1 rounded-full border border-cyan-700 mb-6">
-          <TrendingUp className="w-4 h-4 text-cyan-300" />
-          <span className="text-sm font-medium text-cyan-100">
-            Talep oluştur, satıcılardan teklifleri topla
-          </span>
-        </div>
-
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-          Aradığını Bulamıyorsan, <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-purple-200">
+          {/* Main Title */}
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-white leading-tight animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100 max-w-5xl">
+            Aradığını Bulamıyorsan <br/>
             Talep Oluştur, Satıcılar Gelsin!
-          </span>
-        </h1>
-        
-        <p className="text-lg md:text-xl text-cyan-100 mb-10 max-w-2xl mx-auto">
-          Varsagel ile ihtiyacın olan ürünü veya hizmeti anlat, satıcılar sana özel fiyat teklifleriyle gelsin.
-        </p>
+          </h1>
+          
+          <p className="text-lg md:text-2xl text-blue-50 mb-12 max-w-4xl mx-auto leading-relaxed font-medium animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
+            Varsagel ile ihtiyacın olan ürünü ve hizmeti anlat, satıcılar sana özel fiyat teklifleri ile gelsin.
+          </p>
 
-        <div className="max-w-2xl mx-auto">
-          <form action="/" method="get" className="relative">
-            <div className="relative flex items-center bg-white rounded-2xl shadow-xl p-2 transition-all focus-within:ring-4 focus-within:ring-cyan-500/20">
-              <Search className="w-6 h-6 text-gray-400 ml-3" />
-              <input
-                type="text"
-                name="q"
-                defaultValue={initialSearch}
-                placeholder="Ne satmak istiyorsun? (Örn: iPhone 13, 2015 Honda Civic...)"
-                className="w-full px-4 py-3 text-gray-900 placeholder-gray-500 bg-transparent border-none outline-none text-lg"
-              />
-              <button 
-                type="submit"
-                className="hidden md:block bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors"
-              >
-                Alıcı Bul
-              </button>
-            </div>
-            {/* Mobile Button */}
-            <button 
-              type="submit"
-              className="mt-3 w-full md:hidden bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors shadow-lg"
-            >
-              Alıcı Bul
-            </button>
-          </form>
-        </div>
+          {/* Search Bar - White Background Style */}
+          <div className="w-full max-w-3xl animate-in fade-in slide-in-from-bottom-7 duration-700 delay-300">
+            <form onSubmit={handleSearch} className="relative">
+              <div className="relative flex items-center bg-white rounded-2xl p-2 shadow-2xl">
+                <Search className="w-5 h-5 text-gray-400 ml-4" />
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Ne satmak istiyorsun? (Örn: iPhone 13, 2015 Honda Civic...)" 
+                  className="flex-1 bg-transparent border-none text-gray-900 placeholder-gray-400 focus:ring-0 text-base md:text-lg px-4 h-12 md:h-14 outline-none"
+                />
+                <button 
+                  type="submit"
+                  className="bg-[#2D9CDB] hover:bg-[#268CC5] text-white px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold transition-all text-base md:text-lg shadow-lg whitespace-nowrap"
+                >
+                  Alıcı Bul
+                </button>
+              </div>
+            </form>
+          </div>
 
-        <div className="mt-10 flex flex-wrap justify-center gap-3 text-sm text-cyan-200">
-          <span>Popüler:</span>
-          <Link href="/?q=iphone" className="hover:text-white underline decoration-cyan-400/50 underline-offset-4">iPhone</Link>
-          <Link href="/?category=emlak" className="hover:text-white underline decoration-cyan-400/50 underline-offset-4">Kiralık Ev</Link>
-          <Link href="/?category=vasita" className="hover:text-white underline decoration-cyan-400/50 underline-offset-4">Otomobil</Link>
-          <Link href="/?q=ozel-ders" className="hover:text-white underline decoration-cyan-400/50 underline-offset-4">Özel Ders</Link>
         </div>
       </div>
     </div>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Validation Test</title>
+</head>
+<body>
+    <h1>Talep Oluşturma Validation Test</h1>
+    <p>Console'u açın (F12) ve aşağıdaki adımları takip edin:</p>
+    
+    <h2>Test Adımları:</h2>
+    <ol>
+        <li><a href="http://localhost:3004/talep-olustur" target="_blank">Talep Oluştur Sayfasını Aç</a></li>
+        <li>1. adımda kategori ve alt kategori seçin</li>
+        <li>2. adımda şu test verilerini girin:
+            <ul>
+                <li>Başlık: "Test başlık bu en az 10 karakter"</li>
+                <li>Açıklama: "Test açıklaması bu en az 20 karakter olmalıdır"</li>
+            </ul>
+        </li>
+        <li>Devam Et butonuna tıklayın</li>
+        <li>Console'daki mesajları buraya kopyalayın</li>
+    </ol>
+
+    <h2>Beklenen Console Çıktısı:</h2>
+    <pre id="expected-output">
+=== STEP 2 VALIDATION START ===
+Step 2 validation - formData.title: Test başlık bu en az 10 karakter
+Step 2 validation - formData.description: Test açıklaması bu en az 20 karakter olmalıdır
+Step 2 validation - title length: 32
+Step 2 validation - description length: 47
+Step 2 validation - buildAttributeFields result: [...]
+=== STEP 2 VALIDATION END ===
+Step 2 validation - final errors: {}
+Step 2 validation - error count: 0
+nextStep called, currentStep: 2
+Validation result: true
+    </pre>
+
+    <script>
+        // Console mesajlarını yakalama
+        if (typeof console !== 'undefined') {
+            const originalLog = console.log;
+            console.log = function(...args) {
+                originalLog.apply(console, args);
+                document.getElementById('output').textContent += args.join(' ') + '\n';
+            };
+        }
+    </script>
+
+    <h2>Console Çıktınız:</h2>
+    <pre id="output" style="background: #f0f0f0; padding: 10px; min-height: 200px;">
+        Console mesajları burada görünecek...
+    </pre>
+</body>
+</html>

@@ -8,6 +8,11 @@ const logger = createModuleLogger('admin-attributes');
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   let session: any = null;
   const { id } = await params;
+
+  if (!id || id === 'undefined') {
+    return NextResponse.json({ error: "Attribute ID is required" }, { status: 400 });
+  }
+
   try {
     session = await auth();
     // @ts-ignore

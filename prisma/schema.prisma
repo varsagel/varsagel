@@ -22,15 +22,15 @@ model User {
   accounts         Account[]
   favorites        Favorite[]
   listings         Listing[]      @relation("UserListings")
+  sentMessages     Message[]      @relation("UserMessages")
+  receivedMessages Message[]      @relation("UserReceivedMessages")
   notifications    Notification[]
   offers           Offer[]        @relation("UserOffers")
   questions        Question[]
   reports          Report[]
+  savedSearches    SavedSearch[]
   sessions         Session[]
   visits           Visit[]
-  sentMessages     Message[]      @relation("UserMessages")
-  receivedMessages Message[]      @relation("UserReceivedMessages")
-  savedSearches    SavedSearch[]
 
   @@index([email])
 }
@@ -48,8 +48,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -80,9 +79,9 @@ model Category {
   icon          String?
   createdAt     DateTime            @default(now())
   updatedAt     DateTime            @updatedAt
+  attributes    CategoryAttribute[]
   listings      Listing[]
   subcategories SubCategory[]
-  attributes    CategoryAttribute[]
 
   @@index([slug])
 }
@@ -94,9 +93,9 @@ model SubCategory {
   categoryId String
   createdAt  DateTime            @default(now())
   updatedAt  DateTime            @updatedAt
+  attributes CategoryAttribute[]
   listings   Listing[]
   category   Category            @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  attributes CategoryAttribute[]
 
   @@index([categoryId])
   @@index([slug])
@@ -105,27 +104,27 @@ model SubCategory {
 model CategoryAttribute {
   id            String       @id @default(cuid())
   categoryId    String
-  subCategoryId String?
   name          String
   slug          String
   type          String
   optionsJson   String?
   required      Boolean      @default(false)
-  showInRequest Boolean      @default(true)
-  showInOffer   Boolean      @default(true)
   order         Int          @default(0)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
+  subCategoryId String?
+  showInOffer   Boolean      @default(true)
+  showInRequest Boolean      @default(true)
   category      Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: SetNull)
+  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id])
 
   @@index([categoryId])
   @@index([subCategoryId])
 }
 
 model Listing {
-  id             String      @id @default(cuid())
-  code           String?     @unique
+  id             String       @id @default(cuid())
+  code           String?      @unique
   title          String
   description    String
   imagesJson     String?
@@ -133,18 +132,18 @@ model Listing {
   budget         BigInt?
   city           String?
   district       String?
-  status         String      @default("PENDING")
+  status         String       @default("PENDING")
   reminderSentAt DateTime?
-  viewCount      Int         @default(0)
+  viewCount      Int          @default(0)
   categoryId     String
   subCategoryId  String?
   ownerId        String
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   favorites      Favorite[]
-  owner          User        @relation("UserListings", fields: [ownerId], references: [id], onDelete: Cascade)
+  category       Category     @relation(fields: [categoryId], references: [id])
+  owner          User         @relation("UserListings", fields: [ownerId], references: [id], onDelete: Cascade)
   subCategory    SubCategory? @relation(fields: [subCategoryId], references: [id])
-  category       Category    @relation(fields: [categoryId], references: [id])
   messages       Message[]
   offers         Offer[]
   questions      Question[]
@@ -165,13 +164,14 @@ model Offer {
   price           BigInt
   body            String
   attributesJson  String?
+  manualAttributeKeys String[] @default([])
   status          String   @default("PENDING")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   imagesJson      String?
   rejectionReason String?
-  seller          User     @relation("UserOffers", fields: [sellerId], references: [id], onDelete: Cascade)
   listing         Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  seller          User     @relation("UserOffers", fields: [sellerId], references: [id], onDelete: Cascade)
 
   @@index([listingId])
   @@index([sellerId])
@@ -183,8 +183,8 @@ model Favorite {
   userId    String
   listingId String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, listingId])
   @@index([userId])
@@ -224,41 +224,26 @@ model Notification {
   @@index([read])
 }
 
-enum SavedSearchMatchMode {
-  TITLE
-  CATEGORY
-  FILTERS
-}
-
-enum NotificationFrequency {
-  INSTANT
-  DAILY
-  WEEKLY
-}
-
 model SavedSearch {
   id                String                @id @default(cuid())
   userId            String
-  name              String                @default("Aramam")
   query             String?
   categorySlug      String?
-  subcategorySlug   String?
-  minPrice          Float?
-  maxPrice          Float?
-  city              String?
-  district          String?
-  matchMode         SavedSearchMatchMode  @default(FILTERS)
-  filtersJson       Json?
-  
-  isAlarm           Boolean               @default(false)
-  emailNotification Boolean               @default(false)
-  siteNotification  Boolean               @default(true)
-  frequency         NotificationFrequency @default(INSTANT)
-  
-  lastCheckAt       DateTime              @default(now())
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
-  
+  filtersJson       Json?
+  matchMode         SavedSearchMatchMode  @default(FILTERS)
+  city              String?
+  district          String?
+  emailNotification Boolean               @default(false)
+  frequency         NotificationFrequency @default(INSTANT)
+  isAlarm           Boolean               @default(false)
+  lastCheckAt       DateTime              @default(now())
+  maxPrice          Float?
+  minPrice          Float?
+  name              String                @default("Aramam")
+  siteNotification  Boolean               @default(true)
+  subcategorySlug   String?
   user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -267,13 +252,13 @@ model SavedSearch {
 
 model Question {
   id         String    @id @default(cuid())
-  body       String
   userId     String?
   listingId  String
   answer     String?
-  answeredAt DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  answeredAt DateTime?
+  body       String
   listing    Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
   user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -303,7 +288,7 @@ model Visit {
   ip        String?
   userAgent String?
   createdAt DateTime @default(now())
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user      User?    @relation(fields: [userId], references: [id])
 
   @@index([createdAt])
   @@index([path])
@@ -318,7 +303,7 @@ model Page {
   id        String   @id @default(cuid())
   title     String
   slug      String   @unique
-  content   String   @db.Text
+  content   String
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -328,4 +313,31 @@ model SystemSetting {
   key       String   @id
   value     String
   updatedAt DateTime @updatedAt
+}
+
+model ErrorLog {
+  id        String   @id @default(cuid())
+  message   String
+  stack     String?
+  source    String   @default("unknown") // frontend, backend, boundary
+  url       String?
+  method    String?  // GET, POST, vb.
+  userId    String?
+  context   Json?    // Ekstra bilgiler (body, params, browser info)
+  createdAt DateTime @default(now())
+  
+  @@index([createdAt])
+  @@index([source])
+}
+
+enum SavedSearchMatchMode {
+  TITLE
+  CATEGORY
+  FILTERS
+}
+
+enum NotificationFrequency {
+  INSTANT
+  DAILY
+  WEEKLY
 }

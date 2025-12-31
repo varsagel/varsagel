@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
 import { createModuleLogger, logError } from '@/lib/logger';
+import { logErrorToDb } from '@/lib/logger-service';
 
 const logger = createModuleLogger('error-handler');
 
@@ -81,6 +82,15 @@ export function handleError(error: unknown, requestId?: string): ErrorResponse {
       requestId: requestIdOrGenerate,
     });
 
+    if (error.statusCode >= 500) {
+      logErrorToDb({
+        message: error.message,
+        stack: error.stack,
+        source: 'backend',
+        context: { requestId: requestIdOrGenerate, details: error.details, statusCode: error.statusCode }
+      });
+    }
+
     return {
       error: error.constructor.name,
       message: error.message,
@@ -122,6 +132,13 @@ export function handleError(error: unknown, requestId?: string): ErrorResponse {
       requestId: requestIdOrGenerate,
     });
 
+    logErrorToDb({
+      message: `Prisma Unknown: ${error.message}`,
+      stack: error.stack,
+      source: 'backend',
+      context: { requestId: requestIdOrGenerate, type: 'PrismaClientUnknownRequestError' }
+    });
+
     return {
       error: 'DatabaseError',
       message: 'Database operation failed',
@@ -134,6 +151,13 @@ export function handleError(error: unknown, requestId?: string): ErrorResponse {
     logger.error('Prisma initialization error', {
       message: error.message,
       requestId: requestIdOrGenerate,
+    });
+
+    logErrorToDb({
+      message: `Prisma Init: ${error.message}`,
+      stack: error.stack,
+      source: 'backend',
+      context: { requestId: requestIdOrGenerate, type: 'PrismaClientInitializationError' }
     });
 
     return {
@@ -152,6 +176,13 @@ export function handleError(error: unknown, requestId?: string): ErrorResponse {
       requestId: requestIdOrGenerate,
     });
 
+    logErrorToDb({
+      message: error.message,
+      stack: error.stack,
+      source: 'backend',
+      context: { requestId: requestIdOrGenerate, type: 'UnexpectedError' }
+    });
+
     return {
       error: 'InternalServerError',
       message: process.env.NODE_ENV === 'development' 
@@ -166,6 +197,12 @@ export function handleError(error: unknown, requestId?: string): ErrorResponse {
   logger.error('Unknown error', {
     error,
     requestId: requestIdOrGenerate,
+  });
+
+  logErrorToDb({
+    message: 'Unknown Error',
+    source: 'backend',
+    context: { requestId: requestIdOrGenerate, rawError: JSON.stringify(error) }
   });
 
   return {

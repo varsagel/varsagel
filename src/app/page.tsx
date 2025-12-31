@@ -1,5 +1,5 @@
 import { getListings } from '@/lib/services/listingService';
-import HeroSection from '@/components/home/HeroSection';
+import TechCategoryHero from '@/components/home/TechCategoryHero';
 import HomeListingCard, { ListingItem } from '@/components/home/ListingCard';
 import { CATEGORIES } from '@/data/categories';
 import { ArrowRight, ChevronRight, Heart, X } from 'lucide-react';
@@ -93,51 +93,18 @@ export default async function Home({ searchParams }: PageProps) {
   };
 
   return (
-    <div className="min-h-dvh bg-gray-50 pb-20">
-      <HeroSection initialSearch={q} />
+    <div className="min-h-dvh bg-slate-50 pb-20">
+      <TechCategoryHero categories={CATEGORIES} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Categories Section */}
-        {!q && !category && (
-          <div className="mb-16">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
-                <h2 className="text-xl font-bold text-gray-900">En Çok Arananlar</h2>
-                <span className="text-sm text-gray-500 font-medium hidden sm:block">
-                  Detaylı filtrelemek için kategoriye tıklayın
-                </span>
-              </div>
-              <Link href="/#kategoriler" className="text-sm font-medium text-cyan-600 hover:text-cyan-700 flex items-center gap-1 transition-colors">
-                Tümünü Gör <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {CATEGORIES.slice(0, 12).map((cat) => (
-                <Link
-                  key={cat.slug} 
-                  href={`/kategori/${cat.slug}`}
-                  className="group flex flex-col items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-cyan-50 group-hover:bg-cyan-100 flex items-center justify-center text-3xl transition-colors duration-300">
-                    {cat.icon}
-                  </div>
-                  <span className="text-sm font-semibold text-gray-700 group-hover:text-cyan-600 text-center line-clamp-1 transition-colors">
-                    {cat.name}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="ilanlar">
+        
         {/* Listings Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-4 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-4 border-b border-slate-200">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 tracking-tight">
               {q ? (
                 <>
-                  <span className="text-gray-400 font-normal">Arama Sonuçları:</span> "{q}"
+                  <span className="text-slate-400 font-normal">Arama Sonuçları:</span> "{q}"
                 </>
               ) : category ? (
                 <>
@@ -147,7 +114,7 @@ export default async function Home({ searchParams }: PageProps) {
                 'Son Alım Talepleri'
               )}
             </h2>
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-slate-500 text-sm mt-1">
               {pagination.total} aktif alım talebi listeleniyor
             </p>
           </div>
@@ -157,7 +124,7 @@ export default async function Home({ searchParams }: PageProps) {
 
         {/* Listings Grid */}
         {listings.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
             {listings.map((listing, index) => (
               <HomeListingCard
                 key={listing.id}

@@ -1,12 +1,13 @@
 "use client";
 
-// Force rebuild 2
+// Force rebuild 3
 import Link from "next/link";
 import Image from "next/image";
 import { useMemo, useState, useEffect } from "react";
 import FavoriteButton from '@/components/ui/FavoriteButton';
 import { getSubcategoryImage } from '@/data/subcategory-images';
 import BRAND_LOGOS from "@/data/brand-logos.json";
+import { Clock, MapPin } from "lucide-react";
 
 // Formatters moved outside to avoid recreation on every render
 const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
@@ -86,21 +87,21 @@ function BrandBadge({ category, subcategory, attributes }: { category: string; s
   if (!logoSrc && !brandKey && !subcategory) return null;
 
   return (
-    <div className="mt-1.5 pt-1.5 border-t border-gray-100">
-      <div className="flex items-center gap-1">
+    <div className="mt-3 pt-2 border-t border-slate-100">
+      <div className="flex items-center gap-1.5">
         {logoSrc ? (
           <div
             role="img"
             aria-label={brandKey || "Marka"}
-            className="w-2.5 h-2.5 bg-center bg-no-repeat bg-contain"
+            className="w-4 h-4 bg-center bg-no-repeat bg-contain"
             style={{ backgroundImage: `url(${logoSrc})` }}
           />
         ) : (
-          <div className="w-2.5 h-2.5 flex items-center justify-center text-[8px] font-semibold text-gray-400">
+          <div className="w-4 h-4 flex items-center justify-center rounded-full bg-slate-100 text-[9px] font-bold text-slate-500">
             {String(category || "K").slice(0, 1).toUpperCase()}
           </div>
         )}
-        <span className="text-[10px] text-gray-600 truncate">
+        <span className="text-[11px] font-medium text-slate-600 truncate">
           {brandKey || subcategory || ""}
         </span>
       </div>
@@ -154,48 +155,59 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
   }, [listing.price, listing.attributes?.minPrice, listing.attributes?.maxPrice]);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden relative group">
-      <Link href={`/talep/${listing.id}`} className="block">
-        <div className="relative w-full aspect-[4/3] bg-gray-100">
-          <Image
-            src={currentSrc}
-            alt={listing.title}
-            onError={handleError}
-            priority={priority}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
-            className="object-cover"
-          />
-          <div suppressHydrationWarning className="absolute bottom-1 left-1 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded text-[10px] sm:text-[11px] font-semibold z-10 max-w-[calc(100%-8px)] truncate">
-            {priceText}
-          </div>
+    <div className="group bg-white rounded-xl border border-slate-200 hover:border-cyan-300 shadow-sm hover:shadow-lg hover:shadow-cyan-500/10 transition-all duration-300 overflow-hidden relative flex flex-col h-full">
+      <Link href={`/talep/${listing.id}`} className="block relative aspect-[4/3] overflow-hidden bg-slate-100">
+        <Image
+          src={currentSrc}
+          alt={listing.title}
+          onError={handleError}
+          priority={priority}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+
+        {/* Price Badge */}
+        <div suppressHydrationWarning className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-bold text-slate-900 shadow-sm">
+          {priceText}
+        </div>
+
+        {/* Category Badge */}
+        <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-md border border-white/20 text-white px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
+          {listing.category}
         </div>
       </Link>
-      <FavoriteButton listingId={listing.id} isAuthenticated={isAuthenticated} isFavorited={listing.isFavorited} />
+      
+      <div className="absolute top-2 left-2 z-10">
+        <FavoriteButton listingId={listing.id} isAuthenticated={isAuthenticated} isFavorited={listing.isFavorited} />
+      </div>
 
-      <div className="p-2.5">
-        <Link href={`/talep/${listing.id}`}>
-          <h3 className="font-semibold text-gray-900 mb-1 text-xs line-clamp-2 hover:text-blue-600 transition-colors">
+      <div className="p-4 flex flex-col flex-1">
+        <Link href={`/talep/${listing.id}`} className="block flex-1">
+          <h3 className="font-semibold text-slate-900 mb-2 text-sm leading-snug line-clamp-2 group-hover:text-cyan-700 transition-colors">
             {listing.title}
           </h3>
         </Link>
 
-        <div className="flex items-center gap-1 text-[11px] text-gray-600 mb-1.5">
-          <span suppressHydrationWarning className="truncate">
-            {[listing.location.district, listing.location.city].filter(Boolean).join(", ")}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between text-[11px] text-gray-500">
-          <div className="flex items-center gap-1">
-            <span suppressHydrationWarning>{timeAgo}</span>
+        <div className="mt-auto space-y-2">
+          <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-slate-400" />
+              <span suppressHydrationWarning className="truncate max-w-[100px]">
+                {[listing.location.district, listing.location.city].filter(Boolean).join(", ")}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <span suppressHydrationWarning>{timeAgo}</span>
+            </div>
           </div>
-          <div className="bg-gray-100 px-1 py-0.5 rounded text-[10px] font-medium capitalize">
-            {listing.category}
-          </div>
-        </div>
 
-        <BrandBadge category={listing.category} subcategory={listing.subcategory} attributes={listing.attributes} />
+          <BrandBadge category={listing.category} subcategory={listing.subcategory} attributes={listing.attributes} />
+        </div>
       </div>
     </div>
   );

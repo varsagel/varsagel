@@ -34,12 +34,19 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to external service in production
-    if (process.env.NODE_ENV === 'production') {
-      // Here you would typically send to Sentry, LogRocket, etc.
-      console.error('Global Error Boundary caught:', error, errorInfo);
-    }
-    
+    // Log error to internal log system
+    fetch('/api/admin/logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: error.message,
+        stack: error.stack,
+        source: 'frontend',
+        url: typeof window !== 'undefined' ? window.location.href : '',
+        context: { componentStack: errorInfo.componentStack }
+      })
+    }).catch(e => console.error('Failed to send error log:', e));
+
     this.setState({
       error,
       errorInfo,

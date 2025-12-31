@@ -22,7 +22,7 @@ async function main() {
     if (listings.length === 0) {
       console.log('Henüz hiç talep yok.');
     } else {
-      listings.forEach((listing, index) => {
+      listings.slice(0, 5).forEach((listing, index) => {
         console.log(`\n--- Talep ${index + 1} ---`);
         console.log(`ID: ${listing.id}`);
         console.log(`Başlık: ${listing.title}`);

@@ -42,7 +42,6 @@ export const EXTRA_MODEL_SERIES: any = {
   },
 
   "vasita/motosiklet": {
-    // --- HIGH QUALITY DATA ---
     "Honda": {
       "PCX 125": ["2021-2024", "2018-2020", "2014-2017"],
       "CBR 250 R": ["2014-2017", "2011-2013"],
@@ -51,73 +50,72 @@ export const EXTRA_MODEL_SERIES: any = {
       "Forza 250": ["2021-2024", "2018-2020"],
       "NC 750 X": ["DCT", "Manuel"],
       "X-ADV": ["750"],
-      "CBR 125 R": ["Standart"], "CBR 600 RR": ["Standart"], "CBR 1000 RR": ["Standart"], "CRF 250 L": ["Standart"], "Dio": ["Standart"], "Forza 750": ["Standart"], "Gold Wing": ["Standart"], "PCX 150": ["Standart"], "Spacy": ["Standart"], "CB 125 F": ["Standart"], "CB 250 R": ["Standart"], "CB 650 R": ["Standart"], "CBR 650 R": ["Standart"], "MSX 125": ["Standart"], "Monkey": ["Standart"], "Super Cub": ["Standart"]
+      "CBR 125 R": ["2011-2017", "2004-2010"], "CBR 600 RR": ["2013-2024", "2007-2012", "2003-2006"], "CBR 1000 RR": ["Fireblade", "SP"], "CRF 250 L": ["2017-2020", "2012-2016", "Rally"], "Dio": ["110"], "Forza 750": ["DCT"], "Gold Wing": ["GL1800", "Bagger", "Tour"], "PCX 150": ["2018-2020", "2014-2017"], "Spacy": ["110", "Alpha"], "CB 125 F": ["2021-2024", "2015-2020"], "CB 250 R": ["Neo Sports Café"], "CB 650 R": ["Neo Sports Café"], "CBR 650 R": ["2019-2024"], "MSX 125": ["Grom"], "Monkey": ["125"], "Super Cub": ["C125"]
     },
     "Yamaha": {
-      "MT-07": ["2021-2024", "2018-2020", "2014-2017"],
-      "MT-09": ["2021-2024", "2017-2020", "2014-2016"],
+      "MT-07": ["2021-2024", "2018-2020", "2014-2017", "Pure"],
+      "MT-09": ["2021-2024", "2017-2020", "2014-2016", "SP"],
       "R25": ["2019-2024", "2014-2018"],
-      "X-MAX 250": ["Iron Max", "Momodesign", "Tech Max", "Standart"],
+      "X-MAX 250": ["Iron Max", "Momodesign", "Tech Max", "ABS"],
       "NMAX 125": ["2021-2024", "2015-2020"],
       "NMAX 155": ["2021-2024", "2017-2020"],
-      "Tenere 700": ["Standart", "Rally Edition", "World Raid"],
-      "Crypton": ["Standart"], "Delight": ["Standart"], "Dragstar": ["Standart"], "Fazer": ["Standart"], "MT-25": ["Standart"], "R6": ["Standart"], "R1": ["Standart"], "Tracer 700": ["Standart"], "Tracer 900": ["Standart"], "X-City": ["Standart"], "X-MAX 300": ["Standart"], "X-MAX 400": ["Standart"], "YBR 125": ["Standart"], "XSR 700": ["Standart"], "XSR 900": ["Standart"], "TMAX 560": ["Standart"], "Tricity": ["Standart"], "XV 950": ["Standart"]
+      "Tenere 700": ["Standard", "Rally Edition", "World Raid", "Extreme"],
+      "Crypton": ["115 S"], "Delight": ["125"], "Dragstar": ["650", "1100"], "Fazer": ["FZ6", "FZ8", "FZ1"], "MT-25": ["2020-2024", "2016-2019"], "R6": ["2017-2020", "2006-2016"], "R1": ["2015-2024", "2009-2014"], "Tracer 700": ["2020-2024", "2016-2019"], "Tracer 900": ["GT", "Standard"], "X-City": ["250"], "X-MAX 300": ["Tech Max", "Standard"], "X-MAX 400": ["Tech Max", "Momodesign"], "YBR 125": ["ESD", "Standard"], "XSR 700": ["Legacy", "Standard"], "XSR 900": ["Standard"], "TMAX 560": ["Tech Max", "Standard"], "Tricity": ["155", "300"], "XV 950": ["Racer", "Bolt"]
     },
     "Suzuki": {
-      "V-Strom 250": ["DL250"],
-      "DL 650 V-Strom": ["2017-2024", "2012-2016", "2004-2011"],
-      "Hayabusa": ["GSX 1300 R"],
-      "Address": ["Standart"], "Burgman 200": ["Standart"], "Burgman 400": ["Standart"], "Burgman 650": ["Standart"], "DL 1000 V-Strom": ["Standart"], "GSX-R 600": ["Standart"], "GSX-R 1000": ["Standart"], "GSX-S 1000": ["Standart"], "Inazuma": ["Standart"], "SV 650": ["Standart"], "GSX 250 R": ["Standart"]
+      "V-Strom 250": ["DL250", "SX"],
+      "DL 650 V-Strom": ["XT", "Standard"],
+      "Hayabusa": ["Gen 3", "Gen 2", "Gen 1"],
+      "Address": ["110", "125"], "Burgman 200": ["UH200"], "Burgman 400": ["2017-2024", "2007-2016"], "Burgman 650": ["Executive"], "DL 1000 V-Strom": ["XT", "Standard"], "GSX-R 600": ["2011-2017", "2006-2010"], "GSX-R 1000": ["R", "Standard"], "GSX-S 1000": ["GT", "GX", "Standard"], "Inazuma": ["GW250", "F"], "SV 650": ["X", "Standard"], "GSX 250 R": ["Standard"]
     },
     "Kawasaki": {
-      "Ninja 250 R": ["Standart"],
-      "Ninja 400": ["KRT Edition", "Standart"],
-      "Z 900": ["Standart", "SE"],
-      "J 300": ["Standart"], "Ninja 300": ["Standart"], "Ninja 650": ["Standart"], "Ninja ZX-6R": ["Standart"], "Ninja ZX-10R": ["Standart"], "Versys 650": ["Standart"], "Versys 1000": ["Standart"], "Z 650": ["Standart"], "Z 1000": ["Standart"], "Vulcan S": ["Standart"], "W800": ["Standart"], "Z400": ["Standart"]
+      "Ninja 250 R": ["2008-2012", "SL"],
+      "Ninja 400": ["KRT Edition", "Standard"],
+      "Z 900": ["Standard", "SE", "RS"],
+      "J 300": ["SE", "Standard"], "Ninja 300": ["Standard"], "Ninja 650": ["KRT", "Standard"], "Ninja ZX-6R": ["KRT", "Standard"], "Ninja ZX-10R": ["KRT", "RR", "Standard"], "Versys 650": ["Tourer", "Grand Tourer", "Standard"], "Versys 1000": ["S", "SE", "Standard"], "Z 650": ["RS", "Standard"], "Z 1000": ["R Edition", "Standard", "SX"], "Vulcan S": ["Café", "Standard"], "W800": ["Street", "Café", "Standard"], "Z400": ["Standard"]
     },
     "BMW": {
-      "R 1250 GS": ["Adventure", "Standart"],
-      "F 750 GS": ["Standart"],
-      "S 1000 RR": ["M Package", "Race Package", "Standart"],
-      "C 400 GT": ["Standart"], "C 400 X": ["Standart"], "F 850 GS": ["Standart"], "G 310 GS": ["Standart"], "G 310 R": ["Standart"], "K 1600 GTL": ["Standart"], "R 1200 GS": ["Standart"], "R 1250 RT": ["Standart"], "S 1000 XR": ["Standart"], "R 18": ["Standart"], "R nineT": ["Standart"], "F 900 R": ["Standart"], "F 900 XR": ["Standart"]
+      "R 1250 GS": ["Adventure", "Standard", "Trophy"],
+      "F 750 GS": ["Standard", "Sport"],
+      "S 1000 RR": ["M Package", "Race Package", "Standard"],
+      "C 400 GT": ["Standard"], "C 400 X": ["Standard"], "F 850 GS": ["Adventure", "Standard"], "G 310 GS": ["Standard"], "G 310 R": ["Standard"], "K 1600 GTL": ["Exclusive", "Standard"], "R 1200 GS": ["Adventure", "Standard"], "R 1250 RT": ["Standard"], "S 1000 XR": ["M Package", "Standard"], "R 18": ["Classic", "B", "Transcontinental", "Roctane"], "R nineT": ["Pure", "Scrambler", "Urban G/S"], "F 900 R": ["Standard"], "F 900 XR": ["Standard"]
     },
     "Bajaj": {
       "Dominar 250": ["D 250"],
-      "Dominar 400": ["UG", "Standart"],
+      "Dominar 400": ["UG", "Standard"],
       "Pulsar NS 200": ["2017-2024", "2014-2016"],
-      "Pulsar NS 160": ["Standart"], "Pulsar RS 200": ["Standart"], "Boxer 150": ["Standart"]
+      "Pulsar NS 160": ["Standard"], "Pulsar RS 200": ["Standard"], "Boxer 150": ["Standard"]
     },
     "Vespa": {
       "GTS 300": ["Super", "Super Sport", "Super Tech", "Sei Giorni"],
-      "Primavera 150": ["S", "Touring", "Standart"],
-      "Sprint 150": ["Standart"], "LX 150": ["Standart"], "S 150": ["Standart"], "Elettrica": ["Standart"]
+      "Primavera 150": ["S", "Touring", "Standard", "RED"],
+      "Sprint 150": ["S", "Justin Bieber", "Standard"], "LX 150": ["Standard"], "S 150": ["Standard"], "Elettrica": ["45 km/h", "70 km/h"]
     },
     "CFMOTO": {
-      "450 SR": ["S", "Standart"],
-      "250 NK": ["Standart"],
-      "250 SR": ["Standart"],
-      "400 NK": ["Standart"], "650 NK": ["Standart"], "650 MT": ["Standart"], "800 MT": ["Standart"], "CL-X 700": ["Standart"]
+      "450 SR": ["S", "Standard"],
+      "250 NK": ["Standard"],
+      "250 SR": ["Standard"],
+      "400 NK": ["Standard"], "650 NK": ["Standard"], "650 MT": ["Standard"], "800 MT": ["Touring", "Sport"], "CL-X 700": ["Heritage", "Sport", "Adventure"]
     },
     "Arora": {
       "Cappucino": ["50", "125"],
       "Verano": ["50"],
-      "Freedom": ["Standart"], "Mojito": ["Standart"], "Safari": ["Standart"], "Special": ["Standart"], "Vesta": ["Standart"], "Yebere": ["Standart"], "Cappucino 50": ["Standart"]
+      "Freedom": ["50"], "Mojito": ["50"], "Safari": ["50"], "Special": ["Alpha"], "Vesta": ["50"], "Yebere": ["125"], "Cappucino 50": ["Standard"]
     },
-    // --- COMPLETED WITH DEFAULTS ---
-    "Ducati": { "Diavel": ["Standart"], "Monster 797": ["Standart"], "Monster 821": ["Standart"], "Monster 1200": ["Standart"], "Multistrada 950": ["Standart"], "Multistrada 1260": ["Standart"], "Panigale V4": ["Standart"], "Scrambler": ["Standart"], "Hypermotard": ["Standart"], "Streetfighter V4": ["Standart"], "Supersport": ["Standart"] },
-    "KTM": { "125 Duke": ["Standart"], "200 Duke": ["Standart"], "250 Duke": ["Standart"], "390 Duke": ["Standart"], "RC 125": ["Standart"], "RC 200": ["Standart"], "RC 390": ["Standart"], "250 EXC": ["Standart"], "300 EXC": ["Standart"], "Adventure 390": ["Standart"], "Adventure 790": ["Standart"], "Super Adventure 1290": ["Standart"], "690 SMC R": ["Standart"], "690 Enduro R": ["Standart"] },
-    "Hero": { "Dash": ["Standart"], "Duet": ["Standart"], "Glamour": ["Standart"], "Hunk": ["Standart"], "Pleasure": ["Standart"], "Thriller": ["Standart"], "Xpulse 200": ["Standart"] },
-    "Mondial": { "100 UAG": ["Standart"], "100 SFC": ["Standart"], "125 Drift": ["Standart"], "150 MH Drift": ["Standart"], "150 ZC": ["Standart"], "50 Revival": ["Standart"], "50 Turismo": ["Standart"], "Rx3i Evo": ["Standart"], "X-Treme Max": ["Standart"] },
-    "Kuba": { "Bluebird": ["Standart"], "Blueberry": ["Standart"], "Brilliant": ["Standart"], "CG 100": ["Standart"], "CR1": ["Standart"], "Dragon": ["Standart"], "Ege": ["Standart"], "Filinta": ["Standart"], "Nirvana": ["Standart"], "Pars": ["Standart"], "Rainbow": ["Standart"], "Reiz": ["Standart"], "Space": ["Standart"], "Superlight": ["Standart"], "X-Boss": ["Standart"], "TK 03": ["Standart"], "Çita 100": ["Standart"] },
-    "RKS": { "Azure": ["Standart"], "Bitter": ["Standart"], "Blazer": ["Standart"], "Freccia": ["Standart"], "Pesaro": ["Standart"], "Pollo": ["Standart"], "RN 180": ["Standart"], "Siesta": ["Standart"], "Spontini": ["Standart"], "Titanic": ["Standart"], "Wildcat": ["Standart"], "Vieste 245": ["Standart"] },
-    "Sym": { "Fiddle II": ["Standart"], "Fiddle III": ["Standart"], "GTS 250": ["Standart"], "Jet 14": ["Standart"], "Joymax 250": ["Standart"], "Symphony": ["Standart"], "Wolf": ["Standart"], "Cruisym 250": ["Standart"], "Maxsym TL": ["Standart"] },
-    "Kymco": { "Agility 125": ["Standart"], "Agility 16-200": ["Standart"], "Downton 250": ["Standart"], "Like 125": ["Standart"], "People S": ["Standart"], "X-Town": ["Standart"], "AK 550": ["Standart"] },
-    "Peugeot": { "Django": ["Standart"], "Kisbee": ["Standart"], "Metropolis": ["Standart"], "Speedfight": ["Standart"], "Tweet": ["Standart"], "Pulsion": ["Standart"] },
-    "Triumph": { "Tiger 800": ["Standart"], "Tiger 900": ["Standart"], "Tiger 1200": ["Standart"], "Street Triple": ["Standart"], "Speed Triple": ["Standart"], "Bonneville": ["Standart"], "Scrambler 1200": ["Standart"], "Rocket 3": ["Standart"] },
-    "Harley-Davidson": { "Iron 883": ["Standart"], "Forty-Eight": ["Standart"], "Street Bob": ["Standart"], "Fat Bob": ["Standart"], "Low Rider S": ["Standart"], "Heritage Classic": ["Standart"], "Road King": ["Standart"], "Street Glide": ["Standart"], "Road Glide": ["Standart"], "Pan America": ["Standart"] },
-    "Husqvarna": { "Svartpilen 250": ["Standart"], "Svartpilen 401": ["Standart"], "Vitpilen 401": ["Standart"], "Norden 901": ["Standart"], "701 Supermoto": ["Standart"], "701 Enduro": ["Standart"] },
-    "Aprilia": { "RS 660": ["Standart"], "Tuono 660": ["Standart"], "Tuareg 660": ["Standart"], "RSV4": ["Standart"], "Tuono V4": ["Standart"], "SR GT 200": ["Standart"] },
-    "TVS": { "Apache RTR 200": ["Standart"], "Apache RTR 160": ["Standart"], "Jupiter": ["Standart"], "Wego": ["Standart"] }
+    "Ducati": { "Diavel": ["1260 S", "V4", "XDiavel"], "Monster": ["797", "821", "937", "1200 S", "SP"], "Multistrada": ["V2", "V4 S", "950", "1260 Enduro"], "Panigale": ["V2", "V4 S", "V4 R"], "Scrambler": ["Icon", "Nightshift", "Desert Sled"], "Hypermotard": ["950 RVE", "950 SP"], "Streetfighter": ["V2", "V4 S"], "Supersport": ["950 S"] },
+    "KTM": { "125 Duke": ["Standard"], "200 Duke": ["Standard"], "250 Duke": ["Standard"], "390 Duke": ["Standard"], "RC 125": ["Standard"], "RC 200": ["Standard"], "RC 390": ["Standard"], "250 EXC": ["F", "TPI"], "300 EXC": ["TPI", "Hardenduro"], "Adventure 390": ["Standard"], "Adventure 790": ["Standard", "R"], "Super Adventure 1290": ["S", "R"], "690 SMC R": ["Standard"], "690 Enduro R": ["Standard"] },
+    "Hero": { "Dash": ["110", "125"], "Duet": ["110"], "Glamour": ["125"], "Hunk": ["200"], "Pleasure": ["Plus"], "Thriller": ["160 R"], "Xpulse 200": ["4V", "2V"] },
+    "Mondial": { "100 UAG": ["Standard"], "100 SFC": ["Snappy X"], "125 Drift": ["L", "MH"], "150 MH Drift": ["Standard"], "150 ZC": ["Standard"], "50 Revival": ["Standard"], "50 Turismo": ["Standard"], "Rx3i Evo": ["Standard"], "X-Treme Max": ["200"] },
+    "Kuba": { "Bluebird": ["50", "Pro"], "Blueberry": ["50", "Pro"], "Brilliant": ["125"], "CG 100": ["Standard"], "CR1": ["Standard"], "Dragon": ["50"], "Ege": ["50"], "Filinta": ["200"], "Nirvana": ["125"], "Pars": ["125"], "Rainbow": ["Standard"], "Reiz": ["Standard"], "Space": ["50"], "Superlight": ["200"], "X-Boss": ["Standard"], "TK 03": ["50", "125"], "Çita 100": ["Gold"] },
+    "RKS": { "Azure": ["50"], "Bitter": ["50"], "Blazer": ["XR"], "Freccia": ["150"], "Pesaro": ["125"], "Pollo": ["50"], "RN 180": ["Standard"], "Siesta": ["50"], "Spontini": ["110"], "Titanic": ["150"], "Wildcat": ["125"], "Vieste 245": ["Standard"], "Newlight": ["125"] },
+    "Sym": { "Fiddle II": ["125"], "Fiddle III": ["125"], "GTS 250": ["i Evo"], "Jet 14": ["125", "200"], "Joymax 250": ["Z+"], "Symphony": ["125", "200"], "Wolf": ["125", "250"], "Cruisym 250": ["Alpha"], "Maxsym TL": ["508"] },
+    "Kymco": { "Agility 125": ["16+", "S", "Carry"], "Agility 16-200": ["i"], "Downton 250": ["i"], "Like 125": ["S"], "People S": ["125", "200"], "X-Town": ["250"], "AK 550": ["Premium"] },
+    "Peugeot": { "Django": ["125", "50"], "Kisbee": ["50"], "Metropolis": ["400"], "Speedfight": ["50", "125"], "Tweet": ["125", "200"], "Pulsion": ["125"] },
+    "Triumph": { "Tiger 800": ["XC", "XR"], "Tiger 900": ["GT", "Rally"], "Tiger 1200": ["GT", "Rally"], "Street Triple": ["S", "R", "RS"], "Speed Triple": ["1200 RS", "1200 RR"], "Bonneville": ["T100", "T120", "Bobber"], "Scrambler 1200": ["XC", "XE"], "Rocket 3": ["R", "GT"] },
+    "Harley-Davidson": { "Iron 883": ["Standard"], "Forty-Eight": ["Standard"], "Street Bob": ["114"], "Fat Bob": ["114"], "Low Rider S": ["117"], "Heritage Classic": ["114"], "Road King": ["Special"], "Street Glide": ["Special", "ST"], "Road Glide": ["Special", "ST"], "Pan America": ["1250", "Special"] },
+    "Husqvarna": { "Svartpilen 250": ["Standard"], "Svartpilen 401": ["Standard"], "Vitpilen 401": ["Standard"], "Norden 901": ["Standard", "Expedition"], "701 Supermoto": ["Standard"], "701 Enduro": ["Standard"] },
+    "Aprilia": { "RS 660": ["Standard", "Extrema"], "Tuono 660": ["Standard", "Factory"], "Tuareg 660": ["Standard"], "RSV4": ["Factory", "Standard"], "Tuono V4": ["Factory", "Standard"], "SR GT 200": ["Standard", "Sport"] },
+    "TVS": { "Apache RTR 200": ["4V"], "Apache RTR 160": ["4V"], "Jupiter": ["110", "125"], "Wego": ["110"] }
   },
 
   "vasita/minivan-panelvan": {
@@ -172,53 +170,53 @@ export const EXTRA_MODEL_SERIES: any = {
 
   "vasita/kamyon-cekici": {
     "Mercedes": {
-      "Actros 1844": ["LS"], "Actros 1845": ["LS"], "Actros 1848": ["LS"], "Actros 1851": ["LS", "GigaSpace"], "Axor 1840": ["LS"], "Axor 3240": ["C"], "Atego 1518": ["K"],
-      "Axor 3028": ["Standart"], "Axor 3228": ["Standart"], "Atego 2124": ["Standart"], "Arocs": ["Standart"]
+      "Actros 1844": ["LS", "LsnRL"], "Actros 1845": ["LS", "StreamSpace", "BigSpace"], "Actros 1848": ["LS", "GigaSpace"], "Actros 1851": ["LS", "GigaSpace"], "Axor 1840": ["LS", "LsnRL"], "Axor 3240": ["C", "Retarder"], "Atego 1518": ["K"],
+      "Axor 3028": ["K", "C"], "Axor 3228": ["C", "K"], "Atego 2124": ["K", "C"], "Arocs": ["3342", "4142", "4145", "1842"], "Actros 1842": ["StreamSpace"], "Actros 1863": ["GigaSpace"]
     },
     "Ford": {
-      "F-Max": ["500"], "Cargo 1846 T": ["Midilli", "Standart"], "Cargo 1838 T": ["Standart"], "Cargo 2520": ["Standart"], "Cargo 3230": ["S", "C"],
-      "Cargo 2524": ["Standart"], "Cargo 3233": ["Standart"], "Cargo 4142": ["Standart"]
+      "F-Max": ["500", "L", "LL"], "Cargo 1846 T": ["Midilli", "Standart", "Otomatik"], "Cargo 1838 T": ["Standart", "Konfor"], "Cargo 2520": ["Standart"], "Cargo 3230": ["S", "C", "SHR"],
+      "Cargo 2524": ["Standart", "HR"], "Cargo 3233": ["S", "HR"], "Cargo 4142": ["D", "M", "P"], "Cargo 1842": ["T"]
     },
     "Scania": {
-      "R 450": ["Streamline", "Topline"], "R 500": ["V8"], "S 500": ["Highline"], "G 420": ["Highline"],
-      "G 400": ["Standart"], "R 400": ["Standart"], "R 420": ["Standart"], "R 440": ["Standart"], "R 540": ["Standart"], "S 540": ["Standart"]
+      "R 450": ["Streamline", "Topline", "Highline"], "R 500": ["V8", "Streamline", "Topline"], "S 500": ["Highline", "Normal"], "G 420": ["Highline", "Topline"],
+      "G 400": ["Highline"], "R 400": ["Topline", "Highline"], "R 420": ["Topline"], "R 440": ["Streamline", "Topline"], "R 540": ["Highline"], "S 540": ["Highline"], "R 580": ["V8"], "R 620": ["V8"]
     },
     "Volvo": {
-      "FH 500": ["Globetrotter", "Globetrotter XL"], "FH 540": ["Globetrotter XL"], "FH 460": ["Globetrotter"],
-      "FH 12": ["Standart"], "FH 13": ["Standart"], "FH 16": ["Standart"], "FH 420": ["Standart"], "FM 11": ["Standart"], "FM 12": ["Standart"], "FMX": ["Standart"]
+      "FH 500": ["Globetrotter", "Globetrotter XL", "I-Save"], "FH 540": ["Globetrotter XL", "Dual Clutch"], "FH 460": ["Globetrotter", "I-Save"],
+      "FH 12": ["420", "460"], "FH 13": ["400", "440", "480"], "FH 16": ["600", "700", "750"], "FH 420": ["Globetrotter"], "FM 11": ["450", "410"], "FM 12": ["420"], "FMX": ["460", "500", "540"]
     },
-    "MAN": { "TGX 18.400": ["Standart"], "TGX 18.440": ["Standart"], "TGX 18.460": ["Standart"], "TGX 18.480": ["Standart"], "TGS 18.400": ["Standart"], "TGA 18.430": ["Standart"], "TGL": ["Standart"] },
-    "DAF": { "XF 95": ["Standart"], "XF 105": ["Standart"], "XF 460": ["Standart"], "XF 480": ["Standart"], "XF 510": ["Standart"], "CF 85": ["Standart"], "XG": ["Standart"], "XG+": ["Standart"] },
-    "Renault": { "Magnum": ["Standart"], "Premium 420": ["Standart"], "Premium 440": ["Standart"], "Premium 450": ["Standart"], "Premium 460": ["Standart"], "T 460": ["Standart"], "T 480": ["Standart"], "K Range": ["Standart"], "C Range": ["Standart"] },
-    "Iveco": { "Stralis 430": ["Standart"], "Stralis 450": ["Standart"], "Stralis 460": ["Standart"], "Stralis 480": ["Standart"], "S-Way 510": ["Standart"], "Eurocargo": ["Standart"], "Trakker": ["Standart"] },
-    "BMC": { "Pro 620": ["Standart"], "Pro 827": ["Standart"], "Pro 1142": ["Standart"], "Tuğra 1846": ["Standart"], "Fatih": ["Standart"] },
-    "Isuzu": { "NPR 10": ["Standart"], "NPR 3 D": ["Standart"], "NPR 8": ["Standart"], "NQR": ["Standart"], "Roybus": ["Standart"], "FVR": ["Standart"], "FSR": ["Standart"] },
-    "Mitsubishi": { "Canter 304": ["Standart"], "Canter 449": ["Standart"], "Canter 515": ["Standart"], "Canter 659": ["Standart"], "Canter 859": ["Standart"], "Fuso Canter": ["Standart"] }
+    "MAN": { "TGX 18.400": ["XLX", "XXL"], "TGX 18.440": ["XLX", "XXL"], "TGX 18.460": ["XLX", "XXL"], "TGX 18.480": ["XLX", "XXL"], "TGS 18.400": ["LX"], "TGA 18.430": ["LX"], "TGL": ["12.180", "8.180"], "TGX 18.510": ["GM", "GX"] },
+    "DAF": { "XF 95": ["430", "480"], "XF 105": ["460", "510"], "XF 460": ["Space Cab", "Super Space Cab"], "XF 480": ["Space Cab", "Super Space Cab"], "XF 510": ["Super Space Cab"], "CF 85": ["410", "460"], "XG": ["480", "530"], "XG+": ["480", "530"] },
+    "Renault": { "Magnum": ["440", "460", "480"], "Premium 420": ["dCi"], "Premium 440": ["dxi"], "Premium 450": ["dxi"], "Premium 460": ["dxi"], "T 460": ["Highcab", "Sleeper"], "T 480": ["Highcab", "Comfort"], "K Range": ["440", "480"], "C Range": ["460", "520"] },
+    "Iveco": { "Stralis 430": ["Active Space"], "Stralis 450": ["Active Space"], "Stralis 460": ["Hi-Way", "XP"], "Stralis 480": ["Hi-Way"], "S-Way 510": ["AS"], "Eurocargo": ["150E22", "160E25"], "Trakker": ["410", "450"] },
+    "BMC": { "Pro 620": ["Standard"], "Pro 827": ["Standard"], "Pro 1142": ["Standard"], "Tuğra 1846": ["Standard", "Elite"], "Fatih": ["162-25", "200-26"] },
+    "Isuzu": { "NPR 10": ["Long", "Short"], "NPR 3 D": ["Standard"], "NPR 8": ["Long", "Short"], "NQR": ["Standard"], "Roybus": ["Standard"], "FVR": ["33"], "FSR": ["90"] },
+    "Mitsubishi": { "Canter 304": ["Standard"], "Canter 449": ["Standard"], "Canter 515": ["Standard"], "Canter 659": ["Standard"], "Canter 859": ["Standard"], "Fuso Canter": ["9B"] }
   },
 
   "vasita/traktor": {
     "New Holland": {
-      "TD 75 D": ["Bluemaster"], "TD 90 D": ["Bluemaster"], "TD 100 D": ["Bluemaster"], "TD 110 D": ["Bluemaster"], "TT 50": ["Standart"], "TT 55": ["Standart"],
-      "55-56 S": ["Standart"], "65-56 S": ["Standart"], "75-56 S": ["Standart"], "TD 65 D": ["Standart"], "TR 5.110": ["Standart"], "TT 65": ["Standart"], "T4.75": ["Standart"], "T5.115": ["Standart"], "T6.160": ["Standart"], "T7.270": ["Standart"]
+      "TD 75 D": ["Bluemaster", "Delta"], "TD 90 D": ["Bluemaster", "Delta"], "TD 100 D": ["Bluemaster", "Delta"], "TD 110 D": ["Bluemaster", "Delta"], "TT 50": ["Standard", "Junior"], "TT 55": ["Standard", "B"],
+      "55-56 S": ["Standard"], "65-56 S": ["Standard"], "75-56 S": ["Standard"], "TD 65 D": ["Bluemaster"], "TR 5.110": ["EC"], "TT 65": ["Standard"], "T4.75": ["PowerStar"], "T5.115": ["Electro Command"], "T6.160": ["Auto Command"], "T7.270": ["Auto Command"]
     },
     "Massey Ferguson": {
-      "240 S": ["Standart"], "285 S": ["Standart"], "5440": ["Dyna-4"], "5455": ["Dyna-4"],
-      "135": ["Standart"], "255 Turbo": ["Standart"], "265 S": ["Standart"], "3.060": ["Standart"], "3.075": ["Standart"], "3.085": ["Standart"], "398": ["Standart"], "5430": ["Standart"], "5713": ["Standart"], "6713": ["Standart"], "7718": ["Standart"], "8737": ["Standart"]
+      "240 S": ["Standard"], "285 S": ["Standard"], "5440": ["Dyna-4"], "5455": ["Dyna-4"],
+      "135": ["Standard"], "255 Turbo": ["Standard"], "265 S": ["Standard"], "3.060": ["Phantom"], "3.075": ["Phantom"], "3.085": ["Phantom"], "398": ["Standard"], "5430": ["Dyna-4"], "5713": ["S Dyna-4", "S Dyna-6"], "6713": ["S Dyna-6"], "7718": ["S Dyna-6"], "8737": ["S Dyna-VT"]
     },
     "Tümosan": {
-      "8095": ["Klasik"], "8105": ["Klasik"], "8075": ["Klasik"],
-      "4050": ["Standart"], "5255": ["Standart"], "6055": ["Standart"], "7065": ["Standart"], "8065": ["Standart"], "8085": ["Standart"], "8195": ["Standart"]
+      "8095": ["Klasik", "Hi-Lo"], "8105": ["Klasik", "Hi-Lo"], "8075": ["Klasik"],
+      "4050": ["Bahçe"], "5255": ["Bahçe"], "6055": ["Tarla"], "7065": ["Tarla"], "8065": ["Klasik"], "8085": ["Klasik"], "8195": ["Klasik", "Maxi"]
     },
-    "John Deere": { "5050 E": ["Standart"], "5055 E": ["Standart"], "5065 E": ["Standart"], "5075 E": ["Standart"], "5085 M": ["Standart"], "5090 M": ["Standart"], "5105 M": ["Standart"], "5725": ["Standart"], "6115 M": ["Standart"], "6125 M": ["Standart"], "6155 M": ["Standart"], "6195 M": ["Standart"], "6R 155": ["Standart"] },
-    "Case IH": { "JTB 65": ["Standart"], "JX 65 C": ["Standart"], "JX 75 C": ["Standart"], "JX 90": ["Standart"], "JX 100": ["Standart"], "JX 110": ["Standart"], "Maxxum 110": ["Standart"], "Puma 155": ["Standart"], "Farmall 100 A": ["Standart"], "Optum 300": ["Standart"] },
-    "Deutz-Fahr": { "Agrolux 55": ["Standart"], "Agrolux 65": ["Standart"], "Agrolux 75": ["Standart"], "Agrolux 310": ["Standart"], "Agrolux 320": ["Standart"], "Agrofarm 410": ["Standart"], "Agrofarm 420": ["Standart"], "5110 G": ["Standart"], "6165 RCshift": ["Standart"] },
-    "Erkunt": { "Bereket 60": ["Standart"], "Kısmet 55": ["Standart"], "Kısmet 58": ["Standart"], "Nimet 70": ["Standart"], "Nimet 75": ["Standart"], "Servet 80": ["Standart"], "Kudret 100": ["Standart"], "Hasret 125": ["Standart"] },
-    "Same": { "Argon 70": ["Standart"], "Dorado 65": ["Standart"], "Explorer 85": ["Standart"], "Tiger 65": ["Standart"], "Tiger 70": ["Standart"], "Tiger 75": ["Standart"], "Frutteto": ["Standart"] },
-    "Kubota": { "M 7040": ["Standart"], "M 8540": ["Standart"], "M 9540": ["Standart"], "MK 5000": ["Standart"], "L 4200": ["Standart"], "M5091": ["Standart"], "M7172": ["Standart"] },
-    "Hattat": { "240 S": ["Standart"], "255 T": ["Standart"], "266 G": ["Standart"], "285 S": ["Standart"], "A 50": ["Standart"], "A 60": ["Standart"], "A 80": ["Standart"], "A 110": ["Standart"], "T4100": ["Standart"] },
-    "Fendt": { "209 Vario": ["Standart"], "312 Vario": ["Standart"], "724 Vario": ["Standart"], "942 Vario": ["Standart"], "1050 Vario": ["Standart"] },
-    "Landini": { "5-100 H": ["Standart"], "5-110 H": ["Standart"], "Landpower 135": ["Standart"], "Powerfarm 100": ["Standart"], "Rex 4": ["Standart"] },
-    "Başak": { "2073 SH": ["Standart"], "2075 BK": ["Standart"], "2090 S": ["Standart"], "5120": ["Standart"] }
+    "John Deere": { "5050 E": ["2WD", "4WD"], "5055 E": ["2WD", "4WD"], "5065 E": ["2WD", "4WD"], "5075 E": ["2WD", "4WD"], "5085 M": ["Standard"], "5090 M": ["Standard"], "5105 M": ["Standard"], "5725": ["Super"], "6115 M": ["Select"], "6125 M": ["Select"], "6155 M": ["Select+"], "6195 M": ["Premium"], "6R 155": ["Ultimate"] },
+    "Case IH": { "JTB 65": ["Standard"], "JX 65 C": ["Standard"], "JX 75 C": ["Standard"], "JX 90": ["MaxPro"], "JX 100": ["MaxPro"], "JX 110": ["MaxPro"], "Maxxum 110": ["CVX"], "Puma 155": ["Multicontroller"], "Farmall 100 A": ["Standard"], "Optum 300": ["CVXDrive"] },
+    "Deutz-Fahr": { "Agrolux 55": ["2WD", "4WD"], "Agrolux 65": ["2WD", "4WD"], "Agrolux 75": ["2WD", "4WD"], "Agrolux 310": ["DT"], "Agrolux 320": ["DT"], "Agrofarm 410": ["GS", "DT"], "Agrofarm 420": ["GS", "DT"], "5110 G": ["GS"], "6165 RCshift": ["Warrior"] },
+    "Erkunt": { "Bereket 60": ["Meyveci", "E"], "Kısmet 55": ["E", "Lüks"], "Kısmet 58": ["E", "Lüks"], "Nimet 70": ["E", "Lüks"], "Nimet 75": ["E", "Lüks"], "Servet 80": ["E", "Lüks"], "Kudret 100": ["Lüks"], "Hasret 125": ["Lüks"] },
+    "Same": { "Argon 70": ["Standard"], "Dorado 65": ["Classic"], "Explorer 85": ["TB"], "Tiger 65": ["Standard"], "Tiger 70": ["Standard"], "Tiger 75": ["Standard"], "Frutteto": ["3 S", "CVT"] },
+    "Kubota": { "M 7040": ["Hydraulic Shuttle"], "M 8540": ["Hydraulic Shuttle"], "M 9540": ["Hi-Lo"], "MK 5000": ["Standard"], "L 4200": ["Standard"], "M5091": ["Power Shift"], "M7172": ["Premium"] },
+    "Hattat": { "240 S": ["Standard"], "255 T": ["Standard"], "266 G": ["Standard"], "285 S": ["Standard"], "A 50": ["Compact"], "A 60": ["Compact"], "A 80": ["Original"], "A 110": ["Original"], "T4100": ["Original"] },
+    "Fendt": { "209 Vario": ["V"], "312 Vario": ["Power"], "724 Vario": ["Gen6"], "942 Vario": ["Gen7"], "1050 Vario": ["ProfiPlus"] },
+    "Landini": { "5-100 H": ["Top"], "5-110 H": ["Top"], "Landpower 135": ["T-Tronic"], "Powerfarm 100": ["RPS"], "Rex 4": ["GT", "F"] },
+    "Başak": { "2073 SH": ["Standard"], "2075 BK": ["Plus"], "2090 S": ["Kompozit"], "5120": ["Red Power"] }
   },
 
   "vasita/otomobil": {
@@ -325,6 +323,87 @@ export const EXTRA_MODEL_SERIES: any = {
 };
 
 export const EXTRA_SERIES_TRIMS: any = {
-  // Placeholder for future deeper hierarchy. 
-  // Currently the leaf nodes in EXTRA_MODEL_SERIES act as the final select option.
+  "vasita/motosiklet": {
+    "Honda": {
+      "PCX 125": { "2021-2024": ["ABS", "Standart"], "2018-2020": ["Standart"], "2014-2017": ["Standart"] },
+      "CBR 250 R": { "2014-2017": ["ABS", "Repsol", "Standart"], "2011-2013": ["Standart", "C-ABS"] },
+      "Africa Twin": { "CRF1000L": ["DCT", "Manual"], "CRF1100L": ["DCT", "Manual"], "Adventure Sports": ["DCT", "Manual"] },
+      "Activa": { "Activa S": ["Standart"], "Activa 125": ["Standart"] },
+      "Forza 250": { "2021-2024": ["Smart Top Box", "Standart"], "2018-2020": ["Smart Top Box", "Standart"] },
+      "NC 750 X": { "DCT": ["Standart"], "Manuel": ["Standart"] },
+      "X-ADV": { "750": ["Standard"] }
+    },
+    "Yamaha": {
+      "MT-07": { "2021-2024": ["Standart", "Pure"], "2018-2020": ["Standart"], "2014-2017": ["ABS", "Standart"], "Pure": ["Standart"] },
+      "MT-09": { "2021-2024": ["Standart", "SP"], "2017-2020": ["Standart", "SP"], "2014-2016": ["ABS", "Standart"], "SP": ["Standart"] },
+      "R25": { "2019-2024": ["ABS", "Monster Energy", "World GP"], "2014-2018": ["ABS", "Standart", "Movistar"] },
+      "X-MAX 250": { "Iron Max": ["ABS"], "Momodesign": ["ABS"], "Tech Max": ["ABS"], "ABS": ["Standart"] },
+      "NMAX 125": { "2021-2024": ["Standart"], "2015-2020": ["ABS", "Standart"] },
+      "NMAX 155": { "2021-2024": ["Standart"], "2017-2020": ["ABS", "Standart"] },
+      "Tenere 700": { "Standard": ["Standart"], "Rally Edition": ["Standart"], "World Raid": ["Standart"], "Extreme": ["Standart"] }
+    },
+    "Suzuki": {
+      "V-Strom 250": { "DL250": ["Standart"], "SX": ["Standart"] },
+      "DL 650 V-Strom": { "XT": ["Standart"], "Standard": ["Standart"] },
+      "Hayabusa": { "Gen 3": ["Standart"], "Gen 2": ["Standart"], "Gen 1": ["Standart"] }
+    },
+    "Kawasaki": {
+      "Ninja 400": { "KRT Edition": ["ABS"], "Standard": ["ABS"] },
+      "Z 900": { "Standard": ["ABS"], "SE": ["ABS"], "RS": ["ABS"] }
+    },
+    "BMW": {
+      "R 1250 GS": { "Adventure": ["Triple Black", "Rallye", "40 Years GS"], "Standard": ["Triple Black", "Rallye"], "Trophy": ["Standard"] },
+      "F 750 GS": { "Standard": ["Standart"], "Sport": ["Standart"] }
+    },
+    "Vespa": {
+      "GTS 300": { "Super": ["HPE"], "Super Sport": ["HPE"], "Super Tech": ["HPE"], "Sei Giorni": ["HPE"] },
+      "Primavera 150": { "S": ["ABS"], "Touring": ["ABS"], "Standard": ["ABS"], "RED": ["ABS"] },
+      "Sprint 150": { "S": ["ABS"], "Justin Bieber": ["ABS"], "Standard": ["ABS"] }
+    }
+  },
+  "vasita/minivan-panelvan": {
+    "Ford": {
+      "Transit": { "350 M": ["Trend", "Deluxe"], "350 L": ["Trend", "Deluxe"], "350 E": ["Trend", "Deluxe"], "330 S": ["Trend", "Deluxe"], "300 S": ["Trend", "Deluxe"] },
+      "Transit Custom": { "320 S": ["Trend", "Limited"], "320 L": ["Trend", "Limited"], "340 L": ["Trend", "Limited"] },
+      "Tourneo Courier": { "1.0 EcoBoost": ["Titanium", "Titanium Plus", "Deluxe", "Trend"], "1.5 TDCi": ["Titanium", "Titanium Plus", "Deluxe", "Trend"], "1.6 TDCi": ["Titanium", "Titanium Plus", "Deluxe", "Trend"] },
+      "Transit Courier": { "1.5 TDCi": ["Trend", "Deluxe"], "1.6 TDCi": ["Trend", "Deluxe"] }
+    },
+    "Fiat": {
+      "Doblo": { "1.3 MultiJet": ["Premio", "Safeline", "Urban", "Cargo"], "1.6 MultiJet": ["Premio", "Safeline", "Urban", "Cargo", "Premio Plus"], "1.9 JTD": ["VIP", "SX"], "2.0 MultiJet": ["Premio"], "1.4 Fire": ["Safeline", "Urban", "Cargo"] },
+      "Fiorino": { "1.3 MultiJet": ["Emotion", "Pop", "Premio", "Safeline", "Urban"], "1.4 Fire": ["Pop", "Safeline", "Urban"], "1.4 Eko": ["Pop", "Safeline"] }
+    },
+    "Volkswagen": {
+      "Transporter": { "2.0 TDI (102 hp)": ["City Van", "Camlı Van"], "2.0 TDI (140 hp)": ["City Van", "Camlı Van"], "2.0 TDI (150 hp)": ["City Van", "Camlı Van"], "2.0 BiTDI (180 hp)": ["City Van", "Camlı Van"], "2.0 BiTDI (204 hp)": ["City Van", "Camlı Van"] },
+      "Caddy": { "1.6 TDI": ["Team", "Trendline", "Comfortline", "Highline", "Life"], "1.9 TDI": ["Life", "Kombi"], "2.0 TDI": ["Trendline", "Comfortline", "Highline", "Life", "Style", "Impression"] }
+    }
+  },
+  "vasita/kamyon-cekici": {
+    "Mercedes": {
+      "Actros 1844": { "LS": ["Standart", "Retarder"], "LsnRL": ["Standart"] },
+      "Actros 1845": { "LS": ["Standart", "Retarder", "Klima", "ADR"], "StreamSpace": ["Standart"], "BigSpace": ["Standart"] },
+      "Actros 1848": { "LS": ["Standart", "Retarder"], "GigaSpace": ["Standart"] },
+      "Axor 1840": { "LS": ["Standart", "Retarder"], "LsnRL": ["Standart"] },
+      "Axor 3240": { "C": ["Standart"], "Retarder": ["Standart"] }
+    },
+    "Ford": {
+      "F-Max": { "500": ["L", "LL", "Midilli"], "L": ["Standart"], "LL": ["Standart"] },
+      "Cargo 1846 T": { "Midilli": ["Standart"], "Standart": ["Klima", "Retarder"], "Otomatik": ["Standart"] }
+    }
+  },
+  "vasita/traktor": {
+    "New Holland": {
+      "TD 75 D": { "Bluemaster": ["Kabinli", "Kabinsiz"], "Delta": ["Kabinli", "Kabinsiz"] },
+      "TD 90 D": { "Bluemaster": ["Kabinli", "Kabinsiz"], "Delta": ["Kabinli", "Kabinsiz"] },
+      "TD 100 D": { "Bluemaster": ["Kabinli", "Kabinsiz"], "Delta": ["Kabinli", "Kabinsiz"] },
+      "TD 110 D": { "Bluemaster": ["Kabinli", "Kabinsiz"], "Delta": ["Kabinli", "Kabinsiz"] },
+      "TT 50": { "Standard": ["2WD", "4WD"], "Junior": ["2WD"] },
+      "TT 55": { "Standard": ["2WD", "4WD"], "B": ["2WD", "4WD"] }
+    },
+    "Massey Ferguson": {
+      "240 S": { "Standard": ["Disk Fren", "Kampana"] },
+      "285 S": { "Standard": ["2WD", "4WD"] },
+      "5440": { "Dyna-4": ["Kabinli"] },
+      "5455": { "Dyna-4": ["Kabinli"] }
+    }
+  }
 };

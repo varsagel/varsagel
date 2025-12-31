@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, useCallback, memo, Suspense } from "react";
+import { useEffect, useMemo, useState, useCallback, memo, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Category, SubCategory } from "@/data/categories";
 import { TURKEY_PROVINCES, getProvinceByName, getDistrictsByProvince } from "@/data/turkey-locations";
 import { toast } from "@/components/ui/use-toast";
 import { ATTR_SCHEMAS, AttrField } from '@/data/attribute-schemas';
-import { ATTR_SUBSCHEMAS, MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA } from '@/data/attribute-overrides';
+import { ATTR_SUBSCHEMAS, MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA, BRAND_MODELS } from '@/data/attribute-overrides';
 import BRAND_LOGOS from '@/data/brand-logos.json';
 import { 
   List, 
@@ -24,6 +24,72 @@ import {
   Check,
   X
 } from "lucide-react";
+
+const MultiSelect = memo(function MultiSelect({ options, value, onChange, error }: { options: string[], value: string[], onChange: (val: string[]) => void, error: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const selected = Array.isArray(value) ? value : [];
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleOption = (opt: string) => {
+    const safeSelected = selected || [];
+    const newSelected = safeSelected.includes(opt)
+      ? safeSelected.filter(s => s !== opt)
+      : [...safeSelected, opt];
+    onChange(newSelected);
+  };
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full px-4 py-2.5 border rounded-lg bg-white flex items-center justify-between cursor-pointer transition-all ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-cyan-500'} ${isOpen ? 'ring-2 ring-cyan-500 border-transparent' : ''}`}
+      >
+        <span className={`block truncate ${(selected || []).length ? 'text-gray-900' : 'text-gray-400'}`}>
+          {(selected || []).length > 0 ? `${(selected || []).length} seçim` : 'Seçiniz'}
+        </span>
+        <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? '-rotate-90' : 'rotate-90'}`} />
+      </div>
+      
+      {isOpen && (
+        <div className="absolute z-50 top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+          {(options || []).map(opt => (
+            <div 
+              key={opt}
+              onClick={() => toggleOption(opt)}
+              className="flex items-center px-4 py-2.5 hover:bg-cyan-50 cursor-pointer transition-colors border-b border-gray-50 last:border-0"
+            >
+              <div className={`w-5 h-5 border rounded flex items-center justify-center transition-all ${(selected || []).includes(opt) ? 'bg-cyan-600 border-cyan-600' : 'border-gray-300 bg-white'}`}>
+                {(selected || []).includes(opt) && <Check className="w-3.5 h-3.5 text-white" />}
+              </div>
+              <span className={`ml-3 text-sm ${(selected || []).includes(opt) ? 'text-cyan-900 font-medium' : 'text-gray-700'}`}>{opt}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {(selected || []).length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-2.5">
+          {(selected || []).map(s => (
+            <span key={s} className="inline-flex items-center px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-medium border border-cyan-100">
+              {s}
+              <button type="button" onClick={(e) => { e.stopPropagation(); toggleOption(s); }} className="ml-1.5 hover:text-cyan-900 p-0.5 hover:bg-cyan-100 rounded-full transition-colors"><X className="w-3 h-3" /></button>
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+});
 
 // Adım tanımları
 type Step = {
@@ -118,7 +184,16 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
   }, [brand, modelVal, seriesVal, overrideKeyLocal]);
   
   const fields = useMemo(() => {
-    if (dynamicAttributes && dynamicAttributes.length > 0) {
+    // 1. Check for Static Subschemas (Priority Overrides)
+    // This ensures that for specific categories like Motosiklet, we use the manually curated schema
+    // which has the correct brands and fields, bypassing potentially incomplete API data.
+    const overrideKey = `${category}/${subcategory || ''}`;
+    if (ATTR_SUBSCHEMAS[overrideKey]) {
+       return ATTR_SUBSCHEMAS[overrideKey];
+    }
+
+    // 2. Use Dynamic Attributes from API
+    if (dynamicAttributes && dynamicAttributes?.length > 0) {
       const withScope = dynamicAttributes.filter((attr: any) => {
         // Filter by showInRequest
         if (attr.showInRequest === false) return false;
@@ -132,7 +207,14 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
       const source = withScope.length > 0 ? withScope : dynamicAttributes.filter((attr: any) => !attr.subCategoryId && attr.showInRequest !== false);
 
       if (source.length > 0) {
-        return source.map((attr: any) => {
+        console.log('Processing attributes, count:', source.length);
+        return source.map((attr: any, index: number) => {
+          console.log(`Processing attribute ${index}:`, attr);
+          // Attr objesi null ise atla
+          if (!attr) {
+            console.log('Null attr found, skipping');
+            return null;
+          }
           let options: string[] = [];
           try {
             if (attr.optionsJson) {
@@ -142,6 +224,14 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
               }
             }
           } catch (e) { console.error('Error parsing options', e); }
+
+          // Inject local brands if available
+          if (attr.slug === 'marka') {
+             const localBrands = Object.keys(BRAND_MODELS[overrideKeyLocal] || {});
+             if (localBrands.length > 0) {
+                 options = Array.from(new Set([...options, ...localBrands])).sort((a,b)=>a.localeCompare(b,'tr'));
+             }
+          }
 
           const generatedMinKey = attr.minKey || (attr.type === 'range-number' ? `${attr.slug || attr.id}Min` : undefined);
           const generatedMaxKey = attr.maxKey || (attr.type === 'range-number' ? `${attr.slug || attr.id}Max` : undefined);
@@ -163,15 +253,11 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
             minLabel: attr.minLabel,
             maxLabel: attr.maxLabel
           } as AttrFieldLocal;
-        });
+        }).filter((f) => f !== null);
       }
     }
 
     // 2. Fallback to Static Schemas
-    const overrideKey = `${category}/${subcategory || ''}`;
-    if (ATTR_SUBSCHEMAS[overrideKey]) {
-       return ATTR_SUBSCHEMAS[overrideKey];
-    }
     if (ATTR_SCHEMAS[category]) {
        return ATTR_SCHEMAS[category];
     }
@@ -179,15 +265,21 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
     return [];
   }, [category, subcategory, dynamicAttributes, models, series, trims]); // Updated dependencies
 
-  if (!fields.length) return null;
+  if (!fields?.length) return null;
   return (
     <div className="space-y-6 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center gap-2 pb-4 border-b border-gray-100">
-        <List className="w-5 h-5 text-cyan-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Aradığınız Ürünün Özellikleri</h3>
+      <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <List className="w-5 h-5 text-cyan-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Aradığınız Ürünün Özellikleri</h3>
+        </div>
+        <span className="text-xs text-gray-500 font-medium">
+          <span className="text-red-500">*</span> Zorunlu alanlar
+        </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-        {fields.map((f)=> {
+        {fields?.map((f)=> {
+          if (!f) return null;
           const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
           const isManual = f.key ? manualModes[f.key] : false;
 
@@ -264,6 +356,13 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                 {isManual ? 'Listeden seç' : 'Listede yok mu? Elle gir'}
               </button>
               </>
+            ) : f.type === 'multiselect' ? (
+              <MultiSelect
+                options={f.options || []}
+                value={attributes[f.key!] || []}
+                onChange={(val: any) => onChange(f.key!, val)}
+                error={!!errors[f.key!]}
+              />
             ) : f.type === 'range-number' ? (
               <div className="grid grid-cols-2 gap-3">
                 <input
@@ -330,9 +429,9 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
               />
             )}
             {(errors[f.key!] || errors[f.minKey!] || errors[f.maxKey!]) && (
-               <div className="flex items-center gap-1 mt-1.5 text-red-500 text-xs font-medium">
+               <div className="flex items-center gap-1 mt-1.5 text-red-600 text-xs font-bold">
                  <AlertCircle className="w-3 h-3" />
-                 <span>Bu alan zorunludur</span>
+                 <span>{errors[f.key!] || errors[f.minKey!] || errors[f.maxKey!]}</span>
                </div>
             )}
           </div>
@@ -346,10 +445,15 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
 // Memoized component'ler
 const StepIndicator = memo(function StepIndicator({ currentStep }: { currentStep: number }) {
   return (
-  <div className="mb-8">
+  <div className="mb-10 px-4">
     <div className="flex items-center justify-between relative z-0">
       {/* Connecting Line */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-100 -z-10 rounded-full" />
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1.5 bg-gray-100 -z-10 rounded-full overflow-hidden">
+        <div 
+          className="h-full bg-gradient-to-r from-cyan-500 to-blue-600 transition-all duration-700 ease-out"
+          style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}
+        />
+      </div>
       
       {STEPS.map((step, index) => {
         const isActive = currentStep === step.id;
@@ -357,22 +461,35 @@ const StepIndicator = memo(function StepIndicator({ currentStep }: { currentStep
         const Icon = step.icon;
         
         return (
-        <div key={step.id} className="flex flex-col items-center bg-white px-2">
+        <div key={step.id} className="flex flex-col items-center bg-transparent">
           <div 
             className={`
-              w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2
-              ${isActive ? 'border-cyan-600 bg-cyan-50 text-cyan-600 shadow-lg scale-110' : 
-                isCompleted ? 'border-lime-500 bg-lime-50 text-lime-600' : 
-                'border-gray-200 bg-white text-gray-300'}
+              relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500
+              ${isActive 
+                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/30 scale-110 rotate-3 ring-4 ring-white' 
+                : isCompleted 
+                  ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 ring-4 ring-white' 
+                  : 'bg-white text-gray-300 border-2 border-gray-100 shadow-sm'
+              }
             `}
           >
-            {isCompleted ? <Check className="w-6 h-6" /> : <Icon className="w-5 h-5" />}
+            {isCompleted ? (
+              <Check className="w-7 h-7 animate-in zoom-in duration-300" />
+            ) : (
+              <Icon className={`w-6 h-6 ${isActive ? 'animate-pulse' : ''}`} />
+            )}
+            
+            {/* Active Step Glow Effect */}
+            {isActive && (
+              <div className="absolute inset-0 bg-cyan-400 rounded-2xl blur-xl opacity-40 -z-10" />
+            )}
           </div>
-          <div className="mt-3 text-center hidden sm:block">
-            <p className={`text-sm font-bold transition-colors ${isActive ? 'text-cyan-900' : isCompleted ? 'text-lime-700' : 'text-gray-400'}`}>
+          
+          <div className={`mt-4 text-center hidden sm:block transition-all duration-300 ${isActive ? 'transform translate-y-0 opacity-100' : 'opacity-70'}`}>
+            <p className={`text-sm font-bold tracking-tight ${isActive ? 'text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 to-blue-700' : isCompleted ? 'text-emerald-600' : 'text-gray-400'}`}>
               {step.title}
             </p>
-            <p className="text-xs text-gray-400 mt-0.5 font-medium">{step.description}</p>
+            <p className="text-[10px] uppercase tracking-wider text-gray-400 mt-1 font-semibold">{step.description}</p>
           </div>
         </div>
       )})}
@@ -385,43 +502,47 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
   return (
   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <List className="w-5 h-5 text-cyan-600" />
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+          <div className="p-2 bg-cyan-100 rounded-lg text-cyan-700">
+            <List className="w-6 h-6" />
+          </div>
           Ana Kategori Seçimi
         </h3>
-        {errors.category && <span className="text-red-500 text-sm font-medium flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.category}</span>}
+        {errors.category && <span className="text-red-500 text-sm font-medium flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full"><AlertCircle className="w-3 h-3"/>{errors.category}</span>}
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {categories.map((cat: any) => (
+        {categories?.map((cat: any) => (
           <div
             key={cat.slug}
             onClick={() => updateFormData('category', cat.slug)}
             className={`
-              group relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
-              hover:shadow-md
+              group relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300
+              hover:shadow-lg hover:-translate-y-1
               ${formData.category === cat.slug 
-                ? 'border-cyan-600 bg-cyan-50/50 shadow-sm ring-1 ring-cyan-600/20' 
-                : 'border-gray-200 hover:border-cyan-200 hover:bg-gray-50'
+                ? 'border-cyan-500 bg-cyan-50/50 shadow-md ring-1 ring-cyan-500/20' 
+                : 'border-gray-100 bg-white hover:border-cyan-200 hover:bg-cyan-50/30'
               }
             `}
           >
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-5">
               <div className={`
-                w-12 h-12 rounded-lg flex items-center justify-center transition-colors
-                ${formData.category === cat.slug ? 'bg-cyan-100 text-cyan-600' : 'bg-gray-100 text-gray-500 group-hover:bg-cyan-50 group-hover:text-cyan-500'}
+                w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm
+                ${formData.category === cat.slug 
+                  ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-cyan-500/30' 
+                  : 'bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-cyan-600 group-hover:shadow-md'}
               `}>
-                <List className="w-6 h-6" />
+                <List className="w-7 h-7" />
               </div>
               <div>
-                <h4 className={`font-semibold transition-colors ${formData.category === cat.slug ? 'text-cyan-900' : 'text-gray-900'}`}>{cat.name}</h4>
-                <p className="text-sm text-gray-500 mt-0.5">{cat.subcategories.length} alt kategori</p>
+                <h4 className={`text-lg font-bold transition-colors ${formData.category === cat.slug ? 'text-cyan-900' : 'text-gray-900'}`}>{cat.name}</h4>
+                <p className="text-sm text-gray-500 mt-1 font-medium">{cat.subcategories?.length || 0} alt kategori</p>
               </div>
               {formData.category === cat.slug && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <div className="w-6 h-6 bg-cyan-600 rounded-full flex items-center justify-center text-white">
-                    <Check className="w-4 h-4" />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 animate-in zoom-in duration-300">
+                  <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-cyan-600/30">
+                    <Check className="w-5 h-5" />
                   </div>
                 </div>
               )}
@@ -431,33 +552,35 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
       </div>
     </div>
 
-    {subcats.length > 0 && (
-      <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <ChevronRight className="w-5 h-5 text-cyan-600" />
+    {subcats?.length > 0 && (
+      <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 pt-4 border-t border-gray-100/50">
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="p-2 bg-cyan-100 rounded-lg text-cyan-700">
+              <ChevronRight className="w-6 h-6" />
+            </div>
             Alt Kategori Seçimi
           </h3>
-          {errors.subcategory && <span className="text-red-500 text-sm font-medium flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.subcategory}</span>}
+          {errors.subcategory && <span className="text-red-500 text-sm font-medium flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full"><AlertCircle className="w-3 h-3"/>{errors.subcategory}</span>}
         </div>
         
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {subcats.map((sub: any) => (
+          {subcats?.map((sub: any) => (
             <button
               key={sub.slug}
               type="button"
               onClick={() => updateFormData('subcategory', sub.slug)}
               className={`
-                relative px-4 py-3 rounded-lg text-sm font-medium transition-all text-left
+                relative px-5 py-4 rounded-xl text-sm font-semibold transition-all text-left
                 flex items-center justify-between group
                 ${formData.subcategory === sub.slug
-                  ? 'bg-cyan-600 text-white shadow-md ring-2 ring-cyan-600 ring-offset-2'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 hover:border-gray-300'
+                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-600 ring-offset-2 transform -translate-y-0.5'
+                  : 'bg-white text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 border border-gray-200 hover:border-cyan-200 hover:shadow-md'
                 }
               `}
             >
               <span>{sub.name}</span>
-              {formData.subcategory === sub.slug && <Check className="w-4 h-4 text-white" />}
+              {formData.subcategory === sub.slug && <Check className="w-4 h-4 text-white animate-in zoom-in" />}
             </button>
           ))}
         </div>
@@ -470,60 +593,73 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
 const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void }) {
   return (
   <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center gap-2 pb-4 border-b border-gray-100 mb-6">
-        <FileText className="w-5 h-5 text-cyan-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Temel Bilgiler</h3>
+    <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/40">
+      <div className="flex items-center gap-3 pb-6 border-b border-gray-100 mb-8">
+        <div className="p-2.5 bg-cyan-50 rounded-xl">
+          <FileText className="w-6 h-6 text-cyan-600" />
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-gray-900">Temel Bilgiler</h3>
+          <p className="text-sm text-gray-500 font-medium">İhtiyacınızı detaylandırın</p>
+        </div>
       </div>
       
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
             Ne arıyorsunuz? <span className="text-red-500">*</span>
           </label>
-          <div className="relative">
+          <div className="relative group">
             <input
               type="text"
               value={formData.title}
               onChange={(e) => updateFormData('title', e.target.value)}
               placeholder="Örn: Temiz iPhone 13 arıyorum, Boyasız 2020 Honda Civic..."
               className={`
-                w-full pl-4 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all
-                ${errors.title ? 'border-red-500 focus:ring-red-200' : 'border-gray-300'}
+                w-full pl-5 pr-5 py-4 text-lg border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300
+                placeholder:text-gray-400
+                ${errors.title 
+                  ? 'border-red-300 bg-red-50/50 focus:ring-red-200' 
+                  : 'border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300 hover:shadow-sm focus:bg-white focus:shadow-md'
+                }
               `}
             />
           </div>
-          <div className="flex justify-between mt-1.5">
+          <div className="flex justify-between mt-2 px-1">
             {errors.title ? (
-              <span className="text-red-500 text-xs font-medium flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.title}</span>
+              <span className="text-red-600 text-xs font-bold flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5"/>{errors.title}</span>
             ) : (
-              <span className="text-gray-400 text-xs">En az 10 karakter</span>
+              <span className="text-gray-400 text-xs font-medium">En az 10 karakter</span>
             )}
-            <span className={`text-xs ${formData.title.length >= 10 ? 'text-lime-600' : 'text-gray-400'}`}>{formData.title.length}/50</span>
+            <span className={`text-xs font-bold ${(formData.title?.length || 0) >= 10 ? 'text-emerald-600' : 'text-gray-400'}`}>{formData.title?.length || 0}/50</span>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
             Aradığınız Ürünü Anlatın <span className="text-red-500">*</span>
           </label>
           <textarea
             value={formData.description}
             onChange={(e) => updateFormData('description', e.target.value)}
-            rows={5}
+            rows={6}
             placeholder="Aradığınız ürünün durumunu, rengini, varsa kusurlarını kabul edip etmeyeceğinizi belirtin..."
             className={`
-              w-full p-4 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none
-              ${errors.description ? 'border-red-500 focus:ring-red-200' : 'border-gray-300'}
+              w-full p-5 text-base border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 resize-none
+              placeholder:text-gray-400
+              ${errors.description 
+                ? 'border-red-300 bg-red-50/50 focus:ring-red-200' 
+                : 'border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300 hover:shadow-sm focus:bg-white focus:shadow-md'
+              }
             `}
           />
-          <div className="flex justify-between mt-1.5">
+          <div className="flex justify-between mt-2 px-1">
             {errors.description ? (
-              <span className="text-red-500 text-xs font-medium flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.description}</span>
+              <span className="text-red-600 text-xs font-bold flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5"/>{errors.description}</span>
             ) : (
-              <span className="text-gray-400 text-xs">En az 20 karakter</span>
+              <span className="text-gray-400 text-xs font-medium">En az 20 karakter</span>
             )}
-            <span className={`text-xs ${formData.description.length >= 20 ? 'text-lime-600' : 'text-gray-400'}`}>{formData.description.length}/500</span>
+            <span className={`text-xs font-bold ${(formData.description?.length || 0) >= 20 ? 'text-emerald-600' : 'text-gray-400'}`}>{formData.description?.length || 0}/500</span>
           </div>
         </div>
       </div>
@@ -542,18 +678,23 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
   const availableDistricts = selectedProvince ? getDistrictsByProvince(selectedProvince.name) : [];
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
       
       {/* Location Section */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-        <div className="flex items-center gap-2 pb-4 border-b border-gray-100 mb-6">
-          <MapPin className="w-5 h-5 text-cyan-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Konum Bilgileri</h3>
+      <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
+        <div className="flex items-center gap-3 pb-6 border-b border-gray-100 mb-8">
+          <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <MapPin className="w-5 h-5 text-cyan-600" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Konum Bilgileri</h3>
+            <p className="text-sm text-gray-500 font-medium">Hizmetin gerçekleşeceği konum</p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">İl <span className="text-red-500">*</span></label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-gray-700 ml-1">İl <span className="text-red-500">*</span></label>
             {manualModes['city'] ? (
               <input
                 type="text"
@@ -563,92 +704,97 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                   updateFormData('district', '');
                 }}
                 placeholder="İl giriniz"
-                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full px-5 py-3.5 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none ${errors.city ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
               />
             ) : (
-              <div className="relative">
+              <div className="relative group/select">
                 <select
                   value={formData.city}
                   onChange={(e) => {
                     updateFormData('city', e.target.value);
                     updateFormData('district', '');
                   }}
-                  className={`w-full px-4 py-2.5 border rounded-lg appearance-none bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full px-5 py-3.5 border rounded-xl appearance-none bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none cursor-pointer ${errors.city ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 >
                   <option value="">İl Seçiniz</option>
-                  {TURKEY_PROVINCES.map((province) => (
+                  {TURKEY_PROVINCES?.map((province) => (
                     <option key={province.name} value={province.name}>{province.name}</option>
                   ))}
                 </select>
-                <ChevronRight className="absolute right-3 top-3 w-4 h-4 text-gray-400 rotate-90 pointer-events-none" />
+                <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 rotate-90 pointer-events-none group-hover/select:text-cyan-500 transition-colors" />
               </div>
             )}
             <button
               type="button"
               onClick={() => setManualModes(prev => ({ ...prev, city: !prev.city }))}
-              className="text-xs text-cyan-600 mt-1.5 hover:underline focus:outline-none flex items-center gap-1"
+              className="text-xs font-semibold text-cyan-600 mt-2 hover:text-cyan-700 focus:outline-none flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-cyan-50 w-fit transition-colors"
             >
-              {manualModes['city'] ? <List className="w-3 h-3"/> : <Search className="w-3 h-3"/>}
+              {manualModes['city'] ? <List className="w-3.5 h-3.5"/> : <Search className="w-3.5 h-3.5"/>}
               {manualModes['city'] ? 'Listeden seç' : 'Listede yok mu? Elle gir'}
             </button>
-            {errors.city && <span className="text-red-500 text-xs font-medium flex items-center gap-1 mt-1"><AlertCircle className="w-3 h-3"/>{errors.city}</span>}
+            {errors.city && <span className="text-red-500 text-xs font-bold flex items-center gap-1.5 mt-2 animate-in slide-in-from-left-2"><AlertCircle className="w-3.5 h-3.5"/>{errors.city}</span>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">İlçe <span className="text-red-500">*</span></label>
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-gray-700 ml-1">İlçe <span className="text-red-500">*</span></label>
             {manualModes['district'] ? (
               <input
                 type="text"
                 value={formData.district}
                 onChange={(e) => updateFormData('district', e.target.value)}
                 placeholder="İlçe giriniz"
-                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.district ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full px-5 py-3.5 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none ${errors.district ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
               />
             ) : (
-              <div className="relative">
+              <div className="relative group/select">
                 <select
                   value={formData.district}
                   onChange={(e) => updateFormData('district', e.target.value)}
                   disabled={!formData.city && !manualModes['city']}
                   className={`
-                    w-full px-4 py-2.5 border rounded-lg appearance-none bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all
-                    ${errors.district ? 'border-red-500' : 'border-gray-300'}
-                    ${(!formData.city && !manualModes['city']) ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''}
+                    w-full px-5 py-3.5 border rounded-xl appearance-none bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none cursor-pointer
+                    ${errors.district ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}
+                    ${(!formData.city && !manualModes['city']) ? 'bg-gray-100 text-gray-400 cursor-not-allowed hover:border-gray-200' : ''}
                   `}
                 >
                   <option value="">İlçe Seçiniz</option>
-                  {availableDistricts.map((district) => (
+                  {availableDistricts?.map((district) => (
                     <option key={district.id} value={district.name}>{district.name}</option>
                   ))}
                 </select>
-                <ChevronRight className="absolute right-3 top-3 w-4 h-4 text-gray-400 rotate-90 pointer-events-none" />
+                <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 rotate-90 pointer-events-none group-hover/select:text-cyan-500 transition-colors" />
               </div>
             )}
             <button
               type="button"
               onClick={() => setManualModes(prev => ({ ...prev, district: !prev.district }))}
-              className="text-xs text-cyan-600 mt-1.5 hover:underline focus:outline-none flex items-center gap-1"
+              className="text-xs font-semibold text-cyan-600 mt-2 hover:text-cyan-700 focus:outline-none flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-cyan-50 w-fit transition-colors"
             >
-              {manualModes['district'] ? <List className="w-3 h-3"/> : <Search className="w-3 h-3"/>}
+              {manualModes['district'] ? <List className="w-3.5 h-3.5"/> : <Search className="w-3.5 h-3.5"/>}
               {manualModes['district'] ? 'Listeden seç' : 'Listede yok mu? Elle gir'}
             </button>
-            {errors.district && <span className="text-red-500 text-xs font-medium flex items-center gap-1 mt-1"><AlertCircle className="w-3 h-3"/>{errors.district}</span>}
+            {errors.district && <span className="text-red-500 text-xs font-bold flex items-center gap-1.5 mt-2 animate-in slide-in-from-left-2"><AlertCircle className="w-3.5 h-3.5"/>{errors.district}</span>}
           </div>
         </div>
       </div>
 
       {/* Budget Section */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-        <div className="flex items-center gap-2 pb-4 border-b border-gray-100 mb-6">
-          <TrendingUp className="w-5 h-5 text-cyan-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Bütçe Planlaması</h3>
+      <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
+        <div className="flex items-center gap-3 pb-6 border-b border-gray-100 mb-8">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <TrendingUp className="w-5 h-5 text-blue-600" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Bütçe Planlaması</h3>
+            <p className="text-sm text-gray-500 font-medium">Bütçe aralığınızı belirleyin</p>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Ayırdığınız Bütçe (TL) <span className="text-red-500">*</span></label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">EN DÜŞÜK BÜTÇE</span>
+        <div className="space-y-4">
+          <label className="text-sm font-bold text-gray-700 ml-1">Ayırdığınız Bütçe (TL) <span className="text-red-500">*</span></label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="relative group/input">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] font-bold tracking-wider bg-gray-50 px-2 py-1 rounded border border-gray-200 group-hover/input:border-cyan-200 group-hover/input:text-cyan-600 transition-colors">EN DÜŞÜK</span>
               <input
                 type="number"
                 min="0"
@@ -659,12 +805,12 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('minBudget', val);
                   }
                 }}
-                className={`w-full pl-40 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.minBudget ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full pl-36 pr-5 py-4 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.minBudget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 placeholder="0"
               />
             </div>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">EN YÜKSEK BÜTÇE</span>
+            <div className="relative group/input">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] font-bold tracking-wider bg-gray-50 px-2 py-1 rounded border border-gray-200 group-hover/input:border-cyan-200 group-hover/input:text-cyan-600 transition-colors">EN YÜKSEK</span>
               <input
                 key="budget-input"
                 type="number"
@@ -676,24 +822,29 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('budget', val);
                   }
                 }}
-                className={`w-full pl-40 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors.budget ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full pl-36 pr-5 py-4 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.budget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 placeholder="0"
               />
             </div>
           </div>
           {(errors.minBudget || errors.budget) && (
-            <span className="text-red-500 text-xs font-medium flex items-center gap-1 mt-2"><AlertCircle className="w-3 h-3"/>{errors.minBudget || errors.budget}</span>
+            <span className="text-red-500 text-xs font-bold flex items-center gap-1.5 mt-2 animate-in slide-in-from-left-2"><AlertCircle className="w-3.5 h-3.5"/>{errors.minBudget || errors.budget}</span>
           )}
-          <p className="mt-2 text-xs text-gray-500">Satıcılar bu bütçeye göre size teklif verecektir.</p>
+          <p className="mt-3 text-xs text-gray-500 font-medium flex items-center gap-1.5">
+            <Info className="w-3.5 h-3.5 text-cyan-500" />
+            Satıcılar bu bütçeye göre size teklif verecektir.
+          </p>
         </div>
       </div>
 
-      <div className="bg-cyan-50 border border-cyan-100 rounded-lg p-4">
-        <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-cyan-500 mt-0.5 flex-shrink-0" />
+      <div className="bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-100 rounded-2xl p-6 shadow-sm">
+        <div className="flex items-start gap-4">
+          <div className="p-2 bg-white rounded-lg shadow-sm ring-1 ring-cyan-100">
+            <Info className="w-5 h-5 text-cyan-500" />
+          </div>
           <div>
-            <h3 className="text-sm font-medium text-cyan-900">Önemli Bilgilendirme</h3>
-            <p className="mt-1 text-sm text-cyan-700">
+            <h3 className="text-sm font-bold text-cyan-900">Önemli Bilgilendirme</h3>
+            <p className="mt-1.5 text-sm text-cyan-700/80 font-medium leading-relaxed">
               Varsagel ödeme sistemine sahip değildir. Biz sadece alıcı ve satıcıyı buluşturan bir aracı platformuz. Ödeme ve teslimat detaylarını satıcı ile görüşerek belirleyebilirsiniz.
             </p>
           </div>
@@ -764,52 +915,63 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-gray-500" />
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 overflow-hidden shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
+        <div className="bg-gradient-to-r from-gray-50 via-white to-gray-50 px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+          <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
+              <FileText className="w-5 h-5 text-gray-600" />
+            </div>
             Talep Özeti
           </h3>
-          <span className="px-3 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded-full">Taslak</span>
+          <span className="px-4 py-1.5 bg-cyan-50 text-cyan-700 text-xs font-bold uppercase tracking-wider rounded-full border border-cyan-100 shadow-sm">Taslak</span>
         </div>
         
-        <div className="p-6 space-y-4">
-          {formData.images && formData.images.length > 0 && (
-            <div className="flex justify-center mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
+        <div className="p-8 space-y-8">
+          {formData.images && formData.images?.length > 0 && (
+            <div className="flex justify-center mb-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-100 group-hover:border-cyan-100 transition-colors">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <div className="relative h-32 w-full">
-                <Image 
-                  src={formData.images[0]} 
-                  alt="Referans Görsel" 
-                  fill
-                  className="object-contain mix-blend-multiply" 
-                />
+              <div className="relative h-48 w-full group-hover:scale-105 transition-transform duration-500">
+                {formData.images?.map((img, index) => (
+                  <Image 
+                    key={index}
+                    src={img} 
+                    alt="Referans Görsel" 
+                    fill
+                    className="object-contain mix-blend-multiply drop-shadow-lg" 
+                  />
+                ))}
               </div>
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div>
-                <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Başlık</span>
-                <p className="text-gray-900 font-medium mt-0.5">{formData.title || 'Belirtilmemiş'}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div className="group/item">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Başlık</span>
+                <p className="text-gray-900 font-bold text-lg leading-tight">{formData.title || 'Belirtilmemiş'}</p>
               </div>
-              <div>
-                <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</span>
-                <p className="text-gray-900 font-medium mt-0.5">{selectedCategory?.name} / {selectedSubcategory?.name}</p>
+              <div className="group/item">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Kategori</span>
+                <p className="text-gray-900 font-medium flex items-center gap-2">
+                  <span className="bg-gray-100 px-2 py-1 rounded text-sm">{selectedCategory?.name}</span>
+                  <ChevronRight className="w-4 h-4 text-gray-300" />
+                  <span className="bg-gray-100 px-2 py-1 rounded text-sm">{selectedSubcategory?.name}</span>
+                </p>
               </div>
             </div>
-            <div className="space-y-4">
-              <div>
-                <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Konum</span>
-                <p className="text-gray-900 font-medium mt-0.5 flex items-center gap-1">
-                  <MapPin className="w-4 h-4 text-gray-400" />
+            <div className="space-y-6">
+              <div className="group/item">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Konum</span>
+                <p className="text-gray-900 font-medium flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-red-500" />
+                  </div>
                   {formData.city}, {formData.district}
                 </p>
               </div>
-              <div>
-                <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Hedef Bütçe</span>
-                <p className="text-cyan-600 font-bold mt-0.5 text-lg">
+              <div className="group/item">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Hedef Bütçe</span>
+                <p className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 font-black text-2xl tracking-tight">
                   {formData.minBudget || formData.budget
                     ? `${formData.minBudget ? `${formData.minBudget} TL` : '0'} – ${formData.budget ? `${formData.budget} TL` : '∞'}`
                     : 'Belirtilmemiş'}
@@ -818,35 +980,38 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
             </div>
           </div>
 
-          <div className="pt-4 border-t border-gray-100">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Açıklama</span>
-            <p className="text-gray-700 mt-1.5 whitespace-pre-wrap leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100">
+          <div className="pt-8 border-t border-gray-100">
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block">Açıklama</span>
+            <div className="bg-gray-50/80 p-6 rounded-2xl border border-gray-100 text-gray-700 leading-relaxed whitespace-pre-wrap hover:bg-white hover:shadow-md transition-all duration-300">
               {formData.description || 'Açıklama girilmemiş'}
-            </p>
+            </div>
           </div>
         </div>
       </div>
 
       {(entries.length > 0 || Object.keys(pairs).length > 0) && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <List className="w-4 h-4 text-gray-500" />
-            Teknik Özellikler
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8">
+        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <List className="w-5 h-5 text-orange-600" />
+            </div>
+            <h4 className="text-lg font-bold text-gray-900">Teknik Özellikler</h4>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
             {Object.entries(pairs).map(([base, v]) => (
               (v.min || v.max) ? (
-                <div key={base} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
-                  <span className="text-gray-600 text-sm">{label(base)}</span>
-                  <span className="font-medium text-gray-900 text-sm">{v.min ?? '—'}{(v.min || v.max) ? ' – ' : ''}{v.max ?? '—'}</span>
+                <div key={base} className="flex justify-between items-center py-3 border-b border-gray-50 group/row hover:bg-gray-50/50 px-2 rounded transition-colors">
+                  <span className="text-gray-500 text-sm font-medium group-hover/row:text-gray-700">{label(base)}</span>
+                  <span className="font-bold text-gray-900 text-sm bg-white px-2 py-1 rounded shadow-sm border border-gray-100">{v.min ?? '—'}{(v.min || v.max) ? ' – ' : ''}{v.max ?? '—'}</span>
                 </div>
               ) : null
             ))}
             {entries.map(([k, v]) => (
               v !== undefined && v !== '' ? (
-                <div key={k} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
-                  <span className="text-gray-600 text-sm">{label(k)}</span>
-                  <span className="font-medium text-gray-900 text-sm text-right">{String(v)}</span>
+                <div key={k} className="flex justify-between items-center py-3 border-b border-gray-50 group/row hover:bg-gray-50/50 px-2 rounded transition-colors">
+                  <span className="text-gray-500 text-sm font-medium group-hover/row:text-gray-700">{label(k)}</span>
+                  <span className="font-bold text-gray-900 text-sm text-right bg-white px-2 py-1 rounded shadow-sm border border-gray-100">{String(v)}</span>
                 </div>
               ) : null
             ))}
@@ -854,14 +1019,14 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
         </div>
       )}
 
-      <div className="bg-lime-50 border border-lime-200 rounded-xl p-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-lime-100 rounded-full">
-            <CheckCircle className="w-6 h-6 text-lime-600" />
+      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 shadow-lg shadow-emerald-100/50">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-white rounded-full shadow-md ring-4 ring-emerald-50 animate-pulse">
+            <CheckCircle className="w-8 h-8 text-emerald-500" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-lime-900">Her Şey Hazır!</h3>
-            <p className="mt-1 text-sm text-lime-700">
+            <h3 className="text-lg font-bold text-emerald-900">Her Şey Hazır!</h3>
+            <p className="mt-1 text-sm text-emerald-700 font-medium">
               Talebiniz yayınlanmaya hazır. Onayladıktan sonra satıcılar teklif vermeye başlayacak.
             </p>
           </div>
@@ -947,7 +1112,7 @@ function TalepOlusturPage() {
   }, []);
 
   useEffect(() => {
-    if (!formData.category && categories.length) {
+    if (!formData.category && categories?.length) {
       setFormData(prev => ({ ...prev, category: defaultCategory || categories[0].slug }));
     }
   }, [categories, defaultCategory, formData.category]);
@@ -987,154 +1152,273 @@ function TalepOlusturPage() {
   const [errorSummary, setErrorSummary] = useState<string[]>([]);
 
   const buildAttributeFields = useCallback((): AttrField[] => {
-    const currentCategory = categories.find((c: any) => c.slug === formData.category);
-    const dynamic = currentCategory?.attributes || [];
-    if (Array.isArray(dynamic) && dynamic.length > 0) {
-      const withScope = dynamic.filter((attr: any) => {
-        if (!attr.subCategoryId) return true;
-        if (!attr.subCategory) return false;
-        if (!formData.subcategory) return false;
-        return attr.subCategory.slug === formData.subcategory;
-      });
-      const source = withScope.length > 0 ? withScope : dynamic.filter((attr: any) => !attr.subCategoryId);
-      if (source.length > 0) {
-        return source.map((attr: any) => {
-          let options: string[] = [];
-          try {
-            if (attr.optionsJson) {
-              options = JSON.parse(attr.optionsJson);
-            }
-          } catch (e) {}
-          return {
-            key: attr.slug,
-            label: attr.name,
-            type: attr.type === "checkbox" ? "boolean" : attr.type,
-            required: attr.required,
-            options: options.length ? options : undefined,
-            minKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Min` : undefined,
-            maxKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Max` : undefined,
-          } as AttrField;
-        });
+    // Top-level try-catch for safety
+    try {
+      // 1. Basic Validation
+      if (!formData.category || !categories || !Array.isArray(categories) || categories.length === 0) {
+        return [];
       }
-    }
+      
+      const currentCategory = categories.find((c: any) => c?.slug === formData.category);
+      if (!currentCategory) return [];
 
-    // Fallback logic
-    const overrideKey = `${formData.category}/${formData.subcategory || ''}`;
-    if (ATTR_SUBSCHEMAS[overrideKey]) {
-       return ATTR_SUBSCHEMAS[overrideKey];
+      // 2. Check for Static Subschemas (Priority Overrides) - MATCH RENDERING LOGIC
+      // This ensures validation matches exactly what is rendered
+      const overrideKey = `${formData.category}/${formData.subcategory || ''}`;
+      if (ATTR_SUBSCHEMAS?.[overrideKey]) {
+         return ATTR_SUBSCHEMAS[overrideKey];
+      }
+      
+      const dynamic = currentCategory.attributes || [];
+      
+      // 3. Dynamic Attributes Processing
+      if (Array.isArray(dynamic) && dynamic.length > 0) {
+        let withScope: any[] = [];
+        try {
+          withScope = dynamic.filter((attr: any) => {
+            if (!attr) return false;
+            // If no subCategoryId, it applies to all (unless filtered later)
+            if (!attr.subCategoryId) return true;
+            
+            // Safety check for subCategory object
+            if (!attr.subCategory) return false;
+            
+            // Ensure subCategory has slug property safely
+            const subSlug = attr.subCategory?.slug;
+            if (!subSlug) return false;
+            
+            if (!formData.subcategory) return false;
+            
+            return subSlug === formData.subcategory;
+          });
+        } catch (err) {
+          console.error('Error in dynamic.filter:', err);
+          withScope = [];
+        }
+
+        // Ensure withScope is an array
+        if (!Array.isArray(withScope)) withScope = [];
+
+        const hasScope = withScope.length > 0;
+        const source = hasScope ? withScope : dynamic.filter((attr: any) => attr && !attr.subCategoryId);
+
+        if (Array.isArray(source) && source.length > 0) {
+          return source.map((attr: any) => {
+            if (!attr) return null;
+            
+            let options: string[] = [];
+            try {
+              if (attr.optionsJson) {
+                const parsed = JSON.parse(attr.optionsJson);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  options = parsed.filter(item => item != null).map(String);
+                }
+              }
+            } catch (e) {
+              options = [];
+            }
+
+            // Ensure options is an array
+            if (!Array.isArray(options)) options = [];
+
+            const safeOptions = options.length > 0 ? options : undefined;
+
+            // Force m2/metrekare to be optional, regardless of API response
+            const isM2 = attr.slug === 'm2' || attr.slug === 'metrekare' || attr.name === 'Metrekare' || attr.name === 'm2';
+            const isRequired = isM2 ? false : !!attr.required;
+
+            return {
+              key: attr.slug,
+              label: attr.name || attr.slug || 'Alan',
+              type: attr.type === "checkbox" ? "boolean" : attr.type,
+              required: isRequired,
+              options: safeOptions,
+              minKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Min` : undefined,
+              maxKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Max` : undefined,
+            } as AttrField;
+          }).filter((result): result is AttrField => result !== null);
+        }
+      }
+
+      // 4. Fallback to Category Schemas
+      if (ATTR_SCHEMAS?.[formData.category]) {
+         return ATTR_SCHEMAS[formData.category];
+      }
+      
+      return [];
+    } catch (error) {
+      console.error('Critical error in buildAttributeFields:', error);
+      return [];
     }
-    if (ATTR_SCHEMAS[formData.category]) {
-       return ATTR_SCHEMAS[formData.category];
-    }
-    
-    return [];
   }, [categories, formData.category, formData.subcategory]);
 
   const validateStep = useCallback((step: number): boolean => {
-    const newErrors: Record<string, string> = {};
+    console.log('validateStep called with step:', step);
+    try {
+      const newErrors: Record<string, string> = {};
 
     if (step === 1) {
-      if (!formData.category) newErrors.category = 'Kategori seçmelisiniz';
-      if (!formData.subcategory) newErrors.subcategory = 'Alt kategori seçmelisiniz';
+      if (!formData.category) newErrors.category = 'Lütfen kategori seçiniz';
+      if (!formData.subcategory) newErrors.subcategory = 'Lütfen alt kategori seçiniz';
     }
 
     if (step === 2) {
-      if (!formData.title.trim()) newErrors.title = 'Başlık girmelisiniz';
-      if (formData.title.trim().length < 10) newErrors.title = 'Başlık en az 10 karakter olmalı';
-      if (!formData.description.trim()) newErrors.description = 'Açıklama girmelisiniz';
-      if (formData.description.trim().length < 20) newErrors.description = 'Açıklama en az 20 karakter olmalı';
+      if (!formData.title?.trim()) {
+        newErrors.title = 'Lütfen başlık giriniz';
+      }
+      else if ((formData.title?.trim().length || 0) < 10) {
+        newErrors.title = 'Başlık en az 10 karakter olmalıdır';
+      }
+      
+      if (!formData.description?.trim()) {
+        newErrors.description = 'Lütfen açıklama giriniz';
+      }
+      else if ((formData.description?.trim().length || 0) < 20) {
+        newErrors.description = 'Açıklama en az 20 karakter olmalıdır';
+      }
 
       const combined = buildAttributeFields();
-      const fieldMap = new Map<string, AttrField>();
-      combined.forEach((f) => {
-        const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
-        fieldMap.set(id, f);
-      });
-      const attrs = formData.attributes || {};
-      fieldMap.forEach((f) => {
-        if (f.type === 'range-number' && f.minKey && f.maxKey) {
-          const a = attrs[f.minKey];
-          const b = attrs[f.maxKey];
-          if (f.required) {
-             // Range-number alanlar için en az bir değer (min veya max) girilmiş olmalı
-             const hasA = a !== undefined && String(a) !== '';
-             const hasB = b !== undefined && String(b) !== '';
-             if (!hasA && !hasB) {
-               newErrors[f.minKey] = 'Zorunlu';
-               newErrors[f.maxKey] = 'Zorunlu';
-             }
+      if (combined && combined.length > 0) {
+        const fieldMap = new Map<string, AttrField>();
+        combined.forEach((f) => {
+          if (!f) return;
+          const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
+          fieldMap.set(id, f);
+        });
+        const attrs = formData.attributes || {};
+        fieldMap.forEach((f) => {
+          if (!f) return;
+          if (f.type === 'range-number' && f.minKey && f.maxKey) {
+            const a = attrs[f.minKey];
+            const b = attrs[f.maxKey];
+            if (f.required) {
+               const hasA = a !== undefined && String(a) !== '';
+               const hasB = b !== undefined && String(b) !== '';
+               if (!hasA && !hasB) {
+                 newErrors[f.minKey] = `Lütfen minimum ${f.label.toLowerCase()} giriniz`;
+                 newErrors[f.maxKey] = `Lütfen maksimum ${f.label.toLowerCase()} giriniz`;
+               }
+            }
+            if (f.min !== undefined || f.max !== undefined) {
+               if (a !== undefined && String(a) !== '') {
+                   const val = Number(a);
+                   if (f.min !== undefined && val < f.min) newErrors[f.minKey] = `En az ${f.min}`;
+                   if (f.max !== undefined && val > f.max) newErrors[f.minKey] = `En çok ${f.max}`;
+               }
+               if (b !== undefined && String(b) !== '') {
+                   const val = Number(b);
+                   if (f.min !== undefined && val < f.min) newErrors[f.maxKey] = `En az ${f.min}`;
+                   if (f.max !== undefined && val > f.max) newErrors[f.maxKey] = `En çok ${f.max}`;
+               }
+               if (a !== undefined && String(a) !== '' && b !== undefined && String(b) !== '') {
+                   const minVal = Number(a);
+                   const maxVal = Number(b);
+                   if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
+                       newErrors[f.minKey] = 'Minimum maksimumdan büyük olamaz';
+                       newErrors[f.maxKey] = 'Maksimum minimumdan küçük olamaz';
+                   }
+               }
+            }
+          } else if (f.key) {
+            const v = attrs[f.key];
+            if (f.required) {
+              const present = f.type === 'boolean' ? (f.key in attrs) : (v !== undefined && String(v).trim() !== '' && (!Array.isArray(v) || v.length > 0));
+              if (!present) newErrors[f.key] = `Lütfen ${f.label.toLowerCase()} seçiniz`;
+            }
+            if (f.type === 'number' && (f.min !== undefined || f.max !== undefined) && v !== undefined && String(v).trim() !== '') {
+               const val = Number(v);
+               if (f.min !== undefined && val < f.min) newErrors[f.key] = `En az ${f.min}`;
+               if (f.max !== undefined && val > f.max) newErrors[f.key] = `En çok ${f.max}`;
+            }
           }
-          if (f.min !== undefined || f.max !== undefined) {
-             if (a !== undefined && String(a) !== '') {
-                 const val = Number(a);
-                 if (f.min !== undefined && val < f.min) newErrors[f.minKey] = `En az ${f.min}`;
-                 if (f.max !== undefined && val > f.max) newErrors[f.minKey] = `En çok ${f.max}`;
-             }
-             if (b !== undefined && String(b) !== '') {
-                 const val = Number(b);
-                 if (f.min !== undefined && val < f.min) newErrors[f.maxKey] = `En az ${f.min}`;
-                 if (f.max !== undefined && val > f.max) newErrors[f.maxKey] = `En çok ${f.max}`;
-             }
-             // Eğer hem min hem max değerleri girilmişse, min <= max olmalı
-             if (a !== undefined && String(a) !== '' && b !== undefined && String(b) !== '') {
-                 const minVal = Number(a);
-                 const maxVal = Number(b);
-                 if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
-                     newErrors[f.minKey] = 'Minimum maksimumdan büyük olamaz';
-                     newErrors[f.maxKey] = 'Maksimum minimumdan küçük olamaz';
-                 }
-             }
-          }
-        } else if (f.key) {
-          const v = attrs[f.key];
-          if (f.required) {
-            const present = f.type === 'boolean' ? (f.key in attrs) : (v !== undefined && String(v).trim() !== '');
-            if (!present) newErrors[f.key] = 'Zorunlu';
-          }
-          if (f.type === 'number' && (f.min !== undefined || f.max !== undefined) && v !== undefined && String(v).trim() !== '') {
-             const val = Number(v);
-             if (f.min !== undefined && val < f.min) newErrors[f.key] = `En az ${f.min}`;
-             if (f.max !== undefined && val > f.max) newErrors[f.key] = `En çok ${f.max}`;
-          }
-        }
-      });
+        });
+      } else {
+        console.log('No attributes to validate');
+      }
     }
 
-  if (step === 3) {
-    if (!formData.city.trim()) newErrors.city = 'Şehir girmelisiniz';
-    if (!formData.district.trim()) newErrors.district = 'İlçe girmelisiniz';
-    if (!formData.minBudget) newErrors.minBudget = 'Minimum tutar gerekli';
-    else if (parseInt(formData.minBudget) < 0) newErrors.minBudget = 'Geçerli bir minimum tutar giriniz';
-    if (!formData.budget) newErrors.budget = 'Maksimum tutar gerekli';
-    else if (parseInt(formData.budget) < 1) newErrors.budget = 'Geçerli bir maksimum tutar giriniz';
+    if (step === 3) {
+    if (!formData.city?.trim()) newErrors.city = 'Lütfen şehir seçiniz';
+    if (!formData.district?.trim()) newErrors.district = 'Lütfen ilçe seçiniz';
+    if (!formData.minBudget) newErrors.minBudget = 'Lütfen minimum bütçe giriniz';
+    else if (parseInt(formData.minBudget) < 0) newErrors.minBudget = 'Minimum bütçe 0 TL veya daha fazla olmalıdır';
+    if (!formData.budget) newErrors.budget = 'Lütfen maksimum bütçe giriniz';
+    else if (parseInt(formData.budget) < 1) newErrors.budget = 'Maksimum bütçe 1 TL veya daha fazla olmalıdır';
     if (formData.minBudget && formData.budget) {
       const a = parseInt(formData.minBudget);
       const b = parseInt(formData.budget);
       if (!Number.isNaN(a) && !Number.isNaN(b) && a > b) {
-        newErrors.minBudget = 'En düşük, En yüksek’ten büyük olamaz';
-        newErrors.budget = 'En yüksek, En düşük’ten küçük olamaz';
+        newErrors.minBudget = 'Minimum bütçe maksimum bütçeden büyük olamaz';
+        newErrors.budget = 'Maksimum bütçe minimum bütçeden küçük olamaz';
       }
     }
   }
 
     setErrors(newErrors);
+
+    // Hata özeti oluştur
+    const items = Object.keys(newErrors);
+    const labels: Record<string,string> = { 
+      category:'Kategori', 
+      subcategory:'Alt kategori', 
+      title:'Başlık', 
+      description:'Açıklama', 
+      city:'İl', 
+      district:'İlçe', 
+      minBudget:'Minimum bütçe', 
+      budget:'Maksimum bütçe',
+      model:'Model',
+      seri:'Seri',
+      paket:'Paket'
+    };
+
+    const labelMap = new Map<string, string>();
+    if (step === 2) {
+      const attrs = buildAttributeFields();
+      if (attrs && attrs.length > 0) {
+        attrs.forEach((f) => {
+          if (!f) return;
+          if (f.key) labelMap.set(f.key, f.label);
+          if (f.minKey) labelMap.set(f.minKey, f.label);
+          if (f.maxKey) labelMap.set(f.maxKey, f.label);
+        });
+      }
+    }
+
+    const detailedErrors = items.map(k => {
+      const fieldLabel = labels[k] || labelMap.get(k) || k;
+      const errorMsg = newErrors[k];
+      
+      if (errorMsg.includes('En az') || errorMsg.includes('En çok') || errorMsg.includes('Minimum') || errorMsg.includes('Maksimum')) {
+        return `${fieldLabel}: ${errorMsg}`;
+      }
+      
+      return fieldLabel;
+    });
+    
+    setErrorSummary(detailedErrors);
+
     return Object.keys(newErrors).length === 0;
-  }, [formData]);
+    } catch (error) {
+      console.error('Error in validateStep:', error);
+      return false;
+    }
+  }, [formData, buildAttributeFields]);
 
   const validateAll = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
-    if (!formData.category) newErrors.category = 'Kategori seçmelisiniz';
-    if (!formData.subcategory) newErrors.subcategory = 'Alt kategori seçmelisiniz';
-    if (!formData.title.trim()) newErrors.title = 'Başlık girmelisiniz';
-    else if (formData.title.trim().length < 10) newErrors.title = 'Başlık en az 10 karakter olmalı';
-    if (!formData.description.trim()) newErrors.description = 'Açıklama girmelisiniz';
-    else if (formData.description.trim().length < 20) newErrors.description = 'Açıklama en az 20 karakter olmalı';
-    if (!formData.city.trim()) newErrors.city = 'Şehir girmelisiniz';
-    if (!formData.district.trim()) newErrors.district = 'İlçe girmelisiniz';
-    if (!formData.minBudget) newErrors.minBudget = 'Minimum tutar gerekli';
-    else if (parseInt(formData.minBudget) < 0) newErrors.minBudget = 'Geçerli bir minimum tutar giriniz';
-    if (!formData.budget) newErrors.budget = 'Maksimum tutar gerekli';
-    else if (parseInt(formData.budget) < 1) newErrors.budget = 'Geçerli bir maksimum tutar giriniz';
+    if (!formData.category) newErrors.category = 'Lütfen kategori seçiniz';
+    if (!formData.subcategory) newErrors.subcategory = 'Lütfen alt kategori seçiniz';
+    if (!formData.title?.trim()) newErrors.title = 'Lütfen başlık giriniz';
+    else if ((formData.title?.trim().length || 0) < 10) newErrors.title = 'Başlık en az 10 karakter olmalıdır';
+    if (!formData.description?.trim()) newErrors.description = 'Lütfen açıklama giriniz';
+    else if ((formData.description?.trim().length || 0) < 20) newErrors.description = 'Açıklama en az 20 karakter olmalıdır';
+    if (!formData.city?.trim()) newErrors.city = 'Lütfen şehir seçiniz';
+    if (!formData.district?.trim()) newErrors.district = 'Lütfen ilçe seçiniz';
+    if (!formData.minBudget) newErrors.minBudget = 'Lütfen minimum bütçe giriniz';
+    else if (parseInt(formData.minBudget) < 0) newErrors.minBudget = 'Minimum bütçe 0 TL veya daha fazla olmalıdır';
+    if (!formData.budget) newErrors.budget = 'Lütfen maksimum bütçe giriniz';
+    else if (parseInt(formData.budget) < 1) newErrors.budget = 'Maksimum bütçe 1 TL veya daha fazla olmalıdır';
     if (formData.minBudget && formData.budget) {
       const a = parseInt(formData.minBudget);
       const b = parseInt(formData.budget);
@@ -1159,8 +1443,8 @@ function TalepOlusturPage() {
           if (f.required) {
             // Range-number alanlar için en az bir değer (min veya max) girilmiş olmalı
             if (!hasA && !hasB) {
-              newErrors[f.minKey] = 'Zorunlu';
-              newErrors[f.maxKey] = 'Zorunlu';
+              newErrors[f.minKey] = 'En az bir değer girilmelidir';
+              newErrors[f.maxKey] = 'En az bir değer girilmelidir';
             }
           }
           if (f.min !== undefined || f.max !== undefined) {
@@ -1201,14 +1485,41 @@ function TalepOlusturPage() {
     }
     setErrors(newErrors);
     const items = Object.keys(newErrors);
-    const labels: Record<string,string> = { category:'Kategori', subcategory:'Alt kategori', title:'Başlık', description:'Açıklama', city:'İl', district:'İlçe', budget:'Bütçe' };
+    const labels: Record<string,string> = { 
+      category:'Kategori', 
+      subcategory:'Alt kategori', 
+      title:'Başlık', 
+      description:'Açıklama', 
+      city:'İl', 
+      district:'İlçe', 
+      minBudget:'Minimum bütçe', 
+      budget:'Maksimum bütçe',
+      model:'Model',
+      seri:'Seri',
+      paket:'Paket'
+    };
     const labelMap = new Map<string, string>();
-    combined.forEach((f: AttrField) => {
-      if (f.key) labelMap.set(f.key, f.label);
-      if (f.minKey) labelMap.set(f.minKey, f.label);
-      if (f.maxKey) labelMap.set(f.maxKey, f.label);
+    if (combined && combined.length > 0) {
+      combined.forEach((f: AttrField) => {
+        if (f.key) labelMap.set(f.key, f.label);
+        if (f.minKey) labelMap.set(f.minKey, f.label);
+        if (f.maxKey) labelMap.set(f.maxKey, f.label);
+      });
+    }
+    
+    // Daha detaylı hata mesajları
+    const detailedErrors = items.map(k => {
+      const fieldLabel = labels[k] || labelMap.get(k) || k;
+      const errorMsg = newErrors[k];
+      
+      if (errorMsg.includes('En az') || errorMsg.includes('En çok') || errorMsg.includes('Minimum') || errorMsg.includes('Maksimum')) {
+        return `${fieldLabel}: ${errorMsg}`;
+      }
+      
+      return fieldLabel;
     });
-    setErrorSummary(items.map(k => labels[k] || labelMap.get(k) || k));
+    
+    setErrorSummary(detailedErrors);
     return items.length === 0;
   }, [formData]);
 
@@ -1250,11 +1561,28 @@ const getBrandLogo = (brand: string) => {
   }, [errors]);
 
   const nextStep = useCallback(() => {
-    if (validateStep(currentStep) && currentStep < STEPS.length) {
-      setCurrentStep(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    console.log('nextStep called, currentStep:', currentStep);
+    try {
+      const isValid = validateStep(currentStep);
+      console.log('Validation result:', isValid);
+      console.log('Current formData:', formData);
+      console.log('Current errors:', errors);
+      
+      if (isValid && currentStep < STEPS.length) {
+        console.log('Validation passed, proceeding to next step');
+        setCurrentStep(prev => prev + 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        console.log('Validation failed, showing toast');
+        console.log('Validation errors:', errors);
+        toast({ title: 'Eksik alanlar', description: 'Lütfen yukarıdaki eksik alanları kontrol ediniz.', variant: 'destructive' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } catch (error) {
+      console.error('Error in nextStep:', error);
+      toast({ title: 'Hata', description: 'Bir hata oluştu. Lütfen tekrar deneyiniz.', variant: 'destructive' });
     }
-  }, [validateStep, currentStep]);
+  }, [validateStep, currentStep, formData, errors]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
@@ -1266,7 +1594,8 @@ const getBrandLogo = (brand: string) => {
   const handleAdCreate = useCallback(async () => {
     const ok = validateAll();
     if (!ok) {
-      toast({ title: 'Eksik alanlar', description: `${errorSummary.join(', ')}`, variant: 'destructive' });
+      toast({ title: 'Eksik alanlar', description: 'Lütfen yukarıdaki eksik alanları kontrol ediniz.', variant: 'destructive' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     
@@ -1375,66 +1704,88 @@ const getBrandLogo = (brand: string) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-blue-50/30 py-8">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">{editId ? 'Talebi Düzenle' : 'Yeni Talep Oluştur'}</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-cyan-900 to-blue-900 mb-3 drop-shadow-sm">
+            {editId ? 'Talebi Düzenle' : 'Yeni Talep Oluştur'}
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
             {editId ? 'Talep detaylarınızı güncelleyerek daha iyi teklifler alın' : 'İhtiyacınızı detaylandırın, satıcılar size en uygun teklifleri sunsun'}
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-6 sm:p-8">
-            {errorSummary.length > 0 && (
-              <div className="mb-6 bg-red-50 border border-red-100 text-red-700 rounded-xl p-4 flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-semibold text-sm">Lütfen aşağıdaki alanları kontrol ediniz:</h4>
-                  <p className="text-sm mt-1 opacity-90">{errorSummary.join(', ')}</p>
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-gray-200/50 border border-white/50 overflow-hidden ring-1 ring-gray-900/5">
+          <div className="p-6 sm:p-10">
+            {errorSummary?.length > 0 && (
+              <div className="mb-8 bg-red-50/80 backdrop-blur-sm border border-red-100 text-red-800 rounded-2xl p-5 flex items-start gap-4 animate-in fade-in slide-in-from-top-2 shadow-lg shadow-red-100/50">
+                <div className="flex-shrink-0 p-2 bg-red-100 rounded-xl">
+                  <AlertCircle className="w-6 h-6 text-red-600" />
+                </div>
+                <div className="flex-1 py-1">
+                  <h4 className="font-bold text-base mb-2">⚠️ Lütfen eksik alanları doldurunuz:</h4>
+                  <div className="space-y-1.5">
+                    {errorSummary.map((error, index) => (
+                      <div key={index} className="flex items-center gap-2 text-sm font-medium">
+                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full ring-2 ring-red-200"></span>
+                        <span>{error}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-red-200/60">
+                    <p className="text-xs text-red-700 font-semibold">
+                      💡 Tüm zorunlu alanları doldurduktan sonra devam edebilirsiniz.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
             
             <StepIndicator currentStep={currentStep} />
 
-            <form onSubmit={handleSubmit} className="mt-8">
+            <form onSubmit={handleSubmit} className="mt-10">
               {renderStep()}
               
-              <div className="flex items-center justify-between mt-10 pt-6 border-t border-gray-100">
+              <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={prevStep}
                   disabled={currentStep === 1}
                   className={`
-                    flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all
+                    flex items-center gap-2 px-6 py-3.5 rounded-2xl font-semibold transition-all duration-300
                     ${currentStep === 1 
-                      ? 'text-gray-300 cursor-not-allowed'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'text-gray-300 cursor-not-allowed bg-gray-50'
+                      : 'text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow-lg hover:shadow-gray-200/50 border border-transparent hover:border-gray-100'
                     }
                   `}
                 >
                   <ChevronLeft className="w-5 h-5" />
-                  Geri
+                  Geri Dön
                 </button>
 
                 {currentStep < STEPS.length ? (
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex items-center gap-2 px-8 py-3 bg-cyan-600 text-white rounded-xl font-medium hover:bg-cyan-700 transition-all shadow-lg shadow-cyan-200 hover:shadow-cyan-300 transform hover:-translate-y-0.5"
+                    className="group relative flex items-center gap-2 px-10 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-2xl font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 shadow-xl shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-1 overflow-hidden"
                   >
-                    Devam Et
-                    <ChevronRight className="w-5 h-5" />
+                    <span className="relative z-10 flex items-center gap-2">
+                      Devam Et
+                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={handleAdCreate}
-                    className="flex items-center gap-2 px-8 py-3 bg-lime-600 text-white rounded-xl font-medium hover:bg-lime-700 transition-all shadow-lg shadow-lime-200 hover:shadow-lime-300 transform hover:-translate-y-0.5"
+                    className="group relative flex items-center gap-2 px-10 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-2xl font-semibold hover:from-emerald-500 hover:to-green-500 transition-all duration-300 shadow-xl shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-1 overflow-hidden"
                   >
-                    <CheckCircle className="w-5 h-5" />
-                    {editId ? 'İlanı Güncelle' : 'İlanı Yayınla'}
+                    <span className="relative z-10 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5" />
+                      {editId ? 'İlanı Güncelle' : 'İlanı Yayınla'}
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   </button>
                 )}
               </div>
@@ -1442,7 +1793,7 @@ const getBrandLogo = (brand: string) => {
           </div>
         </div>
 
-        <div className="mt-8 text-center flex items-center justify-center gap-2 text-gray-400 text-sm">
+        <div className="mt-8 text-center flex items-center justify-center gap-2 text-gray-400 text-sm font-medium">
           <Info className="w-4 h-4" />
           <p>Varsagel güvenli ihtiyaç bulma platformu • Tüm hakları saklıdır</p>
         </div>
