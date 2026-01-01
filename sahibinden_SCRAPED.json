@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-01-01 11:19:26",
+  "categories": [
+    {
+      "name": "Emlak",
+      "slug": "emlak",
+      "subcategories": [
+        {
+          "name": "Satılık Daire",
+          "slug": "satilik-daire",
+          "url": "https://www.sahibinden.com/satilik-daire",
+          "filters": []
+        },
+        {
+          "name": "Kiralık Daire",
+          "slug": "kiralik-daire",
+          "url": "https://www.sahibinden.com/kiralik-daire",
+          "filters": []
+        },
+        {
+          "name": "Satılık Arsa",
+          "slug": "satilik-arsa",
+          "url": "https://www.sahibinden.com/satilik-arsa",
+          "filters": []
+        },
+        {
+          "name": "Satılık Villa",
+          "slug": "satilik-villa",
+          "url": "https://www.sahibinden.com/satilik-villa",
+          "filters": []
+        },
+        {
+          "name": "Satılık İşyeri",
+          "slug": "satilik-isyeri",
+          "url": "https://www.sahibinden.com/satilik-isyeri",
+          "filters": []
+        }
+      ]
+    },
+    {
+      "name": "Vasıta",
+      "slug": "vasita",
+      "subcategories": [
+        {
+          "name": "Otomobil",
+          "slug": "otomobil",
+          "url": "https://www.sahibinden.com/otomobil",
+          "filters": []
+        },
+        {
+          "name": "Arazi SUV Pickup",
+          "slug": "arazi-suv-pickup",
+          "url": "https://www.sahibinden.com/arazi-suv-pickup",
+          "filters": []
+        },
+        {
+          "name": "Motosiklet",
+          "slug": "motosiklet",
+          "url": "https://www.sahibinden.com/motosiklet",
+          "filters": []
+        }
+      ]
+    }
+  ]
+}
