@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Satılık Daire",
+    "category": "emlak",
+    "url": "https://www.sahibinden.com/satilik-daire",
+    "filters": []
+  },
+  {
+    "name": "Kiralık Daire",
+    "category": "emlak",
+    "url": "https://www.sahibinden.com/kiralik-daire",
+    "filters": []
+  },
+  {
+    "name": "Satılık Arsa",
+    "category": "emlak",
+    "url": "https://www.sahibinden.com/satilik-arsa",
+    "filters": []
+  },
+  {
+    "name": "Otomobil",
+    "category": "vasita",
+    "url": "https://www.sahibinden.com/otomobil",
+    "filters": []
+  },
+  {
+    "name": "Motosiklet",
+    "category": "vasita",
+    "url": "https://www.sahibinden.com/motosiklet",
+    "filters": []
+  }
+]
