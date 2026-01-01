@@ -1,0 +1,88 @@
+{
+  "categories": [
+    {
+      "name": "Emlak",
+      "slug": "emlak",
+      "subcategories": [
+        {
+          "name": "Satılık Daire",
+          "slug": "satilik-daire",
+          "filters": []
+        },
+        {
+          "name": "Kiralık Daire",
+          "slug": "kiralik-daire",
+          "filters": []
+        },
+        {
+          "name": "Satılık Residence",
+          "slug": "satilik-residence",
+          "filters": []
+        },
+        {
+          "name": "Kiralık Residence",
+          "slug": "kiralik-residence",
+          "filters": []
+        },
+        {
+          "name": "Satılık Müstakil Ev",
+          "slug": "satilik-mustakil-ev",
+          "filters": []
+        }
+      ]
+    },
+    {
+      "name": "Vasıta",
+      "slug": "vasita",
+      "subcategories": [
+        {
+          "name": "Otomobil",
+          "slug": "otomobil",
+          "filters": []
+        },
+        {
+          "name": "Arazi, SUV & Pickup",
+          "slug": "arazi-suv-pickup",
+          "filters": []
+        },
+        {
+          "name": "Motosiklet",
+          "slug": "motosiklet",
+          "filters": []
+        },
+        {
+          "name": "Minivan & Panelvan",
+          "slug": "minivan-panelvan",
+          "filters": []
+        },
+        {
+          "name": "Ticari Araçlar",
+          "slug": "ticari-araclar",
+          "filters": []
+        }
+      ]
+    },
+    {
+      "name": "Yedek Parça & Aksesuar",
+      "slug": "yedek-parca-aksesuar",
+      "subcategories": [
+        {
+          "name": "Otomobil Yedek Parça",
+          "slug": "otomobil-yedek-parca",
+          "filters": []
+        },
+        {
+          "name": "Motosiklet Yedek Parça",
+          "slug": "motosiklet-yedek-parca",
+          "filters": []
+        },
+        {
+          "name": "Aksesuar",
+          "slug": "aksesuar",
+          "filters": []
+        }
+      ]
+    }
+  ],
+  "timestamp": "2025-01-01"
+}
