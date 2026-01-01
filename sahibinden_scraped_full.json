@@ -1,0 +1,23 @@
+{
+  "categories": [
+    {
+      "name": "Emlak",
+      "slug": "emlak",
+      "url": "https://www.sahibinden.com/emlak",
+      "subcategories": []
+    },
+    {
+      "name": "Vasıta",
+      "slug": "vasita",
+      "url": "https://www.sahibinden.com/vasita",
+      "subcategories": []
+    },
+    {
+      "name": "Yedek Parça",
+      "slug": "yedek-parca",
+      "url": "https://www.sahibinden.com/yedek-parca-aksesuar",
+      "subcategories": []
+    }
+  ],
+  "timestamp": "2026-01-01 11:03:37"
+}
