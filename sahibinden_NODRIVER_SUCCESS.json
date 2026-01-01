@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Satılık Daire",
+    "category": "emlak",
+    "url": "https://www.sahibinden.com/satilik-daire",
+    "filters": []
+  },
+  {
+    "name": "Otomobil",
+    "category": "vasita",
+    "url": "https://www.sahibinden.com/otomobil",
+    "filters": []
+  },
+  {
+    "name": "Satılık Arsa",
+    "category": "emlak",
+    "url": "https://www.sahibinden.com/satilik-arsa",
+    "filters": []
+  }
+]

@@ -22,7 +22,10 @@ async def scrape_filters(url, name):
     logger.info(f"🔗 {url}")
     logger.info(f"{'='*70}")
     
-    driver = await uc.start(headless=True)
+    driver = await uc.start(
+        headless=True,
+        browser_executable_path='/usr/bin/chromium'
+    )
     
     try:
         # Sayfayı aç
