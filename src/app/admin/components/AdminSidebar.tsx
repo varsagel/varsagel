@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, List, Users, FolderTree, Settings, LogOut, FileText, SlidersHorizontal, Rocket } from "lucide-react";
+import { LayoutDashboard, List, Users, FolderTree, Settings, LogOut, FileText, SlidersHorizontal, Rocket, ShieldCheck } from "lucide-react";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -10,6 +10,7 @@ export default function AdminSidebar() {
   const menuItems = [
     { href: "/admin", label: "Genel Bakış", icon: LayoutDashboard },
     { href: "/admin/talepler", label: "Talepler", icon: List },
+    { href: "/admin/scans", label: "Virüs Tarama", icon: ShieldCheck },
     { href: "/admin/kategoriler", label: "Kategoriler", icon: FolderTree },
     { href: "/admin/attributes", label: "Özellik Yönetimi", icon: SlidersHorizontal },
     { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users },

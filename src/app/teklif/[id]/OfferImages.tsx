@@ -13,29 +13,51 @@ export default function OfferImages({ images }: OfferImagesProps) {
 
   if (!images || images.length === 0) return null;
 
+  const normalizeImageSrc = (src: string) => {
+    const s = String(src || '').trim();
+    if (!s) return '';
+    const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
+    if (s.startsWith('http://') || s.startsWith('https://')) return s;
+    if (s.startsWith('uploads/')) {
+      const path = `/${s}`;
+      return baseUrl ? `${baseUrl}${path}` : path;
+    }
+    if (s.startsWith('/uploads/')) {
+      return baseUrl ? `${baseUrl}${s}` : s;
+    }
+    return s;
+  };
+  const normalizedImages = images.map(normalizeImageSrc).filter(Boolean);
+  if (normalizedImages.length === 0) return null;
+
   const openImage = (index: number) => setSelectedIndex(index);
   const closeImage = () => setSelectedIndex(null);
   
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedIndex === null) return;
-    setSelectedIndex((selectedIndex + 1) % images.length);
+    setSelectedIndex((selectedIndex + 1) % normalizedImages.length);
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedIndex === null) return;
-    setSelectedIndex((selectedIndex - 1 + images.length) % images.length);
+    setSelectedIndex((selectedIndex - 1 + normalizedImages.length) % normalizedImages.length);
   };
+
+  const isJfif = (src: string) => /\.jfif($|\?)/i.test(src) || /\.jif($|\?)/i.test(src);
+  const isUpload = (src: string) => src.includes('/uploads/') || src.startsWith('uploads/');
+  const isExternal = (src: string) => /^https?:\/\//i.test(src);
+  const shouldUnoptimize = (src: string) => isUpload(src) || isExternal(src) || isJfif(src);
 
   return (
     <div>
       <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
         <ImageIcon className="w-4 h-4" />
-        Görseller ({images.length})
+        Görseller ({normalizedImages.length})
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {images.map((img, i) => (
+        {normalizedImages.map((img, i) => (
           <button 
             key={i} 
             onClick={() => openImage(i)}
@@ -47,6 +69,7 @@ export default function OfferImages({ images }: OfferImagesProps) {
             fill
             sizes="(max-width: 768px) 50vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300" 
+            unoptimized={shouldUnoptimize(img)}
           />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
           </button>
@@ -67,7 +90,7 @@ export default function OfferImages({ images }: OfferImagesProps) {
           </button>
 
           <div className="relative w-full max-w-5xl max-h-[90vh] flex items-center justify-center" onClick={e => e.stopPropagation()}>
-            {images.length > 1 && (
+            {normalizedImages.length > 1 && (
               <>
                 <button 
                   onClick={prevImage}
@@ -86,17 +109,18 @@ export default function OfferImages({ images }: OfferImagesProps) {
             
             <div className="relative w-full h-[85vh]">
               <Image 
-                src={images[selectedIndex]} 
+                src={normalizedImages[selectedIndex]} 
                 alt={`Tam boy ${selectedIndex + 1}`} 
                 fill
                 sizes="100vw"
                 className="object-contain rounded-lg shadow-2xl"
                 priority
+                unoptimized={shouldUnoptimize(normalizedImages[selectedIndex])}
               />
             </div>
             
             <div className="absolute -bottom-8 left-0 right-0 text-center text-white/70 text-sm">
-              {selectedIndex + 1} / {images.length}
+              {selectedIndex + 1} / {normalizedImages.length}
             </div>
           </div>
         </div>
