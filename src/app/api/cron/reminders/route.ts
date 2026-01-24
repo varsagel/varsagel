@@ -6,8 +6,12 @@ export const dynamic = 'force-dynamic'; // Ensure it's not cached
 
 export async function GET(request: Request) {
   // Simple security check
+  const secret = (process.env.CRON_SECRET || '').trim();
+  if (!secret) {
+    return NextResponse.json({ error: "Cron secret eksik" }, { status: 500 });
+  }
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET || 'varsagel_cron_secret'}`) {
+  if (authHeader !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "Yetkisiz işlem" }, { status: 401 });
   }
 

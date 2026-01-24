@@ -24,7 +24,6 @@ const BRAND_DOMAINS = {
   'Volkswagen': 'vw.com.tr',
   'Renault': 'renault.com.tr',
   'Peugeot': 'peugeot.com.tr',
-  'Citroën': 'citroen.com.tr',
   'Toyota': 'toyota.com.tr',
   'Honda': 'honda.com.tr',
   'Hyundai': 'hyundai.com.tr',

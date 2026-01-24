@@ -19,7 +19,7 @@ export default function FavoriteButton({ listingId, isAuthenticated, isFavorited
       toast({
         title: "Giriş Yapmalısınız",
         description: "Lütfen üye olun veya giriş yapın.",
-        variant: "destructive",
+        variant: "warning",
       });
       return;
     }

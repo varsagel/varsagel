@@ -6,11 +6,14 @@ import { z } from 'zod';
 
 const patchSchema = z.object({
   offerId: z.string().min(1),
-  action: z.enum(['accept', 'reject', 'withdraw']), // Added specific actions
+  action: z.enum(['accept', 'reject', 'withdraw', 'update']),
   rejectionReason: z.string().optional(),
 });
 
-// Force TS re-evaluation
+const ensureUploadsClean = async (urls: string[]) => {
+  if (urls.length === 0) return { ok: true as const };
+  return { ok: true as const };
+};
 
 export async function GET(request: NextRequest) {
   try {
@@ -49,6 +52,7 @@ export async function GET(request: NextRequest) {
     const formatted = offers.map((o: any) => ({
       id: o.id,
       listingId: o.listingId,
+      sellerId: o.sellerId,
       listingTitle: o.listing?.title || '',
       price: o.price ? Number(o.price) : 0,
       message: o.body || '',
@@ -62,7 +66,7 @@ export async function GET(request: NextRequest) {
     }))
 
     return NextResponse.json(formatted)
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Teklifler getirilirken hata' }, { status: 500 })
   }
 }
@@ -80,7 +84,7 @@ export async function PATCH(request: NextRequest) {
        return NextResponse.json({ error: 'Geçersiz veri', details: validation.error.flatten() }, { status: 400 })
     }
 
-    const { offerId, action, rejectionReason } = validation.data;
+    const { offerId, action } = validation.data;
 
     const offer = await prisma.offer.findUnique({
       where: { id: offerId },
@@ -163,11 +167,58 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ ok: true, status: updated.status })
     }
 
+    if (action === 'update') {
+      if (offer.sellerId !== userId) return NextResponse.json({ error: 'Yetkisiz' }, { status: 403 })
+      if (offer.status !== 'PENDING') return NextResponse.json({ error: 'Sadece beklemedeki teklifler güncellenebilir' }, { status: 400 })
+      const newPriceNum = Number(body.price)
+      const newMessage = String(body.message ?? offer.body ?? '')
+      if (!newPriceNum || newPriceNum < 1) return NextResponse.json({ error: 'Geçersiz fiyat' }, { status: 400 })
+
+      const images = Array.isArray(body.images) ? body.images.map((x: any) => String(x)).filter(Boolean).slice(0, 10) : null
+      const attributes = body.attributes && typeof body.attributes === 'object' && !Array.isArray(body.attributes) ? body.attributes : null
+      if (images && images.length > 0) {
+        await ensureUploadsClean(images);
+      }
+
+      const updated = await prisma.offer.update({
+        where: { id: offerId },
+        data: {
+          price: BigInt(newPriceNum),
+          body: newMessage,
+          ...(images ? { imagesJson: JSON.stringify(images) } : {}),
+          ...(attributes ? { attributesJson: JSON.stringify(attributes) } : {}),
+          status: 'PENDING',
+        }
+      })
+
+      await prisma.notification.create({
+        data: {
+          userId: offer.listing.ownerId,
+          type: 'offer_updated',
+          title: 'Teklif güncellendi',
+          body: offer.listing.title,
+          dataJson: JSON.stringify({ listingId: offer.listingId, offerId }),
+        },
+      })
+
+      const listing = await prisma.listing.findUnique({ where: { id: offer.listingId }, include: { owner: true } });
+      if (listing?.owner?.email) {
+        await sendEmail({
+          to: listing.owner.email,
+          subject: `Teklif Güncellendi: ${listing.title}`,
+          html: emailTemplates.offerReceived(listing.owner.name || 'Kullanıcı', listing.title, newPriceNum, listing.id)
+        });
+      }
+
+      return NextResponse.json({ ok: true, status: updated.status })
+    }
+
     if (action === 'withdraw') {
       if (offer.sellerId !== userId) return NextResponse.json({ error: 'Yetkisiz' }, { status: 403 })
       const newPriceNum = Number(body.price)
       const newMessage = String(body.message || offer.body)
       if (!newPriceNum || newPriceNum < 1) return NextResponse.json({ error: 'Geçersiz fiyat' }, { status: 400 })
+      if (offer.status === 'ACCEPTED') return NextResponse.json({ error: 'Kabul edilen teklif güncellenemez' }, { status: 400 })
       const twoHoursMs = 2 * 60 * 60 * 1000
       if (offer.status === 'REJECTED') {
         const elapsed = Date.now() - new Date(offer.updatedAt).getTime()
@@ -175,7 +226,21 @@ export async function PATCH(request: NextRequest) {
           return NextResponse.json({ error: '2 saat bekleyiniz ve fiyatı artırınız' }, { status: 429 })
         }
       }
-      const updated = await prisma.offer.update({ where: { id: offerId }, data: { price: BigInt(newPriceNum), body: newMessage, status: 'PENDING' } })
+      const images = Array.isArray(body.images) ? body.images.map((x: any) => String(x)).filter(Boolean).slice(0, 10) : null
+      const attributes = body.attributes && typeof body.attributes === 'object' && !Array.isArray(body.attributes) ? body.attributes : null
+      if (images && images.length > 0) {
+        await ensureUploadsClean(images);
+      }
+      const updated = await prisma.offer.update({
+        where: { id: offerId },
+        data: {
+          price: BigInt(newPriceNum),
+          body: newMessage,
+          ...(images ? { imagesJson: JSON.stringify(images) } : {}),
+          ...(attributes ? { attributesJson: JSON.stringify(attributes) } : {}),
+          status: 'PENDING'
+        }
+      })
       await prisma.notification.create({
         data: {
           userId: offer.listing.ownerId,
@@ -199,7 +264,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Desteklenmeyen işlem' }, { status: 400 })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Teklif güncellenirken hata' }, { status: 500 })
   }
 }

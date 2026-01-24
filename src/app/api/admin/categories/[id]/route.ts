@@ -74,7 +74,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     });
 
     return NextResponse.json(category);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Error updating category" }, { status: 500 });
   }
 }
@@ -91,7 +91,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       where: { id }
     });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Error deleting category" }, { status: 500 });
   }
 }

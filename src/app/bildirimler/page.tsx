@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Bell, Check, CheckCheck, Clock, Filter, Inbox } from "lucide-react";
+import { Bell, CheckCheck, Clock, Filter, Inbox } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 type Notification = {
@@ -17,12 +16,48 @@ type Notification = {
 };
 
 export default function NotificationsPage() {
-  const session = useSession();
-  const status = session?.status || "loading";
   const router = useRouter();
   const [list, setList] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const unreadCount = list.filter(n => !n.read).length;
+
+  const getNotificationTheme = (n: Notification) => {
+    const base =
+      n.type === "offer_accepted"
+        ? {
+            unreadCard: "bg-emerald-50 border-emerald-300",
+            readCard: "bg-emerald-50 border-emerald-200",
+            icon: n.read ? "bg-emerald-100 text-emerald-700" : "bg-emerald-600 text-white",
+            tag: "bg-emerald-600 text-white border-emerald-700",
+          }
+        : n.type === "offer_rejected"
+          ? {
+              unreadCard: "bg-rose-50 border-rose-300",
+              readCard: "bg-rose-50 border-rose-200",
+              icon: n.read ? "bg-rose-100 text-rose-700" : "bg-rose-600 text-white",
+              tag: "bg-rose-600 text-white border-rose-700",
+            }
+          : n.type === "SAVED_SEARCH_MATCH"
+            ? {
+                unreadCard: "bg-amber-50 border-amber-300",
+                readCard: "bg-amber-50 border-amber-200",
+                icon: n.read ? "bg-amber-100 text-amber-800" : "bg-amber-500 text-white",
+                tag: "bg-amber-600 text-white border-amber-700",
+              }
+            : {
+                unreadCard: "bg-sky-50 border-sky-300",
+                readCard: "bg-sky-50 border-sky-200",
+                icon: n.read ? "bg-sky-100 text-sky-700" : "bg-sky-600 text-white",
+                tag: "bg-sky-600 text-white border-sky-700",
+              };
+
+    return {
+      card: n.read ? base.readCard : base.unreadCard,
+      icon: base.icon,
+      tag: base.tag,
+    };
+  };
 
   const load = useCallback(async (unreadOnly = false) => {
     try {
@@ -57,7 +92,7 @@ export default function NotificationsPage() {
       });
 
       if (res.ok) {
-        setList(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+        setList(prev => filter === 'unread' ? prev.filter(n => n.id !== id) : prev.map(n => n.id === id ? { ...n, read: true } : n));
         toast({
           title: "Başarılı",
           description: "Bildirim okundu olarak işaretlendi",
@@ -88,7 +123,7 @@ export default function NotificationsPage() {
         })
       ));
 
-      setList(prev => prev.map(n => ({ ...n, read: true })));
+      setList(prev => filter === 'unread' ? [] : prev.map(n => ({ ...n, read: true })));
       toast({
         title: "Başarılı",
         description: "Tüm bildirimler okundu olarak işaretlendi",
@@ -136,7 +171,9 @@ export default function NotificationsPage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Bildirimler</h1>
-                <p className="text-sm text-gray-500">Hesabınızla ilgili güncellemeler ve haberler</p>
+                <p className="text-sm text-gray-500">
+                  {unreadCount > 0 ? `${unreadCount} okunmamış bildirim var` : "Hesabınızla ilgili güncellemeler ve haberler"}
+                </p>
               </div>
             </div>
             
@@ -162,6 +199,11 @@ export default function NotificationsPage() {
               >
                 <Filter className="w-4 h-4" />
                 Okunmamış
+                {unreadCount > 0 && (
+                  <span className="ml-1 inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-rose-600 text-white text-xs font-bold shadow-sm">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </button>
             </div>
           </div>
@@ -205,47 +247,52 @@ export default function NotificationsPage() {
           <div className="space-y-4">
             {list
               .filter(n => filter === 'all' || !n.read)
-              .map((notification) => (
-              <div 
-                key={notification.id}
-                onClick={() => handleNotificationClick(notification)}
-                className={`
-                  group relative bg-white p-4 rounded-xl border transition-all cursor-pointer hover:shadow-md
-                  ${!notification.read ? 'border-cyan-200 bg-cyan-50/30' : 'border-gray-200'}
-                `}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`
-                    p-2 rounded-lg shrink-0
-                    ${!notification.read ? 'bg-cyan-100 text-cyan-600' : 'bg-gray-100 text-gray-500'}
-                  `}>
-                    <Bell className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <h4 className={`font-semibold text-sm truncate ${!notification.read ? 'text-gray-900' : 'text-gray-700'}`}>
-                        {notification.title}
-                      </h4>
-                      <span className="text-xs text-gray-500 whitespace-nowrap flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {new Date(notification.createdAt).toLocaleDateString('tr-TR', {
-                          day: 'numeric',
-                          month: 'long',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
+              .map((notification) => {
+                const theme = getNotificationTheme(notification);
+                return (
+                  <div 
+                    key={notification.id}
+                    onClick={() => handleNotificationClick(notification)}
+                    className={`group relative p-4 rounded-2xl border-2 transition-all cursor-pointer hover:shadow-xl hover:-translate-y-0.5 ${theme.card}`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`p-2.5 rounded-xl shrink-0 shadow-sm ${theme.icon}`}>
+                        <Bell className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <h4 className={`font-bold text-sm truncate ${!notification.read ? 'text-gray-900' : 'text-gray-800'}`}>
+                            {notification.title}
+                          </h4>
+                          <span className="text-xs text-gray-600 whitespace-nowrap flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {new Date(notification.createdAt).toLocaleDateString('tr-TR', {
+                              day: 'numeric',
+                              month: 'long',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                        <p className={`text-sm line-clamp-2 ${!notification.read ? 'text-gray-900' : 'text-gray-700'}`}>
+                          {notification.body}
+                        </p>
+                      </div>
+                      {!notification.read && (
+                        <div className="mt-1.5 flex items-center gap-2">
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500"></span>
+                            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-600"></span>
+                          </span>
+                          <span className={`text-[11px] font-extrabold px-2 py-0.5 rounded-full border ${theme.tag}`}>
+                            YENİ
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <p className={`text-sm line-clamp-2 ${!notification.read ? 'text-gray-800' : 'text-gray-600'}`}>
-                      {notification.body}
-                    </p>
                   </div>
-                  {!notification.read && (
-                    <div className="w-2 h-2 rounded-full bg-cyan-500 mt-2"></div>
-                  )}
-                </div>
-              </div>
-            ))}
+                );
+              })}
           </div>
         )}
       </div>

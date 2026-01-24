@@ -30,8 +30,6 @@ const faqs = [
   }
 ];
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com';
-
 export default function SSSPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 

@@ -1,15 +1,16 @@
 "use client";
 import { signOut } from "next-auth/react";
-import { LogOut } from "lucide-react";
 
 interface SignOutLinkProps {
   className?: string;
   children: React.ReactNode;
+  onBeforeSignOut?: () => void;
 }
 
-export default function SignOutLink({ className, children }: SignOutLinkProps) {
+export default function SignOutLink({ className, children, onBeforeSignOut }: SignOutLinkProps) {
   const handleSignOut = (e: React.MouseEvent) => {
     e.preventDefault();
+    onBeforeSignOut?.();
     signOut({ callbackUrl: '/' });
   };
 

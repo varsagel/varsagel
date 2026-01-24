@@ -84,7 +84,7 @@ export default async function AdminListingsPage({ searchParams }: { searchParams
         })}
       </div>
 
-      <ListingTable listings={listings} statusFilter={currentStatus} />
+      <ListingTable listings={listings} />
     </div>
   );
 }

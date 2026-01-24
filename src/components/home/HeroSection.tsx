@@ -1,18 +1,26 @@
 "use client";
 
-import Link from "next/link";
 import { Search, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CATEGORIES } from "@/data/categories";
 
 export default function HeroSection({ initialSearch }: { initialSearch: string }) {
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const router = useRouter();
+  const defaultCategorySlug = CATEGORIES[0]?.slug || "";
+  const [categorySlug, setCategorySlug] = useState(defaultCategorySlug);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/?q=${encodeURIComponent(searchQuery)}#ilanlar`);
+      const q = searchQuery.trim();
+      const targetCategory = categorySlug || defaultCategorySlug;
+      const basePath = targetCategory ? `/kategori/${targetCategory}` : "/";
+      const params = new URLSearchParams();
+      params.set("q", q);
+      const url = params.toString() ? `${basePath}?${params.toString()}` : basePath;
+      router.push(url);
     }
   };
 
@@ -44,6 +52,21 @@ export default function HeroSection({ initialSearch }: { initialSearch: string }
           <div className="w-full max-w-3xl animate-in fade-in slide-in-from-bottom-7 duration-700 delay-300">
             <form onSubmit={handleSearch} className="relative">
               <div className="relative flex items-center bg-white rounded-2xl p-2 shadow-2xl">
+                {CATEGORIES.length > 0 && (
+                  <div className="flex items-center gap-2 pl-3 pr-2 border-r border-gray-200">
+                    <select
+                      value={categorySlug}
+                      onChange={(e) => setCategorySlug(e.target.value)}
+                      className="bg-transparent text-gray-700 text-sm md:text-base h-12 md:h-14 outline-none"
+                    >
+                      {CATEGORIES.map((cat) => (
+                        <option key={cat.slug} value={cat.slug}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <Search className="w-5 h-5 text-gray-400 ml-4" />
                 <input 
                   type="text" 

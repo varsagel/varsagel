@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth, getAdminUserId } from "@/auth";
+import { CATEGORIES } from "@/data/categories";
 
 export async function GET() {
   const userId = await getAdminUserId();
@@ -9,6 +10,18 @@ export async function GET() {
   }
 
   try {
+    const g = globalThis as any;
+    if (!g.__varsagel_admin_categories_synced) {
+      g.__varsagel_admin_categories_synced = true;
+      for (const cat of CATEGORIES) {
+        await prisma.category.upsert({
+          where: { slug: cat.slug },
+          update: { name: cat.name, icon: cat.icon || null },
+          create: { name: cat.name, slug: cat.slug, icon: cat.icon || null },
+        });
+      }
+    }
+
     const categories = await prisma.category.findMany({
       include: {
         _count: {
@@ -18,7 +31,7 @@ export async function GET() {
       orderBy: { name: 'asc' }
     });
     return NextResponse.json(categories);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });
   }
 }
@@ -43,7 +56,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(category);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create category" }, { status: 500 });
   }
 }

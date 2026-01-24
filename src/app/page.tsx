@@ -2,21 +2,18 @@ import { getListings } from '@/lib/services/listingService';
 import TechCategoryHero from '@/components/home/TechCategoryHero';
 import HomeListingCard, { ListingItem } from '@/components/home/ListingCard';
 import { CATEGORIES } from '@/data/categories';
-import { ArrowRight, ChevronRight, Heart, X } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
-import BRAND_LOGOS from "@/data/brand-logos.json";
-import { Fragment, useMemo } from "react";
+import { Fragment } from "react";
 import Link from "next/link";
 import { auth } from '@/auth';
-import { getSubcategoryImage } from '@/data/subcategory-images';
-import FavoriteButton from '@/components/ui/FavoriteButton';
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com';
+import { metadataBase, siteUrl } from '@/lib/metadata-base';
 
 export const metadata: Metadata = {
   title: "Varsagel | Türkiye'nin İlk Alım Platformu",
   description:
     "Bütçene göre alım talebini oluştur, güvenilir satıcılardan rekabetçi teklifler al. Türkiye'nin ilk alım platformu Varsagel ile ihtiyacını yaz, onlar sana gelsin.",
+  metadataBase: metadataBase,
   alternates: {
     canonical: "/",
   },
@@ -25,9 +22,10 @@ export const metadata: Metadata = {
     description:
       "Aktif alım taleplerini incele, kendi talebini oluştur veya güvenilir satıcılardan teklifler al.",
     type: "website",
-    url: baseUrl,
+    url: siteUrl,
     siteName: "Varsagel",
     locale: "tr_TR",
+    images: [`${siteUrl}/opengraph-image`],
   },
   twitter: {
     card: "summary_large_image",
@@ -35,6 +33,7 @@ export const metadata: Metadata = {
     description:
       "Bütçene göre alım talebini oluştur, satıcılar sana teklif versin.",
     creator: "@varsagel",
+    images: [`${siteUrl}/twitter-image`],
   },
 };
 

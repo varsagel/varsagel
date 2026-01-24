@@ -1,0 +1,87 @@
+{
+  "name": "Özel Ders Arayanlar",
+  "slug": "ozel-ders-arayanlar",
+  "subcategories": [
+    {
+      "name": "Lise & Üniversite",
+      "slug": "lise-universite-hazirlik",
+      "fullSlug": "lise-universite-hazirlik"
+    },
+    {
+      "name": "İlkokul & Ortaokul",
+      "slug": "ilkogretim-takviye",
+      "fullSlug": "ilkogretim-takviye"
+    },
+    {
+      "name": "Yabancı Dil",
+      "slug": "yabanci-dil",
+      "fullSlug": "yabanci-dil"
+    },
+    {
+      "name": "Bilgisayar",
+      "slug": "ozel-ders-bilgisayar",
+      "fullSlug": "ozel-ders-bilgisayar"
+    },
+    {
+      "name": "Müzik & Enstrüman",
+      "slug": "muzik-enstruman",
+      "fullSlug": "muzik-enstruman"
+    },
+    {
+      "name": "Spor",
+      "slug": "ozel-ders-spor",
+      "fullSlug": "ozel-ders-spor"
+    },
+    {
+      "name": "Sanat",
+      "slug": "sanat",
+      "fullSlug": "sanat"
+    },
+    {
+      "name": "Direksiyon",
+      "slug": "direksiyon",
+      "fullSlug": "direksiyon"
+    },
+    {
+      "name": "Kişisel Gelişim",
+      "slug": "kisisel-gelisim",
+      "fullSlug": "kisisel-gelisim"
+    },
+    {
+      "name": "Çocuk Gelişimi",
+      "slug": "ozel-ders-cocuk-gelisimi",
+      "fullSlug": "ozel-ders-cocuk-gelisimi"
+    },
+    {
+      "name": "Dans",
+      "slug": "ozel-ders-dans",
+      "fullSlug": "ozel-ders-dans"
+    },
+    {
+      "name": "Fotoğrafçılık",
+      "slug": "ozel-ders-fotografcilik",
+      "fullSlug": "ozel-ders-fotografcilik"
+    },
+    {
+      "name": "Güzel Konuşma & Diksiyon",
+      "slug": "ozel-ders-diksiyon",
+      "fullSlug": "ozel-ders-diksiyon"
+    },
+    {
+      "name": "Mesleki Dersler",
+      "slug": "ozel-ders-mesleki-dersler",
+      "fullSlug": "ozel-ders-mesleki-dersler"
+    },
+    {
+      "name": "Özel Eğitim",
+      "slug": "ozel-ders-ozel-egitim",
+      "fullSlug": "ozel-ders-ozel-egitim"
+    },
+    {
+      "name": "Tiyatro & Oyunculuk",
+      "slug": "ozel-ders-tiyatro-oyunculuk",
+      "fullSlug": "ozel-ders-tiyatro-oyunculuk"
+    }
+  ],
+  "fullSlug": "ozel-ders-arayanlar"
+}

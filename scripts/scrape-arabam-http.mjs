@@ -107,7 +107,7 @@ async function scrapeBrand(brand) {
 }
 
 async function main() {
-  const brands = SEED.length ? SEED : ['Opel','Renault','Volkswagen','Toyota','Honda','Hyundai','Kia','Ford','Peugeot','Citroën','Audi','BMW','Mercedes','Skoda','Nissan']
+  const brands = SEED.length ? SEED : ['Opel','Renault','Volkswagen','Toyota','Honda','Hyundai','Kia','Ford','Peugeot','Audi','BMW','Mercedes','Skoda','Nissan']
   const rows = []
   for (const b of brands) {
     const r = await scrapeBrand(b)

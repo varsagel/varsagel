@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import fs from 'node:fs'
 import path from 'node:path'
 import { getAdminUserId } from '@/auth'
+import { listDirCached } from '@/lib/file-cache'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -13,8 +14,7 @@ export async function GET() {
     if (!adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     if (!fs.existsSync(dir)) return NextResponse.json({ images: [] })
-    const files = fs.readdirSync(dir).filter(f=> f.endsWith('.png')).map(f=> ({ name: f, mtime: fs.statSync(path.join(dir, f)).mtimeMs }))
-    files.sort((a,b)=> b.mtime - a.mtime)
-    return NextResponse.json({ images: files.slice(0, 50).map(f=> f.name) })
+    const images = listDirCached(dir, { ext: '.png', limit: 50, ttlMs: 1500 })
+    return NextResponse.json({ images })
   } catch { return NextResponse.json({ images: [] }) }
 }

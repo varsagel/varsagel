@@ -92,7 +92,7 @@ if (!isNode || isEdge || isBuild) {
     createModuleLogger = (module: string) => {
       return logger.child({ module });
     };
-  } catch (e) {
+  } catch {
     logger = createSimpleLogger();
     createModuleLogger = (module: string) => createSimpleLogger(module);
   }

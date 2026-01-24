@@ -16,7 +16,7 @@ export default function SettingsPage() {
     socialFacebook: "",
     socialTwitter: "",
     socialInstagram: "",
-    maintenanceMode: "false"
+    maintenanceMode: "false",
   });
 
   useEffect(() => {

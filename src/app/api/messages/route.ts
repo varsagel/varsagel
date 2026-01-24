@@ -69,3 +69,33 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Mesajlar getirilirken hata" }, { status: 500 });
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: "Oturum açmanız gerekiyor" }, { status: 401 });
+  const userId = session.user.id as string;
+
+  const body = await request.json().catch(() => ({}));
+  const listingId = typeof body?.listingId === 'string' ? body.listingId.trim() : '';
+  const contactId = typeof body?.contactId === 'string' ? body.contactId.trim() : '';
+
+  const whereMsg: any = { toUserId: userId, read: false };
+  if (listingId) whereMsg.listingId = listingId;
+  if (contactId) whereMsg.senderId = contactId;
+
+  const msgResult = await prisma.message.updateMany({
+    where: whereMsg,
+    data: { read: true },
+  });
+
+  const whereNotif: any = { userId, type: 'message', read: false };
+  if (listingId) {
+    whereNotif.dataJson = { contains: `"listingId":"${listingId}"` };
+  }
+  const notifResult = await prisma.notification.updateMany({
+    where: whereNotif,
+    data: { read: true },
+  });
+
+  return NextResponse.json({ ok: true, messagesMarked: msgResult.count, notificationsMarked: notifResult.count });
+}

@@ -1,0 +1,3012 @@
+{
+  "satilik-asfalt-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "marka",
+      "options": [
+        "Asmaksan",
+        "Astec",
+        "Benninghoven",
+        "Bobcat",
+        "Bomag",
+        "Caterpillar",
+        "Diğer",
+        "Dynapac",
+        "Esisan Makine",
+        "Fimak",
+        "Marini",
+        "Okur Makina",
+        "Palme",
+        "Roadtec",
+        "Simak",
+        "Simex",
+        "Tesmec",
+        "Vermeer",
+        "Vimpo",
+        "Vögele",
+        "Wirtgen"
+      ]
+    }
+  ],
+  "satilik-beko-loder-kazici-yukleyici": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "range-number",
+      "label": "lastik durumu",
+      "minKey": "lastik-durumuMin",
+      "maxKey": "lastik-durumuMax",
+      "minLabel": "lastik durumu min",
+      "maxLabel": "lastik durumu max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "marka",
+      "options": [
+        "Asimato",
+        "Bağsan",
+        "Bobcat",
+        "Bull",
+        "Case",
+        "Caterpillar",
+        "Çukurova Makina",
+        "Diğer",
+        "Fermec",
+        "Ford",
+        "Forway",
+        "Gehl",
+        "Gönen",
+        "Heracles",
+        "Hidromek",
+        "Hitachi",
+        "Hpsystems",
+        "Hyundai",
+        "JCB",
+        "John Deree",
+        "Kawasaki",
+        "Komatsu",
+        "Kubota",
+        "Liugong",
+        "Lonking",
+        "Manitou",
+        "Massey Ferguson",
+        "Mastaş",
+        "Maxbull",
+        "Mecalac",
+        "MST",
+        "New Holland",
+        "Steyr",
+        "Terex",
+        "Toros",
+        "Tümosan",
+        "Universal",
+        "Venieri",
+        "Volvo",
+        "XCMG"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-belden-kirmali-damper": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Ausa",
+        "Bergmann"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-beton-dagitici": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Atabey Makine",
+        "Boom Makine",
+        "Diğer",
+        "Putzmeister",
+        "Royalmac"
+      ]
+    }
+  ],
+  "satilik-beton-pompasi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Betonstar",
+        "BMS",
+        "Brinkmann",
+        "CIFA",
+        "Diğer",
+        "Duru",
+        "Everdigm",
+        "IMER",
+        "Junjin",
+        "Klein",
+        "MAN",
+        "Mercedes-Benz",
+        "Pi Makina",
+        "Putzmeister",
+        "Reich",
+        "Royalmac",
+        "Schwing",
+        "Sermac",
+        "Titan",
+        "Tünelmak",
+        "Waitzinger",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-cop-kompaktoru": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bomag",
+        "CAT",
+        "Hamart"
+      ]
+    }
+  ],
+  "satilik-demiryolu-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Diğer"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-dozer": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Caterpillar",
+        "Fiat",
+        "Hidromek",
+        "JCB",
+        "Komatsu",
+        "Liebherr",
+        "Liugong",
+        "Shantui"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "Lastikli",
+        "Paletli"
+      ]
+    }
+  ],
+  "satilik-ekskavator-kepce": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Asimato",
+        "Atlas",
+        "Betlift",
+        "Bobcat",
+        "Carter",
+        "Case",
+        "Caterpillar",
+        "Çukurova Makina",
+        "Daewoo",
+        "Develon",
+        "Diğer",
+        "Doosan",
+        "Eder",
+        "Everun",
+        "Fiat Hitachi",
+        "Hanix",
+        "Hengwang",
+        "Hibold",
+        "Hidromek",
+        "Hitachi",
+        "Huaya",
+        "Huayee",
+        "Hydroteam",
+        "Hyundai",
+        "JCB",
+        "Jiahe",
+        "Kaisan",
+        "Kato",
+        "Kobelco",
+        "Komatsu",
+        "Kubota",
+        "Liebherr",
+        "Liugong",
+        "Lonking",
+        "LTMG",
+        "Mastaş",
+        "Maxbull",
+        "Maxpower",
+        "Mecalac",
+        "MST",
+        "Newholland",
+        "O&K",
+        "Octopus",
+        "Rippa",
+        "Ronata",
+        "Samsung",
+        "Sany",
+        "SDLG",
+        "Sennebogen",
+        "Seta Lifting",
+        "Shantui",
+        "Sinomach",
+        "Solmec",
+        "Sumitomo",
+        "Sunward",
+        "Takeuchi",
+        "Terex",
+        "Toros",
+        "Volvo",
+        "Wacker Neuson",
+        "XCMG",
+        "Yanmar",
+        "YGS",
+        "Youtop",
+        "Yuchai",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj",
+      "minKey": "tonajMin",
+      "maxKey": "tonajMax",
+      "minLabel": "tonaj min",
+      "maxLabel": "tonaj max"
+    },
+    {
+      "type": "select",
+      "key": "yuruyus",
+      "label": "Yürüyüş",
+      "options": [
+        "Lastikli",
+        "Paletli",
+        "Sabit",
+        "Yüzer"
+      ]
+    }
+  ],
+  "satilik-finiser": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "ABG",
+        "Bomag",
+        "Caterpillar",
+        "Demag",
+        "Diğer",
+        "Dynapac",
+        "Gomaco",
+        "Volvo",
+        "Vögele"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-fore-kazik-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bauer"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-greyder": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Caterpillar",
+        "Champion",
+        "Diğer",
+        "Faun Frisch",
+        "John Deere",
+        "Komatsu",
+        "Liugong",
+        "Mitsubishi",
+        "Sany",
+        "SDLG",
+        "Terex",
+        "Volvo",
+        "XCMG"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kanal-hendek-kazici": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bobcat Trencher",
+        "Diğer",
+        "John Deere",
+        "Tesmec",
+        "Vermeer Trencher"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kar-araci": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Diğer",
+        "Pistenbully",
+        "Ratrac"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kar-kureme-araci": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Diğer",
+        "Prinoth"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kar-puskurtme-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Cub Cadet",
+        "Diğer",
+        "Honda",
+        "MTD"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kaya-delici-ankraj": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Atlas Copco",
+        "CMB",
+        "Comacchio",
+        "Diğer",
+        "Dras Mec",
+        "Everdigm",
+        "Fine 20",
+        "Furukawa",
+        "Gemsa",
+        "Hidrobarsan",
+        "Hidrock",
+        "HKM",
+        "Ingersoll Rand",
+        "Klemm",
+        "Komac",
+        "Mine Master",
+        "Montabert",
+        "MTB",
+        "Sandvik",
+        "Selçuk Makina",
+        "Soilmec",
+        "Soosan",
+        "Tamrock"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kaya-kamyonu": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bell",
+        "BMC",
+        "Caterpillar",
+        "Diğer",
+        "Komatsu",
+        "Mercedes-Benz",
+        "Terex",
+        "Volvo"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kirma-eleme-tesisi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Aymak",
+        "Belli Makina",
+        "Betontaş Makine",
+        "Beyer Makine",
+        "Borataş",
+        "Burak Makine",
+        "Cesa",
+        "CSB Makina",
+        "Çelik",
+        "Çimenler Makina",
+        "Diğer",
+        "Dragon",
+        "Entema",
+        "Fabo",
+        "FM",
+        "Gayret Makina",
+        "Gelen Makina",
+        "General Makine",
+        "Gmrt Service",
+        "Gürbüz Makina",
+        "Gürsan Makina",
+        "İbrahim Çimen Makina",
+        "KLC Makina",
+        "Kleemann",
+        "Köksallar Makine",
+        "Mad-Tek",
+        "McCloskey",
+        "Mes Makina",
+        "Metso",
+        "Muka",
+        "Mutafçılar",
+        "Nace",
+        "Pi Makina",
+        "Saes",
+        "Sermaden",
+        "Uğur Maki̇na"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-kule-vinc": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Alfa",
+        "Alimak",
+        "Arlift",
+        "Arnikon",
+        "Bemtaş",
+        "Benazzoto",
+        "BMC",
+        "Cabr",
+        "Cadillon Chrono",
+        "Cenkamak",
+        "Comansa",
+        "Çalışır&İnan",
+        "Dahan",
+        "Dalbe",
+        "Diğer",
+        "Elmak",
+        "Espada",
+        "FM Gru",
+        "GRU Comedil",
+        "Haishan",
+        "Hengsheng",
+        "Hidrokreyn",
+        "Hongda",
+        "ITC",
+        "ITK",
+        "Jaso",
+        "Jinnta",
+        "Kammerlander",
+        "Kasırga",
+        "Kocaoğlu",
+        "Kümsan",
+        "Liebherr",
+        "Linden Comansa",
+        "Link-Belt",
+        "Nova Kule Vinç",
+        "Öz Fatihler",
+        "Özkurt",
+        "Panel",
+        "Peiner",
+        "Petra",
+        "Pi Makina",
+        "Pingon",
+        "Potain",
+        "Puma",
+        "QLCM",
+        "Raimondi",
+        "RECO",
+        "Ruston-Bucyrus",
+        "SAEZ",
+        "Sany",
+        "SCM",
+        "Sekizli Makine",
+        "Sel Vinç",
+        "Simma",
+        "SNN Crane",
+        "Soima",
+        "Star Crane",
+        "Star Lift",
+        "Sunward",
+        "SYM",
+        "Tavol",
+        "Tayder",
+        "Terex Comedil",
+        "Tesla",
+        "TGM",
+        "TKE",
+        "Towerwork",
+        "Turkish Tower Cranes",
+        "Vizyon",
+        "Wolffkran",
+        "XCMG",
+        "XJCM",
+        "Yonca Makina",
+        "Yongmao",
+        "ZCJJ",
+        "Zoomlion",
+        "ZTM"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "range-number",
+      "label": "yükseklik",
+      "minKey": "yukseklikMin",
+      "maxKey": "yukseklikMax",
+      "minLabel": "yükseklik min",
+      "maxLabel": "yükseklik max"
+    }
+  ],
+  "satilik-loder-yukleyici": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "range-number",
+      "label": "lastik durumu",
+      "minKey": "lastik-durumuMin",
+      "maxKey": "lastik-durumuMax",
+      "minLabel": "lastik durumu min",
+      "maxLabel": "lastik durumu max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Alpin",
+        "ANT",
+        "Asimato",
+        "Avant",
+        "Bağsan",
+        "Başak",
+        "Bobcat",
+        "Case",
+        "Caterpillar",
+        "Çukurova Makina",
+        "Develon",
+        "Diğer",
+        "Doosan",
+        "Ferguson",
+        "Fermec",
+        "Fiatallis",
+        "Gehl",
+        "Giant",
+        "Gönen",
+        "Günmak",
+        "Heracles",
+        "Hidromek",
+        "Hitachi",
+        "Huaya",
+        "Hyundai",
+        "JCB",
+        "John Deere",
+        "Kato",
+        "Kawasaki",
+        "Komatsu",
+        "Kramer",
+        "Lgma",
+        "Liebherr",
+        "Liugong",
+        "Lonking",
+        "Massey Ferguson",
+        "Mereks",
+        "MST",
+        "New Holland",
+        "Samsung",
+        "Sandvik",
+        "SDLG",
+        "Sunward",
+        "Taian",
+        "TCM",
+        "Terex",
+        "Universal",
+        "Volvo",
+        "XCMG",
+        "Yanmar"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-mobil-asansor": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "AKL",
+        "Alimak",
+        "Ank Platform",
+        "Bionlift",
+        "BMC",
+        "Boiz",
+        "Bomex",
+        "Böcker",
+        "Chunha",
+        "Denlift",
+        "Derinler",
+        "Diğer",
+        "Dingli",
+        "Dorukup Lift",
+        "Dream",
+        "Encomat",
+        "Etkin",
+        "Geda",
+        "Genie",
+        "Grove",
+        "Haulotte",
+        "Horyong",
+        "Hyundai",
+        "JIC",
+        "JLG",
+        "JND",
+        "JSL",
+        "Juhe",
+        "Klaas",
+        "KuleLift",
+        "Liftsa",
+        "MAN",
+        "Mitsubishi",
+        "Novalift",
+        "Odessa",
+        "Oil&Steel",
+        "Paus",
+        "Star Lift",
+        "Stros",
+        "Sunward",
+        "Tavol",
+        "Tayder",
+        "Teupen",
+        "WAT",
+        "Woosung E&S",
+        "Z-Ton",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "sasi-tipi",
+      "label": "Şasi Tipi",
+      "options": [
+        "Kamyon Üstü",
+        "Vinç Şase"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "Eklemli & Bomlu",
+        "Mobil Kule",
+        "Paletli Platform",
+        "Sepetli Platform",
+        "Teleskopik"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    },
+    {
+      "type": "range-number",
+      "label": "uzunluk",
+      "minKey": "uzunlukMin",
+      "maxKey": "uzunlukMax",
+      "minLabel": "uzunluk min",
+      "maxLabel": "uzunluk max"
+    }
+  ],
+  "satilik-mobil-konkasor": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Argo",
+        "Borataş Makina",
+        "Diğer",
+        "Entema",
+        "Fabo Makina",
+        "General Makina",
+        "Kleemann",
+        "Köksallar Makina",
+        "M-K Makina",
+        "McCloskey",
+        "Mesko",
+        "Metso",
+        "Mutafçı",
+        "Nace",
+        "Newcomen",
+        "Polygonmach",
+        "Portafill",
+        "PowerScreen",
+        "Rockster",
+        "Rubble Master",
+        "Sandvik",
+        "Sermaden",
+        "Tekel Makina",
+        "Terex - Pegson"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "select",
+      "key": "yuruyus-takimi",
+      "label": "Yürüyüş Takımı",
+      "options": [
+        "Lastikli",
+        "Paletli",
+        "Sabit"
+      ]
+    }
+  ],
+  "satilik-mobil-vinc": [
+    {
+      "type": "select",
+      "key": "sasi-tipi",
+      "label": "Şasi tipi",
+      "options": [
+        "Kamyon Üstü",
+        "Vinç Şasi"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    },
+    {
+      "type": "range-number",
+      "label": "uzunluk",
+      "minKey": "uzunlukMin",
+      "maxKey": "uzunlukMax",
+      "minLabel": "uzunluk min",
+      "maxLabel": "uzunluk max"
+    },
+    {
+      "type": "select",
+      "key": "vinc-tipi",
+      "label": "Vinç Tipi",
+      "options": [
+        "Eklemli Bomlu Vinç",
+        "Mobil Kule Vinci",
+        "Paletli Vinç",
+        "Sepetli Platform",
+        "Teleskopik Vinç"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "vinç üretim yılı",
+      "minKey": "vinc-uretim-yiliMin",
+      "maxKey": "vinc-uretim-yiliMax",
+      "minLabel": "vinç üretim yılı min",
+      "maxLabel": "vinç üretim yılı max"
+    }
+  ],
+  "satilik-silindir": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Ammann",
+        "Bitelli",
+        "Bomag",
+        "Caterpillar",
+        "Diğer",
+        "Dynapac",
+        "Hamm",
+        "Hidromek",
+        "HMS Harman",
+        "Hyundai",
+        "Ingersollrand",
+        "JCB",
+        "Komatsu",
+        "Labrero",
+        "Palme",
+        "STA",
+        "Vibromax",
+        "Volvo",
+        "Wacker",
+        "XCMG"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "select",
+      "key": "silindir-konumu",
+      "label": "silindir konumu",
+      "options": [
+        "Arkada",
+        "Çift",
+        "Önde"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "Asfalt",
+        "Toprak"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    }
+  ],
+  "satilik-teleskopik-yukleyici": [
+    {
+      "type": "range-number",
+      "label": "asansör (m)",
+      "minKey": "asansor-mMin",
+      "maxKey": "asansor-mMax",
+      "minLabel": "asansör (m) min",
+      "maxLabel": "asansör (m) max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Ausa",
+        "Bağsan",
+        "Bobcat",
+        "Case",
+        "CAT",
+        "Caterpillar",
+        "Clark",
+        "Dieci",
+        "Diğer",
+        "Everun",
+        "Faresin",
+        "Genie",
+        "Giant",
+        "Haluotte",
+        "Heli",
+        "Hyster",
+        "JCB",
+        "JLG",
+        "Keskinova",
+        "Komatsu",
+        "Lgmg",
+        "Liebherr",
+        "LTMG",
+        "Magni",
+        "Manitou",
+        "Massey Ferguson",
+        "Mazaka",
+        "Merlo",
+        "MST",
+        "New Holland",
+        "Sany",
+        "Steiner",
+        "Sunward",
+        "Wacker Neuson",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    }
+  ],
+  "satilik-transmikser": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Betamix",
+        "BMC",
+        "Carmix",
+        "Diğer",
+        "Duru",
+        "Ford",
+        "Hibold",
+        "Iveco",
+        "MAN",
+        "Mercedes-Benz",
+        "Renault",
+        "Scania",
+        "Volvo"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "satilik-yer-alti-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Karer"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-asfalt-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "marka",
+      "options": [
+        "Asmaksan",
+        "Astec",
+        "Benninghoven",
+        "Bobcat",
+        "Bomag",
+        "Caterpillar",
+        "Diğer",
+        "Dynapac",
+        "Esisan Makine",
+        "Fimak",
+        "Marini",
+        "Okur Makina",
+        "Palme",
+        "Roadtec",
+        "Simak",
+        "Simex",
+        "Tesmec",
+        "Vermeer",
+        "Vimpo",
+        "Vögele",
+        "Wirtgen"
+      ]
+    }
+  ],
+  "kiralik-beko-loder-kazici-yukleyici": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "range-number",
+      "label": "lastik durumu",
+      "minKey": "lastik-durumuMin",
+      "maxKey": "lastik-durumuMax",
+      "minLabel": "lastik durumu min",
+      "maxLabel": "lastik durumu max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "marka",
+      "options": [
+        "Asimato",
+        "Bağsan",
+        "Bobcat",
+        "Bull",
+        "Case",
+        "Caterpillar",
+        "Çukurova Makina",
+        "Diğer",
+        "Fermec",
+        "Ford",
+        "Forway",
+        "Gehl",
+        "Gönen",
+        "Heracles",
+        "Hidromek",
+        "Hitachi",
+        "Hpsystems",
+        "Hyundai",
+        "JCB",
+        "John Deree",
+        "Kawasaki",
+        "Komatsu",
+        "Kubota",
+        "Liugong",
+        "Lonking",
+        "Manitou",
+        "Massey Ferguson",
+        "Mastaş",
+        "Maxbull",
+        "Mecalac",
+        "MST",
+        "New Holland",
+        "Steyr",
+        "Terex",
+        "Toros",
+        "Tümosan",
+        "Universal",
+        "Venieri",
+        "Volvo",
+        "XCMG"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-belden-kirmali-damper": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Ausa",
+        "Bergmann"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-beton-dagitici": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Atabey Makine",
+        "Boom Makine",
+        "Diğer",
+        "Putzmeister",
+        "Royalmac"
+      ]
+    }
+  ],
+  "kiralik-beton-pompasi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Betonstar",
+        "BMS",
+        "Brinkmann",
+        "CIFA",
+        "Diğer",
+        "Duru",
+        "Everdigm",
+        "IMER",
+        "Junjin",
+        "Klein",
+        "MAN",
+        "Mercedes-Benz",
+        "Pi Makina",
+        "Putzmeister",
+        "Reich",
+        "Royalmac",
+        "Schwing",
+        "Sermac",
+        "Titan",
+        "Tünelmak",
+        "Waitzinger",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-cop-kompaktoru": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bomag",
+        "CAT",
+        "Hamart"
+      ]
+    }
+  ],
+  "kiralik-demiryolu-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Diğer"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-dozer": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Caterpillar",
+        "Fiat",
+        "Hidromek",
+        "JCB",
+        "Komatsu",
+        "Liebherr",
+        "Liugong",
+        "Shantui"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "Lastikli",
+        "Paletli"
+      ]
+    }
+  ],
+  "kiralik-ekskavator-kepce": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Asimato",
+        "Atlas",
+        "Betlift",
+        "Bobcat",
+        "Carter",
+        "Case",
+        "Caterpillar",
+        "Çukurova Makina",
+        "Daewoo",
+        "Develon",
+        "Diğer",
+        "Doosan",
+        "Eder",
+        "Everun",
+        "Fiat Hitachi",
+        "Hanix",
+        "Hengwang",
+        "Hibold",
+        "Hidromek",
+        "Hitachi",
+        "Huaya",
+        "Huayee",
+        "Hydroteam",
+        "Hyundai",
+        "JCB",
+        "Jiahe",
+        "Kaisan",
+        "Kato",
+        "Kobelco",
+        "Komatsu",
+        "Kubota",
+        "Liebherr",
+        "Liugong",
+        "Lonking",
+        "LTMG",
+        "Mastaş",
+        "Maxbull",
+        "Maxpower",
+        "Mecalac",
+        "MST",
+        "Newholland",
+        "O&K",
+        "Octopus",
+        "Rippa",
+        "Ronata",
+        "Samsung",
+        "Sany",
+        "SDLG",
+        "Sennebogen",
+        "Seta Lifting",
+        "Shantui",
+        "Sinomach",
+        "Solmec",
+        "Sumitomo",
+        "Sunward",
+        "Takeuchi",
+        "Terex",
+        "Toros",
+        "Volvo",
+        "Wacker Neuson",
+        "XCMG",
+        "Yanmar",
+        "YGS",
+        "Youtop",
+        "Yuchai",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj",
+      "minKey": "tonajMin",
+      "maxKey": "tonajMax",
+      "minLabel": "tonaj min",
+      "maxLabel": "tonaj max"
+    },
+    {
+      "type": "select",
+      "key": "yuruyus",
+      "label": "Yürüyüş",
+      "options": [
+        "Lastikli",
+        "Paletli",
+        "Sabit",
+        "Yüzer"
+      ]
+    }
+  ],
+  "kiralik-finiser": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "ABG",
+        "Bomag",
+        "Caterpillar",
+        "Demag",
+        "Diğer",
+        "Dynapac",
+        "Gomaco",
+        "Volvo",
+        "Vögele"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-fore-kazik-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bauer"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-greyder": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Caterpillar",
+        "Champion",
+        "Diğer",
+        "Faun Frisch",
+        "John Deere",
+        "Komatsu",
+        "Liugong",
+        "Mitsubishi",
+        "Sany",
+        "SDLG",
+        "Terex",
+        "Volvo",
+        "XCMG"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kanal-hendek-kazici": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bobcat Trencher",
+        "Diğer",
+        "John Deere",
+        "Tesmec",
+        "Vermeer Trencher"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kar-araci": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Diğer",
+        "Pistenbully",
+        "Ratrac"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kar-kureme-araci": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Diğer",
+        "Prinoth"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kar-puskurtme-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Cub Cadet",
+        "Diğer",
+        "Honda",
+        "MTD"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kaya-delici-ankraj": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Atlas Copco",
+        "CMB",
+        "Comacchio",
+        "Diğer",
+        "Dras Mec",
+        "Everdigm",
+        "Fine 20",
+        "Furukawa",
+        "Gemsa",
+        "Hidrobarsan",
+        "Hidrock",
+        "HKM",
+        "Ingersoll Rand",
+        "Klemm",
+        "Komac",
+        "Mine Master",
+        "Montabert",
+        "MTB",
+        "Sandvik",
+        "Selçuk Makina",
+        "Soilmec",
+        "Soosan",
+        "Tamrock"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kaya-kamyonu": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Bell",
+        "BMC",
+        "Caterpillar",
+        "Diğer",
+        "Komatsu",
+        "Mercedes-Benz",
+        "Terex",
+        "Volvo"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kirma-eleme-tesisi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Aymak",
+        "Belli Makina",
+        "Betontaş Makine",
+        "Beyer Makine",
+        "Borataş",
+        "Burak Makine",
+        "Cesa",
+        "CSB Makina",
+        "Çelik",
+        "Çimenler Makina",
+        "Diğer",
+        "Dragon",
+        "Entema",
+        "Fabo",
+        "FM",
+        "Gayret Makina",
+        "Gelen Makina",
+        "General Makine",
+        "Gmrt Service",
+        "Gürbüz Makina",
+        "Gürsan Makina",
+        "İbrahim Çimen Makina",
+        "KLC Makina",
+        "Kleemann",
+        "Köksallar Makine",
+        "Mad-Tek",
+        "McCloskey",
+        "Mes Makina",
+        "Metso",
+        "Muka",
+        "Mutafçılar",
+        "Nace",
+        "Pi Makina",
+        "Saes",
+        "Sermaden",
+        "Uğur Maki̇na"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-kule-vinc": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Alfa",
+        "Alimak",
+        "Arlift",
+        "Arnikon",
+        "Bemtaş",
+        "Benazzoto",
+        "BMC",
+        "Cabr",
+        "Cadillon Chrono",
+        "Cenkamak",
+        "Comansa",
+        "Çalışır&İnan",
+        "Dahan",
+        "Dalbe",
+        "Diğer",
+        "Elmak",
+        "Espada",
+        "FM Gru",
+        "GRU Comedil",
+        "Haishan",
+        "Hengsheng",
+        "Hidrokreyn",
+        "Hongda",
+        "ITC",
+        "ITK",
+        "Jaso",
+        "Jinnta",
+        "Kammerlander",
+        "Kasırga",
+        "Kocaoğlu",
+        "Kümsan",
+        "Liebherr",
+        "Linden Comansa",
+        "Link-Belt",
+        "Nova Kule Vinç",
+        "Öz Fatihler",
+        "Özkurt",
+        "Panel",
+        "Peiner",
+        "Petra",
+        "Pi Makina",
+        "Pingon",
+        "Potain",
+        "Puma",
+        "QLCM",
+        "Raimondi",
+        "RECO",
+        "Ruston-Bucyrus",
+        "SAEZ",
+        "Sany",
+        "SCM",
+        "Sekizli Makine",
+        "Sel Vinç",
+        "Simma",
+        "SNN Crane",
+        "Soima",
+        "Star Crane",
+        "Star Lift",
+        "Sunward",
+        "SYM",
+        "Tavol",
+        "Tayder",
+        "Terex Comedil",
+        "Tesla",
+        "TGM",
+        "TKE",
+        "Towerwork",
+        "Turkish Tower Cranes",
+        "Vizyon",
+        "Wolffkran",
+        "XCMG",
+        "XJCM",
+        "Yonca Makina",
+        "Yongmao",
+        "ZCJJ",
+        "Zoomlion",
+        "ZTM"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "range-number",
+      "label": "yükseklik",
+      "minKey": "yukseklikMin",
+      "maxKey": "yukseklikMax",
+      "minLabel": "yükseklik min",
+      "maxLabel": "yükseklik max"
+    }
+  ],
+  "kiralik-loder-yukleyici": [
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "range-number",
+      "label": "lastik durumu",
+      "minKey": "lastik-durumuMin",
+      "maxKey": "lastik-durumuMax",
+      "minLabel": "lastik durumu min",
+      "maxLabel": "lastik durumu max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Alpin",
+        "ANT",
+        "Asimato",
+        "Avant",
+        "Bağsan",
+        "Başak",
+        "Bobcat",
+        "Case",
+        "Caterpillar",
+        "Çukurova Makina",
+        "Develon",
+        "Diğer",
+        "Doosan",
+        "Ferguson",
+        "Fermec",
+        "Fiatallis",
+        "Gehl",
+        "Giant",
+        "Gönen",
+        "Günmak",
+        "Heracles",
+        "Hidromek",
+        "Hitachi",
+        "Huaya",
+        "Hyundai",
+        "JCB",
+        "John Deere",
+        "Kato",
+        "Kawasaki",
+        "Komatsu",
+        "Kramer",
+        "Lgma",
+        "Liebherr",
+        "Liugong",
+        "Lonking",
+        "Massey Ferguson",
+        "Mereks",
+        "MST",
+        "New Holland",
+        "Samsung",
+        "Sandvik",
+        "SDLG",
+        "Sunward",
+        "Taian",
+        "TCM",
+        "Terex",
+        "Universal",
+        "Volvo",
+        "XCMG",
+        "Yanmar"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-mobil-asansor": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "AKL",
+        "Alimak",
+        "Ank Platform",
+        "Bionlift",
+        "BMC",
+        "Boiz",
+        "Bomex",
+        "Böcker",
+        "Chunha",
+        "Denlift",
+        "Derinler",
+        "Diğer",
+        "Dingli",
+        "Dorukup Lift",
+        "Dream",
+        "Encomat",
+        "Etkin",
+        "Geda",
+        "Genie",
+        "Grove",
+        "Haulotte",
+        "Horyong",
+        "Hyundai",
+        "JIC",
+        "JLG",
+        "JND",
+        "JSL",
+        "Juhe",
+        "Klaas",
+        "KuleLift",
+        "Liftsa",
+        "MAN",
+        "Mitsubishi",
+        "Novalift",
+        "Odessa",
+        "Oil&Steel",
+        "Paus",
+        "Star Lift",
+        "Stros",
+        "Sunward",
+        "Tavol",
+        "Tayder",
+        "Teupen",
+        "WAT",
+        "Woosung E&S",
+        "Z-Ton",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "sasi-tipi",
+      "label": "Şasi Tipi",
+      "options": [
+        "Kamyon Üstü",
+        "Vinç Şase"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "Eklemli & Bomlu",
+        "Mobil Kule",
+        "Paletli Platform",
+        "Sepetli Platform",
+        "Teleskopik"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    },
+    {
+      "type": "range-number",
+      "label": "uzunluk",
+      "minKey": "uzunlukMin",
+      "maxKey": "uzunlukMax",
+      "minLabel": "uzunluk min",
+      "maxLabel": "uzunluk max"
+    }
+  ],
+  "kiralik-mobil-konkasor": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Argo",
+        "Borataş Makina",
+        "Diğer",
+        "Entema",
+        "Fabo Makina",
+        "General Makina",
+        "Kleemann",
+        "Köksallar Makina",
+        "M-K Makina",
+        "McCloskey",
+        "Mesko",
+        "Metso",
+        "Mutafçı",
+        "Nace",
+        "Newcomen",
+        "Polygonmach",
+        "Portafill",
+        "PowerScreen",
+        "Rockster",
+        "Rubble Master",
+        "Sandvik",
+        "Sermaden",
+        "Tekel Makina",
+        "Terex - Pegson"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "select",
+      "key": "yuruyus-takimi",
+      "label": "Yürüyüş Takımı",
+      "options": [
+        "Lastikli",
+        "Paletli",
+        "Sabit"
+      ]
+    }
+  ],
+  "kiralik-mobil-vinc": [
+    {
+      "type": "select",
+      "key": "sasi-tipi",
+      "label": "Şasi tipi",
+      "options": [
+        "Kamyon Üstü",
+        "Vinç Şasi"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    },
+    {
+      "type": "range-number",
+      "label": "uzunluk",
+      "minKey": "uzunlukMin",
+      "maxKey": "uzunlukMax",
+      "minLabel": "uzunluk min",
+      "maxLabel": "uzunluk max"
+    },
+    {
+      "type": "select",
+      "key": "vinc-tipi",
+      "label": "Vinç Tipi",
+      "options": [
+        "Eklemli Bomlu Vinç",
+        "Mobil Kule Vinci",
+        "Paletli Vinç",
+        "Sepetli Platform",
+        "Teleskopik Vinç"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "vinç üretim yılı",
+      "minKey": "vinc-uretim-yiliMin",
+      "maxKey": "vinc-uretim-yiliMax",
+      "minLabel": "vinç üretim yılı min",
+      "maxLabel": "vinç üretim yılı max"
+    }
+  ],
+  "kiralik-silindir": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Ammann",
+        "Bitelli",
+        "Bomag",
+        "Caterpillar",
+        "Diğer",
+        "Dynapac",
+        "Hamm",
+        "Hidromek",
+        "HMS Harman",
+        "Hyundai",
+        "Ingersollrand",
+        "JCB",
+        "Komatsu",
+        "Labrero",
+        "Palme",
+        "STA",
+        "Vibromax",
+        "Volvo",
+        "Wacker",
+        "XCMG"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "select",
+      "key": "silindir-konumu",
+      "label": "silindir konumu",
+      "options": [
+        "Arkada",
+        "Çift",
+        "Önde"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "Asfalt",
+        "Toprak"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    }
+  ],
+  "kiralik-teleskopik-yukleyici": [
+    {
+      "type": "range-number",
+      "label": "asansör (m)",
+      "minKey": "asansor-mMin",
+      "maxKey": "asansor-mMax",
+      "minLabel": "asansör (m) min",
+      "maxLabel": "asansör (m) max"
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Ausa",
+        "Bağsan",
+        "Bobcat",
+        "Case",
+        "CAT",
+        "Caterpillar",
+        "Clark",
+        "Dieci",
+        "Diğer",
+        "Everun",
+        "Faresin",
+        "Genie",
+        "Giant",
+        "Haluotte",
+        "Heli",
+        "Hyster",
+        "JCB",
+        "JLG",
+        "Keskinova",
+        "Komatsu",
+        "Lgmg",
+        "Liebherr",
+        "LTMG",
+        "Magni",
+        "Manitou",
+        "Massey Ferguson",
+        "Mazaka",
+        "Merlo",
+        "MST",
+        "New Holland",
+        "Sany",
+        "Steiner",
+        "Sunward",
+        "Wacker Neuson",
+        "Zoomlion"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    },
+    {
+      "type": "range-number",
+      "label": "tonaj (ton)",
+      "minKey": "tonaj-tonMin",
+      "maxKey": "tonaj-tonMax",
+      "minLabel": "tonaj (ton) min",
+      "maxLabel": "Tonaj (Ton) max"
+    }
+  ],
+  "kiralik-transmikser": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Betamix",
+        "BMC",
+        "Carmix",
+        "Diğer",
+        "Duru",
+        "Ford",
+        "Hibold",
+        "Iveco",
+        "MAN",
+        "Mercedes-Benz",
+        "Renault",
+        "Scania",
+        "Volvo"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "kiralik-yer-alti-makinesi": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Karer"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "model yılı",
+      "minKey": "model-yiliMin",
+      "maxKey": "model-yiliMax",
+      "minLabel": "model yılı min",
+      "maxLabel": "model yılı max"
+    }
+  ],
+  "tarim-makineleri-traktor": [
+    {
+      "type": "range-number",
+      "label": "arka lastik",
+      "minKey": "arka-lastikMin",
+      "maxKey": "arka-lastikMax",
+      "minLabel": "arka lastik min",
+      "maxLabel": "arka lastik max"
+    },
+    {
+      "type": "range-number",
+      "label": "çalışma saati",
+      "minKey": "calisma-saatiMin",
+      "maxKey": "calisma-saatiMax",
+      "minLabel": "çalışma saati min",
+      "maxLabel": "çalışma saati max"
+    },
+    {
+      "type": "select",
+      "key": "cekis-tipi",
+      "label": "çekiş tipi",
+      "options": [
+        "4x2",
+        "4x4"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "kabin",
+      "label": "kabin",
+      "options": [
+        "Kapalı Kabin",
+        "Klimalı Kabin",
+        "Tente",
+        "Yok"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Agrifarm",
+        "Agromet",
+        "AGT",
+        "Antonio Carraro",
+        "Arbos",
+        "Artrak Superline",
+        "Aslan",
+        "Başak",
+        "Başkent",
+        "Belarus",
+        "BMC",
+        "Bolinder-Munktell",
+        "Boroon",
+        "Bozok",
+        "Branson",
+        "Captain",
+        "Carraro",
+        "Case IH",
+        "Chery",
+        "Claas",
+        "Deutz-Fahr",
+        "Dexta",
+        "Ebro",
+        "Eicher",
+        "Eltar",
+        "Erkunt",
+        "Farmtrac",
+        "Fatih",
+        "Fendt",
+        "Ferrari",
+        "Fiat",
+        "Ford",
+        "Foton",
+        "Goldoni",
+        "Gönen",
+        "Grace",
+        "Harman",
+        "Hars",
+        "Hattat",
+        "Hema",
+        "Holder",
+        "Hürlimann",
+        "IMT",
+        "International",
+        "İşbora",
+        "JCB",
+        "Jinma",
+        "John Deere",
+        "Kaan",
+        "Karataş",
+        "Kioti",
+        "Kubota",
+        "Lamborghini",
+        "Landini",
+        "Leyland",
+        "LG",
+        "Lombardin",
+        "LS Tractor",
+        "Mahindra",
+        "Massey Ferguson",
+        "Massey Harris",
+        "McCormick",
+        "Mercedes-Benz",
+        "Müşüroğlu",
+        "MY",
+        "New Holland",
+        "Nibbi",
+        "Nuoman",
+        "Paletor",
+        "Pancar",
+        "Perkis",
+        "Renault",
+        "Rippa",
+        "Same",
+        "Solis",
+        "Steyr",
+        "Sunway",
+        "Super Major",
+        "Super Star",
+        "Tafe",
+        "Taral",
+        "Towgo",
+        "Tümosan",
+        "Türk Traktör",
+        "Universal",
+        "Ursus",
+        "Uzel",
+        "Valtra",
+        "Volvo",
+        "Yağmur",
+        "Yanmar",
+        "Zetor"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "ön lastik",
+      "minKey": "on-lastikMin",
+      "maxKey": "on-lastikMax",
+      "minLabel": "ön lastik min",
+      "maxLabel": "ön lastik max"
+    },
+    {
+      "type": "select",
+      "key": "on-yukleyici-kepce",
+      "label": "ön yükleyici kepçe",
+      "options": [
+        "Var",
+        "Yok"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "silindir-sayisi",
+      "label": "silindir sayısı",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "tipi",
+      "options": [
+        "Bahçe & Tarla",
+        "Bahçe Tipi",
+        "Tarla Tipi"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "vites",
+      "label": "vites",
+      "options": [
+        "12 İleri - 12 Geri",
+        "12 İleri - 4 Geri",
+        "15 İleri - 15 Geri",
+        "16 İleri - 16 Geri",
+        "16 İleri - 8 Geri",
+        "18 İleri - 18 Geri",
+        "20 İleri - 20 Geri",
+        "24 İleri - 24 Geri",
+        "28 İleri - 28 Geri",
+        "30 İleri - 15 Geri",
+        "32 İleri - 32 Geri",
+        "36 İleri - 36 Geri",
+        "40 İleri - 20 Geri",
+        "40 İleri - 40 Geri",
+        "6 İleri - 2 Geri",
+        "60 İleri - 60 Geri",
+        "8 İleri - 2 Geri",
+        "8 İleri - 8 Geri",
+        "9 İleri - 3 Geri",
+        "9 İleri - 9 Geri",
+        "Kademesiz"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "yıl",
+      "minKey": "yilMin",
+      "maxKey": "yilMax",
+      "minLabel": "yıl min",
+      "maxLabel": "yıl max"
+    }
+  ],
+  "tarim-makineleri-toprak-isleme": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Ağaç Sökme Makinesi"
+      ]
+    }
+  ],
+  "tarim-makineleri-hasat-harman": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Ağaç Silkeleme Makinesi",
+        "Ayçiçeği Hasat Tablası",
+        "Ayçiçeği Patoz & Toplama",
+        "Balya Makinesi",
+        "Biçerbağlar",
+        "Biçerdöver",
+        "Boylama Makinesi",
+        "Çırçır Makinesi",
+        "Domates Toplama Makinesi",
+        "Fındık Patoz & Toplama",
+        "Fıstık Hasat Makinesi",
+        "Harman Makinesi",
+        "Kabak Hasat Makinesi",
+        "Kurutma Makinesi",
+        "Meyve & Zeytin Toplama",
+        "Mısır Hasat Tablası",
+        "Pamuk Toplama Makinesi",
+        "Pancar Sökme Makinesi",
+        "Pancar Yükleme Makinesi",
+        "Patates & Soğan Sökme",
+        "Pirinç Hasat Makinesi",
+        "Saman Makinesi",
+        "Silaj Makinesi",
+        "Silaj Paketleme Makinesi",
+        "Soyma Makinesi",
+        "Tohum Eleme Makinesi",
+        "Zeytin Eleme Makinesi"
+      ]
+    }
+  ],
+  "tarim-makineleri-bitki-bakim": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Budama Makinesi",
+        "Çayır, Çim & Ot Biçme",
+        "Orak & Tırpan Makinesi",
+        "Pelet Makinesi",
+        "Talaş Hazırlama",
+        "Üfleme Toplama Makinesi",
+        "Yaprak & Dal Öğütme Makinesi"
+      ]
+    }
+  ],
+  "tarim-makineleri-ekim-dikim": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Ekim Makinesi",
+        "Hububat Ekim Mibzeri",
+        "Patates & Soğan Ekme",
+        "Tütün Dikim Makinesi"
+      ]
+    }
+  ],
+  "tarim-makineleri-gubreleme": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Gübre Dağıtma & Serpme",
+        "Gübre Karıştırıcı",
+        "Gübre Kurutma Makinesi",
+        "Gübre Parçalama",
+        "Gübre Pompası",
+        "Gübre Seperatörü",
+        "Gübre Sıyırıcı"
+      ]
+    }
+  ],
+  "tarim-makineleri-sulama": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Gübre Tankı",
+        "Pancar Motoru",
+        "Su Pompası & Motoru",
+        "Su Tankeri",
+        "Sulama Makinesi"
+      ]
+    }
+  ],
+  "tarim-makineleri-hayvancilik": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Ahır Ekipmanları",
+        "Arıcılık Malzemeleri",
+        "Hayvan Kaşıma Fırçası",
+        "Hayvan Kesimhane Ekipmanları",
+        "Süt Sağma Makinesi",
+        "Yem Ezme & Kırma",
+        "Yem İtici",
+        "Yem Karma Makinesi",
+        "Yem Üretim Makinesi"
+      ]
+    }
+  ],
+  "tarim-makineleri-tasima": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "Çeşidi",
+      "options": [
+        "Kasalar & Sepetler",
+        "Konveyör, Bant & Helezon",
+        "Römork",
+        "Tomruk Çekici Vinç"
+      ]
+    }
+  ],
+  "tarim-makineleri-atasman-yedek-parca": [
+    {
+      "type": "select",
+      "key": "parca-grubu",
+      "label": "Parça grubu",
+      "options": [
+        "Aksesuar",
+        "Aktarma (Vites)",
+        "Ataşman & Uygulama",
+        "Elektrik",
+        "Fren",
+        "Hidrolik",
+        "İç Aksam",
+        "Kaporta",
+        "Motor Grubu",
+        "Yürür Aksam"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "Balya Asansörü",
+        "Balya İpi",
+        "Balya Kapma",
+        "Çam Fıstığı Patozu",
+        "Çamurluk",
+        "Çatal",
+        "Çırçır Rölesi",
+        "Direksiyon Pompası",
+        "Fasulye Harmanlama",
+        "Fide Dikme",
+        "Goble Diskaro",
+        "Harmanlama Patozu",
+        "Helezon Taşıyıcı (Elevatör)",
+        "Kanal Kazıcı",
+        "Kar Küreme",
+        "Karter",
+        "Kepçe",
+        "Kültüvatör",
+        "Kürek",
+        "Merdane",
+        "Mısır Toplama & Ufalama",
+        "Motor",
+        "Motor Bloğu",
+        "Ön Far",
+        "Pamuk Toplayıcı",
+        "Patates Sökme",
+        "Pulluk",
+        "Rotovatör Çapa",
+        "Sarf Malzemesi",
+        "Silaj",
+        "Silindir",
+        "Stator",
+        "Süpürge",
+        "Tabla",
+        "Tamir Takımı",
+        "Tampon",
+        "Tesviyeleme",
+        "Tırmık",
+        "Tomruk Yükleyici",
+        "Toprak Burgusu",
+        "Toprak Testeresi",
+        "Tork",
+        "Traktör Kabini",
+        "Traktör Koltuğu",
+        "Traktör Koltuk Kılıfı",
+        "Türbin",
+        "Yükleyici"
+      ]
+    }
+  ],
+  "sanayi-endustri-makineleri": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Ahşap & Mobilya",
+        "Ambalaj & Paketleme",
+        "Cam, Plastik & Kimya",
+        "Gıda",
+        "Isı & Havalandırma",
+        "İnşaat",
+        "Maden & Su Altı",
+        "Matbaa & Reklam",
+        "Metal İşleme",
+        "Otomotiv",
+        "Tekstil & Ayakkabı",
+        "Toplu Satış",
+        "Yedek Parça & Aksesuar"
+      ]
+    }
+  ],
+  "sanayi-endustriyel-mutfak": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Bar, Kafe & Restoran",
+        "Bulaşıkhane & Temizlik",
+        "Eviye",
+        "Gıda Hazırlama",
+        "Gıda Soğutma & Saklama",
+        "Pastane & Fırın",
+        "Pişirme Ekipmanları",
+        "Servis",
+        "Seyyar Tezgahlar",
+        "Toplu Satış"
+      ]
+    }
+  ],
+  "sanayi-endustriyel-mobilya": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Bar & Gece Kulübü Mobilyaları",
+        "Hastane Mobilyaları",
+        "Kafe & Restoran Mobilyaları",
+        "Otel Mobilyaları"
+      ]
+    }
+  ],
+  "sanayi-endustriyel-temizlik": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Çamaşırhane",
+        "Dezenfeksiyon Sistemleri",
+        "Halı Temizleme",
+        "Toplu Satış",
+        "Yedek Parça & Aksesuar",
+        "Yıkama & Süpürme"
+      ]
+    }
+  ],
+  "sanayi-endustriyel-hirdavat": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Ahşap",
+        "Boru İşleme Ekipmanları",
+        "Havalı Aletler",
+        "İnşaat",
+        "İş Güvenliği",
+        "Küçük El Aletleri",
+        "Metal",
+        "Mikro Aletler",
+        "Ölçüm Aletleri"
+      ]
+    }
+  ],
+  "sanayi-tasima-istifleme": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Asansörler",
+        "Basküller",
+        "Forkliftler",
+        "İskele & Kalıp Sistemleri",
+        "İstif Makineleri",
+        "Kaldırma Ataşmanları",
+        "Kasalar & Sepetler",
+        "Platformlar",
+        "Terminal Çekici",
+        "Transpaletler",
+        "Yük Taşıma Arabaları",
+        "Yürüyen Merdiven"
+      ]
+    }
+  ],
+  "sanayi-kompresor": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Kurutucular & Filtreler",
+        "Pistonlu",
+        "Vidalı",
+        "Yağsız",
+        "Yedek Parça & Aksesuar"
+      ]
+    }
+  ],
+  "sanayi-raf-urun-teshir": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Aksesuarlar",
+        "Market Ekipmanları",
+        "Raflar ve Reyonlar",
+        "Standlar",
+        "Toplu Satış",
+        "Vitrin Mankenleri",
+        "Vitrinler, Bankolar & Kabinler"
+      ]
+    }
+  ],
+  "sanayi-cadir-tente-kepenk": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Endüstriyel Çadırlar",
+        "Fotoselli & Otomatik Kapı",
+        "Hızlı PVC Kapı",
+        "Kepenk & Panjur",
+        "Tente & Branda"
+      ]
+    }
+  ],
+  "sanayi-konteyner-kabin": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Kabinler",
+        "Konteynerler"
+      ]
+    }
+  ],
+  "sanayi-koruma-ve-siginak-sistemleri": [
+    {
+      "type": "select",
+      "key": "cesidi",
+      "label": "çeşidi",
+      "options": [
+        "Deprem & Panik Kabinleri",
+        "KBRN Sığınaklar",
+        "Maden Sığınma Odaları"
+      ]
+    }
+  ],
+  "satilik-dizel-cekic": [
+    {
+      "type": "range-number",
+      "label": "üretim yılı",
+      "minKey": "uretim-yiliMin",
+      "maxKey": "uretim-yiliMax",
+      "minLabel": "üretim yılı min",
+      "maxLabel": "üretim yılı max"
+    }
+  ],
+  "satilik-sondaj-makinesi": [
+    {
+      "type": "range-number",
+      "label": "üretim yılı",
+      "minKey": "uretim-yiliMin",
+      "maxKey": "uretim-yiliMax",
+      "minLabel": "üretim yılı min",
+      "maxLabel": "üretim yılı max"
+    }
+  ],
+  "kiralik-dizel-cekic": [
+    {
+      "type": "range-number",
+      "label": "üretim yılı",
+      "minKey": "uretim-yiliMin",
+      "maxKey": "uretim-yiliMax",
+      "minLabel": "üretim yılı min",
+      "maxLabel": "üretim yılı max"
+    }
+  ],
+  "kiralik-sondaj-makinesi": [
+    {
+      "type": "range-number",
+      "label": "üretim yılı",
+      "minKey": "uretim-yiliMin",
+      "maxKey": "uretim-yiliMax",
+      "minLabel": "üretim yılı min",
+      "maxLabel": "üretim yılı max"
+    }
+  ]
+}

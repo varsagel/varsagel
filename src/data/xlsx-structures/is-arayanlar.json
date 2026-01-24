@@ -1,0 +1,1479 @@
+{
+  "name": "İş Arayanlar",
+  "slug": "is-ilanlari",
+  "subcategories": [
+    {
+      "name": "Avukatlık & Hukuki Danışmanlık",
+      "slug": "avukatlik-ve-hukuki-danismanlik",
+      "subcategories": [
+        {
+          "name": "Avukat",
+          "slug": "avukat",
+          "fullSlug": "avukatlik-ve-hukuki-danismanlik/avukat"
+        },
+        {
+          "name": "Avukat Kâtibi",
+          "slug": "avukat-katibi",
+          "fullSlug": "avukatlik-ve-hukuki-danismanlik/avukat-katibi"
+        },
+        {
+          "name": "Hukuk Müşaviri",
+          "slug": "hukuk-musaviri",
+          "fullSlug": "avukatlik-ve-hukuki-danismanlik/hukuk-musaviri"
+        },
+        {
+          "name": "Stajyer Avukat",
+          "slug": "stajyer-avukat",
+          "fullSlug": "avukatlik-ve-hukuki-danismanlik/stajyer-avukat"
+        },
+        {
+          "name": "Şirket Avukatı",
+          "slug": "sirket-avukati",
+          "fullSlug": "avukatlik-ve-hukuki-danismanlik/sirket-avukati"
+        }
+      ],
+      "fullSlug": "avukatlik-ve-hukuki-danismanlik"
+    },
+    {
+      "name": "Eğitim",
+      "slug": "egitim",
+      "subcategories": [
+        {
+          "name": "Çocuk Eğitimi",
+          "slug": "cocuk-egitimi",
+          "fullSlug": "egitim/cocuk-egitimi"
+        },
+        {
+          "name": "Fitness Eğitmeni",
+          "slug": "fitness-egitmeni",
+          "fullSlug": "egitim/fitness-egitmeni"
+        },
+        {
+          "name": "Kurumsal Eğitim ve Danışmanlık",
+          "slug": "kurumsal-egitim-ve-danismanlik",
+          "fullSlug": "egitim/kurumsal-egitim-ve-danismanlik"
+        },
+        {
+          "name": "Öğretmen",
+          "slug": "ogretmen",
+          "fullSlug": "egitim/ogretmen"
+        },
+        {
+          "name": "Yazılım ve Diğer Teknik Eğitim",
+          "slug": "yazilim-ve-diger-teknik-egitim",
+          "fullSlug": "egitim/yazilim-ve-diger-teknik-egitim"
+        }
+      ],
+      "fullSlug": "egitim"
+    },
+    {
+      "name": "Eğlence & Aktivite",
+      "slug": "eglence-ve-aktivite",
+      "subcategories": [
+        {
+          "name": "Animatör ve Palyaço",
+          "slug": "animator-ve-palyaco",
+          "fullSlug": "eglence-ve-aktivite/animator-ve-palyaco"
+        },
+        {
+          "name": "Fotoğrafçı",
+          "slug": "fotografci",
+          "fullSlug": "eglence-ve-aktivite/fotografci"
+        },
+        {
+          "name": "Kameraman",
+          "slug": "kameraman",
+          "fullSlug": "eglence-ve-aktivite/kameraman"
+        },
+        {
+          "name": "Müzisyen ve DJ",
+          "slug": "muzisyen-ve-dj",
+          "fullSlug": "eglence-ve-aktivite/muzisyen-ve-dj"
+        },
+        {
+          "name": "Oyuncu ve Model",
+          "slug": "oyuncu-ve-model",
+          "fullSlug": "eglence-ve-aktivite/oyuncu-ve-model"
+        },
+        {
+          "name": "Ses & Işık Teknisyeni",
+          "slug": "ses-ve-isik-teknisyeni",
+          "fullSlug": "eglence-ve-aktivite/ses-ve-isik-teknisyeni"
+        },
+        {
+          "name": "Spor Faaliyetleri",
+          "slug": "spor-faaliyetleri",
+          "fullSlug": "eglence-ve-aktivite/spor-faaliyetleri"
+        }
+      ],
+      "fullSlug": "eglence-ve-aktivite"
+    },
+    {
+      "name": "Güzellik & Bakım",
+      "slug": "guzellik-ve-bakim",
+      "subcategories": [
+        {
+          "name": "Erkek Kuaförü",
+          "slug": "erkek-kuaforu",
+          "fullSlug": "guzellik-ve-bakim/erkek-kuaforu"
+        },
+        {
+          "name": "Güzellik Uzmanı",
+          "slug": "guzellik-uzmani",
+          "fullSlug": "guzellik-ve-bakim/guzellik-uzmani"
+        },
+        {
+          "name": "Kadın Kuaförü",
+          "slug": "kadin-kuaforu",
+          "fullSlug": "guzellik-ve-bakim/kadin-kuaforu"
+        },
+        {
+          "name": "Kalıcı Makyaj Uzmanı",
+          "slug": "kalici-makyaj-uzmani",
+          "fullSlug": "guzellik-ve-bakim/kalici-makyaj-uzmani"
+        },
+        {
+          "name": "Kaş & Kirpik Uzmanı",
+          "slug": "kas-ve-kirpik-uzmani",
+          "fullSlug": "guzellik-ve-bakim/kas-ve-kirpik-uzmani"
+        },
+        {
+          "name": "Kedi & Köpek Kuaförü",
+          "slug": "kedi-ve-kopek-kuaforu",
+          "fullSlug": "guzellik-ve-bakim/kedi-ve-kopek-kuaforu"
+        },
+        {
+          "name": "Makyöz",
+          "slug": "makyoz",
+          "fullSlug": "guzellik-ve-bakim/makyoz"
+        },
+        {
+          "name": "Manikür & Pedikür Uzmanı",
+          "slug": "manikur-ve-pedikur-uzmani",
+          "fullSlug": "guzellik-ve-bakim/manikur-ve-pedikur-uzmani"
+        },
+        {
+          "name": "Masör & Masöz",
+          "slug": "masor-ve-masoz",
+          "fullSlug": "guzellik-ve-bakim/masor-ve-masoz"
+        }
+      ],
+      "fullSlug": "guzellik-ve-bakim"
+    },
+    {
+      "name": "IT & Yazılım Geliştirme",
+      "slug": "it-ve-yazilim-gelistirme",
+      "subcategories": [
+        {
+          "name": "Bilgisayar Teknisyeni",
+          "slug": "bilgisayar-teknisyeni",
+          "fullSlug": "it-ve-yazilim-gelistirme/bilgisayar-teknisyeni"
+        },
+        {
+          "name": "Kullanılabilirlik ve Etkileşim Tasarımı",
+          "slug": "kullanilabilirlik-ve-etkilesim-tasarimi",
+          "fullSlug": "it-ve-yazilim-gelistirme/kullanilabilirlik-ve-etkilesim-tasarimi"
+        },
+        {
+          "name": "Proje Yöneticisi",
+          "slug": "proje-yoneticisi",
+          "fullSlug": "it-ve-yazilim-gelistirme/proje-yoneticisi"
+        },
+        {
+          "name": "Sistem Yöneticisi",
+          "slug": "sistem-yoneticisi",
+          "fullSlug": "it-ve-yazilim-gelistirme/sistem-yoneticisi"
+        },
+        {
+          "name": "Veritabanı Yöneticisi",
+          "slug": "veritabani-yoneticisi",
+          "fullSlug": "it-ve-yazilim-gelistirme/veritabani-yoneticisi"
+        },
+        {
+          "name": "Yazılım Geliştirme Uzmanı",
+          "slug": "yazilim-gelistirme-uzmani",
+          "fullSlug": "it-ve-yazilim-gelistirme/yazilim-gelistirme-uzmani"
+        }
+      ],
+      "fullSlug": "it-ve-yazilim-gelistirme"
+    },
+    {
+      "name": "İnsan Kaynakları",
+      "slug": "insan-kaynaklari",
+      "subcategories": [
+        {
+          "name": "Halkla İlişkiler Uzmanı",
+          "slug": "halkla-iliskiler-uzmani",
+          "fullSlug": "insan-kaynaklari/halkla-iliskiler-uzmani"
+        },
+        {
+          "name": "İdari İşler Sorumlusu",
+          "slug": "idari-isler-sorumlusu",
+          "fullSlug": "insan-kaynaklari/idari-isler-sorumlusu"
+        },
+        {
+          "name": "İnsan Kaynakları Uzmanı",
+          "slug": "insan-kaynaklari-uzmani",
+          "fullSlug": "insan-kaynaklari/insan-kaynaklari-uzmani"
+        },
+        {
+          "name": "Kurumsal Gelişim ve Eğitim",
+          "slug": "kurumsal-gelisim-ve-egitim",
+          "fullSlug": "insan-kaynaklari/kurumsal-gelisim-ve-egitim"
+        }
+      ],
+      "fullSlug": "insan-kaynaklari"
+    },
+    {
+      "name": "İnşaat & Yapı",
+      "slug": "insaat-ve-yapi",
+      "subcategories": [
+        {
+          "name": "Asansör & Taşıma Sistemleri",
+          "slug": "asansor-ve-tasima-sistemleri",
+          "fullSlug": "insaat-ve-yapi/asansor-ve-tasima-sistemleri"
+        },
+        {
+          "name": "Beton ve Taş İşleri",
+          "slug": "beton-ve-tas-isleri",
+          "fullSlug": "insaat-ve-yapi/beton-ve-tas-isleri"
+        },
+        {
+          "name": "Çatı İşleri",
+          "slug": "cati-isleri",
+          "fullSlug": "insaat-ve-yapi/cati-isleri"
+        },
+        {
+          "name": "Demir İşleri",
+          "slug": "demir-isleri",
+          "fullSlug": "insaat-ve-yapi/demir-isleri"
+        },
+        {
+          "name": "Duvar, Kaplama & Boya İşleri",
+          "slug": "duvar-kaplama-ve-boya-isleri",
+          "fullSlug": "insaat-ve-yapi/duvar-kaplama-ve-boya-isleri"
+        },
+        {
+          "name": "Elektrik İşleri",
+          "slug": "elektrik-isleri",
+          "fullSlug": "insaat-ve-yapi/elektrik-isleri"
+        }
+      ],
+      "fullSlug": "insaat-ve-yapi"
+    },
+    {
+      "name": "İşletme & Stratejik Yönetim",
+      "slug": "isletme-ve-stratejik-yonetim",
+      "subcategories": [
+        {
+          "name": "Danışmanlık",
+          "slug": "danismanlik",
+          "fullSlug": "isletme-ve-stratejik-yonetim/danismanlik"
+        },
+        {
+          "name": "Eğitim Kurumu Yönetimi",
+          "slug": "egitim-kurumu-yonetimi",
+          "fullSlug": "isletme-ve-stratejik-yonetim/egitim-kurumu-yonetimi"
+        },
+        {
+          "name": "Franchise",
+          "slug": "franchise",
+          "fullSlug": "isletme-ve-stratejik-yonetim/franchise"
+        },
+        {
+          "name": "Hastane / Klinik Yöneticiliği",
+          "slug": "hastane-klinik-yoneticiligi",
+          "fullSlug": "isletme-ve-stratejik-yonetim/hastane-klinik-yoneticiligi"
+        },
+        {
+          "name": "İş Analizi",
+          "slug": "is-analizi",
+          "fullSlug": "isletme-ve-stratejik-yonetim/is-analizi"
+        },
+        {
+          "name": "Şube Yönetimi",
+          "slug": "sube-yonetimi",
+          "fullSlug": "isletme-ve-stratejik-yonetim/sube-yonetimi"
+        }
+      ],
+      "fullSlug": "isletme-ve-stratejik-yonetim"
+    },
+    {
+      "name": "Koruma & Güvenlik",
+      "slug": "koruma-ve-guvenlik",
+      "subcategories": [
+        {
+          "name": "Cankurtaran",
+          "slug": "cankurtaran",
+          "fullSlug": "koruma-ve-guvenlik/cankurtaran"
+        },
+        {
+          "name": "Güvenlik Görevlisi",
+          "slug": "guvenlik-gorevlisi",
+          "fullSlug": "koruma-ve-guvenlik/guvenlik-gorevlisi"
+        },
+        {
+          "name": "Güvenlik Şefi",
+          "slug": "guvenlik-sefi",
+          "fullSlug": "koruma-ve-guvenlik/guvenlik-sefi"
+        },
+        {
+          "name": "Havaalanı Güvenlik Görevlisi",
+          "slug": "havaalani-guvenlik-gorevlisi",
+          "fullSlug": "koruma-ve-guvenlik/havaalani-guvenlik-gorevlisi"
+        },
+        {
+          "name": "Yakın Koruma",
+          "slug": "yakin-koruma",
+          "fullSlug": "koruma-ve-guvenlik/yakin-koruma"
+        }
+      ],
+      "fullSlug": "koruma-ve-guvenlik"
+    },
+    {
+      "name": "Lojistik & Taşıma",
+      "slug": "lojistik-ve-tasima",
+      "subcategories": [
+        {
+          "name": "Dağıtım Personeli",
+          "slug": "dagitim-personeli",
+          "fullSlug": "lojistik-ve-tasima/dagitim-personeli"
+        },
+        {
+          "name": "Depo Sevkiyat Sorumlusu",
+          "slug": "depo-sevkiyat-sorumlusu",
+          "fullSlug": "lojistik-ve-tasima/depo-sevkiyat-sorumlusu"
+        },
+        {
+          "name": "Forklift Operatörü",
+          "slug": "forklift-operatoru",
+          "fullSlug": "lojistik-ve-tasima/forklift-operatoru"
+        },
+        {
+          "name": "Gemi Personeli & Denizci",
+          "slug": "gemi-personeli-ve-denizci",
+          "fullSlug": "lojistik-ve-tasima/gemi-personeli-ve-denizci"
+        },
+        {
+          "name": "İthalat ve İhracat Uzmanı",
+          "slug": "ithalat-ve-ihracat-uzmani",
+          "fullSlug": "lojistik-ve-tasima/ithalat-ve-ihracat-uzmani"
+        },
+        {
+          "name": "Kargo",
+          "slug": "kargo",
+          "fullSlug": "lojistik-ve-tasima/kargo"
+        },
+        {
+          "name": "Pilot",
+          "slug": "pilot",
+          "fullSlug": "lojistik-ve-tasima/pilot"
+        },
+        {
+          "name": "Satın Alma Sorumlusu",
+          "slug": "satin-alma-sorumlusu",
+          "fullSlug": "lojistik-ve-tasima/satin-alma-sorumlusu"
+        },
+        {
+          "name": "Şoför",
+          "slug": "sofor",
+          "fullSlug": "lojistik-ve-tasima/sofor"
+        },
+        {
+          "name": "Taşıma Elemanı",
+          "slug": "tasima-elemani",
+          "fullSlug": "lojistik-ve-tasima/tasima-elemani"
+        }
+      ],
+      "fullSlug": "lojistik-ve-tasima"
+    },
+    {
+      "name": "Mağazacılık ve Perakendecilik",
+      "slug": "magazacilik-ve-perakendecilik",
+      "subcategories": [
+        {
+          "name": "Depo Sorumlusu",
+          "slug": "depo-sorumlusu",
+          "fullSlug": "magazacilik-ve-perakendecilik/depo-sorumlusu"
+        },
+        {
+          "name": "Kasap",
+          "slug": "kasap",
+          "fullSlug": "magazacilik-ve-perakendecilik/kasap"
+        },
+        {
+          "name": "Kategori Uzmanı",
+          "slug": "kategori-uzmani",
+          "fullSlug": "magazacilik-ve-perakendecilik/kategori-uzmani"
+        },
+        {
+          "name": "Mağaza ve Perakende Yöneticisi",
+          "slug": "magaza-ve-perakende-yoneticisi",
+          "fullSlug": "magazacilik-ve-perakendecilik/magaza-ve-perakende-yoneticisi"
+        },
+        {
+          "name": "Şarküteri Sorumlusu",
+          "slug": "sarkuteri-sorumlusu",
+          "fullSlug": "magazacilik-ve-perakendecilik/sarkuteri-sorumlusu"
+        },
+        {
+          "name": "Tezgahtar",
+          "slug": "tezgahtar",
+          "fullSlug": "magazacilik-ve-perakendecilik/tezgahtar"
+        }
+      ],
+      "fullSlug": "magazacilik-ve-perakendecilik"
+    },
+    {
+      "name": "Muhasebe, Finans & Bankacılık",
+      "slug": "muhasebe-finans-ve-bankacilik",
+      "subcategories": [
+        {
+          "name": "Finansal Kontrol",
+          "slug": "finansal-kontrol",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/finansal-kontrol"
+        },
+        {
+          "name": "Genel Muhasebe",
+          "slug": "genel-muhasebe",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/genel-muhasebe"
+        },
+        {
+          "name": "Gişe Görevlisi",
+          "slug": "gise-gorevlisi",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/gise-gorevlisi"
+        },
+        {
+          "name": "Kredi Analizi",
+          "slug": "kredi-analizi",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/kredi-analizi"
+        },
+        {
+          "name": "Kredi ve Mortgage Uzmanı",
+          "slug": "kredi-ve-mortgage-uzmani",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/kredi-ve-mortgage-uzmani"
+        },
+        {
+          "name": "Kurumsal Finans",
+          "slug": "kurumsal-finans",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/kurumsal-finans"
+        },
+        {
+          "name": "Kurumsal Muhasebe",
+          "slug": "kurumsal-muhasebe",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/kurumsal-muhasebe"
+        },
+        {
+          "name": "Ön Muhasebe",
+          "slug": "on-muhasebe",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/on-muhasebe"
+        },
+        {
+          "name": "Risk Yönetimi",
+          "slug": "risk-yonetimi",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/risk-yonetimi"
+        },
+        {
+          "name": "Şube Yönetimi",
+          "slug": "sube-yonetimi",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/sube-yonetimi"
+        },
+        {
+          "name": "Tahsilat",
+          "slug": "tahsilat",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/tahsilat"
+        },
+        {
+          "name": "Vergi Muhasebesi",
+          "slug": "vergi-muhasebesi",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/vergi-muhasebesi"
+        },
+        {
+          "name": "Yatırım Danışmanlığı",
+          "slug": "yatirim-danismanligi",
+          "fullSlug": "muhasebe-finans-ve-bankacilik/yatirim-danismanligi"
+        }
+      ],
+      "fullSlug": "muhasebe-finans-ve-bankacilik"
+    },
+    {
+      "name": "Mühendislik",
+      "slug": "muhendislik",
+      "subcategories": [
+        {
+          "name": "Bilgisayar Mühendisi",
+          "slug": "bilgisayar-muhendisi",
+          "fullSlug": "muhendislik/bilgisayar-muhendisi"
+        },
+        {
+          "name": "Çevre Mühendisi",
+          "slug": "cevre-muhendisi",
+          "fullSlug": "muhendislik/cevre-muhendisi"
+        },
+        {
+          "name": "Elektrik, Elektronik Mühendisi",
+          "slug": "elektrik-elektronik-muhendisi",
+          "fullSlug": "muhendislik/elektrik-elektronik-muhendisi"
+        },
+        {
+          "name": "Endüstri Mühendisi",
+          "slug": "endustri-muhendisi",
+          "fullSlug": "muhendislik/endustri-muhendisi"
+        },
+        {
+          "name": "Gıda Mühendisi",
+          "slug": "gida-muhendisi",
+          "fullSlug": "muhendislik/gida-muhendisi"
+        },
+        {
+          "name": "Harita Mühendisi",
+          "slug": "harita-muhendisi",
+          "fullSlug": "muhendislik/harita-muhendisi"
+        },
+        {
+          "name": "İnşaat Mühendisi",
+          "slug": "insaat-muhendisi",
+          "fullSlug": "muhendislik/insaat-muhendisi"
+        },
+        {
+          "name": "Jeoloji Mühendisi",
+          "slug": "jeoloji-muhendisi",
+          "fullSlug": "muhendislik/jeoloji-muhendisi"
+        },
+        {
+          "name": "Kimya Mühendisi",
+          "slug": "kimya-muhendisi",
+          "fullSlug": "muhendislik/kimya-muhendisi"
+        },
+        {
+          "name": "Maden Mühendisi",
+          "slug": "maden-muhendisi",
+          "fullSlug": "muhendislik/maden-muhendisi"
+        },
+        {
+          "name": "Makine Mühendisi",
+          "slug": "makine-muhendisi",
+          "fullSlug": "muhendislik/makine-muhendisi"
+        },
+        {
+          "name": "Mekatronik Mühendisi",
+          "slug": "mekatronik-muhendisi",
+          "fullSlug": "muhendislik/mekatronik-muhendisi"
+        },
+        {
+          "name": "Metalurji ve Malzeme Mühendisi",
+          "slug": "metalurji-ve-malzeme-muhendisi",
+          "fullSlug": "muhendislik/metalurji-ve-malzeme-muhendisi"
+        },
+        {
+          "name": "Orman Mühendisi",
+          "slug": "orman-muhendisi",
+          "fullSlug": "muhendislik/orman-muhendisi"
+        },
+        {
+          "name": "Otomotiv Mühendisi",
+          "slug": "otomotiv-muhendisi",
+          "fullSlug": "muhendislik/otomotiv-muhendisi"
+        },
+        {
+          "name": "Su Ürünleri Mühendisi",
+          "slug": "su-urunleri-muhendisi",
+          "fullSlug": "muhendislik/su-urunleri-muhendisi"
+        },
+        {
+          "name": "Yazılım Mühendisi",
+          "slug": "yazilim-muhendisi",
+          "fullSlug": "muhendislik/yazilim-muhendisi"
+        },
+        {
+          "name": "Ziraat Mühendisi",
+          "slug": "ziraat-muhendisi",
+          "fullSlug": "muhendislik/ziraat-muhendisi"
+        }
+      ],
+      "fullSlug": "muhendislik"
+    },
+    {
+      "name": "Müşteri Hizmetleri",
+      "slug": "musteri-hizmetleri",
+      "subcategories": [
+        {
+          "name": "Çağrı Merkezi Elemanı",
+          "slug": "cagri-merkezi-elemani",
+          "fullSlug": "musteri-hizmetleri/cagri-merkezi-elemani"
+        },
+        {
+          "name": "Host / Hostes",
+          "slug": "host-hostes",
+          "fullSlug": "musteri-hizmetleri/host-hostes"
+        },
+        {
+          "name": "Müşteri Temsilcisi",
+          "slug": "musteri-temsilcisi",
+          "fullSlug": "musteri-hizmetleri/musteri-temsilcisi"
+        },
+        {
+          "name": "Rezervasyon & Biletleme",
+          "slug": "rezervasyon-ve-biletleme",
+          "fullSlug": "musteri-hizmetleri/rezervasyon-ve-biletleme"
+        },
+        {
+          "name": "Teknik Müşteri Destek",
+          "slug": "teknik-musteri-destek",
+          "fullSlug": "musteri-hizmetleri/teknik-musteri-destek"
+        }
+      ],
+      "fullSlug": "musteri-hizmetleri"
+    },
+    {
+      "name": "Ofis Yönetimi & İdari İşler",
+      "slug": "ofis-yonetimi-ve-idari-isler",
+      "subcategories": [
+        {
+          "name": "Apartman & Site Görevlisi",
+          "slug": "apartman-ve-site-gorevlisi",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/apartman-ve-site-gorevlisi"
+        },
+        {
+          "name": "Bina Yönetimi",
+          "slug": "bina-yonetimi",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/bina-yonetimi"
+        },
+        {
+          "name": "İdari İşler Sorumlusu",
+          "slug": "idari-isler-sorumlusu",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/idari-isler-sorumlusu"
+        },
+        {
+          "name": "İkram & Kat Görevlisi",
+          "slug": "ikram-ve-kat-gorevlisi",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/ikram-ve-kat-gorevlisi"
+        },
+        {
+          "name": "İş Birimi Yöneticiliği",
+          "slug": "is-birimi-yoneticiligi",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/is-birimi-yoneticiligi"
+        },
+        {
+          "name": "Ofis Yönetimi",
+          "slug": "ofis-yonetimi",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/ofis-yonetimi"
+        },
+        {
+          "name": "Resepsiyon",
+          "slug": "resepsiyon",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/resepsiyon"
+        },
+        {
+          "name": "Sekreter",
+          "slug": "sekreter",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/sekreter"
+        },
+        {
+          "name": "Temizlik Görevlisi",
+          "slug": "temizlik-gorevlisi",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/temizlik-gorevlisi"
+        },
+        {
+          "name": "Yönetici Asistanı",
+          "slug": "yonetici-asistani",
+          "fullSlug": "ofis-yonetimi-ve-idari-isler/yonetici-asistani"
+        }
+      ],
+      "fullSlug": "ofis-yonetimi-ve-idari-isler"
+    },
+    {
+      "name": "Part Time & Ek İş Fırsatları",
+      "slug": "part-time-ve-ek-is-firsatlari",
+      "subcategories": [
+        {
+          "name": "Anketör",
+          "slug": "anketor",
+          "fullSlug": "part-time-ve-ek-is-firsatlari/anketor"
+        },
+        {
+          "name": "Diğer Dönemsel İşler",
+          "slug": "diger-donemsel-isler",
+          "fullSlug": "part-time-ve-ek-is-firsatlari/diger-donemsel-isler"
+        },
+        {
+          "name": "Stant Elemanı",
+          "slug": "stant-elemani",
+          "fullSlug": "part-time-ve-ek-is-firsatlari/stant-elemani"
+        }
+      ],
+      "fullSlug": "part-time-ve-ek-is-firsatlari"
+    },
+    {
+      "name": "Pazarlama & Ürün Yönetimi",
+      "slug": "pazarlama-ve-urun-yonetimi",
+      "subcategories": [
+        {
+          "name": "CRM",
+          "slug": "crm",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/crm"
+        },
+        {
+          "name": "Etkinlik Yönetimi",
+          "slug": "etkinlik-yonetimi",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/etkinlik-yonetimi"
+        },
+        {
+          "name": "Kurumsal İletişim",
+          "slug": "kurumsal-iletisim",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/kurumsal-iletisim"
+        },
+        {
+          "name": "Marka Yönetimi",
+          "slug": "marka-yonetimi",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/marka-yonetimi"
+        },
+        {
+          "name": "Medya Planlama",
+          "slug": "medya-planlama",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/medya-planlama"
+        },
+        {
+          "name": "Pazar Araştırma",
+          "slug": "pazar-arastirma",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/pazar-arastirma"
+        },
+        {
+          "name": "Pazarlama İletişimi",
+          "slug": "pazarlama-iletisimi",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/pazarlama-iletisimi"
+        },
+        {
+          "name": "Ürün Yönetimi",
+          "slug": "urun-yonetimi",
+          "fullSlug": "pazarlama-ve-urun-yonetimi/urun-yonetimi"
+        }
+      ],
+      "fullSlug": "pazarlama-ve-urun-yonetimi"
+    },
+    {
+      "name": "Radyo, Sinema & Televizyon",
+      "slug": "radyo-sinema-ve-televizyon",
+      "subcategories": [
+        {
+          "name": "Kurgu Operatörü",
+          "slug": "kurgu-operatoru",
+          "fullSlug": "radyo-sinema-ve-televizyon/kurgu-operatoru"
+        },
+        {
+          "name": "Seslendirme Sanatçısı",
+          "slug": "seslendirme-sanatcisi",
+          "fullSlug": "radyo-sinema-ve-televizyon/seslendirme-sanatcisi"
+        },
+        {
+          "name": "TV Sunucusu",
+          "slug": "tv-sunucusu",
+          "fullSlug": "radyo-sinema-ve-televizyon/tv-sunucusu"
+        }
+      ],
+      "fullSlug": "radyo-sinema-ve-televizyon"
+    },
+    {
+      "name": "Restoran & Konaklama",
+      "slug": "restoran-ve-konaklama",
+      "subcategories": [
+        {
+          "name": "Aşçı",
+          "slug": "asci",
+          "fullSlug": "restoran-ve-konaklama/asci"
+        },
+        {
+          "name": "Aşçı Yardımcısı",
+          "slug": "asci-yardimcisi",
+          "fullSlug": "restoran-ve-konaklama/asci-yardimcisi"
+        },
+        {
+          "name": "Barmen & Barista",
+          "slug": "barmen-ve-barista",
+          "fullSlug": "restoran-ve-konaklama/barmen-ve-barista"
+        },
+        {
+          "name": "Bellboy",
+          "slug": "bellboy",
+          "fullSlug": "restoran-ve-konaklama/bellboy"
+        },
+        {
+          "name": "Bulaşıkçı",
+          "slug": "bulasikci",
+          "fullSlug": "restoran-ve-konaklama/bulasikci"
+        },
+        {
+          "name": "Host / Hostes",
+          "slug": "host-hostes",
+          "fullSlug": "restoran-ve-konaklama/host-hostes"
+        },
+        {
+          "name": "Housekeeping",
+          "slug": "housekeeping",
+          "fullSlug": "restoran-ve-konaklama/housekeeping"
+        },
+        {
+          "name": "Kasiyer",
+          "slug": "kasiyer",
+          "fullSlug": "restoran-ve-konaklama/kasiyer"
+        },
+        {
+          "name": "Kebap & Döner Ustası",
+          "slug": "kebap-ve-doner-ustasi",
+          "fullSlug": "restoran-ve-konaklama/kebap-ve-doner-ustasi"
+        },
+        {
+          "name": "Meze Ustası",
+          "slug": "meze-ustasi",
+          "fullSlug": "restoran-ve-konaklama/meze-ustasi"
+        },
+        {
+          "name": "Moto Kurye",
+          "slug": "moto-kurye",
+          "fullSlug": "restoran-ve-konaklama/moto-kurye"
+        },
+        {
+          "name": "Mutfak Yöneticisi",
+          "slug": "mutfak-yoneticisi",
+          "fullSlug": "restoran-ve-konaklama/mutfak-yoneticisi"
+        },
+        {
+          "name": "Müşteri İlişkileri",
+          "slug": "musteri-iliskileri",
+          "fullSlug": "restoran-ve-konaklama/musteri-iliskileri"
+        },
+        {
+          "name": "Otel Yöneticisi",
+          "slug": "otel-yoneticisi",
+          "fullSlug": "restoran-ve-konaklama/otel-yoneticisi"
+        },
+        {
+          "name": "Pasta & Tatlı Ustası",
+          "slug": "pasta-ve-tatli-ustasi",
+          "fullSlug": "restoran-ve-konaklama/pasta-ve-tatli-ustasi"
+        },
+        {
+          "name": "Pide & Fırın Ustası",
+          "slug": "pide-ve-firin-ustasi",
+          "fullSlug": "restoran-ve-konaklama/pide-ve-firin-ustasi"
+        },
+        {
+          "name": "Pizza Ustası",
+          "slug": "pizza-ustasi",
+          "fullSlug": "restoran-ve-konaklama/pizza-ustasi"
+        },
+        {
+          "name": "Resepsiyon & Frontdesk",
+          "slug": "resepsiyon-ve-frontdesk",
+          "fullSlug": "restoran-ve-konaklama/resepsiyon-ve-frontdesk"
+        },
+        {
+          "name": "Restoran Yöneticisi",
+          "slug": "restoran-yoneticisi",
+          "fullSlug": "restoran-ve-konaklama/restoran-yoneticisi"
+        },
+        {
+          "name": "Salata Ustası",
+          "slug": "salata-ustasi",
+          "fullSlug": "restoran-ve-konaklama/salata-ustasi"
+        },
+        {
+          "name": "Servis Elemanı",
+          "slug": "servis-elemani",
+          "fullSlug": "restoran-ve-konaklama/servis-elemani"
+        },
+        {
+          "name": "Tezgahtar",
+          "slug": "tezgahtar",
+          "fullSlug": "restoran-ve-konaklama/tezgahtar"
+        },
+        {
+          "name": "Vale",
+          "slug": "vale",
+          "fullSlug": "restoran-ve-konaklama/vale"
+        }
+      ],
+      "fullSlug": "restoran-ve-konaklama"
+    },
+    {
+      "name": "Sağlık",
+      "slug": "saglik",
+      "subcategories": [
+        {
+          "name": "Acil Tıp Teknisyeni",
+          "slug": "acil-tip-teknisyeni",
+          "fullSlug": "saglik/acil-tip-teknisyeni"
+        },
+        {
+          "name": "Anestezi Teknikeri",
+          "slug": "anestezi-teknikeri",
+          "fullSlug": "saglik/anestezi-teknikeri"
+        },
+        {
+          "name": "Asistan",
+          "slug": "asistan",
+          "fullSlug": "saglik/asistan"
+        },
+        {
+          "name": "Dil ve Konuşma Terapisti",
+          "slug": "dil-ve-konusma-terapisti",
+          "fullSlug": "saglik/dil-ve-konusma-terapisti"
+        },
+        {
+          "name": "Diş Hekimi",
+          "slug": "dis-hekimi",
+          "fullSlug": "saglik/dis-hekimi"
+        },
+        {
+          "name": "Diyetisyen",
+          "slug": "diyetisyen",
+          "fullSlug": "saglik/diyetisyen"
+        },
+        {
+          "name": "EEG & EMG Teknikeri",
+          "slug": "eeg-ve-emg-teknikeri",
+          "fullSlug": "saglik/eeg-ve-emg-teknikeri"
+        },
+        {
+          "name": "Fizik Tedavi Teknikeri",
+          "slug": "fizik-tedavi-teknikeri",
+          "fullSlug": "saglik/fizik-tedavi-teknikeri"
+        },
+        {
+          "name": "Fizyoterapist",
+          "slug": "fizyoterapist",
+          "fullSlug": "saglik/fizyoterapist"
+        },
+        {
+          "name": "Göz Doktoru",
+          "slug": "goz-doktoru",
+          "fullSlug": "saglik/goz-doktoru"
+        },
+        {
+          "name": "Hemşire",
+          "slug": "hemsire",
+          "fullSlug": "saglik/hemsire"
+        },
+        {
+          "name": "İş Güvenliği Uzmanı",
+          "slug": "is-guvenligi-uzmani",
+          "fullSlug": "saglik/is-guvenligi-uzmani"
+        },
+        {
+          "name": "İşyeri Hekimi",
+          "slug": "isyeri-hekimi",
+          "fullSlug": "saglik/isyeri-hekimi"
+        },
+        {
+          "name": "Laborant",
+          "slug": "laborant",
+          "fullSlug": "saglik/laborant"
+        },
+        {
+          "name": "Optisyen",
+          "slug": "optisyen",
+          "fullSlug": "saglik/optisyen"
+        },
+        {
+          "name": "Paramedik",
+          "slug": "paramedik",
+          "fullSlug": "saglik/paramedik"
+        },
+        {
+          "name": "Pratisyen Hekim",
+          "slug": "pratisyen-hekim",
+          "fullSlug": "saglik/pratisyen-hekim"
+        },
+        {
+          "name": "Psikolog",
+          "slug": "psikolog",
+          "fullSlug": "saglik/psikolog"
+        },
+        {
+          "name": "Spor Hastalıkları Uzmanı",
+          "slug": "spor-hastaliklari-uzmani",
+          "fullSlug": "saglik/spor-hastaliklari-uzmani"
+        },
+        {
+          "name": "Tıbbi Sekreter",
+          "slug": "tibbi-sekreter",
+          "fullSlug": "saglik/tibbi-sekreter"
+        },
+        {
+          "name": "Uzman Doktor",
+          "slug": "uzman-doktor",
+          "fullSlug": "saglik/uzman-doktor"
+        },
+        {
+          "name": "Veteriner Hekim",
+          "slug": "veteriner-hekim",
+          "fullSlug": "saglik/veteriner-hekim"
+        },
+        {
+          "name": "Veteriner Teknikeri",
+          "slug": "veteriner-teknikeri",
+          "fullSlug": "saglik/veteriner-teknikeri"
+        }
+      ],
+      "fullSlug": "saglik"
+    },
+    {
+      "name": "Satış",
+      "slug": "satis",
+      "subcategories": [
+        {
+          "name": "Akaryakıt İstasyonu Elemanı",
+          "slug": "akaryakit-istasyonu-elemani",
+          "fullSlug": "satis/akaryakit-istasyonu-elemani"
+        },
+        {
+          "name": "Gayrimenkul Danışmanlığı",
+          "slug": "gayrimenkul-danismanligi",
+          "fullSlug": "satis/gayrimenkul-danismanligi"
+        },
+        {
+          "name": "Reklam Satış Temsilcisi",
+          "slug": "reklam-satis-temsilcisi",
+          "fullSlug": "satis/reklam-satis-temsilcisi"
+        },
+        {
+          "name": "Sağlık ve Güzellik Ürünleri Satış Temsilcisi",
+          "slug": "saglik-ve-guzellik-urunleri-satis-temsilcisi",
+          "fullSlug": "satis/saglik-ve-guzellik-urunleri-satis-temsilcisi"
+        },
+        {
+          "name": "Saha Satış Temsilcisi",
+          "slug": "saha-satis-temsilcisi",
+          "fullSlug": "satis/saha-satis-temsilcisi"
+        },
+        {
+          "name": "Satış Destek Uzmanı",
+          "slug": "satis-destek-uzmani",
+          "fullSlug": "satis/satis-destek-uzmani"
+        },
+        {
+          "name": "Satış Pazarlama Elemanı",
+          "slug": "satis-pazarlama-elemani",
+          "fullSlug": "satis/satis-pazarlama-elemani"
+        },
+        {
+          "name": "Sigorta ve Emeklilik Satış Temsilcisi",
+          "slug": "sigorta-ve-emeklilik-satis-temsilcisi",
+          "fullSlug": "satis/sigorta-ve-emeklilik-satis-temsilcisi"
+        },
+        {
+          "name": "Su ve Tüp Dağıtım Elemanı",
+          "slug": "su-ve-tup-dagitim-elemani",
+          "fullSlug": "satis/su-ve-tup-dagitim-elemani"
+        },
+        {
+          "name": "Şube ve Bayi Satış Temsilcisi",
+          "slug": "sube-ve-bayi-satis-temsilcisi",
+          "fullSlug": "satis/sube-ve-bayi-satis-temsilcisi"
+        },
+        {
+          "name": "Tele Satış Temsilcisi",
+          "slug": "tele-satis-temsilcisi",
+          "fullSlug": "satis/tele-satis-temsilcisi"
+        }
+      ],
+      "fullSlug": "satis"
+    },
+    {
+      "name": "Tamir & Bakım",
+      "slug": "tamir-ve-bakim",
+      "subcategories": [
+        {
+          "name": "Araç Tamir, Bakım & Temizlik",
+          "slug": "arac-tamir-bakim-ve-temizlik",
+          "fullSlug": "tamir-ve-bakim/arac-tamir-bakim-ve-temizlik"
+        },
+        {
+          "name": "Bina Yönetimi",
+          "slug": "bina-yonetimi",
+          "fullSlug": "tamir-ve-bakim/bina-yonetimi"
+        },
+        {
+          "name": "Çilingir",
+          "slug": "cilingir",
+          "fullSlug": "tamir-ve-bakim/cilingir"
+        },
+        {
+          "name": "Elektrik İşleri",
+          "slug": "elektrik-isleri",
+          "fullSlug": "tamir-ve-bakim/elektrik-isleri"
+        },
+        {
+          "name": "Elektronik Tamir, Bakım",
+          "slug": "elektronik-tamir-bakim",
+          "fullSlug": "tamir-ve-bakim/elektronik-tamir-bakim"
+        },
+        {
+          "name": "İlaçlama İşleri",
+          "slug": "ilaclama-isleri",
+          "fullSlug": "tamir-ve-bakim/ilaclama-isleri"
+        },
+        {
+          "name": "İnşaat İşleri",
+          "slug": "insaat-isleri",
+          "fullSlug": "tamir-ve-bakim/insaat-isleri"
+        },
+        {
+          "name": "Tesisat İşleri",
+          "slug": "tesisat-isleri",
+          "fullSlug": "tamir-ve-bakim/tesisat-isleri"
+        }
+      ],
+      "fullSlug": "tamir-ve-bakim"
+    },
+    {
+      "name": "Tarım & Hayvancılık",
+      "slug": "tarim-ve-hayvancilik",
+      "subcategories": [
+        {
+          "name": "Arıcılık",
+          "slug": "aricilik",
+          "fullSlug": "tarim-ve-hayvancilik/aricilik"
+        },
+        {
+          "name": "Bahçıvan",
+          "slug": "bahcivan",
+          "fullSlug": "tarim-ve-hayvancilik/bahcivan"
+        },
+        {
+          "name": "Balıkçılık",
+          "slug": "balikcilik",
+          "fullSlug": "tarim-ve-hayvancilik/balikcilik"
+        },
+        {
+          "name": "Büyükbaş ve Küçükbaş Hayvancılığı",
+          "slug": "buyukbas-ve-kucukbas-hayvanciligi",
+          "fullSlug": "tarim-ve-hayvancilik/buyukbas-ve-kucukbas-hayvanciligi"
+        },
+        {
+          "name": "Hayvan Bakıcılığı",
+          "slug": "hayvan-bakiciligi",
+          "fullSlug": "tarim-ve-hayvancilik/hayvan-bakiciligi"
+        },
+        {
+          "name": "Kümes Hayvancılığı",
+          "slug": "kumes-hayvanciligi",
+          "fullSlug": "tarim-ve-hayvancilik/kumes-hayvanciligi"
+        },
+        {
+          "name": "Tarım İşçisi",
+          "slug": "tarim-iscisi",
+          "fullSlug": "tarim-ve-hayvancilik/tarim-iscisi"
+        }
+      ],
+      "fullSlug": "tarim-ve-hayvancilik"
+    },
+    {
+      "name": "Tasarım & Yaratıcılık",
+      "slug": "tasarim-ve-yaraticilik",
+      "subcategories": [
+        {
+          "name": "Animasyon ve Multimedia",
+          "slug": "animasyon-ve-multimedia",
+          "fullSlug": "tasarim-ve-yaraticilik/animasyon-ve-multimedia"
+        },
+        {
+          "name": "Çeviri & Tercümanlık",
+          "slug": "ceviri-ve-tercumanlik",
+          "fullSlug": "tasarim-ve-yaraticilik/ceviri-ve-tercumanlik"
+        },
+        {
+          "name": "Editör",
+          "slug": "editor",
+          "fullSlug": "tasarim-ve-yaraticilik/editor"
+        },
+        {
+          "name": "Endüstriyel Tasarım",
+          "slug": "endustriyel-tasarim",
+          "fullSlug": "tasarim-ve-yaraticilik/endustriyel-tasarim"
+        },
+        {
+          "name": "Fotoğraf & Video",
+          "slug": "fotograf-ve-video",
+          "fullSlug": "tasarim-ve-yaraticilik/fotograf-ve-video"
+        },
+        {
+          "name": "Grafik Tasarımcısı",
+          "slug": "grafik-tasarimcisi",
+          "fullSlug": "tasarim-ve-yaraticilik/grafik-tasarimcisi"
+        },
+        {
+          "name": "Metin Yazarı",
+          "slug": "metin-yazari",
+          "fullSlug": "tasarim-ve-yaraticilik/metin-yazari"
+        },
+        {
+          "name": "Mimar ve İç Mimar",
+          "slug": "mimar-ve-ic-mimar",
+          "fullSlug": "tasarim-ve-yaraticilik/mimar-ve-ic-mimar"
+        },
+        {
+          "name": "Moda ve Aksesuar Tasarımcısı",
+          "slug": "moda-ve-aksesuar-tasarimcisi",
+          "fullSlug": "tasarim-ve-yaraticilik/moda-ve-aksesuar-tasarimcisi"
+        },
+        {
+          "name": "Montaj & Kurgu",
+          "slug": "montaj-ve-kurgu",
+          "fullSlug": "tasarim-ve-yaraticilik/montaj-ve-kurgu"
+        },
+        {
+          "name": "Müzik & Ses",
+          "slug": "muzik-ve-ses",
+          "fullSlug": "tasarim-ve-yaraticilik/muzik-ve-ses"
+        },
+        {
+          "name": "Peyzaj Mimarı",
+          "slug": "peyzaj-mimari",
+          "fullSlug": "tasarim-ve-yaraticilik/peyzaj-mimari"
+        },
+        {
+          "name": "Ressam & Heykeltıraş",
+          "slug": "ressam-ve-heykeltiras",
+          "fullSlug": "tasarim-ve-yaraticilik/ressam-ve-heykeltiras"
+        },
+        {
+          "name": "Senarist",
+          "slug": "senarist",
+          "fullSlug": "tasarim-ve-yaraticilik/senarist"
+        }
+      ],
+      "fullSlug": "tasarim-ve-yaraticilik"
+    },
+    {
+      "name": "Tekstil & Konfeksiyon",
+      "slug": "tekstil-ve-konfeksiyon",
+      "subcategories": [
+        {
+          "name": "Depo Elemanı",
+          "slug": "depo-elemani",
+          "fullSlug": "tekstil-ve-konfeksiyon/depo-elemani"
+        },
+        {
+          "name": "Diğer Tekstil İşleri",
+          "slug": "diger-tekstil-isleri",
+          "fullSlug": "tekstil-ve-konfeksiyon/diger-tekstil-isleri"
+        },
+        {
+          "name": "Düz Makinacı",
+          "slug": "duz-makinaci",
+          "fullSlug": "tekstil-ve-konfeksiyon/duz-makinaci"
+        },
+        {
+          "name": "Fason Takip Sorumlusu (Inspector)",
+          "slug": "fason-takip-sorumlusu-inspector",
+          "fullSlug": "tekstil-ve-konfeksiyon/fason-takip-sorumlusu-inspector"
+        },
+        {
+          "name": "Kalite Kontrol Sorumlusu",
+          "slug": "kalite-kontrol-sorumlusu",
+          "fullSlug": "tekstil-ve-konfeksiyon/kalite-kontrol-sorumlusu"
+        },
+        {
+          "name": "Makastar",
+          "slug": "makastar",
+          "fullSlug": "tekstil-ve-konfeksiyon/makastar"
+        },
+        {
+          "name": "Merchandiser",
+          "slug": "merchandiser",
+          "fullSlug": "tekstil-ve-konfeksiyon/merchandiser"
+        },
+        {
+          "name": "Model Makineci",
+          "slug": "model-makineci",
+          "fullSlug": "tekstil-ve-konfeksiyon/model-makineci"
+        },
+        {
+          "name": "Modelist",
+          "slug": "modelist",
+          "fullSlug": "tekstil-ve-konfeksiyon/modelist"
+        },
+        {
+          "name": "Ortacı",
+          "slug": "ortaci",
+          "fullSlug": "tekstil-ve-konfeksiyon/ortaci"
+        },
+        {
+          "name": "Overlokçu",
+          "slug": "overlokcu",
+          "fullSlug": "tekstil-ve-konfeksiyon/overlokcu"
+        },
+        {
+          "name": "Planlama ve Operasyon Uzmanı",
+          "slug": "planlama-ve-operasyon-uzmani",
+          "fullSlug": "tekstil-ve-konfeksiyon/planlama-ve-operasyon-uzmani"
+        },
+        {
+          "name": "Prova Mankeni",
+          "slug": "prova-mankeni",
+          "fullSlug": "tekstil-ve-konfeksiyon/prova-mankeni"
+        },
+        {
+          "name": "Reşmeci",
+          "slug": "resmeci",
+          "fullSlug": "tekstil-ve-konfeksiyon/resmeci"
+        },
+        {
+          "name": "Son Ütücü",
+          "slug": "son-utucu",
+          "fullSlug": "tekstil-ve-konfeksiyon/son-utucu"
+        },
+        {
+          "name": "Stilist",
+          "slug": "stilist",
+          "fullSlug": "tekstil-ve-konfeksiyon/stilist"
+        },
+        {
+          "name": "Tekstil ve Konfeksiyon Yöneticisi",
+          "slug": "tekstil-ve-konfeksiyon-yoneticisi",
+          "fullSlug": "tekstil-ve-konfeksiyon/tekstil-ve-konfeksiyon-yoneticisi"
+        },
+        {
+          "name": "Terzi",
+          "slug": "terzi",
+          "fullSlug": "tekstil-ve-konfeksiyon/terzi"
+        }
+      ],
+      "fullSlug": "tekstil-ve-konfeksiyon"
+    },
+    {
+      "name": "Üretim & İmalat",
+      "slug": "uretim-ve-imalat",
+      "subcategories": [
+        {
+          "name": "3D Yazıcı Operatörü",
+          "slug": "3d-yazici-operatoru",
+          "fullSlug": "uretim-ve-imalat/3d-yazici-operatoru"
+        },
+        {
+          "name": "Bakım Teknisyeni",
+          "slug": "bakim-teknisyeni",
+          "fullSlug": "uretim-ve-imalat/bakim-teknisyeni"
+        },
+        {
+          "name": "CAD/CAM Teknisyeni",
+          "slug": "cad-cam-teknisyeni",
+          "fullSlug": "uretim-ve-imalat/cad-cam-teknisyeni"
+        },
+        {
+          "name": "CNC Operatörü",
+          "slug": "cnc-operatoru",
+          "fullSlug": "uretim-ve-imalat/cnc-operatoru"
+        },
+        {
+          "name": "Döküm Ustası",
+          "slug": "dokum-ustasi",
+          "fullSlug": "uretim-ve-imalat/dokum-ustasi"
+        },
+        {
+          "name": "Gıda Üretimi",
+          "slug": "gida-uretimi",
+          "fullSlug": "uretim-ve-imalat/gida-uretimi"
+        },
+        {
+          "name": "Kalıpçı",
+          "slug": "kalipci",
+          "fullSlug": "uretim-ve-imalat/kalipci"
+        },
+        {
+          "name": "Kalite Kontrol Sorumlusu",
+          "slug": "kalite-kontrol-sorumlusu",
+          "fullSlug": "uretim-ve-imalat/kalite-kontrol-sorumlusu"
+        },
+        {
+          "name": "Kaynakçı",
+          "slug": "kaynakci",
+          "fullSlug": "uretim-ve-imalat/kaynakci"
+        },
+        {
+          "name": "Kompozit Malzeme Üretim Elemanı",
+          "slug": "kompozit-malzeme-uretim-elemani",
+          "fullSlug": "uretim-ve-imalat/kompozit-malzeme-uretim-elemani"
+        },
+        {
+          "name": "Makine Montaj Elemanı",
+          "slug": "makine-montaj-elemani",
+          "fullSlug": "uretim-ve-imalat/makine-montaj-elemani"
+        },
+        {
+          "name": "Makine Teknikeri",
+          "slug": "makine-teknikeri",
+          "fullSlug": "uretim-ve-imalat/makine-teknikeri"
+        },
+        {
+          "name": "Marangoz",
+          "slug": "marangoz",
+          "fullSlug": "uretim-ve-imalat/marangoz"
+        },
+        {
+          "name": "Mobilya Ustası",
+          "slug": "mobilya-ustasi",
+          "fullSlug": "uretim-ve-imalat/mobilya-ustasi"
+        },
+        {
+          "name": "Montaj Ustası",
+          "slug": "montaj-ustasi",
+          "fullSlug": "uretim-ve-imalat/montaj-ustasi"
+        },
+        {
+          "name": "Otomasyon Teknisyeni",
+          "slug": "otomasyon-teknisyeni",
+          "fullSlug": "uretim-ve-imalat/otomasyon-teknisyeni"
+        },
+        {
+          "name": "Plastik & Metal Enjeksiyon Ustası",
+          "slug": "plastik-ve-metal-enjeksiyon-ustasi",
+          "fullSlug": "uretim-ve-imalat/plastik-ve-metal-enjeksiyon-ustasi"
+        },
+        {
+          "name": "Pres Operatörü",
+          "slug": "pres-operatoru",
+          "fullSlug": "uretim-ve-imalat/pres-operatoru"
+        },
+        {
+          "name": "PVC Alüminyum Doğrama Ustası",
+          "slug": "pvc-aluminyum-dograma-ustasi",
+          "fullSlug": "uretim-ve-imalat/pvc-aluminyum-dograma-ustasi"
+        },
+        {
+          "name": "Sac Metal İşleme Ustası",
+          "slug": "sac-metal-isleme-ustasi",
+          "fullSlug": "uretim-ve-imalat/sac-metal-isleme-ustasi"
+        },
+        {
+          "name": "Teknik Ressam",
+          "slug": "teknik-ressam",
+          "fullSlug": "uretim-ve-imalat/teknik-ressam"
+        },
+        {
+          "name": "Tekstil Üretim Elemanı",
+          "slug": "tekstil-uretim-elemani",
+          "fullSlug": "uretim-ve-imalat/tekstil-uretim-elemani"
+        },
+        {
+          "name": "Torna & Freze Ustası",
+          "slug": "torna-ve-freze-ustasi",
+          "fullSlug": "uretim-ve-imalat/torna-ve-freze-ustasi"
+        },
+        {
+          "name": "Üretim Elemanı",
+          "slug": "uretim-elemani",
+          "fullSlug": "uretim-ve-imalat/uretim-elemani"
+        },
+        {
+          "name": "Üretim Müdürü",
+          "slug": "uretim-muduru",
+          "fullSlug": "uretim-ve-imalat/uretim-muduru"
+        }
+      ],
+      "fullSlug": "uretim-ve-imalat"
+    }
+  ],
+  "fullSlug": "is-ilanlari"
+}

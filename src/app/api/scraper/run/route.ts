@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     if (code1 !== 0 || code2 !== 0) return NextResponse.json({ ok: false }, { status: 500 })
     if (code3 !== 0) return NextResponse.json({ ok: false }, { status: 500 })
     return NextResponse.json({ ok: true, seed })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ ok: false }, { status: 500 })
   }
 }

@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { headers } from "next/headers";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/Providers";
 import RSCHandler from "@/components/RSCHandler";
@@ -22,15 +21,16 @@ const geistMono = Geist_Mono({
 });
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.varsagel.com";
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://www.varsagel.com");
 
 export const metadata: Metadata = {
   title: {
-    default: "Varsagel | Türkiye'nin İlk Alım Platformu",
-    template: "%s | Varsagel - Türkiye'nin İlk Alım Platformu",
+    default: "Varsagel | Türkiye’nin İlk Alım Platformu",
+    template: "%s | Varsagel - Türkiye’nin İlk Alım Platformu",
   },
   description:
-    "Türkiye'nin ilk alım platformu! Bütçene göre alım talebini oluştur, satıcılar sana teklif versin.",
+    "Türkiye’nin ilk alım platformu! Bütçene göre alım ilanını oluştur, satıcılar sana teklif versin.",
   keywords: [
     "varsagel",
     "alıcı talebi",
@@ -50,24 +50,24 @@ export const metadata: Metadata = {
   authors: [{ name: "Varsagel Ekibi", url: process.env.NEXT_PUBLIC_SITE_URL || "https://varsagel.com" }],
   creator: "Varsagel",
   publisher: "Varsagel",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.varsagel.com"),
+  metadataBase: new URL(baseUrl),
   openGraph: {
     type: "website",
-    title: "Varsagel - Türkiye'nin İlk Alım Platformu",
+    title: "Varsagel - Türkiye’nin İlk Alım Platformu",
     description:
-      "Türkiye'nin ilk alım platformu! Bütçene göre alım talebini oluştur, satıcılar sana teklif versin.",
-    url: "/",
+      "Türkiye’nin ilk alım platformu! Bütçene göre alım ilanını oluştur, satıcılar sana teklif versin.",
+    url: baseUrl,
     siteName: "Varsagel",
     locale: "tr_TR",
-    images: ["/opengraph-image"],
+    images: [`${baseUrl}/opengraph-image`],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Varsagel - Türkiye'nin İlk Alım Platformu",
+    title: "Varsagel - Türkiye’nin İlk Alım Platformu",
     description:
-      "Türkiye'nin ilk alım platformu! Bütçene göre alım talebini oluştur, satıcılar sana teklif versin.",
+      "Türkiye’nin ilk alım platformu! Bütçene göre alım ilanını oluştur, satıcılar sana teklif versin.",
     creator: "@varsagel",
-    images: ["/twitter-image"],
+    images: [`${baseUrl}/twitter-image`],
   },
   robots: {
     index: true,

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, ArrowRight, Loader2, AlertCircle, CheckCircle, KeyRound } from "lucide-react";
+import { Mail, ArrowRight, Loader2, AlertCircle, KeyRound } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -149,4 +149,3 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
-

@@ -1,0 +1,3380 @@
+{
+  "source": "satariz.com",
+  "roots": [
+    {
+      "slug": "alisveris-anne-bebek",
+      "name": "Anne / Bebek",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-anne-bebek",
+      "children": [
+        {
+          "slug": "alisveris-anne-bebek-ani-kutlama",
+          "name": "Anı &amp; Kutlama",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-ani-kutlama",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-banyo-urunleri",
+          "name": "Banyo Ürünleri",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-banyo-urunleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-bebek-bezi",
+          "name": "Bebek Bezi",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-bebek-bezi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-bebek-giyim",
+          "name": "Bebek Giyim",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-bebek-giyim",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-bebek-oyuncaklari",
+          "name": "Bebek Oyuncakları",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-bebek-oyuncaklari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-beslenme",
+          "name": "Beslenme",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-beslenme",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-emzirme",
+          "name": "Emzirme",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-emzirme",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-ev-tekstili",
+          "name": "Ev Tekstili",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-ev-tekstili",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-guvenlik",
+          "name": "Güvenlik",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-guvenlik",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-mobilya",
+          "name": "Mobilya",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-mobilya",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-oda-susu",
+          "name": "Oda Süsü",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-oda-susu",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-saglik-hijyen",
+          "name": "Sağlık &amp; Hijyen",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-saglik-hijyen",
+          "children": []
+        },
+        {
+          "slug": "alisveris-anne-bebek-tasima",
+          "name": "Taşıma",
+          "parentSlug": "alisveris-anne-bebek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-anne-bebek-tasima",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-antika",
+      "name": "Antika",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-antika",
+      "children": [
+        {
+          "slug": "alisveris-antika-aksesuar",
+          "name": "Aksesuar",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-aksesuar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-aydinlatma",
+          "name": "Aydınlatma",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-aydinlatma",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-bahce-ev-mimari",
+          "name": "Bahçe, Ev &amp; Mimari",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-bahce-ev-mimari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-dekorasyon-urunleri",
+          "name": "Dekorasyon Ürünleri",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-dekorasyon-urunleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-denizcilik",
+          "name": "Denizcilik",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-denizcilik",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-enstruman",
+          "name": "Enstrüman",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-enstruman",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-kitap-belge",
+          "name": "Kitap &amp; Belge",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-kitap-belge",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-makine",
+          "name": "Makine",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-makine",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-mobilya",
+          "name": "Mobilya",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-mobilya",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-objeler",
+          "name": "Objeler",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-objeler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-oyuncak",
+          "name": "Oyuncak",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-oyuncak",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-tekstil",
+          "name": "Tekstil",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-tekstil",
+          "children": []
+        },
+        {
+          "slug": "alisveris-antika-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "alisveris-antika",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-antika-toplu-satis",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-bahce-yapi-market",
+      "name": "Bahçe / Yapı Market",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-bahce-yapi-market",
+      "children": [
+        {
+          "slug": "alisveris-bahce-yapi-market-bahce",
+          "name": "Bahçe",
+          "parentSlug": "alisveris-bahce-yapi-market",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bahce-yapi-market-bahce",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bahce-yapi-market-el-aletleri",
+          "name": "El Aletleri",
+          "parentSlug": "alisveris-bahce-yapi-market",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bahce-yapi-market-el-aletleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bahce-yapi-market-yapi-malzemeleri",
+          "name": "Yapı Malzemeleri",
+          "parentSlug": "alisveris-bahce-yapi-market",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bahce-yapi-market-yapi-malzemeleri",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-bilgisayar",
+      "name": "Bilgisayar",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-bilgisayar",
+      "children": [
+        {
+          "slug": "alisveris-bilgisayar-aksesuarlar",
+          "name": "Aksesuarlar",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-aksesuarlar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-cevre-birimleri",
+          "name": "Çevre Birimleri",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-cevre-birimleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-dizustu",
+          "name": "Dizüstü",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-dizustu",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-domain-hosting-yazilim",
+          "name": "Domain, Hosting &amp; Yazılım",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-domain-hosting-yazilim",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-masaustu",
+          "name": "Masaüstü",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-masaustu",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-monitor",
+          "name": "Monitör",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-monitor",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-netbook",
+          "name": "Netbook",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-netbook",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-sunucu",
+          "name": "Sunucu",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-sunucu",
+          "children": []
+        },
+        {
+          "slug": "alisveris-bilgisayar-tablet",
+          "name": "Tablet",
+          "parentSlug": "alisveris-bilgisayar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-bilgisayar-tablet",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-cep-telefonu",
+      "name": "Cep Telefonu / Aksesuar",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-cep-telefonu",
+      "children": [
+        {
+          "slug": "alisveris-cep-telefonu-aksesuar",
+          "name": "Aksesuar",
+          "parentSlug": "alisveris-cep-telefonu",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-cep-telefonu-aksesuar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-cep-telefonu-giyilebilir-teknoloji",
+          "name": "Giyilebilir Teknoloji",
+          "parentSlug": "alisveris-cep-telefonu",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-cep-telefonu-giyilebilir-teknoloji",
+          "children": []
+        },
+        {
+          "slug": "alisveris-cep-telefonu-modeller",
+          "name": "Cep Telefonu",
+          "parentSlug": "alisveris-cep-telefonu",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-cep-telefonu-modeller",
+          "children": []
+        },
+        {
+          "slug": "alisveris-cep-telefonu-numara",
+          "name": "Numara",
+          "parentSlug": "alisveris-cep-telefonu",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-cep-telefonu-numara",
+          "children": []
+        },
+        {
+          "slug": "alisveris-cep-telefonu-yedek-parca",
+          "name": "Yedek Parça",
+          "parentSlug": "alisveris-cep-telefonu",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-cep-telefonu-yedek-parca",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-diger-her-sey",
+      "name": "Diğer Her Şey",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-diger-her-sey",
+      "children": [
+        {
+          "slug": "alisveris-diger-her-sey-diger",
+          "name": "Diğer",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-diger",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-dovme",
+          "name": "Dövme Ekipmanları",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-dovme",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-hasere-fare-kovucu",
+          "name": "Haşere &amp; Fare Kovucu",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-hasere-fare-kovucu",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-konser-aktivite-biletleri",
+          "name": "Konser &amp; Aktivite Biletleri",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-konser-aktivite-biletleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-marka-satisi",
+          "name": "Marka Satışı",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-marka-satisi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-otomatlar",
+          "name": "Otomatlar",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-otomatlar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-ozel-gun-kutlama",
+          "name": "Özel Gün &amp; Kutlama",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-ozel-gun-kutlama",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-reklam-promosyon-urunleri",
+          "name": "Reklam &amp; Promosyon Ürünleri",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-reklam-promosyon-urunleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-satilik-sirket",
+          "name": "Satılık Şirket",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-satilik-sirket",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-sira-disi-urunler",
+          "name": "Sıra Dışı Ürünler",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-sira-disi-urunler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-diger-her-sey-tv-urunleri",
+          "name": "TV Ürünleri",
+          "parentSlug": "alisveris-diger-her-sey",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-diger-her-sey-tv-urunleri",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-elektrikli-ev-aletleri",
+      "name": "Elektrikli Ev Aletleri",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-elektrikli-ev-aletleri",
+      "children": [
+        {
+          "slug": "alisveris-elektrikli-ev-aletleri-beyaz-esya",
+          "name": "Beyaz Eşya",
+          "parentSlug": "alisveris-elektrikli-ev-aletleri",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-elektrikli-ev-aletleri-beyaz-esya",
+          "children": []
+        },
+        {
+          "slug": "alisveris-elektrikli-ev-aletleri-isitma-sogutma-havalandirma",
+          "name": "Isıtma, Soğutma &amp; Havalandırma",
+          "parentSlug": "alisveris-elektrikli-ev-aletleri",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-elektrikli-ev-aletleri-isitma-sogutma-havalandirma",
+          "children": []
+        },
+        {
+          "slug": "alisveris-elektrikli-ev-aletleri-kucuk-ev-aletleri",
+          "name": "Küçük Ev Aletleri",
+          "parentSlug": "alisveris-elektrikli-ev-aletleri",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-elektrikli-ev-aletleri-kucuk-ev-aletleri",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-ev-dekorasyon",
+      "name": "Ev Dekorasyon",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-ev-dekorasyon",
+      "children": [
+        {
+          "slug": "alisveris-ev-dekorasyon-aydinlatma",
+          "name": "Aydınlatma",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-aydinlatma",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-dekorasyon-dekoratif-urunler",
+          "name": "Dekoratif Ürünler",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-dekoratif-urunler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-dekorasyon-el-isi-sanat",
+          "name": "El İşi &amp; Sanat",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-el-isi-sanat",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-dekorasyon-ev-tekstili",
+          "name": "Ev Tekstili",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-ev-tekstili",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-dekorasyon-mobilya",
+          "name": "Mobilya",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-mobilya",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-dekorasyon-mutfak-gerecleri",
+          "name": "Mutfak Gereçleri",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-mutfak-gerecleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-dekorasyon-temizlik-malzemeleri",
+          "name": "Temizlik Malzemeleri",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-temizlik-malzemeleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-dekorasyon-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "alisveris-ev-dekorasyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-dekorasyon-toplu-satis",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-ev-elektronigi",
+      "name": "Ev Elektroniği",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-ev-elektronigi",
+      "children": [
+        {
+          "slug": "alisveris-ev-elektronigi-ev-muzik-sistemleri",
+          "name": "Ev Müzik Sistemleri",
+          "parentSlug": "alisveris-ev-elektronigi",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-elektronigi-ev-muzik-sistemleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-elektronigi-ev-sinema-sistemleri",
+          "name": "Ev Sinema Sistemleri",
+          "parentSlug": "alisveris-ev-elektronigi",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-elektronigi-ev-sinema-sistemleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-elektronigi-guvenlik-sistemleri",
+          "name": "Güvenlik Sistemleri",
+          "parentSlug": "alisveris-ev-elektronigi",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-elektronigi-guvenlik-sistemleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-elektronigi-tasinabilir-ses-sistemleri",
+          "name": "Taşınabilir Ses Sistemleri",
+          "parentSlug": "alisveris-ev-elektronigi",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-elektronigi-tasinabilir-ses-sistemleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-elektronigi-telefon",
+          "name": "Telefon",
+          "parentSlug": "alisveris-ev-elektronigi",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-elektronigi-telefon",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-elektronigi-televizyon",
+          "name": "Televizyon",
+          "parentSlug": "alisveris-ev-elektronigi",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-elektronigi-televizyon",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ev-elektronigi-uydu-ekipmanlari",
+          "name": "Uydu &amp; Ekipmanları",
+          "parentSlug": "alisveris-ev-elektronigi",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ev-elektronigi-uydu-ekipmanlari",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-fotograf-kamera",
+      "name": "Fotoğraf / Kamera",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-fotograf-kamera",
+      "children": [
+        {
+          "slug": "alisveris-fotograf-kamera-aksesuarlar",
+          "name": "Aksesuarlar",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-aksesuarlar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-dijital-fotograf-makinesi",
+          "name": "Dijital Fotoğraf Makinesi",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-dijital-fotograf-makinesi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-durbun",
+          "name": "Dürbün",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-durbun",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-filmli-makineler",
+          "name": "Filmli Makineler",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-filmli-makineler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-kiralik-urunler",
+          "name": "Kiralık Ürünler",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-kiralik-urunler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-lens-aksesuarlari",
+          "name": "Lens Aksesuarları",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-lens-aksesuarlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-lens-filtre",
+          "name": "Lens &amp; Filtre",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-lens-filtre",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-studyo",
+          "name": "Stüdyo",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-studyo",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-teleskop",
+          "name": "Teleskop",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-teleskop",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-video-kamera",
+          "name": "Video Kamera",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-video-kamera",
+          "children": []
+        },
+        {
+          "slug": "alisveris-fotograf-kamera-yedek-parca",
+          "name": "Yedek Parça",
+          "parentSlug": "alisveris-fotograf-kamera",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-fotograf-kamera-yedek-parca",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-giyim-aksesuar",
+      "name": "Giyim / Aksesuar",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-giyim-aksesuar",
+      "children": [
+        {
+          "slug": "alisveris-giyim-aksesuar-cocuk-giyim",
+          "name": "Çocuk Giyim",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-cocuk-giyim",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-erkek",
+          "name": "Erkek",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-erkek",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-evlilik-dugun",
+          "name": "Evlilik &amp; Düğün",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-evlilik-dugun",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-is-elbisesi-uniforma",
+          "name": "İş Elbisesi &amp; Üniforma",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-is-elbisesi-uniforma",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-kadin",
+          "name": "Kadın",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-kadin",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-kostum",
+          "name": "Kostüm",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-kostum",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-uniseks",
+          "name": "Üniseks",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-uniseks",
+          "children": []
+        },
+        {
+          "slug": "alisveris-giyim-aksesuar-valiz-bavul",
+          "name": "Valiz &amp; Bavul",
+          "parentSlug": "alisveris-giyim-aksesuar",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-giyim-aksesuar-valiz-bavul",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-hobi-oyuncak",
+      "name": "Hobi / Oyuncak",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-hobi-oyuncak",
+      "children": [
+        {
+          "slug": "alisveris-hobi-oyuncak-diecast-model",
+          "name": "Diecast Model",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-diecast-model",
+          "children": []
+        },
+        {
+          "slug": "alisveris-hobi-oyuncak-maket",
+          "name": "Maket",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-maket",
+          "children": []
+        },
+        {
+          "slug": "alisveris-hobi-oyuncak-masa-kutu-oyunlari",
+          "name": "Masa &amp; Kutu Oyunları",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-masa-kutu-oyunlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-hobi-oyuncak-oyuncak",
+          "name": "Oyuncak",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-oyuncak",
+          "children": []
+        },
+        {
+          "slug": "alisveris-hobi-oyuncak-puzzle",
+          "name": "Puzzle &amp; Yapboz",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-puzzle",
+          "children": []
+        },
+        {
+          "slug": "alisveris-hobi-oyuncak-rc-araclar",
+          "name": "RC Araçlar",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-rc-araclar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-hobi-oyuncak-saka-illuzyon",
+          "name": "Şaka &amp; İllüzyon",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-saka-illuzyon",
+          "children": []
+        },
+        {
+          "slug": "alisveris-hobi-oyuncak-ticari-oyun-urunleri",
+          "name": "Ticari Oyun Ürünleri",
+          "parentSlug": "alisveris-hobi-oyuncak",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-hobi-oyuncak-ticari-oyun-urunleri",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-kisisel-bakim-kozmetik",
+      "name": "Kişisel Bakım / Kozmetik",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik",
+      "children": [
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-agiz-dis",
+          "name": "Ağız &amp; Diş",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-agiz-dis",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-el-ayak-tirnak",
+          "name": "El, Ayak &amp; Tırnak",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-el-ayak-tirnak",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-epilasyon",
+          "name": "Epilasyon",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-epilasyon",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-makyaj",
+          "name": "Makyaj",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-makyaj",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-parfum",
+          "name": "Parfüm",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-parfum",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-profesyonel-ekipmanlar",
+          "name": "Profesyonel Ekipmanlar",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-profesyonel-ekipmanlar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-sac-bakimi",
+          "name": "Saç Bakımı",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-sac-bakimi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-tiras",
+          "name": "Tıraş",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-tiras",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-yuz-bakim",
+          "name": "Yüz Bakım",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-yuz-bakim",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kisisel-bakim-kozmetik-zayiflama-urunleri",
+          "name": "Zayıflama Ürünleri",
+          "parentSlug": "alisveris-kisisel-bakim-kozmetik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kisisel-bakim-kozmetik-zayiflama-urunleri",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-kitap-dergi-film",
+      "name": "Kitap, Dergi / Film",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-kitap-dergi-film",
+      "children": [
+        {
+          "slug": "alisveris-kitap-dergi-film-cizgi-roman",
+          "name": "Çizgi Roman",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-cizgi-roman",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-cocuk-kitaplari",
+          "name": "Çocuk Kitapları",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-cocuk-kitaplari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-dergi",
+          "name": "Dergi",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-dergi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-edebiyat",
+          "name": "Edebiyat",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-edebiyat",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-egitim-sozluk",
+          "name": "Eğitim &amp; Sözlük",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-egitim-sozluk",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-film",
+          "name": "Film",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-film",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-kaynak-bilgi-kitaplari",
+          "name": "Kaynak &amp; Bilgi Kitapları",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-kaynak-bilgi-kitaplari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-kitap-aksesuarlari",
+          "name": "Kitap Aksesuarları",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-kitap-aksesuarlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "alisveris-kitap-dergi-film-yabanci-dilde-kitaplar",
+          "name": "Yabancı Dilde Kitaplar",
+          "parentSlug": "alisveris-kitap-dergi-film",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-kitap-dergi-film-yabanci-dilde-kitaplar",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-koleksiyon",
+      "name": "Koleksiyon",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-koleksiyon",
+      "children": [
+        {
+          "slug": "alisveris-koleksiyon-imzali-urunler-fotograflar",
+          "name": "İmzalı Ürünler &amp; Fotoğraflar",
+          "parentSlug": "alisveris-koleksiyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-koleksiyon-imzali-urunler-fotograflar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-koleksiyon-kartpostal-poster",
+          "name": "Kartpostal &amp; Poster",
+          "parentSlug": "alisveris-koleksiyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-koleksiyon-kartpostal-poster",
+          "children": []
+        },
+        {
+          "slug": "alisveris-koleksiyon-objeler",
+          "name": "Objeler",
+          "parentSlug": "alisveris-koleksiyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-koleksiyon-objeler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-koleksiyon-para-madalya",
+          "name": "Para &amp; Madalya",
+          "parentSlug": "alisveris-koleksiyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-koleksiyon-para-madalya",
+          "children": []
+        },
+        {
+          "slug": "alisveris-koleksiyon-posta-pulu",
+          "name": "Posta Pulu",
+          "parentSlug": "alisveris-koleksiyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-koleksiyon-posta-pulu",
+          "children": []
+        },
+        {
+          "slug": "alisveris-koleksiyon-yazili-basili-urunler",
+          "name": "Yazılı &amp; Basılı Ürünler",
+          "parentSlug": "alisveris-koleksiyon",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-koleksiyon-yazili-basili-urunler",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-medikal-urunler",
+      "name": "Medikal Ürünler",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-medikal-urunler",
+      "children": [
+        {
+          "slug": "alisveris-medikal-urunler-hastane-klinik",
+          "name": "Hastane &amp; Klinik",
+          "parentSlug": "alisveris-medikal-urunler",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-medikal-urunler-hastane-klinik",
+          "children": []
+        },
+        {
+          "slug": "alisveris-medikal-urunler-kisisel-urunler",
+          "name": "Kişisel Ürünler",
+          "parentSlug": "alisveris-medikal-urunler",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-medikal-urunler-kisisel-urunler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-medikal-urunler-sarf-malzemeleri",
+          "name": "Sarf Malzemeleri",
+          "parentSlug": "alisveris-medikal-urunler",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-medikal-urunler-sarf-malzemeleri",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-muzik",
+      "name": "Müzik",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-muzik",
+      "children": [
+        {
+          "slug": "alisveris-muzik-albumler",
+          "name": "Albümler",
+          "parentSlug": "alisveris-muzik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-muzik-albumler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-muzik-dj-ekipmanlari",
+          "name": "DJ Ekipmanları",
+          "parentSlug": "alisveris-muzik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-muzik-dj-ekipmanlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-muzik-muzik-aletleri",
+          "name": "Müzik Aletleri",
+          "parentSlug": "alisveris-muzik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-muzik-muzik-aletleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-muzik-sahne-sistemleri",
+          "name": "Sahne Sistemleri",
+          "parentSlug": "alisveris-muzik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-muzik-sahne-sistemleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-muzik-studyo-ekipmanlari",
+          "name": "Stüdyo Ekipmanları",
+          "parentSlug": "alisveris-muzik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-muzik-studyo-ekipmanlari",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-ofis-kirtasiye",
+      "name": "Ofis / Kırtasiye",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-ofis-kirtasiye",
+      "children": [
+        {
+          "slug": "alisveris-ofis-kirtasiye-buro-mobilyalari",
+          "name": "Büro Mobilyaları",
+          "parentSlug": "alisveris-ofis-kirtasiye",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ofis-kirtasiye-buro-mobilyalari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ofis-kirtasiye-kirtasiye",
+          "name": "Kırtasiye",
+          "parentSlug": "alisveris-ofis-kirtasiye",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ofis-kirtasiye-kirtasiye",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ofis-kirtasiye-ofis-makineleri",
+          "name": "Ofis Makineleri",
+          "parentSlug": "alisveris-ofis-kirtasiye",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ofis-kirtasiye-ofis-makineleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ofis-kirtasiye-okul-mobilyalari",
+          "name": "Okul Mobilyaları",
+          "parentSlug": "alisveris-ofis-kirtasiye",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ofis-kirtasiye-okul-mobilyalari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-ofis-kirtasiye-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "alisveris-ofis-kirtasiye",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-ofis-kirtasiye-toplu-satis",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-saat",
+      "name": "Saat",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-saat",
+      "children": [
+        {
+          "slug": "alisveris-saat-cep-saati",
+          "name": "Cep Saati",
+          "parentSlug": "alisveris-saat",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-saat-cep-saati",
+          "children": []
+        },
+        {
+          "slug": "alisveris-saat-duvar-saati",
+          "name": "Duvar Saati",
+          "parentSlug": "alisveris-saat",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-saat-duvar-saati",
+          "children": []
+        },
+        {
+          "slug": "alisveris-saat-kol-saati",
+          "name": "Kol Saati",
+          "parentSlug": "alisveris-saat",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-saat-kol-saati",
+          "children": []
+        },
+        {
+          "slug": "alisveris-saat-kum-saati",
+          "name": "Kum Saati",
+          "parentSlug": "alisveris-saat",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-saat-kum-saati",
+          "children": []
+        },
+        {
+          "slug": "alisveris-saat-masa-saati",
+          "name": "Masa Saati",
+          "parentSlug": "alisveris-saat",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-saat-masa-saati",
+          "children": []
+        },
+        {
+          "slug": "alisveris-saat-parca-aksesuar",
+          "name": "Parça &amp; Aksesuar",
+          "parentSlug": "alisveris-saat",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-saat-parca-aksesuar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-saat-taki-saat",
+          "name": "Takı Saat",
+          "parentSlug": "alisveris-saat",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-saat-taki-saat",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-spor",
+      "name": "Spor",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-spor",
+      "children": [
+        {
+          "slug": "alisveris-spor-atletizm",
+          "name": "Atletizm",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-atletizm",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-bisiklet",
+          "name": "Bisiklet",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-bisiklet",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-doga-sporlari",
+          "name": "Doğa Sporları",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-doga-sporlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-dovus-sporlari",
+          "name": "Dövüş Sporları",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-dovus-sporlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-fitness-kondisyon",
+          "name": "Fitness &amp; Kondisyon",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-fitness-kondisyon",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-kis-sporlari",
+          "name": "Kış Sporları",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-kis-sporlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-pilates-yoga-jimnastik",
+          "name": "Pilates, Yoga &amp; Jimnastik",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-pilates-yoga-jimnastik",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-raket-sporlari",
+          "name": "Raket Sporları",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-raket-sporlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-salon-oyunlari",
+          "name": "Salon Oyunları",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-salon-oyunlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-sira-disi-sporlar",
+          "name": "Sıra Dışı Sporlar",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-sira-disi-sporlar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-su-sporlari",
+          "name": "Su Sporları",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-su-sporlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-takim-sporlari",
+          "name": "Takım Sporları",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-takim-sporlari",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-taraftar-urunleri",
+          "name": "Taraftar Ürünleri",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-taraftar-urunleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-uyelikler",
+          "name": "Üyelikler",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-uyelikler",
+          "children": []
+        },
+        {
+          "slug": "alisveris-spor-vucut-gelistirme",
+          "name": "Vücut Geliştirme",
+          "parentSlug": "alisveris-spor",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-spor-vucut-gelistirme",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-taki-mucevher-altin",
+      "name": "Takı, Mücevher / Altın",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-taki-mucevher-altin",
+      "children": [
+        {
+          "slug": "alisveris-taki-mucevher-altin-aksesuar",
+          "name": "Aksesuar",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-aksesuar",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-bileklik-bilezik",
+          "name": "Bileklik &amp; Bilezik",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-bileklik-bilezik",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-kolye",
+          "name": "Kolye",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-kolye",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-kulce-ziynet-altin",
+          "name": "Külçe &amp; Ziynet Altın",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-kulce-ziynet-altin",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-kupe",
+          "name": "Küpe",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-kupe",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-taki-malzemeleri",
+          "name": "Takı Malzemeleri",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-taki-malzemeleri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-taki-seti",
+          "name": "Takı Seti",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-taki-seti",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "alisveris-taki-mucevher-altin-yuzuk",
+          "name": "Yüzük",
+          "parentSlug": "alisveris-taki-mucevher-altin",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-taki-mucevher-altin-yuzuk",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-teknik-elektronik",
+      "name": "Teknik Elektronik",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-teknik-elektronik",
+      "children": [
+        {
+          "slug": "alisveris-teknik-elektronik-devre-montaj",
+          "name": "Devre &amp; Montaj",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-devre-montaj",
+          "children": []
+        },
+        {
+          "slug": "alisveris-teknik-elektronik-el-feneri-lazer",
+          "name": "El Feneri &amp; Lazer",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-el-feneri-lazer",
+          "children": []
+        },
+        {
+          "slug": "alisveris-teknik-elektronik-guc-kaynagi",
+          "name": "Güç Kaynağı",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-guc-kaynagi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-teknik-elektronik-lisanssiz-telsiz",
+          "name": "Lisanssız Telsiz",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-lisanssiz-telsiz",
+          "children": []
+        },
+        {
+          "slug": "alisveris-teknik-elektronik-metal-dedektoru",
+          "name": "Metal Dedektörü",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-metal-dedektoru",
+          "children": []
+        },
+        {
+          "slug": "alisveris-teknik-elektronik-pil",
+          "name": "Pil",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-pil",
+          "children": []
+        },
+        {
+          "slug": "alisveris-teknik-elektronik-terazi",
+          "name": "Terazi",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-terazi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-teknik-elektronik-test-olcum-cihazi",
+          "name": "Test &amp; Ölçüm Cihazı",
+          "parentSlug": "alisveris-teknik-elektronik",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-teknik-elektronik-test-olcum-cihazi",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "alisveris-yiyecek-icecek",
+      "name": "Yiyecek / İçecek",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/alisveris-yiyecek-icecek",
+      "children": [
+        {
+          "slug": "alisveris-yiyecek-icecek-baharat",
+          "name": "Baharat",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-baharat",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-bakliyat",
+          "name": "Bakliyat",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-bakliyat",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-et-balik",
+          "name": "Et &amp; Balık",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-et-balik",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-gida-paketi",
+          "name": "Gıda Paketi",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-gida-paketi",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-hazir-gida",
+          "name": "Hazır Gıda",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-hazir-gida",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-icecek",
+          "name": "İçecek",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-icecek",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-kuruyemis",
+          "name": "Kuruyemiş",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-kuruyemis",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-meyve-sebze",
+          "name": "Meyve &amp; Sebze",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-meyve-sebze",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-pastane-firin",
+          "name": "Pastane &amp; Fırın",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-pastane-firin",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-sarkuteri",
+          "name": "Şarküteri",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-sarkuteri",
+          "children": []
+        },
+        {
+          "slug": "alisveris-yiyecek-icecek-sekerli-besinler",
+          "name": "Şekerli Besinler",
+          "parentSlug": "alisveris-yiyecek-icecek",
+          "level": 1,
+          "url": "https://www.satariz.com/alisveris-yiyecek-icecek-sekerli-besinler",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "arsa",
+      "name": "Arsa",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/arsa",
+      "children": []
+    },
+    {
+      "slug": "deniz-araci-ekipmanlari",
+      "name": "Deniz Aracı Ekipmanları",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/deniz-araci-ekipmanlari",
+      "children": [
+        {
+          "slug": "deniz-araci-ekipmanlari-boya-bakim",
+          "name": "Boya &amp; Bakım",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-boya-bakim",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-demirleme-rihtim",
+          "name": "Demirleme &amp; Rıhtım",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-demirleme-rihtim",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-dumen-kumanda",
+          "name": "Dümen / Kumanda",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-dumen-kumanda",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-elektrik",
+          "name": "Elektrik",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-elektrik",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-elektronik",
+          "name": "Elektronik",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-elektronik",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-giyim",
+          "name": "Giyim",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-giyim",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-guvenlik",
+          "name": "Güvenlik",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-guvenlik",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-guverte",
+          "name": "Güverte",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-guverte",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-havalandirma",
+          "name": "Havalandırma",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-havalandirma",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-hirdavat-tesisat",
+          "name": "Hırdavat &amp; Tesisat",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-hirdavat-tesisat",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-kabin",
+          "name": "Kabin",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-kabin",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-motor-aksami",
+          "name": "Motor Aksamı",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-motor-aksami",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-navigasyon",
+          "name": "Navigasyon",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-navigasyon",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-pis-su-tuvalet",
+          "name": "Pis Su &amp; Tuvalet",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-pis-su-tuvalet",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-romork",
+          "name": "Römork",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-romork",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-sintine",
+          "name": "Sintine",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-sintine",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-tatli-su",
+          "name": "Tatlı Su",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-tatli-su",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-yakit-sistemi",
+          "name": "Yakıt Sistemi",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-yakit-sistemi",
+          "children": []
+        },
+        {
+          "slug": "deniz-araci-ekipmanlari-yelken-donanimi",
+          "name": "Yelken Donanımı",
+          "parentSlug": "deniz-araci-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/deniz-araci-ekipmanlari-yelken-donanimi",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "deniz-motorlari",
+      "name": "Deniz Motorları",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/deniz-motorlari",
+      "children": []
+    },
+    {
+      "slug": "emlak",
+      "name": "Kiralık ve Satılık Emlak",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/emlak",
+      "children": [
+        {
+          "slug": "emlak-bina",
+          "name": "Komple Bina",
+          "parentSlug": "emlak",
+          "level": 1,
+          "url": "https://www.satariz.com/emlak-bina",
+          "children": [
+            {
+              "slug": "emlak-bina-kiralik",
+              "name": "Kiralık",
+              "parentSlug": "emlak-bina",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-bina-kiralik",
+              "children": []
+            },
+            {
+              "slug": "emlak-bina-satilik",
+              "name": "Satılık",
+              "parentSlug": "emlak-bina",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-bina-satilik",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "emlak-devremulk",
+          "name": "Devremülk",
+          "parentSlug": "emlak",
+          "level": 1,
+          "url": "https://www.satariz.com/emlak-devremulk",
+          "children": [
+            {
+              "slug": "emlak-devremulk-akdeniz-bolgesi",
+              "name": "Akdeniz Bölgesi",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-akdeniz-bolgesi",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-dogu-anadolu-bolgesi",
+              "name": "Doğu Anadolu Bölgesi",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-dogu-anadolu-bolgesi",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-ege-bolgesi",
+              "name": "Ege Bölgesi",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-ege-bolgesi",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-guneydogu-anadolu-bolgesi",
+              "name": "Güneydoğu Anadolu Bölgesi",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-guneydogu-anadolu-bolgesi",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-ic-anadolu-bolgesi",
+              "name": "İç Anadolu Bölgesi",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-ic-anadolu-bolgesi",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-karadeniz-bolgesi",
+              "name": "Karadeniz Bölgesi",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-karadeniz-bolgesi",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-kibris",
+              "name": "Kıbrıs",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-kibris",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-marmara-bolgesi",
+              "name": "Marmara Bölgesi",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-marmara-bolgesi",
+              "children": []
+            },
+            {
+              "slug": "emlak-devremulk-yurtdisi",
+              "name": "Yurtdışı",
+              "parentSlug": "emlak-devremulk",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-devremulk-yurtdisi",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "emlak-is-yeri",
+          "name": "İş Yeri",
+          "parentSlug": "emlak",
+          "level": 1,
+          "url": "https://www.satariz.com/emlak-is-yeri",
+          "children": [
+            {
+              "slug": "emlak-is-yeri-devren",
+              "name": "Devren",
+              "parentSlug": "emlak-is-yeri",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-is-yeri-devren",
+              "children": []
+            },
+            {
+              "slug": "emlak-is-yeri-kiralik",
+              "name": "Kiralık",
+              "parentSlug": "emlak-is-yeri",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-is-yeri-kiralik",
+              "children": []
+            },
+            {
+              "slug": "emlak-is-yeri-satilik",
+              "name": "Satılık",
+              "parentSlug": "emlak-is-yeri",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-is-yeri-satilik",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "emlak-konut",
+          "name": "Konut",
+          "parentSlug": "emlak",
+          "level": 1,
+          "url": "https://www.satariz.com/emlak-konut",
+          "children": [
+            {
+              "slug": "emlak-konut-kiralik",
+              "name": "Kiralık",
+              "parentSlug": "emlak-konut",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-konut-kiralik",
+              "children": []
+            },
+            {
+              "slug": "emlak-konut-projeleri",
+              "name": "Konut Projeleri",
+              "parentSlug": "emlak-konut",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-konut-projeleri",
+              "children": [
+                {
+                  "slug": "emlak-konut-projeleri-devam-ediyor",
+                  "name": "Devam Ediyor",
+                  "parentSlug": "emlak-konut-projeleri",
+                  "level": 3,
+                  "url": "https://www.satariz.com/emlak-konut-projeleri-devam-ediyor",
+                  "children": []
+                },
+                {
+                  "slug": "emlak-konut-projeleri-proje-asamasinda",
+                  "name": "Proje Aşamasında",
+                  "parentSlug": "emlak-konut-projeleri",
+                  "level": 3,
+                  "url": "https://www.satariz.com/emlak-konut-projeleri-proje-asamasinda",
+                  "children": []
+                },
+                {
+                  "slug": "emlak-konut-projeleri-tamamlandi",
+                  "name": "Tamamlandı",
+                  "parentSlug": "emlak-konut-projeleri",
+                  "level": 3,
+                  "url": "https://www.satariz.com/emlak-konut-projeleri-tamamlandi",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "slug": "emlak-konut-satilik",
+              "name": "Satılık",
+              "parentSlug": "emlak-konut",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-konut-satilik",
+              "children": []
+            },
+            {
+              "slug": "emlak-konut-turistik-gunluk-kiralik",
+              "name": "Turistik Günlük Kiralık",
+              "parentSlug": "emlak-konut",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-konut-turistik-gunluk-kiralik",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "emlak-toprak",
+          "name": "Toprak",
+          "parentSlug": "emlak",
+          "level": 1,
+          "url": "https://www.satariz.com/emlak-toprak",
+          "children": [
+            {
+              "slug": "emlak-toprak-kat-karsiligi",
+              "name": "Kat Karşılığı",
+              "parentSlug": "emlak-toprak",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-toprak-kat-karsiligi",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "emlak-turistlik-tesis",
+          "name": "Turistlik Tesis",
+          "parentSlug": "emlak",
+          "level": 1,
+          "url": "https://www.satariz.com/emlak-turistlik-tesis",
+          "children": [
+            {
+              "slug": "emlak-turistlik-tesis-kiralik",
+              "name": "Kiralık",
+              "parentSlug": "emlak-turistlik-tesis",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-turistlik-tesis-kiralik",
+              "children": []
+            },
+            {
+              "slug": "emlak-turistlik-tesis-satilik",
+              "name": "Satılık",
+              "parentSlug": "emlak-turistlik-tesis",
+              "level": 2,
+              "url": "https://www.satariz.com/emlak-turistlik-tesis-satilik",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "hava-araclari-helikopter",
+      "name": "Helikopter",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/hava-araclari-helikopter",
+      "children": []
+    },
+    {
+      "slug": "icar",
+      "name": "İcar",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/icar",
+      "children": []
+    },
+    {
+      "slug": "ikinci-el-ve-sifir-alisveris",
+      "name": "Sıfır ve İkinci El Ürünler için Online Alışveriş",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris",
+      "children": [
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-anne-bebek-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-anne-bebek-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-bahce-yapi-market-is-guvenligi-elbiseleri",
+          "name": "İş Güvenliği &amp; Elbiseleri",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-bahce-yapi-market-is-guvenligi-elbiseleri",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-bahce-yapi-market-prefabrik-yapilar",
+          "name": "Prefabrik Yapılar",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-bahce-yapi-market-prefabrik-yapilar",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-bahce-yapi-market-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-bahce-yapi-market-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-cep-telefonu-aksesuar-yenilenmis-cep-telefonu",
+          "name": "Yenilenmiş Cep Telefonu",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-cep-telefonu-aksesuar-yenilenmis-cep-telefonu",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-diger-her-sey-tek-kullanimlik-urunler",
+          "name": "Tek Kullanımlık Ürünler",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-diger-her-sey-tek-kullanimlik-urunler",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-diger-her-sey-tutun-aksesuarlari",
+          "name": "Tütün Aksesuarları",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-diger-her-sey-tutun-aksesuarlari",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-ev-elektronigi-akilli-ev-sistemleri",
+          "name": "Akıllı Ev Sistemleri",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-ev-elektronigi-akilli-ev-sistemleri",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-ev-elektronigi-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-ev-elektronigi-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-fotograf-kamera-analog-fotograf-makinesi",
+          "name": "Analog Fotoğraf Makinesi",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-fotograf-kamera-analog-fotograf-makinesi",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-fotograf-kamera-mikroskop",
+          "name": "Mikroskop",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-fotograf-kamera-mikroskop",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-hobi-oyuncak-aksiyon-figurleri",
+          "name": "Aksiyon Figürleri",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-hobi-oyuncak-aksiyon-figurleri",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-hobi-oyuncak-koleksiyon-kartlari",
+          "name": "Koleksiyon Kartları",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-hobi-oyuncak-koleksiyon-kartlari",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-hobi-oyuncak-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-hobi-oyuncak-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-kisisel-bakim-kozmetik-hijyenik-urunler",
+          "name": "Hijyenik Ürünler",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-kisisel-bakim-kozmetik-hijyenik-urunler",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-kisisel-bakim-kozmetik-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-kisisel-bakim-kozmetik-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-kisisel-bakim-kozmetik-vucut-bakimi",
+          "name": "Vücut Bakımı",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-kisisel-bakim-kozmetik-vucut-bakimi",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel",
+          "name": "Oyunculara Özel",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-oyunculara-ozel",
+          "children": [
+            {
+              "slug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyun-bilgisayari",
+              "name": "Oyun Bilgisayarı",
+              "parentSlug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel",
+              "level": 2,
+              "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyun-bilgisayari",
+              "children": []
+            },
+            {
+              "slug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyun-konsolu",
+              "name": "Oyun Konsolu",
+              "parentSlug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel",
+              "level": 2,
+              "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyun-konsolu",
+              "children": []
+            },
+            {
+              "slug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyuncu-ekipmanlari",
+              "name": "Oyuncu Ekipmanları",
+              "parentSlug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel",
+              "level": 2,
+              "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyuncu-ekipmanlari",
+              "children": []
+            },
+            {
+              "slug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyunlar",
+              "name": "Oyunlar",
+              "parentSlug": "ikinci-el-ve-sifir-alisveris-oyunculara-ozel",
+              "level": 2,
+              "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-oyunculara-ozel-oyunlar",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-saat-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-saat-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-spor-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-spor-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-teknik-elektronik-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-teknik-elektronik-toplu-satis",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-teknik-elektronik-yedek-parca",
+          "name": "Yedek Parça",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-teknik-elektronik-yedek-parca",
+          "children": []
+        },
+        {
+          "slug": "ikinci-el-ve-sifir-alisveris-yiyecek-icecek-toplu-satis",
+          "name": "Toplu Satış",
+          "parentSlug": "ikinci-el-ve-sifir-alisveris",
+          "level": 1,
+          "url": "https://www.satariz.com/ikinci-el-ve-sifir-alisveris-yiyecek-icecek-toplu-satis",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "is-makineleri-sanayi-elektrik-enerji-akaryakit-urunleri",
+      "name": "Akaryakıt Ürünleri",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-elektrik-enerji-akaryakit-urunleri",
+      "children": []
+    },
+    {
+      "slug": "is-makineleri-sanayi-elektrik-enerji-elektrik-elektronik",
+      "name": "Elektrik &amp; Elektronik",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-elektrik-enerji-elektrik-elektronik",
+      "children": []
+    },
+    {
+      "slug": "is-makineleri-sanayi-elektrik-enerji-gunes-panelleri",
+      "name": "Güneş Panelleri",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-elektrik-enerji-gunes-panelleri",
+      "children": []
+    },
+    {
+      "slug": "is-makineleri-sanayi-elektrik-enerji-jenerator",
+      "name": "Jeneratör",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-elektrik-enerji-jenerator",
+      "children": []
+    },
+    {
+      "slug": "is-makineleri-sanayi-elektrik-enerji-ruzgar-turbini",
+      "name": "Rüzgar Türbini",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-elektrik-enerji-ruzgar-turbini",
+      "children": []
+    },
+    {
+      "slug": "is-makineleri-sanayi-elektrik-enerji-su-turbini",
+      "name": "Su Türbini",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-elektrik-enerji-su-turbini",
+      "children": []
+    },
+    {
+      "slug": "is-makineleri-sanayi-is-makineleri",
+      "name": "İş Makineleri",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-is-makineleri",
+      "children": [
+        {
+          "slug": "is-makineleri-sanayi-is-makineleri-kiralik",
+          "name": "Kiralık",
+          "parentSlug": "is-makineleri-sanayi-is-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-is-makineleri-kiralik",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-is-makineleri-parca-atasman",
+          "name": "Parça / Ataşman",
+          "parentSlug": "is-makineleri-sanayi-is-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-is-makineleri-parca-atasman",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-is-makineleri-satilik",
+          "name": "Satılık",
+          "parentSlug": "is-makineleri-sanayi-is-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-is-makineleri-satilik",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "is-makineleri-sanayi-sanayi",
+      "name": "Sanayi",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi",
+      "children": [
+        {
+          "slug": "is-makineleri-sanayi-sanayi-cadir-tente-kepenk",
+          "name": "Çadır, Tente / Kepenk",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-cadir-tente-kepenk",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-endustri-makineleri",
+          "name": "Endüstri Makineleri",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-endustri-makineleri",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-endustriyel-hirdavat",
+          "name": "Endüstriyel Hırdavat",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-endustriyel-hirdavat",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-endustriyel-mutfak",
+          "name": "Endüstriyel Mutfak",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-endustriyel-mutfak",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-endustriyel-temizlik",
+          "name": "Endüstriyel Temizlik",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-endustriyel-temizlik",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-kompresor",
+          "name": "Kompresör",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-kompresor",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-konteyner-kabin",
+          "name": "Konteyner / Kabin",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-konteyner-kabin",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-raf-urun-teshir",
+          "name": "Raf / Ürün Teşhir",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-raf-urun-teshir",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-sanayi-tasima-istifleme",
+          "name": "Taşıma / İstifleme",
+          "parentSlug": "is-makineleri-sanayi-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-sanayi-tasima-istifleme",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "is-makineleri-sanayi-tarim-makineleri",
+      "name": "Tarım Makineleri",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri",
+      "children": [
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-atasman-yedek-parca",
+          "name": "Ataşman / Yedek Parça",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-atasman-yedek-parca",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-balya-silaj",
+          "name": "Balya &amp; Silaj",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-balya-silaj",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-bicerdover",
+          "name": "Biçerdöver",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-bicerdover",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-budama-makinesi",
+          "name": "Budama Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-budama-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-capa-makinesi",
+          "name": "Çapa Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-capa-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-cayir-cim-ot-bicme",
+          "name": "Çayır, Çim &amp; Ot Biçme",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-cayir-cim-ot-bicme",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-diger",
+          "name": "Diğer",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-diger",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-diskaro",
+          "name": "Diskaro",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-diskaro",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-ekim-makinesi",
+          "name": "Ekim Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-ekim-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-findik-patoz-toplama",
+          "name": "Fındık Patoz &amp; Toplama",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-findik-patoz-toplama",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-gubre-dagitma-serpme",
+          "name": "Gübre Dağıtma &amp; Serpme",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-gubre-dagitma-serpme",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-gubre-kurutma-makinesi",
+          "name": "Gübre Kurutma Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-gubre-kurutma-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-gubre-parcalama",
+          "name": "Gübre Parçalama",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-gubre-parcalama",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-harman-makinesi",
+          "name": "Harman Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-harman-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-konveyor-bant-helezon",
+          "name": "Konveyör, Bant &amp; Helezon",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-konveyor-bant-helezon",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-kultivator",
+          "name": "Kültivatör",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-kultivator",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-meyve-zeytin-toplama",
+          "name": "Meyve &amp; Zeytin Toplama",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-meyve-zeytin-toplama",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-misir-hasat-tablasi",
+          "name": "Mısır Hasat Tablası",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-misir-hasat-tablasi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-misir-silaj-makinesi",
+          "name": "Mısır Silaj Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-misir-silaj-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-orak-tirpan-makinesi",
+          "name": "Orak &amp; Tırpan Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-orak-tirpan-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-pamuk-toplama-makinesi",
+          "name": "Pamuk Toplama Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-pamuk-toplama-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-pancar-motoru",
+          "name": "Pancar Motoru",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-pancar-motoru",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-pancar-sokme-makinesi",
+          "name": "Pancar Sökme Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-pancar-sokme-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-patates-sogan-sokme",
+          "name": "Patates &amp; Soğan Sökme",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-patates-sogan-sokme",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-pelet-makinesi",
+          "name": "Pelet Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-pelet-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-pulluk",
+          "name": "Pulluk",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-pulluk",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-romork",
+          "name": "Römork",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-romork",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-rotavator",
+          "name": "Rotavatör",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-rotavator",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-saman-makinesi",
+          "name": "Saman Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-saman-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-su-pompasi-motoru",
+          "name": "Su Pompası &amp; Motoru",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-su-pompasi-motoru",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-sulama-makinesi",
+          "name": "Sulama Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-sulama-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-sut-sagma-makinesi",
+          "name": "Süt Sağma Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-sut-sagma-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-talas-hazirlama",
+          "name": "Talaş Hazırlama",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-talas-hazirlama",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-tirmik",
+          "name": "Tırmık",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-tirmik",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-toprak-burgu-makinesi",
+          "name": "Toprak Burgu Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-toprak-burgu-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-toprak-cim-havalandirma",
+          "name": "Toprak &amp; Çim Havalandırma",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-toprak-cim-havalandirma",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-toprak-ogutme-makinesi",
+          "name": "Toprak Öğütme Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-toprak-ogutme-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-traktor",
+          "name": "Traktör",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-traktor",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-ufleme-toplama-makinesi",
+          "name": "Üfleme Toplama Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-ufleme-toplama-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-yaprak-dal-ogutme-makinesi",
+          "name": "Yaprak / Dal Öğütme Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-yaprak-dal-ogutme-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-yem-ezme-kirma",
+          "name": "Yem Ezme &amp; Kırma",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-yem-ezme-kirma",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-yem-karma-makinesi",
+          "name": "Yem Karma Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-yem-karma-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-yem-uretim-makinesi",
+          "name": "Yem Üretim Makinesi",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-yem-uretim-makinesi",
+          "children": []
+        },
+        {
+          "slug": "is-makineleri-sanayi-tarim-makineleri-zeytin-eleme-makinasi",
+          "name": "Zeytin Eleme Makinası",
+          "parentSlug": "is-makineleri-sanayi-tarim-makineleri",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-sanayi-tarim-makineleri-zeytin-eleme-makinasi",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "is-makineleri-ve-sanayi",
+      "name": "Satılık İş Makineleri, Sanayi ve Endüstriyel Ürünler ile Yenilenebilir Enerji Kaynakları",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/is-makineleri-ve-sanayi",
+      "children": [
+        {
+          "slug": "is-makineleri-ve-sanayi-tarim-makineleri-tasima",
+          "name": "Taşıma",
+          "parentSlug": "is-makineleri-ve-sanayi",
+          "level": 1,
+          "url": "https://www.satariz.com/is-makineleri-ve-sanayi-tarim-makineleri-tasima",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "kiralik-araclar",
+      "name": "Kiralık Araçlar",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/kiralik-araclar",
+      "children": [
+        {
+          "slug": "kiralik-araclar-hava-araclari",
+          "name": "Hava Araçları",
+          "parentSlug": "kiralik-araclar",
+          "level": 1,
+          "url": "https://www.satariz.com/kiralik-araclar-hava-araclari",
+          "children": []
+        },
+        {
+          "slug": "kiralik-araclar-karavan",
+          "name": "Karavan",
+          "parentSlug": "kiralik-araclar",
+          "level": 1,
+          "url": "https://www.satariz.com/kiralik-araclar-karavan",
+          "children": []
+        },
+        {
+          "slug": "kiralik-araclar-motosiklet-atv",
+          "name": "Motosiklet / ATV",
+          "parentSlug": "kiralik-araclar",
+          "level": 1,
+          "url": "https://www.satariz.com/kiralik-araclar-motosiklet-atv",
+          "children": []
+        },
+        {
+          "slug": "kiralik-araclar-ticari-araclar",
+          "name": "Ticari Araçlar",
+          "parentSlug": "kiralik-araclar",
+          "level": 1,
+          "url": "https://www.satariz.com/kiralik-araclar-ticari-araclar",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "klasik-araclar-vasita-klasik-araclar",
+      "name": "Klasik Araçlar",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/klasik-araclar-vasita-klasik-araclar",
+      "children": [
+        {
+          "slug": "klasik-araclar-vasita-klasik-araclar-klasik-araclar",
+          "name": "Klasik Araçlar",
+          "parentSlug": "klasik-araclar-vasita-klasik-araclar",
+          "level": 1,
+          "url": "https://www.satariz.com/klasik-araclar-vasita-klasik-araclar-klasik-araclar",
+          "children": []
+        },
+        {
+          "slug": "klasik-araclar-vasita-klasik-araclar-klasik-motosikletler",
+          "name": "Klasik Motosikletler",
+          "parentSlug": "klasik-araclar-vasita-klasik-araclar",
+          "level": 1,
+          "url": "https://www.satariz.com/klasik-araclar-vasita-klasik-araclar-klasik-motosikletler",
+          "children": []
+        },
+        {
+          "slug": "klasik-araclar-vasita-klasik-araclar-klasik-ticari-araclar",
+          "name": "Klasik Ticari Araçlar",
+          "parentSlug": "klasik-araclar-vasita-klasik-araclar",
+          "level": 1,
+          "url": "https://www.satariz.com/klasik-araclar-vasita-klasik-araclar-klasik-ticari-araclar",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "motosiklet-ekipmanlari",
+      "name": "Motosiklet Ekipmanları",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/motosiklet-ekipmanlari",
+      "children": [
+        {
+          "slug": "motosiklet-ekipmanlari-aksesuar-tuning",
+          "name": "Aksesuar &amp; Tuning",
+          "parentSlug": "motosiklet-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/motosiklet-ekipmanlari-aksesuar-tuning",
+          "children": []
+        },
+        {
+          "slug": "motosiklet-ekipmanlari-elektronik-ekipman",
+          "name": "Elektronik Ekipman",
+          "parentSlug": "motosiklet-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/motosiklet-ekipmanlari-elektronik-ekipman",
+          "children": []
+        },
+        {
+          "slug": "motosiklet-ekipmanlari-jant-lastik",
+          "name": "Jant &amp; Lastik",
+          "parentSlug": "motosiklet-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/motosiklet-ekipmanlari-jant-lastik",
+          "children": []
+        },
+        {
+          "slug": "motosiklet-ekipmanlari-kask-kiyafet-ekipman",
+          "name": "Kask, Kıyafet &amp; Ekipman",
+          "parentSlug": "motosiklet-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/motosiklet-ekipmanlari-kask-kiyafet-ekipman",
+          "children": []
+        },
+        {
+          "slug": "motosiklet-ekipmanlari-yedek-parca",
+          "name": "Yedek Parça",
+          "parentSlug": "motosiklet-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/motosiklet-ekipmanlari-yedek-parca",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "otomotiv-ekipmanlari",
+      "name": "Otomotiv Ekipmanları",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/otomotiv-ekipmanlari",
+      "children": [
+        {
+          "slug": "otomotiv-ekipmanlari-aksesuar-tuning",
+          "name": "Aksesuar &amp; Tuning",
+          "parentSlug": "otomotiv-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/otomotiv-ekipmanlari-aksesuar-tuning",
+          "children": []
+        },
+        {
+          "slug": "otomotiv-ekipmanlari-jant-lastik",
+          "name": "Jant &amp; Lastik",
+          "parentSlug": "otomotiv-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/otomotiv-ekipmanlari-jant-lastik",
+          "children": []
+        },
+        {
+          "slug": "otomotiv-ekipmanlari-ses-goruntu-sistemleri",
+          "name": "Ses &amp; Görüntü Sistemleri",
+          "parentSlug": "otomotiv-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/otomotiv-ekipmanlari-ses-goruntu-sistemleri",
+          "children": []
+        },
+        {
+          "slug": "otomotiv-ekipmanlari-yedek-parca",
+          "name": "Yedek Parça",
+          "parentSlug": "otomotiv-ekipmanlari",
+          "level": 1,
+          "url": "https://www.satariz.com/otomotiv-ekipmanlari-yedek-parca",
+          "children": []
+        }
+      ]
+    },
+    {
+      "slug": "tarla",
+      "name": "Tarla",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/tarla",
+      "children": []
+    },
+    {
+      "slug": "vasita",
+      "name": "İkinci El Araç, Motosiklet, Ticari Araç, Kiralık Araç ve Diğer Vasıta",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/vasita",
+      "children": [
+        {
+          "slug": "vasita-arac",
+          "name": "Araç",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-arac",
+          "children": []
+        },
+        {
+          "slug": "vasita-deniz-araclari",
+          "name": "Deniz Araçları",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-deniz-araclari",
+          "children": []
+        },
+        {
+          "slug": "vasita-hasarli-araclar",
+          "name": "Hasarlı Araçlar",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-hasarli-araclar",
+          "children": [
+            {
+              "slug": "vasita-hasarli-araclar-arazi-araclari",
+              "name": "Arazi Araçları",
+              "parentSlug": "vasita-hasarli-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hasarli-araclar-arazi-araclari",
+              "children": []
+            },
+            {
+              "slug": "vasita-hasarli-araclar-minivan-van-panelvan",
+              "name": "Minivan / Panelvan",
+              "parentSlug": "vasita-hasarli-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hasarli-araclar-minivan-van-panelvan",
+              "children": []
+            },
+            {
+              "slug": "vasita-hasarli-araclar-motosiklet",
+              "name": "Motosiklet",
+              "parentSlug": "vasita-hasarli-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hasarli-araclar-motosiklet",
+              "children": []
+            },
+            {
+              "slug": "vasita-hasarli-araclar-otomobil",
+              "name": "Otomobil",
+              "parentSlug": "vasita-hasarli-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hasarli-araclar-otomobil",
+              "children": []
+            },
+            {
+              "slug": "vasita-hasarli-araclar-ticari-araclar",
+              "name": "Ticari Araçlar",
+              "parentSlug": "vasita-hasarli-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hasarli-araclar-ticari-araclar",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "vasita-hava-araclari",
+          "name": "Hava Araçları",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-hava-araclari",
+          "children": [
+            {
+              "slug": "vasita-hava-araclari-deniz-ucagi",
+              "name": "Deniz Uçağı",
+              "parentSlug": "vasita-hava-araclari",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hava-araclari-deniz-ucagi",
+              "children": []
+            },
+            {
+              "slug": "vasita-hava-araclari-paramotor",
+              "name": "Paramotor",
+              "parentSlug": "vasita-hava-araclari",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hava-araclari-paramotor",
+              "children": []
+            },
+            {
+              "slug": "vasita-hava-araclari-ucak",
+              "name": "Uçak",
+              "parentSlug": "vasita-hava-araclari",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hava-araclari-ucak",
+              "children": []
+            },
+            {
+              "slug": "vasita-hava-araclari-yelken-kanat-microlight",
+              "name": "Yelken Kanat / Microlight",
+              "parentSlug": "vasita-hava-araclari",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-hava-araclari-yelken-kanat-microlight",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "vasita-karavan",
+          "name": "Karavan",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-karavan",
+          "children": [
+            {
+              "slug": "vasita-karavan-cekme-karavan",
+              "name": "Çekme Karavan",
+              "parentSlug": "vasita-karavan",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-karavan-cekme-karavan",
+              "children": []
+            },
+            {
+              "slug": "vasita-karavan-motokaravan",
+              "name": "Motokaravan",
+              "parentSlug": "vasita-karavan",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-karavan-motokaravan",
+              "children": []
+            }
+          ]
+        },
+        {
+          "slug": "vasita-kiralik-araclar-arac",
+          "name": "Araç",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-kiralik-araclar-arac",
+          "children": []
+        },
+        {
+          "slug": "vasita-kiralik-deniz-araclari",
+          "name": "Kiralık",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-kiralik-deniz-araclari",
+          "children": []
+        },
+        {
+          "slug": "vasita-motosiklet",
+          "name": "Motosiklet",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-motosiklet",
+          "children": []
+        },
+        {
+          "slug": "vasita-satilik-deniz-araclari",
+          "name": "Satılık",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-satilik-deniz-araclari",
+          "children": []
+        },
+        {
+          "slug": "vasita-ticari-araclar",
+          "name": "Ticari Araçlar",
+          "parentSlug": "vasita",
+          "level": 1,
+          "url": "https://www.satariz.com/vasita-ticari-araclar",
+          "children": [
+            {
+              "slug": "vasita-ticari-araclar-cekici",
+              "name": "Çekici",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-cekici",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-dorse",
+              "name": "Dorse",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-dorse",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-kamyon-kamyonet",
+              "name": "Kamyon &amp; Kamyonet",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-kamyon-kamyonet",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-karoser-ust-yapi",
+              "name": "Karoser &amp; Üst Yapı",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-karoser-ust-yapi",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-minibus-midibus",
+              "name": "Minibüs &amp; Midibüs",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-minibus-midibus",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-oto-kurtarici-tasiyici",
+              "name": "Oto Kurtarıcı &amp; Taşıyıcı",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-oto-kurtarici-tasiyici",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-otobus",
+              "name": "Otobüs",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-otobus",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-romork",
+              "name": "Römork",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-romork",
+              "children": []
+            },
+            {
+              "slug": "vasita-ticari-araclar-ticari-hat-ticari-plaka",
+              "name": "Ticari Hat &amp; Ticari Plaka",
+              "parentSlug": "vasita-ticari-araclar",
+              "level": 2,
+              "url": "https://www.satariz.com/vasita-ticari-araclar-ticari-hat-ticari-plaka",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yedek-parca-aksesuar",
+      "name": "Oto, Motosiklet ve Deniz Araçları Yedek Parça &amp; Aksesuar",
+      "parentSlug": "",
+      "level": 0,
+      "url": "https://www.satariz.com/yedek-parca-aksesuar",
+      "children": []
+    }
+  ]
+}

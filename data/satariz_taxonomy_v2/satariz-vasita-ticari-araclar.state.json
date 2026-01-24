@@ -1,0 +1,17 @@
+{
+  "startedAt": "2026-01-20T11:30:46.440Z",
+  "updatedAt": "2026-01-20T12:06:59.167Z",
+  "completedBrandPaths": [
+    "/vasita-ticari-araclar-minibus-midibus",
+    "/vasita-ticari-araclar-otobus",
+    "/vasita-ticari-araclar-kamyon-kamyonet",
+    "/vasita-ticari-araclar-cekici",
+    "/vasita-ticari-araclar-dorse",
+    "/vasita-ticari-araclar-romork",
+    "/vasita-ticari-araclar-karoser-ust-yapi",
+    "/vasita-ticari-araclar-oto-kurtarici-tasiyici",
+    "/vasita-ticari-araclar-ticari-hat-ticari-plaka"
+  ],
+  "errors": [],
+  "rowsWritten": 391
+}

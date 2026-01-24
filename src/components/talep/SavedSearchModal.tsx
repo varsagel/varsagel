@@ -16,8 +16,8 @@ interface SavedSearchModalProps {
     subcategorySlug?: string;
     minPrice?: number;
     maxPrice?: number;
-    city?: string;
-    district?: string;
+    city?: string | string[];
+    district?: string | string[];
     filtersJson?: any;
   };
   onSave?: () => void;
@@ -86,7 +86,7 @@ export function SavedSearchModal({ searchParams, onSave, trigger }: SavedSearchM
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Arama Adı (Opsiyonel)</Label>
+            <Label htmlFor="name">Arama Adı (İsteğe Bağlı)</Label>
             <Input
               id="name"
               value={name}

@@ -1,0 +1,399 @@
+{
+  "name": "Hayvanlar Alemi",
+  "slug": "hayvanlar-alemi",
+  "subcategories": [
+    {
+      "name": "Aksesuar & Ekipman",
+      "slug": "aksesuarlar",
+      "subcategories": [
+        {
+          "name": "Balık",
+          "slug": "balik",
+          "subcategories": [
+            {
+              "name": "Akvaryum",
+              "slug": "akvaryum",
+              "fullSlug": "aksesuarlar/balik/akvaryum"
+            },
+            {
+              "name": "Akvaryum Canlı Bitki",
+              "slug": "akvaryum-canli-bitki",
+              "fullSlug": "aksesuarlar/balik/akvaryum-canli-bitki"
+            },
+            {
+              "name": "Akvaryum Dekorasyon",
+              "slug": "akvaryum-dekorasyon",
+              "fullSlug": "aksesuarlar/balik/akvaryum-dekorasyon"
+            },
+            {
+              "name": "Akvaryum Malzemeleri",
+              "slug": "akvaryum-malzemeleri",
+              "fullSlug": "aksesuarlar/balik/akvaryum-malzemeleri"
+            }
+          ],
+          "fullSlug": "aksesuarlar/balik"
+        },
+        {
+          "name": "Böcekler",
+          "slug": "bocekler",
+          "subcategories": [
+            {
+              "name": "Kovan & Yuva",
+              "slug": "kovan-ve-yuva",
+              "fullSlug": "aksesuarlar/bocekler/kovan-ve-yuva"
+            }
+          ],
+          "fullSlug": "aksesuarlar/bocekler"
+        },
+        {
+          "name": "Büyükbaş & Küçükbaş",
+          "slug": "buyukbas-ve-kucukbas",
+          "fullSlug": "aksesuarlar/buyukbas-ve-kucukbas"
+        },
+        {
+          "name": "Kedi",
+          "slug": "kedi",
+          "subcategories": [
+            {
+              "name": "Barınma & Taşıma",
+              "slug": "barinma-ve-tasima",
+              "fullSlug": "aksesuarlar/kedi/barinma-ve-tasima"
+            },
+            {
+              "name": "Giyim",
+              "slug": "giyim",
+              "fullSlug": "aksesuarlar/kedi/giyim"
+            },
+            {
+              "name": "Güvenlik",
+              "slug": "guvenlik",
+              "fullSlug": "aksesuarlar/kedi/guvenlik"
+            },
+            {
+              "name": "Mama & Su Kabı",
+              "slug": "mama-ve-su-kabi",
+              "fullSlug": "aksesuarlar/kedi/mama-ve-su-kabi"
+            },
+            {
+              "name": "Oyun & Tırmalama",
+              "slug": "oyun-ve-tirmalama",
+              "fullSlug": "aksesuarlar/kedi/oyun-ve-tirmalama"
+            },
+            {
+              "name": "Temizlik & Bakım",
+              "slug": "temizlik-ve-bakim",
+              "fullSlug": "aksesuarlar/kedi/temizlik-ve-bakim"
+            },
+            {
+              "name": "Tuvalet & Kum",
+              "slug": "tuvalet-ve-kum",
+              "fullSlug": "aksesuarlar/kedi/tuvalet-ve-kum"
+            }
+          ],
+          "fullSlug": "aksesuarlar/kedi"
+        },
+        {
+          "name": "Kemirgen",
+          "slug": "kemirgen",
+          "subcategories": [
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "aksesuarlar/kemirgen/aksesuar"
+            },
+            {
+              "name": "Kafes",
+              "slug": "kafes",
+              "fullSlug": "aksesuarlar/kemirgen/kafes"
+            }
+          ],
+          "fullSlug": "aksesuarlar/kemirgen"
+        },
+        {
+          "name": "Köpek",
+          "slug": "kopek",
+          "subcategories": [
+            {
+              "name": "Barınma",
+              "slug": "barinma",
+              "fullSlug": "aksesuarlar/kopek/barinma"
+            },
+            {
+              "name": "Beslenme",
+              "slug": "beslenme",
+              "fullSlug": "aksesuarlar/kopek/beslenme"
+            },
+            {
+              "name": "Eğitim",
+              "slug": "egitim",
+              "fullSlug": "aksesuarlar/kopek/egitim"
+            },
+            {
+              "name": "Giyim",
+              "slug": "giyim",
+              "fullSlug": "aksesuarlar/kopek/giyim"
+            },
+            {
+              "name": "Oyuncak",
+              "slug": "oyuncak",
+              "fullSlug": "aksesuarlar/kopek/oyuncak"
+            },
+            {
+              "name": "Taşıma",
+              "slug": "tasima",
+              "fullSlug": "aksesuarlar/kopek/tasima"
+            },
+            {
+              "name": "Temizlik",
+              "slug": "temizlik",
+              "fullSlug": "aksesuarlar/kopek/temizlik"
+            }
+          ],
+          "fullSlug": "aksesuarlar/kopek"
+        },
+        {
+          "name": "Kuş",
+          "slug": "kus",
+          "subcategories": [
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "aksesuarlar/kus/aksesuar"
+            },
+            {
+              "name": "Kafes",
+              "slug": "kafes",
+              "fullSlug": "aksesuarlar/kus/kafes"
+            }
+          ],
+          "fullSlug": "aksesuarlar/kus"
+        },
+        {
+          "name": "Kümes Hayvanları",
+          "slug": "kumes-hayvanlari",
+          "subcategories": [
+            {
+              "name": "Ekipman",
+              "slug": "ekipman",
+              "fullSlug": "aksesuarlar/kumes-hayvanlari/ekipman"
+            },
+            {
+              "name": "Kafes & Kümes",
+              "slug": "kafes-ve-kumes",
+              "fullSlug": "aksesuarlar/kumes-hayvanlari/kafes-ve-kumes"
+            }
+          ],
+          "fullSlug": "aksesuarlar/kumes-hayvanlari"
+        },
+        {
+          "name": "Sürüngen",
+          "slug": "surungen",
+          "subcategories": [
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "aksesuarlar/surungen/aksesuar"
+            },
+            {
+              "name": "Kafes & Akvaryum",
+              "slug": "kafes-ve-akvaryum",
+              "fullSlug": "aksesuarlar/surungen/kafes-ve-akvaryum"
+            }
+          ],
+          "fullSlug": "aksesuarlar/surungen"
+        }
+      ],
+      "fullSlug": "aksesuarlar"
+    },
+    {
+      "name": "Yem & Mama",
+      "slug": "yem-mama",
+      "subcategories": [
+        {
+          "name": "Balık",
+          "slug": "balik",
+          "subcategories": [
+            {
+              "name": "Yem",
+              "slug": "yem",
+              "fullSlug": "yem-mama/balik/yem"
+            }
+          ],
+          "fullSlug": "yem-mama/balik"
+        },
+        {
+          "name": "Böcek",
+          "slug": "bocek",
+          "subcategories": [
+            {
+              "name": "Yem",
+              "slug": "yem",
+              "fullSlug": "yem-mama/bocek/yem"
+            }
+          ],
+          "fullSlug": "yem-mama/bocek"
+        },
+        {
+          "name": "Kedi",
+          "slug": "kedi",
+          "subcategories": [
+            {
+              "name": "Mama",
+              "slug": "mama",
+              "fullSlug": "yem-mama/kedi/mama"
+            }
+          ],
+          "fullSlug": "yem-mama/kedi"
+        },
+        {
+          "name": "Kemirgen",
+          "slug": "kemirgen",
+          "subcategories": [
+            {
+              "name": "Yem",
+              "slug": "yem",
+              "fullSlug": "yem-mama/kemirgen/yem"
+            }
+          ],
+          "fullSlug": "yem-mama/kemirgen"
+        },
+        {
+          "name": "Köpek",
+          "slug": "kopek",
+          "subcategories": [
+            {
+              "name": "Mama",
+              "slug": "mama",
+              "fullSlug": "yem-mama/kopek/mama"
+            }
+          ],
+          "fullSlug": "yem-mama/kopek"
+        },
+        {
+          "name": "Kuş",
+          "slug": "kus",
+          "subcategories": [
+            {
+              "name": "Yem",
+              "slug": "yem",
+              "fullSlug": "yem-mama/kus/yem"
+            }
+          ],
+          "fullSlug": "yem-mama/kus"
+        },
+        {
+          "name": "Küçükbaş & Büyükbaş",
+          "slug": "kucukbas-ve-buyukbas",
+          "subcategories": [
+            {
+              "name": "Yem",
+              "slug": "yem",
+              "fullSlug": "yem-mama/kucukbas-ve-buyukbas/yem"
+            }
+          ],
+          "fullSlug": "yem-mama/kucukbas-ve-buyukbas"
+        },
+        {
+          "name": "Kümes Hayvanları",
+          "slug": "kumes-hayvanlari",
+          "subcategories": [
+            {
+              "name": "Yem",
+              "slug": "yem",
+              "fullSlug": "yem-mama/kumes-hayvanlari/yem"
+            }
+          ],
+          "fullSlug": "yem-mama/kumes-hayvanlari"
+        },
+        {
+          "name": "Sürüngen",
+          "slug": "surungen",
+          "subcategories": [
+            {
+              "name": "Yem",
+              "slug": "yem",
+              "fullSlug": "yem-mama/surungen/yem"
+            }
+          ],
+          "fullSlug": "yem-mama/surungen"
+        }
+      ],
+      "fullSlug": "yem-mama"
+    },
+    {
+      "name": "Evcil Hayvanlar",
+      "slug": "evcil-hayvanlar",
+      "subcategories": [
+        {
+          "name": "Guinea Pig / Kobay",
+          "slug": "guinea-pig-kobay",
+          "fullSlug": "evcil-hayvanlar/guinea-pig-kobay"
+        },
+        {
+          "name": "Hamster",
+          "slug": "hamster",
+          "fullSlug": "evcil-hayvanlar/hamster"
+        },
+        {
+          "name": "Kedi",
+          "slug": "kedi",
+          "fullSlug": "evcil-hayvanlar/kedi"
+        },
+        {
+          "name": "Köpek",
+          "slug": "kopek",
+          "fullSlug": "evcil-hayvanlar/kopek"
+        },
+        {
+          "name": "Kuş",
+          "slug": "kus",
+          "fullSlug": "evcil-hayvanlar/kus"
+        }
+      ],
+      "fullSlug": "evcil-hayvanlar"
+    },
+    {
+      "name": "Akvaryum Balıkları",
+      "slug": "akvaryum-baliklari",
+      "subcategories": [],
+      "fullSlug": "akvaryum-baliklari"
+    },
+    {
+      "name": "Kümes Hayvanları",
+      "slug": "kumes-hayvanlari",
+      "subcategories": [],
+      "fullSlug": "kumes-hayvanlari"
+    },
+    {
+      "name": "Büyükbaş Hayvanlar",
+      "slug": "buyukbas-hayvanlar",
+      "subcategories": [],
+      "fullSlug": "buyukbas-hayvanlar"
+    },
+    {
+      "name": "Küçükbaş Hayvanlar",
+      "slug": "kucukbas-hayvanlar",
+      "subcategories": [],
+      "fullSlug": "kucukbas-hayvanlar"
+    },
+    {
+      "name": "Deniz Canlıları",
+      "slug": "deniz-canlilari",
+      "subcategories": [],
+      "fullSlug": "deniz-canlilari"
+    },
+    {
+      "name": "Sürüngenler",
+      "slug": "surungenler",
+      "subcategories": [],
+      "fullSlug": "surungenler"
+    },
+    {
+      "name": "Böcekler",
+      "slug": "bocekler",
+      "subcategories": [],
+      "fullSlug": "bocekler"
+    }
+  ],
+  "fullSlug": "hayvanlar-alemi"
+}

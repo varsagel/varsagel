@@ -126,22 +126,18 @@ async function processCurrentPage() {
         return;
     }
     
-    switch(pageLevel) {
-        case 1:
-            await processBrands();
-            break;
-        case 2:
-            await processModels();
-            break;
-        case 3:
-            await processEngines();
-            break;
-        case 4:
-            await processOptions();
-            break;
-        default:
-            console.log("❌ Sayfa seviyesi belirlenemedi");
-            stopBot();
+    const handlers = {
+        1: processBrands,
+        2: processModels,
+        3: globalThis.processEngines,
+        4: globalThis.processOptions
+    };
+    const handler = handlers[pageLevel];
+    if (handler) {
+        await handler();
+    } else {
+        console.log("❌ Sayfa seviyesi belirlenemedi");
+        stopBot();
     }
 }
 
@@ -207,8 +203,8 @@ async function findBrands() {
     
     // Bilinen markalar listesi
     const knownBrands = [
-        'Abarth', 'Aion', 'Alfa Romeo', 'Alpine', 'Anadol', 'Arora', 'Aston Martin', 'Audi', 'Bentley', 'BMW', 'Buick', 'BYD', 'Cadillac', 'Cenntro', 'Chery', 'Chevrolet', 'Chrysler', 'Citroen', 'Cupra', 'Dacia', 'Daewoo', 'Daihatsu', 'Dodge', 'DS Automobiles', 'Eagle', 'Ferrari', 'Fiat', 'Ford', 'Geely', 'Honda', 'Hyundai', 'I-GO', 'Ikco', 'Infiniti', 'Jaguar', 'Joyce', 'Kia', 'Kuba', 'Lada', 'Lamborghini', 'Lancia', 'Leapmotor', 'Lexus', 'Lincoln', 'Lotus', 'Luqi', 'Marcos', 'Maserati', 'Mazda', 'McLaren', 'Mercedes-Benz', 'Mercury', 'MG', 'Micro', 'Mini', 'Mitsubishi', 'Morgan', 'Nieve', 'Niğmer', 'Nissan', 'Opel', 'Orti', 'Peugeot', 'Plymouth', 'Polestar', 'Pontiac', 'Porsche', 'Proton', 'Rainwoll', 'Reeder', 'Regal Raptor', 'Relive', 'Renault', 'RKS', 'Roewe', 'Rolls-Royce', 'Rover', 'Saab', 'Seat', 'Skoda', 'Smart', 'Subaru', 'Suzuki', 'Tata', 'Tesla', 'The London Taxi', 'Tofaş', 'TOGG', 'Toyota', 'Vanderhall', 'Volkswagen', 'Volta', 'Volvo', 'XEV', 'Yuki'
-    ];
+  'Abarth', 'Aion', 'Alfa Romeo', 'Alpine', 'Anadol', 'Arora', 'Aston Martin', 'Audi', 'Bentley', 'BMW', 'Buick', 'BYD', 'Cadillac', 'Cenntro', 'Chery', 'Chevrolet', 'Chrysler', 'Cupra', 'Dacia', 'Daewoo', 'Daihatsu', 'Dodge', 'DS Automobiles', 'Eagle', 'Ferrari', 'Fiat', 'Ford', 'Geely', 'Honda', 'Hyundai', 'I-GO', 'Ikco', 'Infiniti', 'Jaguar', 'Joyce', 'Kia', 'Kuba', 'Lada', 'Lamborghini', 'Lancia', 'Leapmotor', 'Lexus', 'Lincoln', 'Lotus', 'Luqi', 'Marcos', 'Maserati', 'Mazda', 'McLaren', 'Mercedes-Benz', 'Mercury', 'MG', 'Micro', 'Mini', 'Mitsubishi', 'Morgan', 'Nieve', 'Niğmer', 'Nissan', 'Opel', 'Orti', 'Peugeot', 'Plymouth', 'Polestar', 'Pontiac', 'Porsche', 'Proton', 'Rainwoll', 'Reeder', 'Regal Raptor', 'Relive', 'Renault', 'RKS', 'Roewe', 'Rolls-Royce', 'Rover', 'Saab', 'Seat', 'Skoda', 'Smart', 'Subaru', 'Suzuki', 'Tata', 'Tesla', 'The London Taxi', 'Tofaş', 'TOGG', 'Toyota', 'Vanderhall', 'Volkswagen', 'Volta', 'Volvo', 'XEV', 'Yuki'
+];
     
     // Tüm linkleri kontrol et - daha basit ve etkili yöntem
     const allLinks = document.querySelectorAll('a[href*="/otomobil/"]');
@@ -324,7 +320,6 @@ async function findBrands() {
         
         allLinks.forEach(link => {
             const href = link.href;
-            const text = link.innerText.trim();
             
             // URL'den marka adını çıkar
             // https://www.sahibinden.com/otomobil/bmw -> bmw
@@ -482,7 +477,7 @@ async function processModels() {
 }
 
 // 3. SEVİYE: MOTOR/SERİ ÇEK VE TIKLA
-async function processEngines() {
+globalThis.processEngines = async () => {
     const currentBrand = currentPath[0];
     const currentModel = currentPath[1];
     console.log(`⚙️ ${currentBrand} > ${currentModel} motorları işleniyor...`);
@@ -589,10 +584,10 @@ async function processEngines() {
     
     console.log(`🎯 İlk motora tıklanıyor: ${firstEngine.name}`);
     window.location.href = firstEngine.url;
-}
+};
 
 // 4. SEVİYE: DONANIM/SERİ ÇEK VE KAYDET
-async function processOptions() {
+globalThis.processOptions = async () => {
     const currentBrand = currentPath[0];
     const currentModel = currentPath[1];
     const currentEngine = currentPath[2];
@@ -708,7 +703,7 @@ async function processOptions() {
     
     // Bir üst seviyeye dön ve bir sonrakini dene
     await goBackAndTryNext();
-}
+};
 
 function findAllCategoriesLink(searchTerm) {
     const links = document.querySelectorAll('a');

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import { logApiError, createModuleLogger } from "@/lib/logger";
+import { createModuleLogger } from "@/lib/logger";
 
 const logger = createModuleLogger('admin-attributes');
 

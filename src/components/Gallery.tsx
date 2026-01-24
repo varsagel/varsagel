@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -21,6 +21,27 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
   }, [open, images.length]);
 
   const mainSrc = images[current] || "/images/placeholder-1.svg";
+  const isS3Image = (src: string) => {
+    if (!/^https?:\/\//i.test(src)) return false;
+    try {
+      return new URL(src).hostname.toLowerCase().includes(".s3.");
+    } catch {
+      return false;
+    }
+  };
+  const isCloudFrontImage = (src: string) => {
+    if (!/^https?:\/\//i.test(src)) return false;
+    try {
+      return new URL(src).hostname.toLowerCase().includes(".cloudfront.net");
+    } catch {
+      return false;
+    }
+  };
+  const mainUnoptimized =
+    /\.jfif($|\?)/i.test(mainSrc) ||
+    /\.jif($|\?)/i.test(mainSrc) ||
+    isS3Image(mainSrc) ||
+    isCloudFrontImage(mainSrc);
 
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -45,6 +66,7 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
           fill
           className="object-contain p-2"
           priority
+          unoptimized={mainUnoptimized}
         />
         
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -91,6 +113,7 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
                 alt={`${alt} thumbnail ${i + 1}`}
                 fill
                 className="object-cover"
+                unoptimized={/\.jfif($|\?)/i.test(src) || /\.jif($|\?)/i.test(src) || isS3Image(src) || isCloudFrontImage(src)}
               />
             </button>
           ))}
@@ -121,6 +144,7 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
               fill
               className="object-contain"
               quality={100}
+              unoptimized={mainUnoptimized}
             />
           </div>
 
@@ -139,4 +163,3 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
     </div>
   );
 }
-

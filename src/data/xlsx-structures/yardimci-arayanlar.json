@@ -1,0 +1,22 @@
+{
+  "name": "Yardımcı Arayanlar",
+  "slug": "yardimci-arayanlar",
+  "subcategories": [
+    {
+      "name": "Bebek & Çocuk Bakıcısı",
+      "slug": "bebek-cocuk-bakicisi",
+      "fullSlug": "bebek-cocuk-bakicisi"
+    },
+    {
+      "name": "Yaşlı & Hasta Bakıcısı",
+      "slug": "yasli-hasta-bakicisi",
+      "fullSlug": "yasli-hasta-bakicisi"
+    },
+    {
+      "name": "Temizlikçi & Ev İşlerine Yardımcı",
+      "slug": "temizlikci-ev-islerine-yardimci",
+      "fullSlug": "temizlikci-ev-islerine-yardimci"
+    }
+  ],
+  "fullSlug": "yardimci-arayanlar"
+}

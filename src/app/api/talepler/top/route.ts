@@ -25,7 +25,7 @@ export async function GET() {
     }));
 
     return NextResponse.json(payload);
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Popüler talepler yüklenemedi" }, { status: 500 });
   }
 }

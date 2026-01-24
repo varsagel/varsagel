@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
@@ -17,11 +17,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
     published: false
   });
 
-  useEffect(() => {
-    fetchPage();
-  }, []);
-
-  const fetchPage = async () => {
+  const fetchPage = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/pages/${params.id}`);
       if (res.ok) {
@@ -36,7 +32,11 @@ export default function EditPage({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id, router]);
+
+  useEffect(() => {
+    fetchPage();
+  }, [fetchPage]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

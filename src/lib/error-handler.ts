@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
-import { createModuleLogger, logError } from '@/lib/logger';
+import { createModuleLogger } from '@/lib/logger';
 import { logErrorToDb } from '@/lib/logger-service';
 
 const logger = createModuleLogger('error-handler');
@@ -288,11 +288,7 @@ export function createErrorResponse(error: unknown, requestId?: string): NextRes
 }
 
 export function wrapAsyncHandler<T extends (...args: any[]) => Promise<any>>(
-  handler: T,
-  options?: {
-    requireAuth?: boolean;
-    requireAdmin?: boolean;
-  }
+  handler: T
 ): T {
   return (async (...args: Parameters<T>) => {
     try {
@@ -303,7 +299,7 @@ export function wrapAsyncHandler<T extends (...args: any[]) => Promise<any>>(
   }) as T;
 }
 
-export default {
+const errorHandler = {
   AppError,
   ValidationError,
   AuthenticationError,
@@ -315,3 +311,5 @@ export default {
   createErrorResponse,
   wrapAsyncHandler,
 };
+
+export default errorHandler;

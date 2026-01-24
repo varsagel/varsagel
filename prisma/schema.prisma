@@ -31,6 +31,7 @@ model User {
   savedSearches    SavedSearch[]
   sessions         Session[]
   visits           Visit[]
+  uploadScans      UploadScan[]
 
   @@index([email])
 }
@@ -129,6 +130,7 @@ model Listing {
   description    String
   imagesJson     String?
   attributesJson String?
+  manualAttributeKeys String[] @default([])
   budget         BigInt?
   city           String?
   district       String?
@@ -328,6 +330,28 @@ model ErrorLog {
   
   @@index([createdAt])
   @@index([source])
+}
+
+model UploadScan {
+  id        String   @id @default(cuid())
+  ownerId   String?
+  fileKey   String
+  fileUrl   String
+  mimeType  String?
+  sizeBytes Int?
+  status    String   @default("PENDING")
+  source    String?
+  error     String?
+  lockedAt  DateTime?
+  scannedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner User? @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+
+  @@index([ownerId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 enum SavedSearchMatchMode {

@@ -118,7 +118,7 @@ async function main() {
 
   let brands = await extractByPattern(page, (segs) => segs[0] === 'ikinci-el' && segs[1] === 'otomobil' && segs.length === 3)
   if (!brands.length) {
-    const fallback = SEED_BRANDS.length ? SEED_BRANDS : ['Opel','Renault','Volkswagen','Toyota','Honda','Hyundai','Kia','Ford','Peugeot','Citroën','Audi','BMW','Mercedes','Skoda','Nissan']
+    const fallback = SEED_BRANDS.length ? SEED_BRANDS : ['Opel','Renault','Volkswagen','Toyota','Honda','Hyundai','Kia','Ford','Peugeot','Audi','BMW','Mercedes','Skoda','Nissan','Alfa Romeo']
     brands = fallback.map(b=> ({ text: b, href: brandUrl(b) }))
   }
   if (SEED_BRANDS.length) {

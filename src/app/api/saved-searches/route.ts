@@ -10,8 +10,8 @@ const createSchema = z.object({
   subcategorySlug: z.string().optional().nullable(),
   minPrice: z.number().optional().nullable(),
   maxPrice: z.number().optional().nullable(),
-  city: z.string().optional().nullable(),
-  district: z.string().optional().nullable(),
+  city: z.union([z.string(), z.array(z.string())]).optional().nullable(),
+  district: z.union([z.string(), z.array(z.string())]).optional().nullable(),
   filtersJson: z.any().optional(),
   isAlarm: z.boolean().optional(),
   emailNotification: z.boolean().optional(),
@@ -60,8 +60,8 @@ export async function POST(req: Request) {
         subcategorySlug: data.subcategorySlug || null,
         minPrice: data.minPrice || null,
         maxPrice: data.maxPrice || null,
-        city: data.city || null,
-        district: data.district || null,
+        city: Array.isArray(data.city) ? data.city.join(',') : (data.city || null),
+        district: Array.isArray(data.district) ? data.district.join(',') : (data.district || null),
         filtersJson: data.filtersJson || null,
         isAlarm: data.isAlarm ?? false,
         emailNotification: data.emailNotification ?? false,
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.id) {

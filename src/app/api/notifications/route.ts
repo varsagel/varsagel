@@ -21,6 +21,10 @@ export async function PATCH(request: NextRequest) {
   const body = await request.json()
   const id = (body?.id as string || '').trim()
   if (!id) return NextResponse.json({ error: 'id gerekli' }, { status: 400 })
-  await prisma.notification.update({ where: { id }, data: { read: true } }).catch(() => {})
+  const result = await prisma.notification.updateMany({
+    where: { id, userId },
+    data: { read: true },
+  })
+  if (result.count === 0) return NextResponse.json({ error: 'Bildirim bulunamadı' }, { status: 404 })
   return NextResponse.json({ ok: true })
 }

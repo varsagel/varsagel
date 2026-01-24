@@ -3,12 +3,13 @@
 import { useEffect, useMemo, useState, useCallback, memo, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { Category, SubCategory } from "@/data/categories";
+import { Category, SubCategory, CATEGORIES as STATIC_CATEGORIES } from "@/data/categories";
 import { TURKEY_PROVINCES, getProvinceByName, getDistrictsByProvince } from "@/data/turkey-locations";
 import { toast } from "@/components/ui/use-toast";
-import { ATTR_SCHEMAS, AttrField } from '@/data/attribute-schemas';
-import { ATTR_SUBSCHEMAS, MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA, BRAND_MODELS } from '@/data/attribute-overrides';
+import { AttrField } from '@/data/attribute-schemas';
 import BRAND_LOGOS from '@/data/brand-logos.json';
+import { titleCaseTR } from "@/lib/title-case-tr";
+import { getSubcategoryImage } from "@/data/subcategory-images";
 import { 
   List, 
   FileText, 
@@ -19,11 +20,163 @@ import {
   AlertCircle, 
   Info, 
   TrendingUp, 
-  Loader2,
   Search,
   Check,
   X
 } from "lucide-react";
+
+const stableAttrFieldId = (f: AttrField) => {
+  if (f.type === 'range-number' && f.minKey && f.maxKey) {
+    const minBase = f.minKey.endsWith('Min') ? f.minKey.slice(0, -3) : null;
+    const maxBase = f.maxKey.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
+    if (minBase && maxBase && minBase === maxBase) return `r:${minBase}`;
+    return `r:${f.minKey}:${f.maxKey}`;
+  }
+  if (f.key) return `k:${f.key}`;
+  return `l:${f.label}`;
+};
+
+const stripReservedAttrFields = (fields: AttrField[]) =>
+  fields.filter((f) => {
+    if (f.key === 'minPrice' || f.key === 'maxPrice') return false;
+    if (f.key === 'minBudget' || f.key === 'budget') return false;
+
+    if (f.type !== 'range-number') return true;
+
+    if (f.minKey === 'minPrice' && f.maxKey === 'maxPrice') return false;
+    if (f.minKey === 'minBudget' && f.maxKey === 'budget') return false;
+
+    const minBase = f.minKey?.endsWith('Min') ? f.minKey.slice(0, -3) : null;
+    const maxBase = f.maxKey?.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
+    const base = minBase && maxBase && minBase === maxBase ? minBase : null;
+    if (base === 'minPrice' || base === 'minBudget') return false;
+
+    return true;
+  });
+
+const normalizeSubcategoryCompare = (s: any) =>
+  String(s || '')
+    .trim()
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/\/+/g, '/');
+
+const subcategoryMatches = (attrSlugRaw: any, selectedRaw: any) => {
+  const attrSlug = normalizeSubcategoryCompare(attrSlugRaw);
+  const selected = normalizeSubcategoryCompare(selectedRaw);
+  if (!attrSlug || !selected) return false;
+  if (attrSlug === selected) return true;
+
+  const attrDash = attrSlug.split('/').filter(Boolean).join('-');
+  const selectedDash = selected.split('/').filter(Boolean).join('-');
+  if (attrDash && selectedDash && attrDash === selectedDash) return true;
+
+  if (attrSlug.endsWith(`-${selected}`) || selected.endsWith(`-${attrSlug}`)) return true;
+  if (attrDash.endsWith(`-${selectedDash}`) || selectedDash.endsWith(`-${attrDash}`)) return true;
+
+  return false;
+};
+
+const findSubcategoryBySlug = (items: SubCategory[], slug: string): SubCategory | undefined => {
+  for (const item of items) {
+    if (item.slug === slug || item.fullSlug === slug) return item;
+    if (item.subcategories) {
+      const found = findSubcategoryBySlug(item.subcategories, slug);
+      if (found) return found;
+    }
+  }
+  return undefined;
+};
+
+const attributesToFields = (category: string, subcategory: string, attrs: any[], subcategoryId?: string): AttrField[] => {
+  const list = Array.isArray(attrs) ? attrs : [];
+  if (!category || list.length === 0) return [];
+
+  const source = list
+    .filter((a) => {
+      if (!a) return false;
+      if (a.showInRequest === false) return false;
+      if (!a.subCategoryId) return true;
+      if (!subcategory) return false;
+      if (subcategoryId && String(a.subCategoryId) === String(subcategoryId)) return true;
+      const attrSlug = a?.subCategory?.slug;
+      if (!attrSlug) return false;
+      return subcategoryMatches(attrSlug, subcategory);
+    })
+    .sort((a, b) => {
+      const aSpecific = a?.subCategoryId ? 1 : 0;
+      const bSpecific = b?.subCategoryId ? 1 : 0;
+      return aSpecific - bSpecific;
+    });
+
+  const mapped = source
+    .map((a) => {
+      const slug = String(a.slug || '').trim();
+      const normalizedType = a.type === 'checkbox' ? 'boolean' : a.type;
+      const isVehicleHierarchy = slug && ['marka', 'model', 'seri', 'paket'].includes(slug);
+      const type = isVehicleHierarchy ? 'multiselect' : normalizedType;
+
+      let options: string[] | undefined = undefined;
+      try {
+        const parsed = a.optionsJson ? JSON.parse(a.optionsJson) : null;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const cleaned = parsed.filter((x) => x != null).map(String);
+          if (cleaned.length > 0) options = cleaned;
+        }
+      } catch {}
+
+      const isM2 = slug === 'm2' || slug === 'metrekare' || a.name === 'Metrekare' || a.name === 'm2';
+      const required = isM2 ? false : !!a.required;
+
+      const minKey = a.minKey || (type === 'range-number' ? `${slug || a.id}Min` : undefined);
+      const maxKey = a.maxKey || (type === 'range-number' ? `${slug || a.id}Max` : undefined);
+
+      return {
+        key: type === 'range-number' ? undefined : slug,
+        label: a.name || slug || 'Alan',
+        type,
+        required,
+        options,
+        minKey,
+        maxKey,
+        min: a.min,
+        max: a.max,
+        minLabel: a.minLabel,
+        maxLabel: a.maxLabel,
+      } as AttrField;
+    })
+    .filter(Boolean) as AttrField[];
+
+  const uniq = new Map<string, AttrField>();
+  mapped.forEach((f) => uniq.set(stableAttrFieldId(f), f));
+  const filtered = stripReservedAttrFields(Array.from(uniq.values()));
+
+  if (category === 'vasita') {
+    const priorityKeys = ["marka", "model", "motor", "seri", "donanim", "paket"];
+    const rank = (f: AttrField) => {
+      if (f.key) {
+        const i = priorityKeys.indexOf(f.key);
+        if (i !== -1) return i;
+      }
+      if (f.type === "range-number" && f.minKey && f.minKey.endsWith("Min")) {
+        const base = f.minKey.slice(0, -3);
+        if (base === "yil") return 10;
+        if (base === "km") return 11;
+      }
+      return 100;
+    };
+    return filtered
+      .map((f, idx) => ({ f, idx }))
+      .sort((a, b) => {
+        const ra = rank(a.f);
+        const rb = rank(b.f);
+        if (ra !== rb) return ra - rb;
+        return a.idx - b.idx;
+      })
+      .map((x) => x.f);
+  }
+
+  return filtered;
+};
 
 const MultiSelect = memo(function MultiSelect({ options, value, onChange, error }: { options: string[], value: string[], onChange: (val: string[]) => void, error: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -112,160 +265,142 @@ type FormData = {
   description: string;
   category: string;
   subcategory: string;
+  subcategoryFullSlug?: string;
   city: string;
   district: string;
+  neighborhood: string;
   minBudget: string;
   budget: string;
   images: string[];
   attributes: Record<string, any>;
+  manualAttributeKeys: string[];
 };
 
 // CategoryAttributes definitions
 type AttrFieldLocal = AttrField;
-const ATTRS: Record<string, AttrFieldLocal[]> = ATTR_SCHEMAS;
 
-const CategoryAttributes = memo(function CategoryAttributes({ category, subcategory, attributes, errors, onChange, dynamicAttributes }: { category: string; subcategory: string; attributes: Record<string, any>; errors: Record<string, string>; onChange: (key: string, val: any) => void; dynamicAttributes?: any[] }) {
-  const [manualModes, setManualModes] = useState<Record<string, boolean>>({});
+const CategoryAttributes = memo(function CategoryAttributes({ 
+  category, 
+  subcategory, 
+  fields,
+  attributes, 
+  errors, 
+  onChange, 
+  onManualChange,
+  manualModes
+}: { 
+  category: string; 
+  subcategory: string; 
+  fields: AttrFieldLocal[];
+  attributes: Record<string, any>; 
+  errors: Record<string, string>; 
+  onChange: (key: string, val: any) => void; 
+  onManualChange: (key: string, isManual: boolean) => void;
+  manualModes: Record<string, boolean>;
+}) {
+  const [brandOptions, setBrandOptions] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [series, setSeries] = useState<string[]>([]);
   const [trims, setTrims] = useState<string[]>([]);
 
-  const brand = String(attributes['marka'] || '').trim();
-  const modelVal = String(attributes['model'] || '').trim();
-  const seriesVal = String(attributes['seri'] || '').trim();
+  // Helper to ensure array
+  const getArray = (val: any): string[] => {
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'string' && val.trim() !== '') return [val];
+    return [];
+  };
+
+  const markaAttribute = attributes['marka'];
+  const modelAttribute = attributes['model'];
+  const seriAttribute = attributes['seri'];
+
+  const brands = useMemo(() => getArray(markaAttribute), [markaAttribute]);
+  const modelVals = useMemo(() => getArray(modelAttribute), [modelAttribute]);
+  const seriesVals = useMemo(() => getArray(seriAttribute), [seriAttribute]);
+  
   const overrideKeyLocal = `${category}/${subcategory || ''}`;
 
   useEffect(() => {
-    if (!brand || !['vasita', 'alisveris'].includes(category)) {
+    if (!['vasita', 'alisveris'].includes(category)) {
+      setBrandOptions([]);
+      return;
+    }
+    fetch(`/api/vehicle-data?type=brands&category=${overrideKeyLocal}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setBrandOptions(data);
+        else setBrandOptions([]);
+      })
+      .catch(() => setBrandOptions([]));
+  }, [category, overrideKeyLocal]);
+
+  useEffect(() => {
+    if (brands.length === 0 || !['vasita', 'alisveris'].includes(category)) {
       setModels([]);
       return;
     }
-    fetch(`/api/vehicle-data?type=models&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}`)
+    
+    const params = new URLSearchParams();
+    params.append('type', 'models');
+    params.append('category', overrideKeyLocal);
+    brands.forEach(b => params.append('brand', b));
+
+    fetch(`/api/vehicle-data?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
-         const extra = Object.keys(((MODEL_SERIES_EXTRA[overrideKeyLocal] || {})[brand] || {}));
-         const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+         const arr = Array.isArray(data) ? data : [];
          setModels(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
       })
       .catch(() => setModels([]));
-  }, [brand, category, overrideKeyLocal]);
+  }, [brands, category, overrideKeyLocal]);
 
   useEffect(() => {
-    if (!brand || !modelVal) {
+    if (brands.length === 0 || modelVals.length === 0) {
       setSeries([]);
       return;
     }
-    fetch(`/api/vehicle-data?type=series&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(modelVal)}`)
+
+    const params = new URLSearchParams();
+    params.append('type', 'series');
+    params.append('category', overrideKeyLocal);
+    brands.forEach(b => params.append('brand', b));
+    modelVals.forEach(m => params.append('model', m));
+
+    fetch(`/api/vehicle-data?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
-        const seriesExtra = (MODEL_SERIES_EXTRA[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
-        const brandSeries = seriesExtra[brand] || {};
-        const extra = brandSeries[modelVal] || [];
-        
-        const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+        const arr = Array.isArray(data) ? data : [];
         const sorted = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
         setSeries(sorted);
       })
       .catch(() => setSeries([]));
-  }, [brand, modelVal, overrideKeyLocal]);
+  }, [brands, modelVals, overrideKeyLocal]);
 
   useEffect(() => {
-    if (!brand || !modelVal || !seriesVal) {
+    if (brands.length === 0 || modelVals.length === 0 || seriesVals.length === 0) {
       setTrims([]);
       return;
     }
-    fetch(`/api/vehicle-data?type=trims&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(modelVal)}&series=${encodeURIComponent(seriesVal)}`)
+
+    const params = new URLSearchParams();
+    params.append('type', 'trims');
+    params.append('category', overrideKeyLocal);
+    brands.forEach(b => params.append('brand', b));
+    modelVals.forEach(m => params.append('model', m));
+    seriesVals.forEach(s => params.append('series', s));
+
+    fetch(`/api/vehicle-data?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
          const arr = Array.isArray(data) ? data : [];
          setTrims(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
       })
       .catch(() => setTrims([]));
-  }, [brand, modelVal, seriesVal, overrideKeyLocal]);
+  }, [brands, modelVals, seriesVals, overrideKeyLocal]);
   
-  const fields = useMemo(() => {
-    // 1. Check for Static Subschemas (Priority Overrides)
-    // This ensures that for specific categories like Motosiklet, we use the manually curated schema
-    // which has the correct brands and fields, bypassing potentially incomplete API data.
-    const overrideKey = `${category}/${subcategory || ''}`;
-    if (ATTR_SUBSCHEMAS[overrideKey]) {
-       return ATTR_SUBSCHEMAS[overrideKey];
-    }
-
-    // 2. Use Dynamic Attributes from API
-    if (dynamicAttributes && dynamicAttributes?.length > 0) {
-      const withScope = dynamicAttributes.filter((attr: any) => {
-        // Filter by showInRequest
-        if (attr.showInRequest === false) return false;
-
-        if (!attr.subCategoryId) return true;
-        if (!attr.subCategory) return false;
-        if (!subcategory) return false;
-        return attr.subCategory.slug === subcategory;
-      });
-
-      const source = withScope.length > 0 ? withScope : dynamicAttributes.filter((attr: any) => !attr.subCategoryId && attr.showInRequest !== false);
-
-      if (source.length > 0) {
-        console.log('Processing attributes, count:', source.length);
-        return source.map((attr: any, index: number) => {
-          console.log(`Processing attribute ${index}:`, attr);
-          // Attr objesi null ise atla
-          if (!attr) {
-            console.log('Null attr found, skipping');
-            return null;
-          }
-          let options: string[] = [];
-          try {
-            if (attr.optionsJson) {
-              const parsed = JSON.parse(attr.optionsJson);
-              if (Array.isArray(parsed)) {
-                options = parsed;
-              }
-            }
-          } catch (e) { console.error('Error parsing options', e); }
-
-          // Inject local brands if available
-          if (attr.slug === 'marka') {
-             const localBrands = Object.keys(BRAND_MODELS[overrideKeyLocal] || {});
-             if (localBrands.length > 0) {
-                 options = Array.from(new Set([...options, ...localBrands])).sort((a,b)=>a.localeCompare(b,'tr'));
-             }
-          }
-
-          const generatedMinKey = attr.minKey || (attr.type === 'range-number' ? `${attr.slug || attr.id}Min` : undefined);
-          const generatedMaxKey = attr.maxKey || (attr.type === 'range-number' ? `${attr.slug || attr.id}Max` : undefined);
-
-          if (attr.type === 'range-number' && (!attr.slug && !attr.id)) {
-            console.warn('Attribute missing slug and id', attr);
-          }
-
-          return {
-            key: attr.slug,
-            label: attr.name,
-            type: attr.type === 'checkbox' ? 'boolean' : attr.type, // Map DB types to UI types
-            required: attr.required,
-            options: options.length ? options : undefined,
-            minKey: generatedMinKey,
-            maxKey: generatedMaxKey,
-            min: attr.min,
-            max: attr.max,
-            minLabel: attr.minLabel,
-            maxLabel: attr.maxLabel
-          } as AttrFieldLocal;
-        }).filter((f) => f !== null);
-      }
-    }
-
-    // 2. Fallback to Static Schemas
-    if (ATTR_SCHEMAS[category]) {
-       return ATTR_SCHEMAS[category];
-    }
-
-    return [];
-  }, [category, subcategory, dynamicAttributes, models, series, trims]); // Updated dependencies
-
-  if (!fields?.length) return null;
+  if (!fields?.length) {
+    return null;
+  }
   return (
     <div className="space-y-6 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
       <div className="flex items-center justify-between pb-4 border-b border-gray-100">
@@ -282,12 +417,17 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
           if (!f) return null;
           const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
           const isManual = f.key ? manualModes[f.key] : false;
+          const hasError = !!(
+            (f.key && errors[f.key]) ||
+            (f.type === 'range-number' && ((f.minKey && errors[f.minKey]) || (f.maxKey && errors[f.maxKey])))
+          );
 
           return (
           <div key={id} className={f.type === 'range-number' ? 'md:col-span-2' : ''}>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {f.label} {f.required && <span className="text-red-500">*</span>}
-            </label>
+            <div className={`rounded-xl border-2 p-4 transition-colors ${hasError ? 'border-red-200 bg-red-50/40' : 'border-gray-200 bg-gray-50/40 hover:border-cyan-200'}`}>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
+                {titleCaseTR(f.label)} {f.required && <span className="text-red-500">*</span>}
+              </label>
             {f.type === 'select' ? (
               <>
               {isManual ? (
@@ -295,7 +435,7 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                   type="text"
                   value={attributes[f.key!] ?? ''}
                   onChange={(e)=>onChange(f.key!, e.target.value)}
-                  placeholder={`${f.label} giriniz`}
+                  placeholder={`${titleCaseTR(f.label)} Giriniz`}
                   className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.key!] ? 'border-red-500 focus:ring-red-200' : 'border-gray-300'}`}
                 />
               ) : (
@@ -304,9 +444,9 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                     value={attributes[f.key!] ?? ''}
                     onChange={(e)=>onChange(f.key!, e.target.value)}
                     disabled={
-                      (f.key === 'model' && !String(attributes['marka'] || '').trim())
-                      || (f.key === 'seri' && (!String(attributes['marka'] || '').trim() || !String(attributes['model'] || '').trim()))
-                      || (f.key === 'paket' && !String(attributes['seri'] || '').trim())
+                      (f.key === 'model' && getArray(attributes['marka']).length === 0)
+                      || (f.key === 'seri' && (getArray(attributes['marka']).length === 0 || getArray(attributes['model']).length === 0))
+                      || (f.key === 'paket' && getArray(attributes['seri']).length === 0)
                     }
                     className={`w-full px-4 py-2.5 border rounded-lg appearance-none bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.key!] ? 'border-red-500 focus:ring-red-200' : 'border-gray-300'} disabled:bg-gray-50 disabled:text-gray-400`}
                   >
@@ -314,8 +454,8 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                     {(() => {
                       let opts = f.options ? [...f.options] : [];
                       
-                      // Explicitly sort brands if they are not sorted
                       if (f.key === 'marka') {
+                         if (brandOptions.length > 0) opts = brandOptions;
                          opts.sort((a, b) => {
                              if (a === 'Farketmez') return 1;
                              if (b === 'Farketmez') return -1;
@@ -323,20 +463,17 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                          });
                       }
 
-                      if (f.key === 'model' && brand) {
+                      if (f.key === 'model' && brands.length > 0) {
                         opts = models;
                       } else if (f.key === 'seri') {
                         opts = series;
                       } else if (f.key === 'paket') {
                         if (trims.length > 0) {
                           opts = trims;
-                        } else {
-                           const defaultPaket = (ATTR_SUBSCHEMAS[overrideKeyLocal] || []).find((ff)=> ff.key === 'paket')?.options || [];
-                           opts = defaultPaket;
                         }
                       }
                       return opts.map((o) => (
-                        <option key={o} value={o}>{o}</option>
+                        <option key={o} value={o}>{titleCaseTR(o)}</option>
                       ));
                     })()}
                   </select>
@@ -347,7 +484,10 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                 type="button"
                 onClick={() => {
                   if (f.key) {
-                     setManualModes(prev => ({ ...prev, [f.key!]: !prev[f.key!] }));
+                     onManualChange(f.key, !isManual);
+                     if (!isManual) {
+                        onChange(f.key, '');
+                     }
                   }
                 }}
                 className="text-xs text-cyan-600 mt-1.5 hover:text-cyan-700 hover:underline focus:outline-none flex items-center gap-1"
@@ -357,19 +497,35 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
               </button>
               </>
             ) : f.type === 'multiselect' ? (
-              <MultiSelect
-                options={f.options || []}
-                value={attributes[f.key!] || []}
-                onChange={(val: any) => onChange(f.key!, val)}
-                error={!!errors[f.key!]}
-              />
+                <>
+                  <MultiSelect
+                    options={(() => {
+                        let opts = f.options ? [...f.options] : [];
+                        if (f.key === 'marka') {
+                            if (brandOptions.length > 0) opts = brandOptions;
+                            opts.sort((a, b) => a.localeCompare(b, 'tr'));
+                        }
+                        if (f.key === 'model' && brands.length > 0) opts = models;
+                        else if (f.key === 'seri') opts = series;
+                        else if (f.key === 'paket' && trims.length > 0) opts = trims;
+                        return opts;
+                    })()}
+                    value={attributes[f.key!] || []}
+                    onChange={(val: any) => onChange(f.key!, val)}
+                    error={!!errors[f.key!]}
+                  />
+                </>
             ) : f.type === 'range-number' ? (
               <div className="grid grid-cols-2 gap-3">
                 <input
                   type="number"
                   min={f.min !== undefined ? f.min : "0"}
                   max={f.max}
-                  placeholder={f.minLabel || 'En düşük'}
+                  placeholder={
+                    String(f.minLabel || '').trim().toLowerCase() === 'min'
+                      ? 'En düşük'
+                      : (f.minLabel || 'En düşük')
+                  }
                   value={attributes[f.minKey!] ?? ''}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -383,7 +539,11 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                   type="number"
                   min={f.min !== undefined ? f.min : "0"}
                   max={f.max}
-                  placeholder={f.maxLabel || 'En yüksek'}
+                  placeholder={
+                    String(f.maxLabel || '').trim().toLowerCase() === 'max'
+                      ? 'En yüksek'
+                      : (f.maxLabel || 'En yüksek')
+                  }
                   value={attributes[f.maxKey!] ?? ''}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -418,7 +578,7 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                     className="w-5 h-5 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
                   />
                 </div>
-                <span className="ml-3 text-gray-700 font-medium select-none">{f.label}</span>
+                <span className="ml-3 text-gray-700 font-medium select-none">{titleCaseTR(f.label)}</span>
               </label>
             ) : (
               <input
@@ -434,6 +594,7 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                  <span>{errors[f.key!] || errors[f.minKey!] || errors[f.maxKey!]}</span>
                </div>
             )}
+            </div>
           </div>
           );
         })}
@@ -455,7 +616,7 @@ const StepIndicator = memo(function StepIndicator({ currentStep }: { currentStep
         />
       </div>
       
-      {STEPS.map((step, index) => {
+      {STEPS.map((step) => {
         const isActive = currentStep === step.id;
         const isCompleted = currentStep > step.id;
         const Icon = step.icon;
@@ -498,51 +659,138 @@ const StepIndicator = memo(function StepIndicator({ currentStep }: { currentStep
   );
 });
 
-const CategorySelection = memo(function CategorySelection({ formData, errors, updateFormData, subcats, categories }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void; subcats: SubCategory[]; categories: Category[] }) {
+const CategorySelection = memo(function CategorySelection({ formData, errors, updateFormData, subcats, categories, nextStep }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void; subcats: SubCategory[]; categories: Category[]; nextStep: (override?: Partial<FormData>) => void }) {
+  const subcategorySectionRef = useRef<HTMLDivElement | null>(null);
+  const lastCategoryRef = useRef(formData.category);
+  const [history, setHistory] = useState<SubCategory[]>([]);
+
+  useEffect(() => {
+    const prev = lastCategoryRef.current;
+    if (prev === formData.category) return;
+    lastCategoryRef.current = formData.category;
+    setHistory([]);
+
+    if (typeof window === "undefined") return;
+    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+    if (!isMobile) return;
+    if (!subcats?.length) return;
+
+    requestAnimationFrame(() => {
+      subcategorySectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [formData.category, subcats]);
+
+  const currentLevelSubcats = useMemo(() => {
+    if (history.length > 0) {
+      return history[history.length - 1].subcategories || [];
+    }
+    return subcats;
+  }, [history, subcats]);
+
+  const handleSubcategoryClick = (sub: SubCategory) => {
+    if (sub.subcategories && sub.subcategories.length > 0) {
+      setHistory(prev => [...prev, sub]);
+    } else {
+      const selected = sub.fullSlug || sub.slug;
+      updateFormData('subcategory', selected);
+      if (sub.fullSlug) updateFormData('subcategoryFullSlug', sub.fullSlug);
+      nextStep({ subcategory: selected, subcategoryFullSlug: sub.fullSlug });
+    }
+  };
+
+  const handleSubcategorySelect = (sub: SubCategory) => {
+    const selected = sub.fullSlug || sub.slug;
+    updateFormData('subcategory', selected);
+    if (sub.fullSlug) updateFormData('subcategoryFullSlug', sub.fullSlug);
+    nextStep({ subcategory: selected, subcategoryFullSlug: sub.fullSlug });
+  };
+
+  const handleBack = () => {
+    if (history.length > 0) {
+      setHistory(prev => prev.slice(0, -1));
+    } else {
+       updateFormData('category', '');
+       updateFormData('subcategory', '');
+       setHistory([]);
+    }
+  };
+
+  const currentCategoryName = useMemo(() => {
+    const raw = categories?.find((c: any) => c.slug === formData.category)?.name || 'Kategori';
+    return titleCaseTR(raw);
+  }, [categories, formData.category]);
+
   return (
   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
     <div>
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
-          <div className="p-2 bg-cyan-100 rounded-lg text-cyan-700">
-            <List className="w-6 h-6" />
-          </div>
-          Ana Kategori Seçimi
-        </h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          {(formData.category || history.length > 0) && (
+            <button onClick={handleBack} className="p-1.5 hover:bg-gray-100 rounded-full transition-colors group" title="Geri Dön">
+              <ChevronLeft className="w-5 h-5 text-gray-500 group-hover:text-cyan-600" />
+            </button>
+          )}
+          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-3">
+            <div className="p-1.5 bg-cyan-100 rounded-lg text-cyan-700">
+              <List className="w-5 h-5" />
+            </div>
+            {history.length > 0 ? 'Alt Kategori Seçimi' : 'Ana Kategori Seçimi'}
+          </h3>
+        </div>
         {errors.category && <span className="text-red-500 text-sm font-medium flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full"><AlertCircle className="w-3 h-3"/>{errors.category}</span>}
       </div>
+
+      {/* Breadcrumb Navigation */}
+         <div className="flex flex-wrap items-center gap-2 mb-5 text-sm bg-gray-50 p-2.5 rounded-lg border border-gray-100">
+         <div className="flex items-center gap-1">
+            <span className={`font-medium ${history.length === 0 ? 'text-cyan-700' : 'text-gray-600'}`}>
+              {currentCategoryName}
+            </span>
+         </div>
+         {history.map((item, index) => (
+           <div key={`${item.fullSlug || item.slug}:${index}`} className="flex items-center gap-1 animate-in fade-in slide-in-from-left-2">
+             <ChevronRight className="w-4 h-4 text-gray-400" />
+             <button 
+               onClick={() => setHistory(prev => prev.slice(0, index + 1))}
+               className={`hover:text-cyan-600 transition-colors ${index === history.length - 1 ? 'text-cyan-700 font-bold' : 'text-gray-600 font-medium'}`}
+             >
+               {titleCaseTR(item.name)}
+             </button>
+           </div>
+         ))}
+      </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {categories?.map((cat: any) => (
           <div
             key={cat.slug}
             onClick={() => updateFormData('category', cat.slug)}
             className={`
-              group relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300
-              hover:shadow-lg hover:-translate-y-1
+              group relative p-3 rounded-xl border cursor-pointer transition-all duration-300
+              hover:shadow-md hover:-translate-y-0.5
               ${formData.category === cat.slug 
-                ? 'border-cyan-500 bg-cyan-50/50 shadow-md ring-1 ring-cyan-500/20' 
-                : 'border-gray-100 bg-white hover:border-cyan-200 hover:bg-cyan-50/30'
+                ? 'border-cyan-500 bg-cyan-50/50 shadow-sm ring-1 ring-cyan-500/20' 
+                : 'border-gray-200 bg-white hover:border-cyan-200 hover:bg-cyan-50/30'
               }
             `}
           >
-            <div className="flex items-center space-x-5">
+            <div className="flex items-center gap-3">
               <div className={`
-                w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm
+                w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 shadow-sm
                 ${formData.category === cat.slug 
                   ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-cyan-500/30' 
                   : 'bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-cyan-600 group-hover:shadow-md'}
               `}>
-                <List className="w-7 h-7" />
+                <List className="w-5 h-5" />
               </div>
               <div>
-                <h4 className={`text-lg font-bold transition-colors ${formData.category === cat.slug ? 'text-cyan-900' : 'text-gray-900'}`}>{cat.name}</h4>
-                <p className="text-sm text-gray-500 mt-1 font-medium">{cat.subcategories?.length || 0} alt kategori</p>
+                <h4 className={`text-[15px] font-bold leading-tight transition-colors ${formData.category === cat.slug ? 'text-cyan-900' : 'text-gray-900'}`}>{titleCaseTR(cat.name)}</h4>
+                <p className="text-xs text-gray-500 mt-0.5 font-medium">{cat.subcategories?.length || 0} Alt Kategori</p>
               </div>
               {formData.category === cat.slug && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 animate-in zoom-in duration-300">
-                  <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-cyan-600/30">
-                    <Check className="w-5 h-5" />
+                <div className="absolute right-2.5 top-1/2 -translate-y-1/2 animate-in zoom-in duration-300">
+                  <div className="w-7 h-7 bg-cyan-600 rounded-full flex items-center justify-center text-white shadow-md shadow-cyan-600/30">
+                    <Check className="w-4 h-4" />
                   </div>
                 </div>
               )}
@@ -553,35 +801,61 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
     </div>
 
     {subcats?.length > 0 && (
-      <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 pt-4 border-t border-gray-100/50">
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="p-2 bg-cyan-100 rounded-lg text-cyan-700">
-              <ChevronRight className="w-6 h-6" />
+      <div ref={subcategorySectionRef} className="animate-in fade-in slide-in-from-bottom-2 duration-300 pt-4 border-t border-gray-100/50">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-3">
+            <div className="p-1.5 bg-cyan-100 rounded-lg text-cyan-700">
+              <ChevronRight className="w-5 h-5" />
             </div>
-            Alt Kategori Seçimi
+            <div className="flex items-center gap-2">
+                <button onClick={handleBack} className="hover:bg-gray-100 p-1 rounded-full transition-colors group" title="Geri Dön">
+                    <ChevronLeft className="w-5 h-5 text-gray-500 group-hover:text-cyan-600" />
+                </button>
+                <span>{history.length > 0 ? titleCaseTR(history[history.length - 1].name) : 'Alt Kategori Seçimi'}</span>
+            </div>
           </h3>
           {errors.subcategory && <span className="text-red-500 text-sm font-medium flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full"><AlertCircle className="w-3 h-3"/>{errors.subcategory}</span>}
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {subcats?.map((sub: any) => (
-            <button
-              key={sub.slug}
-              type="button"
-              onClick={() => updateFormData('subcategory', sub.slug)}
-              className={`
-                relative px-5 py-4 rounded-xl text-sm font-semibold transition-all text-left
-                flex items-center justify-between group
-                ${formData.subcategory === sub.slug
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-600 ring-offset-2 transform -translate-y-0.5'
-                  : 'bg-white text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 border border-gray-200 hover:border-cyan-200 hover:shadow-md'
-                }
-              `}
-            >
-              <span>{sub.name}</span>
-              {formData.subcategory === sub.slug && <Check className="w-4 h-4 text-white animate-in zoom-in" />}
-            </button>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+          {currentLevelSubcats?.map((sub: any) => (
+            <div key={sub.fullSlug || sub.slug} className="relative">
+              <button
+                type="button"
+                onClick={() => handleSubcategoryClick(sub)}
+                className={`
+                  w-full relative px-3.5 py-2.5 rounded-lg text-[13px] font-semibold transition-all text-left
+                  flex items-center justify-between group
+                  ${formData.subcategory === (sub.fullSlug || sub.slug)
+                    ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-600 ring-offset-2 transform -translate-y-0.5'
+                    : 'bg-white text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 border border-gray-200 hover:border-cyan-200 hover:shadow-sm'
+                  }
+                `}
+              >
+                <span className="pr-10 leading-snug">{titleCaseTR(sub.name)}</span>
+                {sub.subcategories && sub.subcategories.length > 0 ? (
+                  <ChevronRight className={`w-4 h-4 ${formData.subcategory === (sub.fullSlug || sub.slug) ? 'text-white' : 'text-gray-400 group-hover:text-cyan-600'}`} />
+                ) : (
+                  formData.subcategory === (sub.fullSlug || sub.slug) && <Check className="w-4 h-4 text-white animate-in zoom-in" />
+                )}
+              </button>
+
+              {sub.subcategories && sub.subcategories.length > 0 && sub.fullSlug && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); handleSubcategorySelect(sub); }}
+                  className={`
+                    absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 rounded-md text-[11px] font-bold transition-colors
+                    ${formData.subcategory === (sub.fullSlug || sub.slug)
+                      ? 'bg-white/15 text-white hover:bg-white/25'
+                      : 'bg-white text-cyan-700 border border-cyan-200 hover:bg-cyan-50'
+                    }
+                  `}
+                >
+                  Seç
+                </button>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -590,23 +864,69 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
   );
 });
 
-const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void }) {
+const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData, categories }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void; categories: Category[] }) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  
+  // Helper to find subcategory name recursively
+  const findSubcategoryName = (items: SubCategory[], slug: string): string | undefined => {
+    for (const item of items) {
+      if (item.slug === slug || item.fullSlug === slug) return item.name;
+      if (item.subcategories) {
+        const found = findSubcategoryName(item.subcategories, slug);
+        if (found) return found;
+      }
+    }
+    return undefined;
+  };
+
+  const selectedCategory = categories.find(c => c.slug === formData.category);
+  const subcategoryName = selectedCategory && formData.subcategory 
+    ? findSubcategoryName(selectedCategory.subcategories || [], formData.subcategory)
+    : undefined;
+
   return (
-  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/40">
-      <div className="flex items-center gap-3 pb-6 border-b border-gray-100 mb-8">
-        <div className="p-2.5 bg-cyan-50 rounded-xl">
-          <FileText className="w-6 h-6 text-cyan-600" />
+    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-lg shadow-gray-200/40">
+        <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-cyan-50 rounded-xl">
+              <FileText className="w-5 h-5 text-cyan-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">Temel Bilgiler</h3>
+              <p className="text-xs text-gray-500 font-medium">İhtiyacınızı detaylandırın</p>
+            </div>
+          </div>
+          
+          {selectedCategory && (
+            <div className="hidden sm:flex items-center gap-2 text-xs font-medium bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+              <span className="text-gray-600">{selectedCategory.name}</span>
+              {subcategoryName && (
+                <>
+                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <span className="text-cyan-700">{subcategoryName}</span>
+                </>
+              )}
+            </div>
+          )}
         </div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-900">Temel Bilgiler</h3>
-          <p className="text-sm text-gray-500 font-medium">İhtiyacınızı detaylandırın</p>
-        </div>
-      </div>
+        
+        {selectedCategory && (
+          <div className="sm:hidden mb-4 flex items-center gap-2 text-xs font-medium bg-gray-50 px-3 py-2 rounded-lg border border-gray-100">
+             <span className="text-gray-600">{selectedCategory.name}</span>
+             {subcategoryName && (
+               <>
+                 <ChevronRight className="w-3 h-3 text-gray-400" />
+                 <span className="text-cyan-700">{subcategoryName}</span>
+               </>
+             )}
+          </div>
+        )}
       
-      <div className="space-y-8">
+      <div className="space-y-5">
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
             Ne arıyorsunuz? <span className="text-red-500">*</span>
           </label>
           <div className="relative group">
@@ -616,7 +936,7 @@ const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData
               onChange={(e) => updateFormData('title', e.target.value)}
               placeholder="Örn: Temiz iPhone 13 arıyorum, Boyasız 2020 Honda Civic..."
               className={`
-                w-full pl-5 pr-5 py-4 text-lg border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300
+                w-full pl-4 pr-4 py-3 text-base border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300
                 placeholder:text-gray-400
                 ${errors.title 
                   ? 'border-red-300 bg-red-50/50 focus:ring-red-200' 
@@ -636,16 +956,16 @@ const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
             Aradığınız Ürünü Anlatın <span className="text-red-500">*</span>
           </label>
           <textarea
             value={formData.description}
             onChange={(e) => updateFormData('description', e.target.value)}
-            rows={6}
+            rows={5}
             placeholder="Aradığınız ürünün durumunu, rengini, varsa kusurlarını kabul edip etmeyeceğinizi belirtin..."
             className={`
-              w-full p-5 text-base border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 resize-none
+              w-full p-4 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 resize-none
               placeholder:text-gray-400
               ${errors.description 
                 ? 'border-red-300 bg-red-50/50 focus:ring-red-200' 
@@ -662,6 +982,87 @@ const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData
             <span className={`text-xs font-bold ${(formData.description?.length || 0) >= 20 ? 'text-emerald-600' : 'text-gray-400'}`}>{formData.description?.length || 0}/500</span>
           </div>
         </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
+            Resim Ekle <span className="text-gray-400 font-semibold">(İsteğe Bağlı)</span>
+          </label>
+          <div className="bg-gray-50/30 border border-gray-200 rounded-2xl p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-sm text-gray-600 font-medium">
+                En fazla 10 resim ekleyebilirsiniz.
+              </div>
+              <label className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${uploading ? 'bg-gray-200 text-gray-500 border-gray-200 cursor-not-allowed' : 'bg-white text-cyan-700 border-cyan-200 hover:bg-cyan-50 cursor-pointer'}`}>
+                Resim Yükle
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  multiple
+                  disabled={uploading || (formData.images?.length || 0) >= 10}
+                  onChange={async (e) => {
+                    const files = e.target.files;
+                    e.target.value = '';
+                    if (!files || files.length === 0) return;
+                    setUploadError(null);
+                    setUploading(true);
+                    try {
+                      let current = Array.isArray(formData.images) ? [...formData.images] : [];
+                      if (current[0]?.startsWith('/images/defaults/')) current = [];
+                      for (let i = 0; i < files.length; i++) {
+                        if (current.length >= 10) break;
+                        const file = files[i];
+                        if (!file) continue;
+                        const fd = new FormData();
+                        fd.append('file', file);
+                        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                        const data = await res.json().catch(() => null);
+                        if (!res.ok || !data?.url) {
+                          throw new Error(data?.error || 'Resim yüklenemedi');
+                        }
+                        current.push(String(data.url));
+                      }
+                      updateFormData('images', current);
+                    } catch (err: any) {
+                      setUploadError(err?.message || 'Resim yüklenemedi');
+                    } finally {
+                      setUploading(false);
+                    }
+                  }}
+                />
+              </label>
+            </div>
+
+            {uploadError && (
+              <div className="mt-3 text-xs font-bold text-red-600 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5" />
+                {uploadError}
+              </div>
+            )}
+
+            {Array.isArray(formData.images) && formData.images.length > 0 && (
+              <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {formData.images.slice(0, 10).map((img, idx) => (
+                  <div key={`${img}-${idx}`} className="relative border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    <div className="relative aspect-square">
+                      <Image src={img} alt={`Resim ${idx + 1}`} fill unoptimized className="object-cover" />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const next = formData.images.filter((_, i) => i !== idx);
+                        updateFormData('images', next);
+                      }}
+                      className="w-full py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border-t border-red-100"
+                    >
+                      Kaldır
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
  </div>
@@ -674,25 +1075,72 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
   updateFormData: (field: keyof FormData, value: any) => void;
 }) {
   const [manualModes, setManualModes] = useState<Record<string, boolean>>({});
+  const manualDistrict = manualModes['district'];
+  const manualNeighborhood = manualModes['neighborhood'];
   const selectedProvince = getProvinceByName(formData.city);
   const availableDistricts = selectedProvince ? getDistrictsByProvince(selectedProvince.name) : [];
+  const [districtOptions, setDistrictOptions] = useState<string[]>([]);
+  const [districtLoading, setDistrictLoading] = useState(false);
+  const [neighborhoodOptions, setNeighborhoodOptions] = useState<string[]>([]);
+  const [neighborhoodLoading, setNeighborhoodLoading] = useState(false);
+
+  useEffect(() => {
+    if (formData.category !== 'emlak') {
+      setDistrictOptions([]);
+      return;
+    }
+    if (!formData.city || manualDistrict) {
+      setDistrictOptions([]);
+      return;
+    }
+    setDistrictLoading(true);
+    const params = new URLSearchParams();
+    params.set('city', formData.city);
+    fetch(`/api/locations/districts?${params.toString()}`)
+      .then((r) => r.json())
+      .then((data) => setDistrictOptions(Array.isArray(data) ? data : []))
+      .catch(() => setDistrictOptions([]))
+      .finally(() => setDistrictLoading(false));
+  }, [formData.category, formData.city, manualDistrict]);
+
+  useEffect(() => {
+    if (formData.category !== 'emlak') {
+      setNeighborhoodOptions([]);
+      return;
+    }
+    if (!formData.city || !formData.district || manualNeighborhood) {
+      setNeighborhoodOptions([]);
+      return;
+    }
+    setNeighborhoodLoading(true);
+    const params = new URLSearchParams();
+    params.set('city', formData.city);
+    params.set('district', formData.district);
+    fetch(`/api/locations/neighborhoods?${params.toString()}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setNeighborhoodOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => setNeighborhoodOptions([]))
+      .finally(() => setNeighborhoodLoading(false));
+  }, [formData.category, formData.city, formData.district, manualNeighborhood]);
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="space-y-5 animate-in fade-in slide-in-from-bottom-8 duration-700">
       
       {/* Location Section */}
-      <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
-        <div className="flex items-center gap-3 pb-6 border-b border-gray-100 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <MapPin className="w-5 h-5 text-cyan-600" />
+      <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-5 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
+        <div className="flex items-center gap-3 pb-4 border-b border-gray-100 mb-5">
+          <div className="w-8 h-8 rounded-xl bg-cyan-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <MapPin className="w-4 h-4 text-cyan-600" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Konum Bilgileri</h3>
-            <p className="text-sm text-gray-500 font-medium">Hizmetin gerçekleşeceği konum</p>
+            <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Konum Bilgileri</h3>
+            <p className="text-xs text-gray-500 font-medium">Hizmetin gerçekleşeceği konum</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-bold text-gray-700 ml-1">İl <span className="text-red-500">*</span></label>
             {manualModes['city'] ? (
@@ -702,9 +1150,10 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                 onChange={(e) => {
                   updateFormData('city', e.target.value);
                   updateFormData('district', '');
+                  updateFormData('neighborhood', '');
                 }}
                 placeholder="İl giriniz"
-                className={`w-full px-5 py-3.5 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none ${errors.city ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                className={`w-full px-4 py-3 text-sm border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none ${errors.city ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
               />
             ) : (
               <div className="relative group/select">
@@ -713,8 +1162,9 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                   onChange={(e) => {
                     updateFormData('city', e.target.value);
                     updateFormData('district', '');
+                    updateFormData('neighborhood', '');
                   }}
-                  className={`w-full px-5 py-3.5 border rounded-xl appearance-none bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none cursor-pointer ${errors.city ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                  className={`w-full px-4 py-3 text-sm border rounded-xl appearance-none bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none cursor-pointer ${errors.city ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 >
                   <option value="">İl Seçiniz</option>
                   {TURKEY_PROVINCES?.map((province) => (
@@ -741,26 +1191,36 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
               <input
                 type="text"
                 value={formData.district}
-                onChange={(e) => updateFormData('district', e.target.value)}
+                onChange={(e) => {
+                  updateFormData('district', e.target.value);
+                  updateFormData('neighborhood', '');
+                }}
                 placeholder="İlçe giriniz"
-                className={`w-full px-5 py-3.5 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none ${errors.district ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                className={`w-full px-4 py-3 text-sm border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none ${errors.district ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
               />
             ) : (
               <div className="relative group/select">
                 <select
                   value={formData.district}
-                  onChange={(e) => updateFormData('district', e.target.value)}
-                  disabled={!formData.city && !manualModes['city']}
+                  onChange={(e) => {
+                    updateFormData('district', e.target.value);
+                    updateFormData('neighborhood', '');
+                  }}
+                  disabled={(!formData.city && !manualModes['city']) || (formData.category === 'emlak' && districtLoading)}
                   className={`
-                    w-full px-5 py-3.5 border rounded-xl appearance-none bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none cursor-pointer
+                    w-full px-4 py-3 text-sm border rounded-xl appearance-none bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none cursor-pointer
                     ${errors.district ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}
-                    ${(!formData.city && !manualModes['city']) ? 'bg-gray-100 text-gray-400 cursor-not-allowed hover:border-gray-200' : ''}
+                    ${((!formData.city && !manualModes['city']) || (formData.category === 'emlak' && districtLoading)) ? 'bg-gray-100 text-gray-400 cursor-not-allowed hover:border-gray-200' : ''}
                   `}
                 >
                   <option value="">İlçe Seçiniz</option>
-                  {availableDistricts?.map((district) => (
-                    <option key={district.id} value={district.name}>{district.name}</option>
-                  ))}
+                  {formData.category === 'emlak'
+                    ? districtOptions?.map((district) => (
+                        <option key={district} value={district}>{district}</option>
+                      ))
+                    : availableDistricts?.map((district) => (
+                        <option key={district.id} value={district.name}>{district.name}</option>
+                      ))}
                 </select>
                 <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 rotate-90 pointer-events-none group-hover/select:text-cyan-500 transition-colors" />
               </div>
@@ -776,23 +1236,68 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
             {errors.district && <span className="text-red-500 text-xs font-bold flex items-center gap-1.5 mt-2 animate-in slide-in-from-left-2"><AlertCircle className="w-3.5 h-3.5"/>{errors.district}</span>}
           </div>
         </div>
+
+        {formData.category === 'emlak' && (
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-700 ml-1">Mahalle <span className="text-red-500">*</span></label>
+              {manualModes['neighborhood'] ? (
+                <input
+                  type="text"
+                  value={formData.neighborhood}
+                  onChange={(e) => updateFormData('neighborhood', e.target.value)}
+                  placeholder="Mahalle giriniz"
+                  className={`w-full px-4 py-3 text-sm border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none ${errors.neighborhood ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                />
+              ) : (
+                <div className="relative group/select">
+                  <select
+                    value={formData.neighborhood}
+                    onChange={(e) => updateFormData('neighborhood', e.target.value)}
+                    disabled={!formData.city || !formData.district || neighborhoodLoading}
+                    className={`
+                      w-full px-4 py-3 text-sm border rounded-xl appearance-none bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none cursor-pointer
+                      ${errors.neighborhood ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}
+                      ${(!formData.city || !formData.district || neighborhoodLoading) ? 'bg-gray-100 text-gray-400 cursor-not-allowed hover:border-gray-200' : ''}
+                    `}
+                  >
+                    <option value="">{neighborhoodLoading ? 'Yükleniyor...' : 'Mahalle Seçiniz'}</option>
+                    {neighborhoodOptions?.map((n) => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                  <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 rotate-90 pointer-events-none group-hover/select:text-cyan-500 transition-colors" />
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => setManualModes(prev => ({ ...prev, neighborhood: !prev.neighborhood }))}
+                className="text-xs font-semibold text-cyan-600 mt-2 hover:text-cyan-700 focus:outline-none flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-cyan-50 w-fit transition-colors"
+              >
+                {manualModes['neighborhood'] ? <List className="w-3.5 h-3.5"/> : <Search className="w-3.5 h-3.5"/>}
+                {manualModes['neighborhood'] ? 'Listeden seç' : 'Listede yok mu? Elle gir'}
+              </button>
+              {errors.neighborhood && <span className="text-red-500 text-xs font-bold flex items-center gap-1.5 mt-2 animate-in slide-in-from-left-2"><AlertCircle className="w-3.5 h-3.5"/>{errors.neighborhood}</span>}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Budget Section */}
-      <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
-        <div className="flex items-center gap-3 pb-6 border-b border-gray-100 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <TrendingUp className="w-5 h-5 text-blue-600" />
+      <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-5 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
+        <div className="flex items-center gap-3 pb-4 border-b border-gray-100 mb-5">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <TrendingUp className="w-4 h-4 text-blue-600" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Bütçe Planlaması</h3>
-            <p className="text-sm text-gray-500 font-medium">Bütçe aralığınızı belirleyin</p>
+            <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Bütçe Planlaması</h3>
+            <p className="text-xs text-gray-500 font-medium">Bütçe aralığınızı belirleyin</p>
           </div>
         </div>
 
         <div className="space-y-4">
           <label className="text-sm font-bold text-gray-700 ml-1">Ayırdığınız Bütçe (TL) <span className="text-red-500">*</span></label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative group/input">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] font-bold tracking-wider bg-gray-50 px-2 py-1 rounded border border-gray-200 group-hover/input:border-cyan-200 group-hover/input:text-cyan-600 transition-colors">EN DÜŞÜK</span>
               <input
@@ -805,7 +1310,7 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('minBudget', val);
                   }
                 }}
-                className={`w-full pl-36 pr-5 py-4 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.minBudget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                className={`w-full pl-32 pr-4 py-3 text-sm border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.minBudget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 placeholder="0"
               />
             </div>
@@ -822,7 +1327,7 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('budget', val);
                   }
                 }}
-                className={`w-full pl-36 pr-5 py-4 border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.budget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                className={`w-full pl-32 pr-4 py-3 text-sm border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.budget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 placeholder="0"
               />
             </div>
@@ -837,14 +1342,14 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-100 rounded-2xl p-6 shadow-sm">
+      <div className="bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-100 rounded-2xl p-4 shadow-sm">
         <div className="flex items-start gap-4">
           <div className="p-2 bg-white rounded-lg shadow-sm ring-1 ring-cyan-100">
             <Info className="w-5 h-5 text-cyan-500" />
           </div>
           <div>
             <h3 className="text-sm font-bold text-cyan-900">Önemli Bilgilendirme</h3>
-            <p className="mt-1.5 text-sm text-cyan-700/80 font-medium leading-relaxed">
+            <p className="mt-1 text-xs text-cyan-700/80 font-medium leading-relaxed">
               Varsagel ödeme sistemine sahip değildir. Biz sadece alıcı ve satıcıyı buluşturan bir aracı platformuz. Ödeme ve teslimat detaylarını satıcı ile görüşerek belirleyebilirsiniz.
             </p>
           </div>
@@ -856,7 +1361,19 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
 
 const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData: FormData, categories: Category[] }) {
   const selectedCategory = categories.find((c: any) => c.slug === formData.category);
-  const selectedSubcategory = selectedCategory?.subcategories.find((s: any) => s.slug === formData.subcategory);
+  const findSubcategory = (items: SubCategory[], slug: string): SubCategory | undefined => {
+    for (const item of items) {
+      if (item.slug === slug || item.fullSlug === slug) return item;
+      if (item.subcategories) {
+        const found = findSubcategory(item.subcategories, slug);
+        if (found) return found;
+      }
+    }
+    return undefined;
+  };
+  const selectedSubcategory = selectedCategory && formData.subcategory
+    ? findSubcategory(selectedCategory.subcategories || [], formData.subcategory)
+    : undefined;
   const attrs = formData.attributes || {};
   const pairs: Record<string, { min?: any; max?: any }> = {};
   
@@ -915,63 +1432,69 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="space-y-5 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 overflow-hidden shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
-        <div className="bg-gradient-to-r from-gray-50 via-white to-gray-50 px-8 py-6 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
-              <FileText className="w-5 h-5 text-gray-600" />
+        <div className="bg-gradient-to-r from-gray-50 via-white to-gray-50 px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
+              <FileText className="w-4 h-4 text-gray-600" />
             </div>
             Talep Özeti
           </h3>
-          <span className="px-4 py-1.5 bg-cyan-50 text-cyan-700 text-xs font-bold uppercase tracking-wider rounded-full border border-cyan-100 shadow-sm">Taslak</span>
+          <span className="px-3 py-1 bg-cyan-50 text-cyan-700 text-[11px] font-bold uppercase tracking-wider rounded-full border border-cyan-100 shadow-sm">Taslak</span>
         </div>
         
-        <div className="p-8 space-y-8">
+        <div className="p-5 space-y-5">
           {formData.images && formData.images?.length > 0 && (
-            <div className="flex justify-center mb-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-100 group-hover:border-cyan-100 transition-colors">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <div className="relative h-48 w-full group-hover:scale-105 transition-transform duration-500">
-                {formData.images?.map((img, index) => (
-                  <Image 
-                    key={index}
-                    src={img} 
-                    alt="Referans Görsel" 
-                    fill
-                    className="object-contain mix-blend-multiply drop-shadow-lg" 
-                  />
-                ))}
+            <div className="mb-5 bg-gray-50/50 p-4 rounded-2xl border border-gray-100 group-hover:border-cyan-100 transition-colors">
+              <div className="relative h-40 w-full rounded-xl overflow-hidden bg-white group-hover:scale-105 transition-transform duration-500">
+                <Image
+                  src={formData.images[0]}
+                  alt="Referans Görsel"
+                  fill
+                  unoptimized
+                  className="object-contain mix-blend-multiply drop-shadow-lg"
+                />
               </div>
+              {formData.images.length > 1 && (
+                <div className="mt-4 grid grid-cols-4 sm:grid-cols-6 gap-2">
+                  {formData.images.slice(0, 10).map((img, idx) => (
+                    <div key={`${img}-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border border-gray-200 bg-white">
+                      <Image src={img} alt={`Referans Görsel ${idx + 1}`} fill unoptimized className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
               <div className="group/item">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Başlık</span>
-                <p className="text-gray-900 font-bold text-lg leading-tight">{formData.title || 'Belirtilmemiş'}</p>
+                <p className="text-gray-900 font-bold text-base leading-tight">{formData.title || 'Belirtilmemiş'}</p>
               </div>
               <div className="group/item">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Kategori</span>
                 <p className="text-gray-900 font-medium flex items-center gap-2">
-                  <span className="bg-gray-100 px-2 py-1 rounded text-sm">{selectedCategory?.name}</span>
+                  <span className="bg-gray-100 px-2 py-1 rounded text-xs">{selectedCategory?.name}</span>
                   <ChevronRight className="w-4 h-4 text-gray-300" />
-                  <span className="bg-gray-100 px-2 py-1 rounded text-sm">{selectedSubcategory?.name}</span>
+                  <span className="bg-gray-100 px-2 py-1 rounded text-xs">{selectedSubcategory?.name}</span>
                 </p>
               </div>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="group/item">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Konum</span>
                 <p className="text-gray-900 font-medium flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center">
                     <MapPin className="w-4 h-4 text-red-500" />
                   </div>
-                  {formData.city}, {formData.district}
+                  {formData.city}, {formData.district}{formData.neighborhood ? `, ${formData.neighborhood}` : ''}
                 </p>
               </div>
               <div className="group/item">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block group-hover/item:text-cyan-600 transition-colors">Hedef Bütçe</span>
-                <p className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 font-black text-2xl tracking-tight">
+                <p className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 font-black text-xl tracking-tight">
                   {formData.minBudget || formData.budget
                     ? `${formData.minBudget ? `${formData.minBudget} TL` : '0'} – ${formData.budget ? `${formData.budget} TL` : '∞'}`
                     : 'Belirtilmemiş'}
@@ -980,9 +1503,9 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
             </div>
           </div>
 
-          <div className="pt-8 border-t border-gray-100">
+          <div className="pt-5 border-t border-gray-100">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block">Açıklama</span>
-            <div className="bg-gray-50/80 p-6 rounded-2xl border border-gray-100 text-gray-700 leading-relaxed whitespace-pre-wrap hover:bg-white hover:shadow-md transition-all duration-300">
+            <div className="bg-gray-50/80 p-4 rounded-2xl border border-gray-100 text-gray-700 text-sm leading-relaxed whitespace-pre-wrap hover:bg-white hover:shadow-md transition-all duration-300">
               {formData.description || 'Açıklama girilmemiş'}
             </div>
           </div>
@@ -990,28 +1513,31 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
       </div>
 
       {(entries.length > 0 || Object.keys(pairs).length > 0) && (
-        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-8 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <List className="w-5 h-5 text-orange-600" />
+        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-5 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <List className="w-4 h-4 text-orange-600" />
             </div>
-            <h4 className="text-lg font-bold text-gray-900">Teknik Özellikler</h4>
+            <div>
+              <h4 className="text-base font-bold text-gray-900">Özellikler</h4>
+              <div className="text-xs text-gray-500 font-medium mt-0.5">Talep özellikleri</div>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.entries(pairs).map(([base, v]) => (
               (v.min || v.max) ? (
-                <div key={base} className="flex justify-between items-center py-3 border-b border-gray-50 group/row hover:bg-gray-50/50 px-2 rounded transition-colors">
-                  <span className="text-gray-500 text-sm font-medium group-hover/row:text-gray-700">{label(base)}</span>
-                  <span className="font-bold text-gray-900 text-sm bg-white px-2 py-1 rounded shadow-sm border border-gray-100">{v.min ?? '—'}{(v.min || v.max) ? ' – ' : ''}{v.max ?? '—'}</span>
+                <div key={base} className="grid grid-cols-[1fr_auto] gap-4 items-center p-3 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-cyan-200 transition-colors">
+                  <span className="text-gray-700 text-sm font-semibold">{label(base)}</span>
+                  <span className="font-bold text-gray-900 text-sm bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 text-right">{v.min ?? '—'}{(v.min || v.max) ? ' – ' : ''}{v.max ?? '—'}</span>
                 </div>
               ) : null
             ))}
             {entries.map(([k, v]) => (
               v !== undefined && v !== '' ? (
-                <div key={k} className="flex justify-between items-center py-3 border-b border-gray-50 group/row hover:bg-gray-50/50 px-2 rounded transition-colors">
-                  <span className="text-gray-500 text-sm font-medium group-hover/row:text-gray-700">{label(k)}</span>
-                  <span className="font-bold text-gray-900 text-sm text-right bg-white px-2 py-1 rounded shadow-sm border border-gray-100">{String(v)}</span>
+                <div key={k} className="grid grid-cols-[1fr_auto] gap-4 items-center p-3 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-cyan-200 transition-colors">
+                  <span className="text-gray-700 text-sm font-semibold">{label(k)}</span>
+                  <span className="font-bold text-gray-900 text-sm text-right bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200">{String(v)}</span>
                 </div>
               ) : null
             ))}
@@ -1019,14 +1545,14 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
         </div>
       )}
 
-      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 shadow-lg shadow-emerald-100/50">
+      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-4 shadow-lg shadow-emerald-100/50">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-white rounded-full shadow-md ring-4 ring-emerald-50 animate-pulse">
-            <CheckCircle className="w-8 h-8 text-emerald-500" />
+          <div className="p-2 bg-white rounded-full shadow-md ring-4 ring-emerald-50 animate-pulse">
+            <CheckCircle className="w-6 h-6 text-emerald-500" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-emerald-900">Her Şey Hazır!</h3>
-            <p className="mt-1 text-sm text-emerald-700 font-medium">
+            <h3 className="text-base font-bold text-emerald-900">Her Şey Hazır!</h3>
+            <p className="mt-1 text-xs text-emerald-700 font-medium">
               Talebiniz yayınlanmaya hazır. Onayladıktan sonra satıcılar teklif vermeye başlayacak.
             </p>
           </div>
@@ -1050,13 +1576,36 @@ function TalepOlusturPage() {
     subcategory: defaultSubcategory,
     city: "",
     district: "",
+    neighborhood: "",
     minBudget: "",
     budget: "",
     images: [],
     attributes: {},
+    manualAttributeKeys: [],
   });
 
-  const subcats = useMemo(() => categories.find((c) => c.slug === formData.category)?.subcategories ?? [], [formData.category, categories]);
+  const handleManualChange = useCallback((key: string, isManual: boolean) => {
+    setFormData(prev => {
+       const keys = prev.manualAttributeKeys || [];
+       if (isManual) {
+         // Avoid duplicates
+         if (keys.includes(key)) return prev;
+         return { ...prev, manualAttributeKeys: [...keys, key] };
+       } else {
+         return { ...prev, manualAttributeKeys: keys.filter(k => k !== key) };
+       }
+    });
+  }, []);
+
+  const subcats = useMemo(() => {
+    // 1. Try to find hierarchical structure in static data first (for Emlak etc.)
+    const staticCat = STATIC_CATEGORIES.find(c => c.slug === formData.category);
+    if (staticCat?.subcategories && staticCat.subcategories.length > 0) {
+      return staticCat.subcategories;
+    }
+    // 2. Fallback to API data (usually flat)
+    return categories.find((c) => c.slug === formData.category)?.subcategories ?? [];
+  }, [formData.category, categories]);
 
   const router = useRouter();
   const editId = sp.get("editId") || sp.get("edit");
@@ -1077,10 +1626,12 @@ function TalepOlusturPage() {
             subcategory: data.subCategory?.slug || '',
             city: data.location.city,
             district: data.location.district,
+            neighborhood: attrs.mahalle ? String(attrs.mahalle) : '',
             minBudget: attrs.minPrice ? String(attrs.minPrice) : '',
             budget: attrs.maxPrice ? String(attrs.maxPrice) : (data.price ? String(data.price) : ''),
             images: data.images || [],
-            attributes: attrs
+            attributes: attrs,
+            manualAttributeKeys: data.manualAttributeKeys || []
           });
         } else {
           toast({ title: 'Hata', description: 'Talep bilgileri yüklenemedi', variant: 'destructive' });
@@ -1118,18 +1669,44 @@ function TalepOlusturPage() {
   }, [categories, defaultCategory, formData.category]);
 
   useEffect(() => {
-    const valid = subcats.some((s: SubCategory) => s.slug === formData.subcategory);
-    if (!valid) {
-      const newValue = subcats[0]?.slug ?? "";
-      if (formData.subcategory !== newValue) {
-        setFormData(prev => ({ ...prev, subcategory: newValue }));
-      }
+    // Recursive validation helper
+    const isValidSubcategory = (items: SubCategory[], slug: string): boolean => {
+      if (!slug) return false;
+      return items.some(item => {
+        if (item.slug === slug || item.fullSlug === slug) return true;
+        if (item.subcategories && item.subcategories.length > 0) {
+          return isValidSubcategory(item.subcategories, slug);
+        }
+        return false;
+      });
+    };
+
+    const valid = isValidSubcategory(subcats, formData.subcategory);
+    
+    if (!valid && formData.subcategory) {
+       // If currently selected subcategory is NOT in the tree at all, reset to first available.
+       // But if subcategory is empty, we might want to auto-select ONLY if it's a flat list?
+       // For Emlak, we don't want to auto-select 'konut' necessarily, or maybe we do.
+       // But crucial fix is: don't reset if it IS valid deeply.
+       
+       // If valid is false, it means slug is not found anywhere in the tree.
+       const newValue = subcats[0]?.fullSlug ?? subcats[0]?.slug ?? "";
+       if (formData.subcategory !== newValue) {
+          // Careful: This auto-selects the top-level parent (e.g. 'konut').
+          // If the user had an invalid selection, this is a fallback.
+          setFormData(prev => ({ ...prev, subcategory: newValue }));
+       }
+    } else if (!formData.subcategory && subcats.length > 0) {
+       // Optional: Auto-select first item if nothing selected?
+       // This was the behavior of the previous code (valid was false for empty string).
+       const newValue = subcats[0]?.fullSlug ?? subcats[0]?.slug ?? "";
+       setFormData(prev => ({ ...prev, subcategory: newValue }));
     }
 
     // Generic default image logic
     if (formData.subcategory) {
       setFormData(prev => {
-        const defaultPath = `/images/defaults/${formData.subcategory}.webp`;
+        const defaultPath = getSubcategoryImage(formData.subcategory);
         
         // Case 1: No images -> Set default
         if (prev.images.length === 0) {
@@ -1139,7 +1716,7 @@ function TalepOlusturPage() {
         // Case 2: Has images, check if it's a default image (starts with /images/defaults/)
         // If so, update it to the new subcategory's default
         const firstImage = prev.images[0];
-        if (firstImage.startsWith('/images/defaults/') && firstImage !== defaultPath) {
+        if ((firstImage.startsWith('/images/defaults/') || firstImage.startsWith('/images/placeholder-')) && firstImage !== defaultPath) {
            return { ...prev, images: [defaultPath, ...prev.images.slice(1)] };
         }
         
@@ -1150,142 +1727,125 @@ function TalepOlusturPage() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [errorSummary, setErrorSummary] = useState<string[]>([]);
+  const [dynamicAttributes, setDynamicAttributes] = useState<any[]>([]);
 
-  const buildAttributeFields = useCallback((): AttrField[] => {
-    // Top-level try-catch for safety
-    try {
-      // 1. Basic Validation
-      if (!formData.category || !categories || !Array.isArray(categories) || categories.length === 0) {
-        return [];
-      }
-      
-      const currentCategory = categories.find((c: any) => c?.slug === formData.category);
-      if (!currentCategory) return [];
+  const mergeAttributeSources = useCallback((overrideAttrs: any[], dbAttrs: any[]) => {
+    const norm = (s: any) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const override = Array.isArray(overrideAttrs) ? overrideAttrs : [];
+    const base = Array.isArray(dbAttrs) ? dbAttrs : [];
+    if (override.length === 0) return base;
 
-      // 2. Check for Static Subschemas (Priority Overrides) - MATCH RENDERING LOGIC
-      // This ensures validation matches exactly what is rendered
-      const overrideKey = `${formData.category}/${formData.subcategory || ''}`;
-      if (ATTR_SUBSCHEMAS?.[overrideKey]) {
-         return ATTR_SUBSCHEMAS[overrideKey];
-      }
-      
-      const dynamic = currentCategory.attributes || [];
-      
-      // 3. Dynamic Attributes Processing
-      if (Array.isArray(dynamic) && dynamic.length > 0) {
-        let withScope: any[] = [];
-        try {
-          withScope = dynamic.filter((attr: any) => {
-            if (!attr) return false;
-            // If no subCategoryId, it applies to all (unless filtered later)
-            if (!attr.subCategoryId) return true;
-            
-            // Safety check for subCategory object
-            if (!attr.subCategory) return false;
-            
-            // Ensure subCategory has slug property safely
-            const subSlug = attr.subCategory?.slug;
-            if (!subSlug) return false;
-            
-            if (!formData.subcategory) return false;
-            
-            return subSlug === formData.subcategory;
-          });
-        } catch (err) {
-          console.error('Error in dynamic.filter:', err);
-          withScope = [];
+    const overrideKeys = new Set<string>();
+    override.forEach((a) => overrideKeys.add(norm(a?.slug)));
+
+    const missingRequired = base.filter((a) => !!a?.required && !overrideKeys.has(norm(a?.slug)));
+    const missingOptional = base.filter((a) => !a?.required && !overrideKeys.has(norm(a?.slug)));
+
+    const sortByOrder = (a: any, b: any) => (Number(a?.order || 0) - Number(b?.order || 0));
+    missingRequired.sort(sortByOrder);
+    missingOptional.sort(sortByOrder);
+
+    return [...missingRequired, ...override, ...missingOptional];
+  }, []);
+
+  // Calculate manualModes from formData.manualAttributeKeys
+  const manualModes = useMemo(() => {
+    const modes: Record<string, boolean> = {};
+    (formData.manualAttributeKeys || []).forEach(k => {
+      modes[k] = true;
+    });
+    return modes;
+  }, [formData.manualAttributeKeys]);
+
+  useEffect(() => {
+    if (!formData.category) return;
+    
+    // Fetch dynamic attributes for the selected category
+    const fetchAttributes = async () => {
+      try {
+        const query = new URLSearchParams();
+        if (formData.subcategory) {
+          query.append('subcategory', formData.subcategory);
         }
 
-        // Ensure withScope is an array
-        if (!Array.isArray(withScope)) withScope = [];
+        const url = `/api/categories/${formData.category}/attributes?${query.toString()}`;
 
-        const hasScope = withScope.length > 0;
-        const source = hasScope ? withScope : dynamic.filter((attr: any) => attr && !attr.subCategoryId);
-
-        if (Array.isArray(source) && source.length > 0) {
-          return source.map((attr: any) => {
-            if (!attr) return null;
-            
-            let options: string[] = [];
-            try {
-              if (attr.optionsJson) {
-                const parsed = JSON.parse(attr.optionsJson);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                  options = parsed.filter(item => item != null).map(String);
-                }
-              }
-            } catch (e) {
-              options = [];
-            }
-
-            // Ensure options is an array
-            if (!Array.isArray(options)) options = [];
-
-            const safeOptions = options.length > 0 ? options : undefined;
-
-            // Force m2/metrekare to be optional, regardless of API response
-            const isM2 = attr.slug === 'm2' || attr.slug === 'metrekare' || attr.name === 'Metrekare' || attr.name === 'm2';
-            const isRequired = isM2 ? false : !!attr.required;
-
-            return {
-              key: attr.slug,
-              label: attr.name || attr.slug || 'Alan',
-              type: attr.type === "checkbox" ? "boolean" : attr.type,
-              required: isRequired,
-              options: safeOptions,
-              minKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Min` : undefined,
-              maxKey: attr.type === 'range-number' ? `${attr.slug || attr.id}Max` : undefined,
-            } as AttrField;
-          }).filter((result): result is AttrField => result !== null);
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          setDynamicAttributes(data);
+        } else {
+          console.error('Fetch failed:', res.status);
         }
+      } catch (error) {
+        console.error('Error fetching attributes:', error);
       }
+    };
 
-      // 4. Fallback to Category Schemas
-      if (ATTR_SCHEMAS?.[formData.category]) {
-         return ATTR_SCHEMAS[formData.category];
-      }
-      
-      return [];
-    } catch (error) {
-      console.error('Critical error in buildAttributeFields:', error);
-      return [];
+    fetchAttributes();
+  }, [formData.category, formData.subcategory]);
+
+  const mergedDynamicAttributes = useMemo(() => {
+    const currentCategory = categories.find((c: any) => c?.slug === formData.category);
+    const base = currentCategory?.attributes || [];
+    if (Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0) {
+      return mergeAttributeSources(dynamicAttributes, base);
     }
-  }, [categories, formData.category, formData.subcategory]);
+    return base;
+  }, [categories, dynamicAttributes, formData.category, mergeAttributeSources]);
 
-  const validateStep = useCallback((step: number): boolean => {
-    console.log('validateStep called with step:', step);
+  const selectedCategory = useMemo(
+    () => categories.find((c: any) => c?.slug === formData.category),
+    [categories, formData.category]
+  );
+
+  const selectedSubcategory = useMemo(() => {
+    if (!selectedCategory || !formData.subcategory) return undefined;
+    return findSubcategoryBySlug(selectedCategory.subcategories || [], formData.subcategory);
+  }, [selectedCategory, formData.subcategory]);
+
+  const selectedSubcategoryId = useMemo(() => {
+    const raw = (selectedSubcategory as any)?.id;
+    return raw ? String(raw) : undefined;
+  }, [selectedSubcategory]);
+
+  const attributeFields = useMemo(
+    () => attributesToFields(formData.category, formData.subcategory, mergedDynamicAttributes, selectedSubcategoryId),
+    [formData.category, formData.subcategory, mergedDynamicAttributes, selectedSubcategoryId]
+  );
+
+  const validateStep = useCallback((step: number, data: FormData = formData): boolean => {
     try {
       const newErrors: Record<string, string> = {};
 
     if (step === 1) {
-      if (!formData.category) newErrors.category = 'Lütfen kategori seçiniz';
-      if (!formData.subcategory) newErrors.subcategory = 'Lütfen alt kategori seçiniz';
+      if (!data.category) newErrors.category = 'Lütfen kategori seçiniz';
+      if (!data.subcategory) newErrors.subcategory = 'Lütfen alt kategori seçiniz';
     }
 
     if (step === 2) {
-      if (!formData.title?.trim()) {
+      if (!data.title?.trim()) {
         newErrors.title = 'Lütfen başlık giriniz';
       }
-      else if ((formData.title?.trim().length || 0) < 10) {
+      else if ((data.title?.trim().length || 0) < 10) {
         newErrors.title = 'Başlık en az 10 karakter olmalıdır';
       }
       
-      if (!formData.description?.trim()) {
+      if (!data.description?.trim()) {
         newErrors.description = 'Lütfen açıklama giriniz';
       }
-      else if ((formData.description?.trim().length || 0) < 20) {
+      else if ((data.description?.trim().length || 0) < 20) {
         newErrors.description = 'Açıklama en az 20 karakter olmalıdır';
       }
 
-      const combined = buildAttributeFields();
+      const combined = attributeFields;
       if (combined && combined.length > 0) {
         const fieldMap = new Map<string, AttrField>();
         combined.forEach((f) => {
           if (!f) return;
-          const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
-          fieldMap.set(id, f);
+          fieldMap.set(stableAttrFieldId(f), f);
         });
-        const attrs = formData.attributes || {};
+        const attrs = data.attributes || {};
         fieldMap.forEach((f) => {
           if (!f) return;
           if (f.type === 'range-number' && f.minKey && f.maxKey) {
@@ -1332,21 +1892,20 @@ function TalepOlusturPage() {
             }
           }
         });
-      } else {
-        console.log('No attributes to validate');
       }
     }
 
     if (step === 3) {
-    if (!formData.city?.trim()) newErrors.city = 'Lütfen şehir seçiniz';
-    if (!formData.district?.trim()) newErrors.district = 'Lütfen ilçe seçiniz';
-    if (!formData.minBudget) newErrors.minBudget = 'Lütfen minimum bütçe giriniz';
-    else if (parseInt(formData.minBudget) < 0) newErrors.minBudget = 'Minimum bütçe 0 TL veya daha fazla olmalıdır';
-    if (!formData.budget) newErrors.budget = 'Lütfen maksimum bütçe giriniz';
-    else if (parseInt(formData.budget) < 1) newErrors.budget = 'Maksimum bütçe 1 TL veya daha fazla olmalıdır';
-    if (formData.minBudget && formData.budget) {
-      const a = parseInt(formData.minBudget);
-      const b = parseInt(formData.budget);
+    if (!data.city?.trim()) newErrors.city = 'Lütfen şehir seçiniz';
+    if (!data.district?.trim()) newErrors.district = 'Lütfen ilçe seçiniz';
+    if (data.category === 'emlak' && !data.neighborhood?.trim()) newErrors.neighborhood = 'Lütfen mahalle seçiniz';
+    if (!data.minBudget) newErrors.minBudget = 'Lütfen minimum bütçe giriniz';
+    else if (parseInt(data.minBudget) < 0) newErrors.minBudget = 'Minimum bütçe 0 TL veya daha fazla olmalıdır';
+    if (!data.budget) newErrors.budget = 'Lütfen maksimum bütçe giriniz';
+    else if (parseInt(data.budget) < 1) newErrors.budget = 'Maksimum bütçe 1 TL veya daha fazla olmalıdır';
+    if (data.minBudget && data.budget) {
+      const a = parseInt(data.minBudget);
+      const b = parseInt(data.budget);
       if (!Number.isNaN(a) && !Number.isNaN(b) && a > b) {
         newErrors.minBudget = 'Minimum bütçe maksimum bütçeden büyük olamaz';
         newErrors.budget = 'Maksimum bütçe minimum bütçeden küçük olamaz';
@@ -1365,6 +1924,7 @@ function TalepOlusturPage() {
       description:'Açıklama', 
       city:'İl', 
       district:'İlçe', 
+      neighborhood:'Mahalle',
       minBudget:'Minimum bütçe', 
       budget:'Maksimum bütçe',
       model:'Model',
@@ -1374,9 +1934,8 @@ function TalepOlusturPage() {
 
     const labelMap = new Map<string, string>();
     if (step === 2) {
-      const attrs = buildAttributeFields();
-      if (attrs && attrs.length > 0) {
-        attrs.forEach((f) => {
+      if (attributeFields && attributeFields.length > 0) {
+        attributeFields.forEach((f) => {
           if (!f) return;
           if (f.key) labelMap.set(f.key, f.label);
           if (f.minKey) labelMap.set(f.minKey, f.label);
@@ -1403,7 +1962,7 @@ function TalepOlusturPage() {
       console.error('Error in validateStep:', error);
       return false;
     }
-  }, [formData, buildAttributeFields]);
+  }, [formData, attributeFields]);
 
   const validateAll = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
@@ -1427,11 +1986,10 @@ function TalepOlusturPage() {
         newErrors.budget = 'En yüksek, En düşük’ten küçük olamaz';
       }
     }
-    const combined = buildAttributeFields();
+    const combined = attributeFields;
     const fieldMap = new Map<string, AttrField>();
     combined.forEach((f) => {
-      const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
-      fieldMap.set(id, f);
+      fieldMap.set(stableAttrFieldId(f), f);
     });
     const attrs = formData.attributes || {};
     fieldMap.forEach((f) => {
@@ -1521,15 +2079,35 @@ function TalepOlusturPage() {
     
     setErrorSummary(detailedErrors);
     return items.length === 0;
-  }, [formData]);
+  }, [formData, attributeFields]);
 
   const updateFormData = useCallback((field: keyof FormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    // Hata temizleme
-    if (errors[field as string]) {
-      setErrors(prev => { const n = { ...prev }; delete n[field as string]; return n; });
+    setFormData((prev) => {
+      if (field === 'category') {
+        if (prev.category === value) return prev;
+        return { ...prev, category: value, subcategory: '', subcategoryFullSlug: undefined, attributes: {}, manualAttributeKeys: [], images: [] };
+      }
+      if (field === 'subcategory') {
+        if (prev.subcategory === value) return prev;
+        return { ...prev, subcategory: value, subcategoryFullSlug: undefined, attributes: {}, manualAttributeKeys: [] };
+      }
+      return { ...prev, [field]: value };
+    });
+
+    if (field === 'category' || field === 'subcategory') {
+      if (Object.keys(errors).length) setErrors({});
+      if (errorSummary.length) setErrorSummary([]);
+      return;
     }
-  }, [errors]);
+
+    if (errors[field as string]) {
+      setErrors((prev) => {
+        const n = { ...prev };
+        delete n[field as string];
+        return n;
+      });
+    }
+  }, [errors, errorSummary]);
 
 const getBrandLogo = (brand: string) => {
     if (!brand) return '';
@@ -1554,27 +2132,25 @@ const getBrandLogo = (brand: string) => {
       if (key === 'seri') { next.attributes['paket'] = ''; }
       return next;
     });
-    if (errors[key]) setErrors(prev => { const n = { ...prev }; delete n[key]; return n; });
-    if (key === 'marka') setErrors(prev => { const n = { ...prev }; delete n.model; delete n.seri; delete n.paket; return n; });
-    if (key === 'model') setErrors(prev => { const n = { ...prev }; delete n.seri; delete n.paket; return n; });
-    if (key === 'seri') setErrors(prev => { const n = { ...prev }; delete n.paket; return n; });
-  }, [errors]);
+    setErrors(prev => {
+      const n = { ...prev };
+      delete n[key];
+      if (key === 'marka') { delete n.model; delete n.seri; delete n.paket; }
+      if (key === 'model') { delete n.seri; delete n.paket; }
+      if (key === 'seri') { delete n.paket; }
+      return n;
+    });
+  }, []);
 
-  const nextStep = useCallback(() => {
-    console.log('nextStep called, currentStep:', currentStep);
+  const nextStep = useCallback((overrideData?: Partial<FormData>) => {
     try {
-      const isValid = validateStep(currentStep);
-      console.log('Validation result:', isValid);
-      console.log('Current formData:', formData);
-      console.log('Current errors:', errors);
+      const currentData = { ...formData, ...overrideData };
+      const isValid = validateStep(currentStep, currentData);
       
       if (isValid && currentStep < STEPS.length) {
-        console.log('Validation passed, proceeding to next step');
         setCurrentStep(prev => prev + 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        console.log('Validation failed, showing toast');
-        console.log('Validation errors:', errors);
         toast({ title: 'Eksik alanlar', description: 'Lütfen yukarıdaki eksik alanları kontrol ediniz.', variant: 'destructive' });
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -1582,7 +2158,7 @@ const getBrandLogo = (brand: string) => {
       console.error('Error in nextStep:', error);
       toast({ title: 'Hata', description: 'Bir hata oluştu. Lütfen tekrar deneyiniz.', variant: 'destructive' });
     }
-  }, [validateStep, currentStep, formData, errors]);
+  }, [validateStep, currentStep, formData]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
@@ -1627,7 +2203,9 @@ const getBrandLogo = (brand: string) => {
             ...formData.attributes,
             ...(formData.minBudget ? { minPrice: parseInt(formData.minBudget) } : {}),
             ...(formData.budget ? { maxPrice: parseInt(formData.budget) } : {}),
+            ...(formData.category === 'emlak' && formData.neighborhood?.trim() ? { mahalle: formData.neighborhood.trim() } : {}),
           },
+          manualAttributeKeys: formData.manualAttributeKeys || []
         }),
       });
 
@@ -1661,7 +2239,7 @@ const getBrandLogo = (brand: string) => {
         variant: "destructive",
       });
     }
-  }, [formData, validateAll, errorSummary, editId, categories, router]);
+  }, [formData, validateAll, editId, router, sp]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1676,20 +2254,21 @@ const getBrandLogo = (brand: string) => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <CategorySelection formData={formData} errors={errors} updateFormData={updateFormData} subcats={subcats} categories={categories} />;
+        return <CategorySelection formData={formData} errors={errors} updateFormData={updateFormData} subcats={subcats} categories={categories} nextStep={nextStep} />;
       case 2:
-        const currentCategory = categories.find((c: any) => c.slug === formData.category);
         return (
           <>
-            <DetailsStep formData={formData} errors={errors} updateFormData={updateFormData} />
+            <DetailsStep formData={formData} errors={errors} updateFormData={updateFormData} categories={categories} />
             <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
               <CategoryAttributes
                 category={formData.category}
                 subcategory={formData.subcategory}
+                fields={attributeFields}
                 attributes={formData.attributes}
                 errors={errors}
                 onChange={handleAttributeChange}
-                dynamicAttributes={currentCategory?.attributes}
+                onManualChange={handleManualChange}
+                manualModes={manualModes}
               />
             </div>
           </>
@@ -1766,7 +2345,7 @@ const getBrandLogo = (brand: string) => {
                 {currentStep < STEPS.length ? (
                   <button
                     type="button"
-                    onClick={nextStep}
+                    onClick={() => nextStep()}
                     className="group relative flex items-center gap-2 px-10 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-2xl font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 shadow-xl shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-1 overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center gap-2">

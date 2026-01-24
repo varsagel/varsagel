@@ -7,6 +7,8 @@ import { User, AlertCircle, ArrowLeft, MapPin, FileText, Tag } from 'lucide-reac
 import OfferActions from './OfferActions';
 import OfferImages from './OfferImages';
 import SafetyTips from '@/components/talep/SafetyTips';
+import { humanizeKeyTR } from '@/lib/humanize-key-tr';
+import OfferEditClient from './OfferEditClient';
 
 const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
 
@@ -187,7 +189,7 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
                 <div className="grid grid-cols-2 gap-3">
                   {Object.entries(attributes).map(([key, value]) => (
                     <div key={key} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                      <span className="block text-xs text-gray-400 uppercase mb-1">{key}</span>
+                      <span className="block text-xs text-gray-400 mb-1">{humanizeKeyTR(key)}</span>
                       <span className="font-medium text-gray-900">{String(value)}</span>
                     </div>
                   ))}
@@ -203,6 +205,17 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
           {isOwner && offer.status === 'PENDING' && (
             <div className="mt-8 pt-6 border-t border-gray-100">
               <OfferActions offerId={offer.id} />
+            </div>
+          )}
+
+          {isMaker && offer.status === 'PENDING' && (
+            <div className="mt-6 pt-6 border-t border-gray-100 flex items-center justify-end">
+              <OfferEditClient
+                offerId={offer.id}
+                initialPrice={Number(offer.price)}
+                initialMessage={offer.body || ''}
+                initialImages={images}
+              />
             </div>
           )}
           

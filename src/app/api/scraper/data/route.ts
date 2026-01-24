@@ -1,21 +1,14 @@
 import { NextResponse } from 'next/server'
-import fs from 'node:fs'
 import path from 'node:path'
 import { getAdminUserId } from '@/auth'
+import { readJsonFileCached } from '@/lib/file-cache'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 function readGenerated() {
   const fp = path.join(process.cwd(), 'src', 'data', 'generated-automobil.json')
-  if (!fs.existsSync(fp)) return { modelSeries: { 'vasita/otomobil': {} }, seriesTrims: { 'vasita/otomobil': {} } }
-  try {
-    const raw = fs.readFileSync(fp, 'utf-8')
-    const json = JSON.parse(raw || '{}')
-    return json || {}
-  } catch {
-    return { modelSeries: { 'vasita/otomobil': {} }, seriesTrims: { 'vasita/otomobil': {} } }
-  }
+  return readJsonFileCached<any>(fp, { modelSeries: { 'vasita/otomobil': {} }, seriesTrims: { 'vasita/otomobil': {} } }, 5000)
 }
 
 function sortTr(a: string, b: string) {

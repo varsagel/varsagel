@@ -1,22 +1,38 @@
 import { auth } from "@/auth";
-import { Bell, MessageSquare, User, LogOut, PlusCircle, Menu, ChevronDown, Settings, List } from "lucide-react";
+import { Bell, MessageSquare, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import SignOutLink from "./SignOutLink";
 
 import { Logo } from "@/components/Logo";
+import HeaderMobileMenu from "./HeaderMobileMenu";
+import HeaderSearch from "./HeaderSearch";
+import { prisma } from "@/lib/prisma";
+import HeaderUserMenuClient from "./HeaderUserMenuClient";
 
 export default async function Header() {
   const session = await auth();
   const isAuth = !!session?.user?.email;
   const firstName = session?.user?.name?.split(" ")?.[0] || "Hesabım";
   const initial = session?.user?.name?.trim()?.[0]?.toUpperCase() || "U";
+  const userId = (session?.user as any)?.id as string | undefined;
+  const unreadNotifications = isAuth && userId
+    ? await prisma.notification.count({ where: { userId, read: false, NOT: { type: "message" } } })
+    : 0;
+  const unreadMessages = isAuth && userId
+    ? await prisma.message.count({ where: { toUserId: userId, read: false } })
+    : 0;
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3">
         <Link href="/" className="relative z-10">
           <Logo className="w-10 h-10" textClassName="text-2xl" />
         </Link>
+
+        <div className="hidden md:flex flex-1 justify-center px-6">
+          <div className="w-full max-w-xl">
+            <HeaderSearch />
+          </div>
+        </div>
 
         <nav className="hidden md:flex items-center gap-6">
           <Link
@@ -58,166 +74,40 @@ export default async function Header() {
               <div className="flex items-center gap-1">
                 <Link href="/mesajlar" className="relative p-2.5 text-gray-500 hover:text-cyan-600 hover:bg-cyan-50 rounded-xl transition-all" title="Mesajlar">
                   <MessageSquare className="w-5 h-5" />
+                  {unreadMessages > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-rose-600 text-white text-[11px] font-extrabold shadow-md ring-2 ring-white">
+                      {unreadMessages > 99 ? "99+" : unreadMessages}
+                    </span>
+                  )}
                 </Link>
                 <Link href="/bildirimler" className="relative p-2.5 text-gray-500 hover:text-cyan-600 hover:bg-cyan-50 rounded-xl transition-all" title="Bildirimler">
                   <Bell className="w-5 h-5" />
+                  {unreadNotifications > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-rose-600 text-white text-[11px] font-extrabold shadow-md ring-2 ring-white">
+                      {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                    </span>
+                  )}
                 </Link>
               </div>
 
               <div className="h-6 w-px bg-gray-200"></div>
 
-              <details className="relative group">
-                <summary className="list-none flex items-center gap-3 pl-2 cursor-pointer select-none outline-none">
-                  <div className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 group-hover:border-cyan-200 group-hover:bg-cyan-50 transition-all">
-                    <User className="w-5 h-5 text-gray-600 group-hover:text-cyan-600" />
-                  </div>
-                  <div className="hidden lg:flex flex-col items-start">
-                    <span className="text-sm font-semibold text-gray-700 group-hover:text-cyan-600 transition-colors">
-                      {firstName}
-                    </span>
-                  </div>
-                  <ChevronDown className="w-4 h-4 text-gray-400 transition-transform duration-200 group-open:rotate-180" />
-                </summary>
-                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                  <div className="px-4 py-2 border-b border-gray-100 mb-2">
-                    <p className="text-sm font-semibold text-gray-900">{session?.user?.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{session?.user?.email}</p>
-                  </div>
-
-                  <Link
-                    href="/profil"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors"
-                  >
-                    <User className="w-4 h-4" />
-                    Profilim
-                  </Link>
-
-                  <Link
-                    href="/profil?tab=taleplerim"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors"
-                  >
-                    <List className="w-4 h-4" />
-                    Taleplerim
-                  </Link>
-
-                  <Link
-                    href="/profil?tab=ayarlar"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors"
-                  >
-                    <Settings className="w-4 h-4" />
-                    Ayarlar
-                  </Link>
-
-                  <div className="h-px bg-gray-100 my-2"></div>
-
-                  <SignOutLink className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                    <LogOut className="w-4 h-4" />
-                    Çıkış Yap
-                  </SignOutLink>
-                </div>
-              </details>
+              <HeaderUserMenuClient firstName={firstName} name={session?.user?.name} email={session?.user?.email} />
             </div>
           )}
         </nav>
 
-        <details className="md:hidden relative">
-          <summary className="list-none p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer select-none relative z-10">
-            <Menu className="w-6 h-6" />
-          </summary>
-          <div className="absolute top-14 right-0 w-[calc(100vw-2rem)] max-w-sm bg-white border border-gray-100 shadow-xl rounded-2xl overflow-hidden">
-            <div className="p-4 space-y-4">
-              {isAuth && (
-                <div className="flex items-center gap-3 p-4 bg-cyan-50 rounded-xl">
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-cyan-600 font-bold shadow-sm">
-                    {initial}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">{session?.user?.name}</p>
-                    <p className="text-xs text-gray-500">{session?.user?.email}</p>
-                  </div>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-3">
-                <Link
-                  href="/talep-olustur"
-                  prefetch={false}
-                  className="col-span-2 flex items-center justify-center gap-2 bg-cyan-600 text-white p-3 rounded-xl font-medium shadow-md active:scale-95 transition-transform"
-                >
-                  <PlusCircle className="w-5 h-5" />
-                  Talep Oluştur
-                </Link>
-
-                {isAuth && (
-                  <>
-                    <Link
-                      href="/mesajlar"
-                      className="flex flex-col items-center justify-center gap-2 bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors"
-                    >
-                      <MessageSquare className="w-6 h-6 text-cyan-600" />
-                      <span className="text-sm font-medium text-gray-700">Mesajlar</span>
-                    </Link>
-                    <Link
-                      href="/bildirimler"
-                      className="flex flex-col items-center justify-center gap-2 bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors relative"
-                    >
-                      <Bell className="w-6 h-6 text-cyan-600" />
-                      <span className="text-sm font-medium text-gray-700">Bildirimler</span>
-                    </Link>
-                  </>
-                )}
-              </div>
-
-              <nav className="space-y-1">
-                <Link
-                  href="/#kategoriler"
-                  className="flex items-center gap-3 p-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                >
-                  <List className="w-5 h-5 text-gray-400" />
-                  Kategoriler
-                </Link>
-
-                {isAuth ? (
-                  <>
-                    <Link
-                      href="/profil"
-                      className="flex items-center gap-3 p-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                    >
-                      <User className="w-5 h-5 text-gray-400" />
-                      Profilim
-                    </Link>
-                    <Link
-                      href="/profil?tab=ayarlar"
-                      className="flex items-center gap-3 p-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                    >
-                      <Settings className="w-5 h-5 text-gray-400" />
-                      Ayarlar
-                    </Link>
-                    <SignOutLink className="w-full flex items-center gap-3 p-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors">
-                      <LogOut className="w-5 h-5" />
-                      Çıkış Yap
-                    </SignOutLink>
-                  </>
-                ) : (
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    <Link
-                      href="/giris"
-                      className="inline-flex items-center justify-center border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium h-10 px-4 py-2 rounded-md text-sm transition-colors"
-                    >
-                      Giriş Yap
-                    </Link>
-                    <Link
-                      href="/kayit"
-                      className="inline-flex items-center justify-center bg-cyan-600 text-white hover:bg-cyan-700 font-medium h-10 px-4 py-2 rounded-md text-sm transition-colors"
-                    >
-                      Kayıt Ol
-                    </Link>
-                  </div>
-                )}
-              </nav>
-            </div>
-          </div>
-        </details>
+        <div className="flex md:hidden items-center gap-2 ml-auto">
+          <HeaderSearch mode="icon" />
+          <HeaderMobileMenu
+            isAuth={isAuth}
+            initial={initial}
+            userName={session?.user?.name}
+            userEmail={session?.user?.email}
+            unreadNotifications={unreadNotifications}
+            unreadMessages={unreadMessages}
+          />
+        </div>
       </div>
     </header>
   );

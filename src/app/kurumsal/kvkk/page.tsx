@@ -2,11 +2,13 @@ import React from 'react';
 import SozlesmeLayout from '@/components/layout/SozlesmeLayout';
 import { Shield } from 'lucide-react';
 import type { Metadata } from 'next';
+import { metadataBase } from '@/lib/metadata-base';
 
 export const metadata: Metadata = {
   title: "KVKK Aydınlatma Metni | Varsagel",
   description:
     "6698 sayılı KVKK kapsamında kişisel verilerinizin işlenmesine ilişkin aydınlatma metnimizi okuyun. Veri sorumlusu bilgilerimiz ve haklarınız hakkında detaylı bilgi.",
+  metadataBase: metadataBase,
   alternates: {
     canonical: "/kurumsal/kvkk",
   },

@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, Users, Tag, Flag, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, Users, Tag, Flag, LogOut, ClipboardList } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 const menuItems = [
   { name: "Genel Bakış", href: "/admin", icon: LayoutDashboard },
   { name: "Talep Yönetimi", href: "/admin/talepler", icon: FileText },
+  { name: "Manuel Girişler", href: "/admin/manual-entries", icon: ClipboardList },
   { name: "Kullanıcılar", href: "/admin/users", icon: Users },
   { name: "Teklifler", href: "/admin/offers", icon: Tag },
   { name: "Şikayetler", href: "/admin/reports", icon: Flag },
@@ -59,4 +60,3 @@ export default function Sidebar() {
     </div>
   );
 }
-

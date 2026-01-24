@@ -30,6 +30,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.mts",
@@ -38,6 +39,7 @@
   ],
   "exclude": [
     "node_modules",
-    ".next"
+    ".next",
+    "varsagel"
   ]
 }

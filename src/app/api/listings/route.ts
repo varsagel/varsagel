@@ -18,7 +18,7 @@ const searchSchema = z.object({
   ids: z.string().optional(), // Comma separated IDs
   status: z.string().optional(),
   userId: z.string().optional(),
-});
+}).passthrough();
 
 export async function GET(request: NextRequest) {
   try {

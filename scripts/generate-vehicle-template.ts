@@ -37,7 +37,7 @@ try {
 // 3. Add common brands if missing
 const commonBrands = [
   'Togg', 'Tesla', 'Volkswagen', 'Ford', 'Renault', 'Fiat', 'Toyota', 'Hyundai', 'Honda', 
-  'Opel', 'Peugeot', 'Citroen', 'Dacia', 'Skoda', 'Seat', 'Audi', 'BMW', 'Mercedes-Benz', 
+  'Opel', 'Peugeot', 'Dacia', 'Skoda', 'Seat', 'Audi', 'BMW', 'Mercedes-Benz', 
   'Volvo', 'Kia', 'Nissan', 'Suzuki', 'Mazda', 'Chevrolet', 'Land Rover', 'Jeep', 'Mini', 
   'Porsche', 'Subaru', 'Chery', 'MG', 'BYD', 'Alfa Romeo', 'Cupra', 'DS Automobiles', 
   'Isuzu', 'Iveco', 'Jaguar', 'Lada', 'Lexus', 'Maserati', 'Mitsubishi', 'Smart', 'SsangYong'

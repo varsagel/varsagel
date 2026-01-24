@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { getAdminUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
+const getUploadScanClient = (client: any) => client?.uploadScan as
+  | {
+      findFirst: (args: any) => Promise<any>;
+      updateMany: (args: any) => Promise<{ count: number }>;
+      findUnique: (args: any) => Promise<any>;
+      update: (args: any) => Promise<any>;
+    }
+  | undefined;
+
 export async function POST(req: Request) {
   const adminId = await getAdminUserId();
   if (!adminId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -12,17 +21,19 @@ export async function POST(req: Request) {
   let job: any = null;
   try {
     job = await prisma.$transaction(async (tx) => {
-      const pending = await tx.uploadScan.findFirst({
+      const uploadScan = getUploadScanClient(tx);
+      if (!uploadScan) return null;
+      const pending = await uploadScan.findFirst({
         where: { status: "PENDING" },
         orderBy: { createdAt: "asc" },
       });
       if (!pending) return null;
-      const res = await tx.uploadScan.updateMany({
+      const res = await uploadScan.updateMany({
         where: { id: pending.id, status: "PENDING" },
         data: { status: "IN_PROGRESS", lockedAt: new Date() },
       });
       if (!res.count) return null;
-      return tx.uploadScan.findUnique({ where: { id: pending.id } });
+      return uploadScan.findUnique({ where: { id: pending.id } });
     });
   } catch (err: any) {
     if (err?.code === "P2021") {
@@ -34,10 +45,13 @@ export async function POST(req: Request) {
   if (!job) return NextResponse.json({ ok: true, job: null });
 
   if (workerId) {
-    await prisma.uploadScan.update({
+    const uploadScan = getUploadScanClient(prisma);
+    if (uploadScan) {
+      await uploadScan.update({
       where: { id: job.id },
       data: { source: `worker:${workerId}` },
     });
+    }
   }
 
   return NextResponse.json({ ok: true, job });
@@ -67,7 +81,11 @@ export async function PATCH(req: Request) {
 
   let updated: any;
   try {
-    updated = await prisma.uploadScan.update({
+    const uploadScan = getUploadScanClient(prisma);
+    if (!uploadScan) {
+      return NextResponse.json({ ok: false, error: "UploadScan tablosu bulunamadı" }, { status: 500 });
+    }
+    updated = await uploadScan.update({
       where: { id },
       data,
     });

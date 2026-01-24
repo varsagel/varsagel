@@ -101,66 +101,68 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
     },
   },
 
-  cookies: {
-    sessionToken: {
-      name: `__Secure-next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-    callbackUrl: {
-      name: `__Secure-next-auth.callback-url`,
-      options: {
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-    csrfToken: {
-      name: `__Secure-next-auth.csrf-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-    pkceCodeVerifier: {
-      name: `__Secure-next-auth.pkce.code_verifier`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-    state: {
-      name: `__Secure-next-auth.state`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-    nonce: {
-      name: `__Secure-next-auth.nonce`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-  },
+  cookies: isProd
+    ? {
+        sessionToken: {
+          name: `__Secure-next-auth.session-token`,
+          options: {
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+          },
+        },
+        callbackUrl: {
+          name: `__Secure-next-auth.callback-url`,
+          options: {
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+          },
+        },
+        csrfToken: {
+          name: `__Secure-next-auth.csrf-token`,
+          options: {
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+          },
+        },
+        pkceCodeVerifier: {
+          name: `__Secure-next-auth.pkce.code_verifier`,
+          options: {
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+          },
+        },
+        state: {
+          name: `__Secure-next-auth.state`,
+          options: {
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+          },
+        },
+        nonce: {
+          name: `__Secure-next-auth.nonce`,
+          options: {
+            httpOnly: true,
+            sameSite: "lax",
+            path: "/",
+            secure: true,
+          },
+        },
+      }
+    : undefined,
   pages: {
     signIn: "/giris",
   },
   callbacks: {
-    async signIn({ account, profile }) {
+    async signIn({ account }) {
       fileLog("SignIn Callback triggered", { provider: account?.provider, accountId: account?.providerAccountId });
       if (account?.provider === "google") return true;
       return true;
@@ -181,9 +183,9 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
       return token;
     },
     async redirect({ url, baseUrl }) {
-      const host = (process.env.AUTH_URL || process.env.NEXTAUTH_URL || baseUrl || "").replace(/\/$/, "");
       try {
         const u = new URL(url, baseUrl);
+        const safeOrigin = new URL(baseUrl).origin;
         
         // Eğer callback URL'si varsa oraya yönlendir
         if (u.searchParams.has('callbackUrl')) {
@@ -192,7 +194,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
             // Güvenlik kontrolü - sadece aynı domain'e yönlendir
             try {
               const callback = new URL(callbackUrl, baseUrl);
-              if (callback.origin === new URL(baseUrl).origin) {
+              if (callback.origin === safeOrigin) {
                 return callback.href;
               }
             } catch {
@@ -202,17 +204,21 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         }
         
         // API auth endpoint'lerinden geliyorsa ana sayfaya
-        if (u.pathname.startsWith("/api/auth")) return `${host}/`;
+        if (u.pathname.startsWith("/api/auth")) return `${safeOrigin}/`;
         
         // Aynı domain içindeki URL'ye yönlendir
-        if (u.origin === new URL(baseUrl).origin) {
+        if (u.origin === safeOrigin) {
           return u.href;
         }
         
         // Varsayılan olarak ana sayfaya
-        return `${host}/`;
+        return `${safeOrigin}/`;
       } catch {
-        return `${host}/`;
+        try {
+          return `${new URL(baseUrl).origin}/`;
+        } catch {
+          return '/';
+        }
       }
     },
   },
@@ -228,8 +234,22 @@ export async function getAdminUserId() {
   const userId = session?.user?.id as string | undefined;
   if (!userId) return null;
 
+  const sessionRole = String(session?.user?.role || '').toUpperCase();
+  if (sessionRole && sessionRole !== 'ADMIN') return null;
+
+  const g = globalThis as any;
+  if (!g.__varsagel_admin_role_cache) {
+    g.__varsagel_admin_role_cache = new Map<string, { isAdmin: boolean; expiresAt: number }>();
+  }
+  const cache: Map<string, { isAdmin: boolean; expiresAt: number }> = g.__varsagel_admin_role_cache;
+
+  const cached = cache.get(userId);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.isAdmin ? userId : null;
+  }
+
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
   const isAdmin = (user?.role || '').toUpperCase() === 'ADMIN';
-  if (!isAdmin) return null;
-  return userId;
+  cache.set(userId, { isAdmin, expiresAt: Date.now() + 30_000 });
+  return isAdmin ? userId : null;
 }

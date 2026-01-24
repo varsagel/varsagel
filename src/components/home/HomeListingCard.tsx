@@ -2,6 +2,7 @@
 
 // Force rebuild 2
 import Link from "next/link";
+import Image from "next/image";
 import { useMemo, useState, useEffect } from "react";
 import dynamic from 'next/dynamic';
 
@@ -11,6 +12,8 @@ const FavoriteButton = dynamic(() => import('@/components/ui/FavoriteButton'), {
 });
 import { getSubcategoryImage } from '@/data/subcategory-images';
 import BRAND_LOGOS from "@/data/brand-logos.json";
+import { listingHref } from '@/lib/listing-url';
+import { titleCaseTR } from '@/lib/title-case-tr';
 
 function formatTimeAgoLocal(createdAt: string) {
   const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
@@ -55,6 +58,7 @@ function formatTryLocal(price: number) {
 
 export interface ListingItem {
   id: string;
+  code?: string | null;
   title: string;
   description: string;
   price: number;
@@ -105,12 +109,45 @@ function BrandBadge({ category, subcategory, attributes }: { category: string; s
 }
 
 export default function HomeListingCard({ listing, priority, isAuthenticated }: { listing: ListingItem; priority?: boolean; isAuthenticated: boolean }) {
+  const href = useMemo(() => {
+    return listingHref({
+      id: listing.id,
+      code: listing.code,
+      title: listing.title,
+      category: listing.category,
+      subcategory: listing.subcategory,
+    });
+  }, [listing.category, listing.code, listing.id, listing.subcategory, listing.title]);
+
   const subcategoryImage = useMemo(() => {
-    return listing.subcategory ? getSubcategoryImage(listing.subcategory, listing.category) : '/images/placeholder-1.svg';
-  }, [listing.subcategory, listing.category]);
+    return listing.subcategory ? getSubcategoryImage(listing.subcategory) : '/images/placeholder-1.svg';
+  }, [listing.subcategory]);
 
   const [currentSrc, setCurrentSrc] = useState(listing.images?.[0] || subcategoryImage);
-
+  const isRemoteImage = useMemo(() => {
+    return currentSrc.startsWith('http://') || currentSrc.startsWith('https://');
+  }, [currentSrc]);
+  const isS3Host = useMemo(() => {
+    if (!isRemoteImage) return false;
+    try {
+      const host = new URL(currentSrc).hostname.toLowerCase();
+      return host.includes(".s3.");
+    } catch {
+      return false;
+    }
+  }, [currentSrc, isRemoteImage]);
+  const isAllowedRemote = useMemo(() => {
+    if (!isRemoteImage) return false;
+    try {
+      const host = new URL(currentSrc).hostname.toLowerCase();
+      return host === 'varsagel.com' || host === 'www.varsagel.com' || host === 'localhost' || host === '127.0.0.1' || isS3Host;
+    } catch {
+      return false;
+    }
+  }, [currentSrc, isRemoteImage, isS3Host]);
+  const isJfifImage = useMemo(() => {
+    return /\.jfif($|\?)/i.test(currentSrc) || /\.jif($|\?)/i.test(currentSrc);
+  }, [currentSrc]);
   useEffect(() => {
     setCurrentSrc(listing.images?.[0] || subcategoryImage);
   }, [listing.images, subcategoryImage]);
@@ -140,10 +177,10 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
       return `${formatTryLocal(min)} - ${formatTryLocal(max)}`;
     } else if (minPrice) {
       const min = typeof minPrice === 'string' ? parseFloat(minPrice) : minPrice;
-      return `Min ${formatTryLocal(min)}`;
+      return `En Az ${formatTryLocal(min)}`;
     } else if (maxPrice) {
       const max = typeof maxPrice === 'string' ? parseFloat(maxPrice) : maxPrice;
-      return `Max ${formatTryLocal(max)}`;
+      return `En Çok ${formatTryLocal(max)}`;
     }
     
     return formatTryLocal(listing.price);
@@ -151,15 +188,18 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
 
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden relative group">
-      <Link href={`/talep/${listing.id}`} className="block">
+      <Link href={href} className="block">
         <div className="relative w-full aspect-[4/3] bg-gray-100">
-          <img
+          <Image
             src={currentSrc}
             alt={listing.title}
             onError={handleError}
             loading={priority ? "eager" : "lazy"}
-            decoding="async"
-            className="absolute inset-0 w-full h-full object-cover"
+            priority={!!priority}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            unoptimized={isJfifImage || isS3Host || (isRemoteImage && !isAllowedRemote)}
+            className="object-cover"
           />
           <div suppressHydrationWarning className="absolute bottom-1 left-1 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded text-[11px] font-semibold">
             {priceText}
@@ -169,7 +209,7 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
       <FavoriteButton listingId={listing.id} isAuthenticated={isAuthenticated} isFavorited={listing.isFavorited} />
 
       <div className="p-2.5">
-        <Link href={`/talep/${listing.id}`}>
+        <Link href={href}>
           <h3 className="font-semibold text-gray-900 mb-1 text-xs line-clamp-2 hover:text-blue-600 transition-colors">
             {listing.title}
           </h3>
@@ -186,7 +226,7 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
             <span suppressHydrationWarning>{timeAgo}</span>
           </div>
           <div className="bg-gray-100 px-1 py-0.5 rounded text-[10px] font-medium capitalize">
-            {listing.category}
+            {titleCaseTR(listing.category)}
           </div>
         </div>
 

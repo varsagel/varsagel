@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import fs from 'node:fs'
 import path from 'node:path'
 import { getAdminUserId } from '@/auth'
+import { readJsonFileCached } from '@/lib/file-cache'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -12,8 +13,7 @@ export async function GET() {
     if (!adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const fp = path.join(process.cwd(), 'src', 'data', 'generated-automobil.json')
-    const raw = fs.existsSync(fp) ? fs.readFileSync(fp, 'utf-8') : '{}'
-    const json = JSON.parse(raw || '{}')
+    const json = readJsonFileCached<any>(fp, {}, 5000)
     const auto = json?.modelSeries?.['vasita/otomobil'] || {}
     const trims = json?.seriesTrims?.['vasita/otomobil'] || {}
     let brands = 0, models = 0, series = 0, trimCount = 0
@@ -40,7 +40,7 @@ export async function GET() {
     const scrapeRunning = alive(readPid(scrapePidFile))
     const importRunning = alive(readPid(importPidFile))
     return NextResponse.json({ brands, models, series, trims: trimCount, updatedAt: Date.now(), running: { scrape: scrapeRunning, import: importRunning } })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'status_failed' }, { status: 500 })
   }
 }

@@ -17,7 +17,16 @@ export default function OfferImages({ images }: OfferImagesProps) {
     const s = String(src || '').trim();
     if (!s) return '';
     const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
-    if (s.startsWith('http://') || s.startsWith('https://')) return s;
+    if (s.startsWith('http://') || s.startsWith('https://')) {
+      try {
+        const parsed = new URL(s);
+        const host = parsed.hostname.toLowerCase();
+        if (host.includes('.s3.') || host.includes('.cloudfront.net')) {
+          return `/api/upload?url=${encodeURIComponent(s)}`;
+        }
+      } catch {}
+      return s;
+    }
     if (s.startsWith('uploads/')) {
       const path = `/${s}`;
       return baseUrl ? `${baseUrl}${path}` : path;
@@ -48,7 +57,8 @@ export default function OfferImages({ images }: OfferImagesProps) {
   const isJfif = (src: string) => /\.jfif($|\?)/i.test(src) || /\.jif($|\?)/i.test(src);
   const isUpload = (src: string) => src.includes('/uploads/') || src.startsWith('uploads/');
   const isExternal = (src: string) => /^https?:\/\//i.test(src);
-  const shouldUnoptimize = (src: string) => isUpload(src) || isExternal(src) || isJfif(src);
+  const isProxy = (src: string) => src.startsWith('/api/upload?');
+  const shouldUnoptimize = (src: string) => isUpload(src) || isExternal(src) || isJfif(src) || isProxy(src);
 
   return (
     <div>

@@ -18,7 +18,7 @@ export async function GET() {
     }, {} as Record<string, string>);
 
     return NextResponse.json(settingsMap);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
   }
 }
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     await prisma.$transaction(updates);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
   }
 }

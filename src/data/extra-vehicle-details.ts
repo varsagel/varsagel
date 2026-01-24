@@ -9,6 +9,7 @@ export const EXTRA_MODEL_SERIES: any = {
     // --- HIGH QUALITY DATA ---
     "Togg": { "T10X": ["V1 RWD", "V2 RWD"] },
     "Chery": { "Omoda 5": ["1.6 TGDI"], "Tiggo 7 Pro": ["1.6 TGDI"], "Tiggo 8 Pro": ["1.6 TGDI"] },
+    "Citroen": { "C3 Aircross": ["1.2 PureTech", "1.5 BlueHDi"], "C4 Cactus": ["1.2 PureTech", "1.6 BlueHDi"], "C5 Aircross": ["1.5 BlueHDi", "1.6 PureTech"] },
     "Dacia": { "Duster": ["1.0 Eco-G", "1.3 Tce", "1.5 BlueDCi", "1.6 Sce", "1.5 dCi"], "Sandero Stepway": ["1.0 Tce", "0.9 Tce"], "Spring": ["Electric 45", "Electric 65"] },
     "Fiat": { "Egea Cross": ["1.0 FireFly", "1.3 MultiJet", "1.4 Fire", "1.5 T4 Hybrid", "1.6 MultiJet"], "500X": ["1.0 FireFly", "1.3 MultiJet", "1.4 MultiAir", "1.6 MultiJet"], "Freemont": ["2.0 MultiJet"], "Fullback": ["2.4 D"] },
     "Peugeot": { "2008": ["1.2 PureTech", "1.5 BlueHDi", "e-2008"], "3008": ["1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "Hybrid"], "5008": ["1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech"], "408": ["1.2 PureTech"] },
@@ -19,7 +20,7 @@ export const EXTRA_MODEL_SERIES: any = {
     "Hyundai": { "Tucson": ["1.6 CRDI", "1.6 T-GDI", "1.6 T-GDI Hybrid"], "Bayon": ["1.0 T-GDI", "1.4 MPI"], "Kona": ["1.0 T-GDI", "1.6 CRDI", "1.6 T-GDI", "Electric"], "Santa Fe": ["1.6 T-GDI Hybrid", "2.0 CRDi"], "Palisade": ["2.2 CRDi"] },
     "Kia": { "Sportage": ["1.6 CRDI", "1.6 GDI", "1.6 T-GDI", "1.6 T-GDI Hybrid"], "Stonic": ["1.0 T-GDI", "1.2 MPI", "1.4 MPI"], "Niro": ["Hybrid", "EV"], "Sorento": ["2.2 CRDi", "Hybrid"], "XCeed": ["1.5 T-GDI", "1.6 CRDi"], "EV6": ["GT-Line"], "EV9": ["GT-Line"] },
     "Opel": { "Mokka": ["1.2 Turbo", "1.5 Diesel", "Mokka-e"], "Crossland": ["1.2 Turbo", "1.5 Turbo D"], "Grandland": ["1.2 Turbo", "1.5 Turbo D"], "Frontera": ["2.2 DTI"], "Antara": ["2.0 CDTI"] },
-    "Citroën": { "C3 Aircross": ["1.2 PureTech", "1.5 BlueHDi"], "C5 Aircross": ["1.5 BlueHDi", "1.6 PureTech"], "C4 Cactus": ["1.2 PureTech", "1.6 e-HDi"] },
+
     "Skoda": { "Kamiq": ["1.0 TSI", "1.5 TSI", "1.6 TDI"], "Karoq": ["1.5 TSI", "1.6 TDI"], "Kodiaq": ["1.5 TSI", "2.0 TDI"], "Yeti": ["1.2 TSI", "1.6 TDI"] },
     "Seat": { "Arona": ["1.0 EcoTSI"], "Ateca": ["1.5 EcoTSI", "1.6 TDI", "1.4 TSI"], "Tarraco": ["1.5 EcoTSI"] },
     "Renault": { "Captur": ["0.9 TCe", "1.0 TCe", "1.2 Turbo", "1.3 TCe", "1.5 dCi"], "Kadjar": ["1.2 Turbo", "1.3 TCe", "1.5 dCi", "1.6 dCi"], "Austral": ["1.3 TCe Mild Hybrid"], "Koleos": ["1.6 dCi", "2.0 dCi"], "Arkana": ["1.3 TCe Mild Hybrid"] },
@@ -151,11 +152,6 @@ export const EXTRA_MODEL_SERIES: any = {
       "Expert": ["1.6 BlueHDi", "2.0 BlueHDi"],
       "Boxer": ["2.2 HDi"], "Bipper": ["1.3 HDi", "1.4 HDi"]
     },
-    "Citroën": {
-      "Berlingo": ["1.6 HDi", "1.6 BlueHDi", "1.5 BlueHDi"],
-      "Jumpy": ["1.6 BlueHDi", "2.0 BlueHDi"],
-      "Jumper": ["2.2 HDi"], "Nemo": ["1.3 HDi", "1.4 HDi"]
-    },
     "Mercedes": {
       "Vito": ["111 CDI", "114 CDI", "116 CDI", "119 CDI", "124 CDI"],
       "Sprinter": ["315 CDI", "316 CDI", "319 CDI", "416 CDI", "516 CDI"],
@@ -264,20 +260,7 @@ export const EXTRA_MODEL_SERIES: any = {
           "i20": ["1.0 T-GDI", "1.2 MPI", "1.4 MPI", "1.4 CRDi"],
           "Elantra": ["1.6 MPI", "1.6 CRDI"]
       },
-      "Citroën": {
-          "Ami": ["Electric"],
-          "C1": ["1.0 VTi"],
-          "C3": ["1.2 PureTech", "1.4 HDi", "1.5 BlueHDi", "1.6 BlueHDi", "1.4", "1.6"],
-          "C4": ["1.2 PureTech", "1.4", "1.6", "1.6 BlueHDi", "1.6 e-HDi", "1.6 HDi", "e-C4"],
-          "C4 Cactus": ["1.2 PureTech", "1.6 BlueHDi", "1.6 e-HDi"],
-          "C4 Picasso": ["1.6 e-HDi", "1.6 BlueHDi", "1.6 HDi"],
-          "Grand C4 Picasso": ["1.6 e-HDi", "1.6 BlueHDi"],
-          "C4 X": ["1.2 PureTech", "1.5 BlueHDi", "e-C4 X"],
-          "C-Elysee": ["1.2 PureTech", "1.2 VTi", "1.5 BlueHDi", "1.6 HDi"],
-          "C5": ["1.6 HDi", "1.6 THP", "1.6 e-HDi", "2.0 HDi"],
-          "Xsara": ["1.4", "1.6"],
-          "Saxo": ["1.4", "1.5D", "1.6 VTS"]
-      },
+
       "Peugeot": {
           "208": ["1.2 PureTech", "1.4 HDi", "1.5 BlueHDi", "1.6 e-HDi"],
           "301": ["1.2 PureTech", "1.5 BlueHDi", "1.6 HDi"],

@@ -23,6 +23,7 @@ export type ListingCardStatus = 'active' | 'pending' | 'sold'
 
 export interface ListingCardItem {
   id: string
+  code?: string | null
   title: string
   description: string
   price: number
@@ -78,7 +79,24 @@ export async function getListings(params: ListingSearchParams) {
   }
 
   if (params.category) whereClause.category = { is: { slug: params.category } };
-  if (params.subcategory) whereClause.subCategory = { is: { slug: params.subcategory } };
+  
+  const rawSubcategory =
+    typeof params.subcategory === 'string' ? decodeURIComponent(params.subcategory).trim() : undefined;
+  const normalizedSubcategory =
+    rawSubcategory && rawSubcategory.includes('/')
+      ? rawSubcategory.split('/').filter(Boolean).join('-')
+      : rawSubcategory;
+
+  if (normalizedSubcategory) {
+    whereClause.subCategory = {
+      is: {
+        OR: [
+          { slug: normalizedSubcategory },
+          { slug: { startsWith: `${normalizedSubcategory}-` } }
+        ]
+      }
+    };
+  }
 
   if (params.q) {
     whereClause.OR = [
@@ -99,8 +117,37 @@ export async function getListings(params: ListingSearchParams) {
   if (params.maxPrice !== undefined) priceFilter.lte = BigInt(params.maxPrice);
   if (priceFilter.gte !== undefined || priceFilter.lte !== undefined) whereClause.budget = priceFilter;
 
-  if (params.city) whereClause.city = { contains: params.city, mode: 'insensitive' };
-  if (params.district) whereClause.district = { contains: params.district, mode: 'insensitive' };
+  const addAndClause = (clause: Prisma.ListingWhereInput) => {
+    if (!whereClause.AND) {
+      whereClause.AND = [clause];
+    } else if (Array.isArray(whereClause.AND)) {
+      whereClause.AND.push(clause);
+    } else {
+      whereClause.AND = [whereClause.AND as Prisma.ListingWhereInput, clause];
+    }
+  };
+
+  const cityValues = (Array.isArray(params.city) ? params.city : params.city ? [params.city] : [])
+    .map(String)
+    .filter(Boolean);
+  if (cityValues.length === 1) {
+    whereClause.city = { contains: cityValues[0], mode: 'insensitive' };
+  } else if (cityValues.length > 1) {
+    addAndClause({
+      OR: cityValues.map((c) => ({ city: { contains: c, mode: 'insensitive' } })),
+    });
+  }
+
+  const districtValues = (Array.isArray(params.district) ? params.district : params.district ? [params.district] : [])
+    .map(String)
+    .filter(Boolean);
+  if (districtValues.length === 1) {
+    whereClause.district = { contains: districtValues[0], mode: 'insensitive' };
+  } else if (districtValues.length > 1) {
+    addAndClause({
+      OR: districtValues.map((d) => ({ district: { contains: d, mode: 'insensitive' } })),
+    });
+  }
 
   let orderBy: Prisma.ListingOrderByWithRelationInput = { createdAt: 'desc' };
   const sort = params.sort || 'newest';
@@ -154,7 +201,7 @@ export async function getListings(params: ListingSearchParams) {
         attributesJson: true,
       },
       orderBy,
-      take: 2500 // Increased from 1000 to 2500 for better recall
+      take: Math.min(1200, Math.max(300, skip + limit * 20)),
     });
 
     const safeParse = (text: string | null) => {
@@ -183,8 +230,13 @@ export async function getListings(params: ListingSearchParams) {
           const actual = attrs[k];
           if (actual === undefined) return false; // Strict: if filter exists, attribute must exist
           
-          const reqParts = String(v).split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
-          const actParts = String(actual).split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+          const toArray = (val: any): string[] => {
+            if (Array.isArray(val)) return val.map(String).map(s => s.trim().toLowerCase()).filter(Boolean);
+            return String(val).split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+          };
+
+          const reqParts = toArray(v);
+          const actParts = toArray(actual);
           
           if (reqParts.length === 0) continue;
           
@@ -234,9 +286,10 @@ export async function getListings(params: ListingSearchParams) {
   const session = await auth();
   const sessionUserId = session?.user?.id;
   let favoriteIds = new Set<string>();
-  if (sessionUserId) {
+  const listingIds = listings.map((l) => l.id);
+  if (sessionUserId && listingIds.length > 0) {
     const favs = await prisma.favorite.findMany({
-      where: { userId: sessionUserId },
+      where: { userId: sessionUserId, listingId: { in: listingIds } },
       select: { listingId: true },
     });
     favoriteIds = new Set(favs.map((f) => f.listingId));
@@ -262,6 +315,7 @@ export async function getListings(params: ListingSearchParams) {
     const status: ListingCardStatus = listing.status === 'OPEN' ? 'active' : listing.status === 'PENDING' ? 'pending' : 'sold';
     return {
       id: listing.id,
+      code: listing.code,
       title: listing.title,
       description: listing.description,
       price: listing.budget ? Number(listing.budget) : 0,

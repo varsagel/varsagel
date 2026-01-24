@@ -1,0 +1,13 @@
+{
+  "startedAt": "2026-01-19T22:48:53.121Z",
+  "updatedAt": "2026-01-20T07:23:57.353Z",
+  "completedBrandPaths": [
+    "/vasita-hasarli-araclar-otomobil",
+    "/vasita-hasarli-araclar-motosiklet",
+    "/vasita-hasarli-araclar-ticari-araclar",
+    "/vasita-hasarli-araclar-arazi-araclari",
+    "/vasita-hasarli-araclar-minivan-van-panelvan"
+  ],
+  "errors": [],
+  "rowsWritten": 668
+}

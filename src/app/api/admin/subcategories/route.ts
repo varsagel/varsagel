@@ -25,8 +25,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(subcategory);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create subcategory" }, { status: 500 });
   }
 }
-

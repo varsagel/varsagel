@@ -5,9 +5,9 @@ module.exports = {
       script: "server.js",
       watch: false,
       env: {
-        NODE_ENV: "development",
-        FORCE_VARSAGEL_DOMAIN: "false",
-        PORT: "3000"
+        NODE_ENV: "production",
+        FORCE_VARSAGEL_DOMAIN: "true",
+        PORT: "3004"
       },
     },
   ],

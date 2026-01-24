@@ -2,9 +2,10 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ChevronLeft, Send, User, ShoppingCart, MapPin, Folder, Tag, Info, MessageSquare, CheckCircle } from "lucide-react";
+import { humanizeKeyTR } from "@/lib/humanize-key-tr";
 
 export default function ChatPage() {
   const params = useParams();
@@ -12,6 +13,7 @@ export default function ChatPage() {
   const searchParams = useSearchParams();
   const toUserId = searchParams.get('to');
   const { data: session } = useSession();
+  const router = useRouter();
   const [listing, setListing] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
@@ -22,6 +24,7 @@ export default function ChatPage() {
   const listRef = useRef<HTMLDivElement | null>(null);
   const [highlightIds, setHighlightIds] = useState<Set<string>>(new Set());
   const prevIdsRef = useRef<Set<string>>(new Set());
+  const didMarkRef = useRef(false);
   
   const ATTR_ICONS: Record<string, string> = {
     marka: '🚗',
@@ -87,10 +90,19 @@ export default function ChatPage() {
   useEffect(() => {
     if (!otherUserId || !session?.user?.id) return;
 
-    let active = true;
     (async () => {
       setLoading(true);
       await loadMessages();
+      if (!didMarkRef.current) {
+        didMarkRef.current = true;
+        fetch('/api/messages', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ listingId, contactId: otherUserId }),
+        })
+          .then(() => router.refresh())
+          .catch(() => {});
+      }
       setLoading(false);
     })();
 
@@ -150,11 +162,10 @@ export default function ChatPage() {
     (window as any).__msg_es = es;
 
     return () => {
-      active = false;
       es.close();
       prevIdsRef.current = new Set(); // Reset seen IDs
     };
-  }, [otherUserId, listingId, loadMessages, session?.user?.id]); // Added listingId dependency
+  }, [otherUserId, listingId, loadMessages, session?.user?.id, router]);
 
   useEffect(() => {
     // Otomatik en alta kaydır
@@ -333,7 +344,7 @@ export default function ChatPage() {
                             <div key={k} className="flex items-start gap-2 text-sm group">
                               <span className="text-gray-400 mt-0.5">{icon}</span>
                               <div>
-                                <span className="text-gray-500 text-xs block">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                <span className="text-gray-500 text-xs block">{humanizeKeyTR(k)}</span>
                                 <span className="text-gray-900 font-medium">{parts.length > 0 ? parts.join(', ') : s}</span>
                               </div>
                             </div>
@@ -367,7 +378,6 @@ export default function ChatPage() {
                   messages.map((m) => {
                     const mine = myId && m.senderId === myId;
                     const ownerId = listing?.owner?.id as string | undefined
-                    const sellerId = acceptedOffer?.sellerId as string | undefined
                     const senderName = listing && acceptedOffer
                       ? (m.senderId === ownerId ? (listing.owner?.name || 'Talep Sahibi') : (acceptedOffer.sellerName || 'Teklif Veren'))
                       : (mine ? 'Siz' : 'Karşı Taraf');

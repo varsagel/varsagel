@@ -1,0 +1,296 @@
+[
+  {
+    "brand": "Audi",
+    "model": "A3",
+    "series": "A3 Hatchback",
+    "trim": "1.4 TFSI"
+  },
+  {
+    "brand": "Audi",
+    "model": "A3",
+    "series": "A3 Sportback",
+    "trim": "1.6 TDI"
+  },
+  {
+    "brand": "Bajaj",
+    "model": "Pulsar RS 200",
+    "series": "",
+    "trim": ""
+  },
+  {
+    "brand": "BMW",
+    "model": "3 Serisi",
+    "series": "316i",
+    "trim": "Comfort"
+  },
+  {
+    "brand": "BMW",
+    "model": "3 Serisi",
+    "series": "320i ED",
+    "trim": "M Plus"
+  },
+  {
+    "brand": "Chevrolet",
+    "model": "Aveo",
+    "series": "1.3 D",
+    "trim": "LT"
+  },
+  {
+    "brand": "Chevrolet",
+    "model": "Cruze",
+    "series": "2.0 D",
+    "trim": "LT"
+  },
+  {
+    "brand": "Chevrolet",
+    "model": "Epica",
+    "series": "2.0 D LT",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.4 HDI",
+    "trim": ""
+  },
+  {
+    "brand": "Fiat",
+    "model": "Egea",
+    "series": "1.3 Multijet",
+    "trim": "Easy"
+  },
+  {
+    "brand": "Fiat",
+    "model": "Linea",
+    "series": "1.3 Multijet",
+    "trim": "Emotion Plus"
+  },
+  {
+    "brand": "Fiat",
+    "model": "Marea",
+    "series": "1.6",
+    "trim": "Liberty"
+  },
+  {
+    "brand": "Fiat",
+    "model": "Siena",
+    "series": "1.2",
+    "trim": "S"
+  },
+  {
+    "brand": "Ford",
+    "model": "EcoSport",
+    "series": "1.0 EcoBoost",
+    "trim": "Style"
+  },
+  {
+    "brand": "Ford",
+    "model": "Focus",
+    "series": "1.5 TDCi",
+    "trim": "Trend X"
+  },
+  {
+    "brand": "Ford",
+    "model": "Focus",
+    "series": "1.5 Ti-VCT",
+    "trim": "Trend X"
+  },
+  {
+    "brand": "Hero",
+    "model": "XPulse 200 4V Pro",
+    "series": "",
+    "trim": ""
+  },
+  {
+    "brand": "Honda",
+    "model": "Civic",
+    "series": "1.6",
+    "trim": "Si"
+  },
+  {
+    "brand": "Honda",
+    "model": "Civic",
+    "series": "1.6i VTEC",
+    "trim": "Eco Executive"
+  },
+  {
+    "brand": "Hyundai",
+    "model": "i20",
+    "series": "1.4 CRDi",
+    "trim": "Jump"
+  },
+  {
+    "brand": "Hyundai",
+    "model": "Santa Fe",
+    "series": "2.2 CRDi",
+    "trim": ""
+  },
+  {
+    "brand": "Kanuni",
+    "model": "Seyhan 150",
+    "series": "",
+    "trim": ""
+  },
+  {
+    "brand": "Kia",
+    "model": "Sorento",
+    "series": "2.5 CRDi",
+    "trim": "Prestige"
+  },
+  {
+    "brand": "Kymco",
+    "model": "Dink R 150",
+    "series": "",
+    "trim": ""
+  },
+  {
+    "brand": "Lincoln",
+    "model": "Navigator",
+    "series": "5.4 4WD",
+    "trim": ""
+  },
+  {
+    "brand": "Mercedes-Benz",
+    "model": "C Serisi",
+    "series": "C 200 D",
+    "trim": "AMG"
+  },
+  {
+    "brand": "Mercedes-Benz",
+    "model": "E Serisi",
+    "series": "E 180",
+    "trim": "AMG"
+  },
+  {
+    "brand": "Nissan",
+    "model": "Qashqai",
+    "series": "1.6 dCi",
+    "trim": "Tekna Plus"
+  },
+  {
+    "brand": "Opel",
+    "model": "Astra",
+    "series": "1.2 T",
+    "trim": "GS"
+  },
+  {
+    "brand": "Opel",
+    "model": "Astra",
+    "series": "1.4 T",
+    "trim": "Enjoy"
+  },
+  {
+    "brand": "Opel",
+    "model": "Corsa",
+    "series": "1.2 Twinport",
+    "trim": "Essentia"
+  },
+  {
+    "brand": "Peugeot",
+    "model": "208",
+    "series": "1.2 PureTech",
+    "trim": "Active"
+  },
+  {
+    "brand": "Peugeot",
+    "model": "301",
+    "series": "1.6 HDi",
+    "trim": "Active"
+  },
+  {
+    "brand": "Peugeot",
+    "model": "Bipper",
+    "series": "1.4 HDi Comfort",
+    "trim": ""
+  },
+  {
+    "brand": "Renault",
+    "model": "Clio",
+    "series": "1.0 TCe",
+    "trim": "RS Line"
+  },
+  {
+    "brand": "Renault",
+    "model": "Clio",
+    "series": "1.0 TCe",
+    "trim": "Touch"
+  },
+  {
+    "brand": "Renault",
+    "model": "Fluence",
+    "series": "1.5 dCi",
+    "trim": "Business"
+  },
+  {
+    "brand": "Renault",
+    "model": "Kangoo",
+    "series": "1.9 D RN",
+    "trim": ""
+  },
+  {
+    "brand": "Renault",
+    "model": "Megane",
+    "series": "1.5 dCi",
+    "trim": "Expression"
+  },
+  {
+    "brand": "Skoda",
+    "model": "Fabia",
+    "series": "1.4",
+    "trim": "Elegance"
+  },
+  {
+    "brand": "Skoda",
+    "model": "Superb",
+    "series": "1.6 TDI",
+    "trim": "Prestige"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Golf",
+    "series": "1.6 TDI",
+    "trim": "BlueMotion Highline"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Jetta",
+    "series": "1.9 TDI",
+    "trim": "Midline"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Passat",
+    "series": "1.6 FSI",
+    "trim": "Comfortline"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Passat",
+    "series": "2.0 TDI BlueMotion",
+    "trim": "Highline"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Polo",
+    "series": "1.0",
+    "trim": "Impression"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Polo",
+    "series": "1.4",
+    "trim": "Chrome Edition"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "Polo",
+    "series": "1.4",
+    "trim": "Trendline"
+  },
+  {
+    "brand": "Volkswagen",
+    "model": "T-Roc",
+    "series": "1.5 TSI",
+    "trim": "Highline"
+  }
+]

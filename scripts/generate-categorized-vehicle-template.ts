@@ -55,7 +55,7 @@ const tractorBrands = getBrandsFromExtra('vasita/traktor').sort();
 
 const busBrands = ['Mercedes-Benz', 'MAN', 'Temsa', 'Otokar', 'Isuzu', 'Mitsubishi', 'Setra', 'Neoplan', 'Volvo', 'Scania', 'BMC', 'Karsan', 'Güleryüz'].sort();
 
-const minibusBrands = ['Mercedes-Benz', 'Volkswagen', 'Ford', 'Fiat', 'Peugeot', 'Citroen', 'Iveco', 'Isuzu', 'Karsan', 'Renault', 'Opel', 'Otokar', 'BMC'].sort();
+const minibusBrands = ['Mercedes-Benz', 'Volkswagen', 'Ford', 'Fiat', 'Peugeot', 'Iveco', 'Isuzu', 'Karsan', 'Renault', 'Opel', 'Otokar', 'BMC'].sort();
 
 const atvUtvBrands = ['Polaris', 'Can-Am', 'CFMoto', 'Kuba', 'Segway', 'Yamaha', 'Honda', 'Kawasaki', 'Arctic Cat', 'Mondial', 'Arora', 'RKS', 'TGB', 'Access Motor'].sort();
 
@@ -68,7 +68,7 @@ const caravanBrands = ['Hymer', 'Adria', 'Eriba', 'Crawler', 'Erba', 'Saly', 'Ba
 // Categories that use the "Car + SUV" list (Rental, Damaged, Classic, Electric, Disabled)
 // We'll combine Car + SUV + Minivan for these generally
 const generalBrands = Array.from(new Set([...carBrands, ...suvBrands, ...minivanBrands])).sort();
-const electricBrands = ['Tesla', 'Togg', 'BYD', 'MG', 'Skywell', 'Leapmotor', 'Seres', 'Renault', 'Zoe', 'BMW i', 'Mercedes-EQ', 'Audi e-tron', 'Porsche Taycan', 'Citroen Ami', 'Opel', 'Peugeot', 'Volvo Recharge', 'Kia EV', 'Hyundai Ioniq', 'Mini Electric'].sort();
+const electricBrands = ['Tesla', 'Togg', 'BYD', 'MG', 'Skywell', 'Leapmotor', 'Seres', 'Renault', 'Zoe', 'BMW i', 'Mercedes-EQ', 'Audi e-tron', 'Porsche Taycan', 'Opel', 'Peugeot', 'Volvo Recharge', 'Kia EV', 'Hyundai Ioniq', 'Mini Electric'].sort();
 
 // --- Category Configuration ---
 const categories = [

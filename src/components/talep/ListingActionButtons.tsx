@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Tag, MessageCircle, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useEffect, useMemo, useState } from 'react';
 
 interface ListingActionButtonsProps {
   listingId: string;
@@ -13,6 +14,8 @@ interface ListingActionButtonsProps {
 
 export default function ListingActionButtons({ listingId, isAuthenticated, hasAcceptedOffer = false, isOpen = true }: ListingActionButtonsProps) {
   const { toast } = useToast();
+  const [elig, setElig] = useState<any>(null);
+  const [tick, setTick] = useState<number>(0);
 
   const handleOfferClick = () => {
     if (!isOpen) {
@@ -24,7 +27,7 @@ export default function ListingActionButtons({ listingId, isAuthenticated, hasAc
       return;
     }
     toast({
-      variant: "destructive",
+      variant: "warning",
       title: "Üye Olmalısınız",
       description: "Teklif verebilmek için lütfen giriş yapın veya üye olun.",
     });
@@ -41,9 +44,49 @@ export default function ListingActionButtons({ listingId, isAuthenticated, hasAc
 
   const canInteract = isOpen;
 
+  useEffect(() => {
+    if (!isAuthenticated || !canInteract) {
+      setElig(null);
+      return;
+    }
+    fetch(`/api/offers/eligibility?listingId=${encodeURIComponent(listingId)}`, { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => setElig(data))
+      .catch(() => setElig(null));
+  }, [isAuthenticated, canInteract, listingId]);
+
+  useEffect(() => {
+    if (!elig?.nextAllowedAt) return;
+    setTick(Date.now());
+    const id = window.setInterval(() => setTick(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [elig?.nextAllowedAt]);
+
+  const blockedReasonText = useMemo(() => {
+    if (!elig || elig.canOffer) return null;
+    if (elig.reason === 'DAILY_LIMIT') return 'Aynı talebe bugün 2 teklif verdiniz.'
+    if (elig.reason === 'COOLDOWN') return 'Tekrar teklif vermek için 1 saat beklemelisiniz.'
+    if (elig.reason === 'PENDING_EXISTS') return 'Bu talep için bekleyen teklifiniz var.'
+    if (elig.reason === 'BLOCKED') return 'Bu talep için teklif verme yetkiniz bulunmuyor.'
+    return 'Şu anda teklif verilemiyor.'
+  }, [elig]);
+
+  const countdownText = useMemo(() => {
+    if (!elig?.nextAllowedAt) return null;
+    const until = new Date(elig.nextAllowedAt).getTime();
+    const diff = Math.max(0, until - tick);
+    const s = Math.floor(diff / 1000);
+    const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+    const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+    const ss = String(s % 60).padStart(2, '0');
+    return `${hh}:${mm}:${ss}`;
+  }, [elig?.nextAllowedAt, tick]);
+
+  const offerDisabled = !canInteract || (isAuthenticated && elig && !elig.canOffer);
+
   return (
     <div className="space-y-3">
-       {isAuthenticated && canInteract ? (
+       {isAuthenticated && !offerDisabled ? (
          <Link 
           href={`/teklif-ver/${listingId}`}
           className="w-full flex items-center justify-center gap-2 bg-cyan-600 text-white py-4 rounded-xl font-bold hover:bg-cyan-700 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
@@ -53,14 +96,26 @@ export default function ListingActionButtons({ listingId, isAuthenticated, hasAc
          </Link>
        ) : (
          <button
-          onClick={handleOfferClick}
+          onClick={isAuthenticated ? undefined : handleOfferClick}
           className={`w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all ${
-            canInteract ? "bg-cyan-600 text-white hover:bg-cyan-700" : "bg-gray-200 text-gray-500 cursor-not-allowed"
+            canInteract && !offerDisabled ? "bg-cyan-600 text-white hover:bg-cyan-700" : "bg-gray-200 text-gray-500 cursor-not-allowed"
           }`}
          >
            <Tag className="w-5 h-5" />
            Teklif Ver
          </button>
+       )}
+
+       <div className="text-xs text-gray-500">
+        <div>Aynı talebe günde en fazla 2 defa teklif verebilirsiniz.</div>
+        <div>Teklifler arasında 1 saat bekleme vardır.</div>
+        <div>Bütçe üzeri teklifi bu talep için en fazla 1 defa verebilirsiniz.</div>
+       </div>
+
+       {isAuthenticated && blockedReasonText && (
+        <div className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+          {blockedReasonText}{countdownText ? ` (${countdownText})` : ''}
+        </div>
        )}
        
        {isAuthenticated && hasAcceptedOffer ? (

@@ -17,7 +17,7 @@ export async function GET(_req: NextRequest) {
         // Initial connection message
         try {
           controller.enqueue(encoder.encode(': connected\n\n'))
-        } catch (e) {
+        } catch {
           // Client disconnected immediately
           return
         }
@@ -52,7 +52,7 @@ export async function GET(_req: NextRequest) {
             
             const evt = `event: count\n` + `data: ${JSON.stringify({ unread })}\n\n`
             controller.enqueue(encoder.encode(evt))
-          } catch (error) {
+          } catch {
             // Ignore errors (likely client disconnect or DB temporary issue)
           }
         }
@@ -67,7 +67,7 @@ export async function GET(_req: NextRequest) {
         heartbeat = setInterval(() => {
           try {
             controller.enqueue(encoder.encode(': heartbeat\n\n'))
-          } catch (e) {
+          } catch {
             cleanup()
           }
         }, 10000)

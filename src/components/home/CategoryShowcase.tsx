@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, ChevronRight, Zap, CircuitBoard, Layers } from "lucide-react";
+import { ArrowRight, ChevronRight, CircuitBoard, Layers } from "lucide-react";
 import { Category } from "@/data/categories";
+import { titleCaseTR } from "@/lib/title-case-tr";
 
 export default function CategoryShowcase({ categories }: { categories: Category[] }) {
   const mainCategories = categories.slice(0, 4);
@@ -48,7 +49,7 @@ export default function CategoryShowcase({ categories }: { categories: Category[
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white tracking-wide group-hover:text-cyan-400 transition-colors flex items-center gap-2">
-                        {cat.name}
+                        {titleCaseTR(cat.name)}
                         <ChevronRight className="w-5 h-5 text-slate-600 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
                       </h3>
                       <p className="text-sm text-slate-400 font-medium flex items-center gap-1.5 mt-1">
@@ -71,10 +72,10 @@ export default function CategoryShowcase({ categories }: { categories: Category[
                     {cat.subcategories.slice(0, index === 0 ? 8 : 5).map((sub) => (
                       <Link
                         key={sub.slug}
-                        href={`/kategori/${cat.slug}/${sub.slug}`}
+                        href={`/kategori/${cat.slug}/${sub.fullSlug || sub.slug}`}
                         className="group/tag relative px-3.5 py-2 text-xs font-semibold text-slate-300 bg-slate-800/40 border border-slate-700/60 rounded-lg overflow-hidden transition-all hover:text-white hover:border-cyan-500/50 hover:bg-cyan-900/20"
                       >
-                        <span className="relative z-10">{sub.name}</span>
+                        <span className="relative z-10">{titleCaseTR(sub.name)}</span>
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent translate-x-[-100%] group-hover/tag:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
                       </Link>
                     ))}
@@ -115,7 +116,7 @@ export default function CategoryShowcase({ categories }: { categories: Category[
               
               <span className="text-2xl filter grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-300">{cat.icon}</span>
               <span className="text-sm font-semibold text-slate-600 group-hover:text-cyan-700 line-clamp-1 relative z-10">
-                {cat.name}
+                {titleCaseTR(cat.name)}
               </span>
               
               {/* Corner Accent */}

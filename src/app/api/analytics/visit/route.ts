@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/auth"
+import { auth, getAdminUserId } from "@/auth"
 
 export async function POST(req: NextRequest) {
   const session = await auth()
@@ -78,6 +78,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  const adminId = await getAdminUserId()
+  if (!adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const total = await prisma.visit.count()
   const last = await prisma.visit.findMany({ orderBy: { createdAt: 'desc' }, take: 50 })
   return NextResponse.json({ total, last })

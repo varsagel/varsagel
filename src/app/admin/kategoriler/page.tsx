@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Edit, Trash2, FolderTree, ArrowRight } from "lucide-react";
+import { Plus, Edit, Trash2, FolderTree } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { titleCaseTR } from "@/lib/title-case-tr";
 
 type Category = {
   id: string;
@@ -31,7 +32,7 @@ export default function CategoriesPage() {
         const data = await res.json();
         setCategories(data);
       }
-    } catch (error) {
+    } catch {
       toast({ title: "Hata", description: "Kategoriler yüklenemedi", variant: "destructive" });
     } finally {
       setIsLoading(false);
@@ -94,7 +95,7 @@ export default function CategoriesPage() {
                     <div className="w-8 h-8 rounded bg-cyan-50 flex items-center justify-center text-cyan-600">
                       {category.icon ? <span className="text-xl">{category.icon}</span> : <FolderTree className="w-4 h-4" />}
                     </div>
-                    {category.name}
+                    {titleCaseTR(category.name)}
                   </td>
                   <td className="px-6 py-4 text-gray-500 font-mono text-sm">{category.slug}</td>
                   <td className="px-6 py-4 text-gray-500">

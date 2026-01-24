@@ -7,14 +7,16 @@ import ListingActionButtons from '@/components/talep/ListingActionButtons';
 import SafetyTips from '@/components/talep/SafetyTips';
 import { prisma } from '@/lib/prisma';
 import { getListings } from '@/lib/services/listingService';
-import { ArrowLeft, Calendar, CheckCircle2, Eye, MapPin, ShieldCheck, User, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Calendar, CheckCircle2, Eye, MapPin, ShieldCheck, User, Edit } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Image from 'next/image';
+import { metadataBase, siteUrl } from '@/lib/metadata-base';
+import { buildListingSlug, parseListingIdentifier } from '@/lib/listing-url';
+import { titleCaseTR } from '@/lib/title-case-tr';
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.varsagel.com';
+const baseUrl = siteUrl;
 
 const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
 
@@ -50,15 +52,17 @@ function formatTimeAgoTR(date: Date) {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-  const { id } = await params;
-  const listing = await prisma.listing.findUnique({
-    where: { id },
+  const { id: raw } = await params;
+  const ident = parseListingIdentifier(raw);
+  const listing = await prisma.listing.findFirst({
+    where: ident.code ? { code: ident.code } : ident.id ? { id: ident.id } : undefined,
     include: { category: true, subCategory: true }
   });
 
   if (!listing) {
     return {
       title: 'Talep Bulunamadı | Varsagel',
+      metadataBase: metadataBase,
       robots: {
         index: false,
         follow: false,
@@ -66,9 +70,41 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     };
   }
 
-  const description =
-    (listing.description || '').substring(0, 160) ||
-    `${listing.title} için açılmış alım talebini Varsagel üzerinde inceleyin.`;
+  let attributes: Record<string, any> = {};
+  try {
+    const parsed = listing.attributesJson ? JSON.parse(listing.attributesJson) : {};
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) attributes = parsed;
+  } catch {}
+
+  const minRaw = attributes.minPrice ?? attributes.minBudget;
+  const maxRaw = attributes.maxPrice ?? attributes.budget ?? listing.budget;
+  const minPrice = typeof minRaw === 'number' || typeof minRaw === 'string' ? Number(minRaw) : null;
+  const maxPrice = typeof maxRaw === 'number' || typeof maxRaw === 'string' ? Number(maxRaw) : null;
+
+  const formatTL = (n: number) => `${n.toLocaleString('tr-TR')} TL`;
+
+  let budgetText = '';
+  const hasMin = typeof minPrice === 'number' && Number.isFinite(minPrice) && minPrice > 0;
+  const hasMax = typeof maxPrice === 'number' && Number.isFinite(maxPrice) && maxPrice > 0;
+  if (hasMin && hasMax) {
+    budgetText = minPrice === maxPrice ? formatTL(maxPrice) : `${formatTL(minPrice)} - ${formatTL(maxPrice)}`;
+  } else if (hasMax) {
+    budgetText = formatTL(maxPrice);
+  } else if (hasMin) {
+    budgetText = formatTL(minPrice);
+  }
+
+  const location = `${listing.city}/${listing.district}`;
+  const titleCore = `${titleCaseTR(listing.title)}${budgetText ? ` - ${budgetText}` : ''} - ${location}`;
+
+  const slogan =
+    "Türkiye’nin ilk alım platformu! Bütçene göre alım ilanını oluştur, satıcılar sana teklif versin.";
+
+  const description = [
+    slogan,
+    `Bütçe: ${budgetText || 'Belirtilmemiş'}.`,
+    `${titleCaseTR(listing.title)} talebini ${location} konumunda inceleyin.`,
+  ].join(' ');
 
   let images: string[] = [];
   try {
@@ -77,37 +113,49 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   } catch {}
   
   const primaryImage = images[0];
-  const path = `/talep/${listing.id}`;
+  const primaryImageUrl = primaryImage
+    ? (primaryImage.startsWith('http') ? primaryImage : `${baseUrl}${primaryImage}`)
+    : undefined;
+  const canonicalSlug = buildListingSlug({
+    id: listing.id,
+    code: listing.code,
+    title: listing.title,
+    category: listing.category,
+    subCategory: listing.subCategory,
+  });
+  const path = `/talep/${canonicalSlug}`;
 
   return {
-    title: `${listing.title} | Varsagel`,
+    title: `${titleCore} | Varsagel`,
     description,
+    metadataBase: metadataBase,
     alternates: {
       canonical: path,
     },
     openGraph: {
-      title: `${listing.title} | Varsagel`,
+      title: `${titleCore} | Varsagel`,
       description,
       type: 'article',
-      url: path,
+      url: `${baseUrl}${path}`,
       siteName: 'Varsagel',
-      images: primaryImage ? [primaryImage] : undefined,
+      images: primaryImageUrl ? [primaryImageUrl] : [`${baseUrl}/opengraph-image`],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${listing.title} | Varsagel`,
+      title: `${titleCore} | Varsagel`,
       description,
-      images: primaryImage ? [primaryImage] : undefined,
+      images: primaryImageUrl ? [primaryImageUrl] : [`${baseUrl}/twitter-image`],
     },
   };
 }
 
 export default async function ListingPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+  const { id: raw } = await params;
   const session = await auth();
 
-  const listing = await prisma.listing.findUnique({
-    where: { id },
+  const ident = parseListingIdentifier(raw);
+  const listing = await prisma.listing.findFirst({
+    where: ident.code ? { code: ident.code } : ident.id ? { id: ident.id } : undefined,
     include: {
       owner: {
         select: {
@@ -131,10 +179,20 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
   if (!listing) return notFound();
 
+  const canonicalSlug = buildListingSlug({
+    id: listing.id,
+    code: listing.code,
+    title: listing.title,
+    category: listing.category,
+    subCategory: listing.subCategory,
+  });
+  const decoded = decodeURIComponent(String(raw || '')).trim();
+  if (decoded !== canonicalSlug) permanentRedirect(`/talep/${canonicalSlug}`);
+
   // Increment view count only if listing exists
   try {
     await prisma.listing.update({
-      where: { id },
+      where: { id: listing.id },
       data: { viewCount: { increment: 1 } }
     });
   } catch (error) {
@@ -149,12 +207,154 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
     const parsed = listing.imagesJson ? JSON.parse(listing.imagesJson) : [];
     if (Array.isArray(parsed)) images = parsed;
   } catch {}
+  
+  const mainImageIndex = (() => {
+    const idx = images.findIndex((img) => typeof img === 'string' && !img.startsWith('/images/defaults/'));
+    return idx >= 0 ? idx : 0;
+  })();
+  const mainImage = images[mainImageIndex];
+  const otherImages = images.filter((_, i) => i !== mainImageIndex);
+  const mainIsDefault = !!mainImage && mainImage.startsWith('/images/defaults/');
+  const mainIsRemote = !!mainImage && (mainImage.startsWith('http://') || mainImage.startsWith('https://'));
+  const mainIsJfif = !!mainImage && (/\.jfif($|\?)/i.test(mainImage) || /\.jif($|\?)/i.test(mainImage));
 
   let attributes: Record<string, any> = {};
   try {
     const parsed = listing.attributesJson ? JSON.parse(listing.attributesJson) : {};
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) attributes = parsed;
   } catch {}
+
+  const displayTitle = titleCaseTR(listing.title);
+
+  const humanizeKeyTR = (rawKey: string) => {
+    const raw = String(rawKey || '').trim();
+    if (!raw) return '';
+    const withSpaces = raw
+      .replace(/[-_]+/g, ' ')
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return titleCaseTR(withSpaces);
+  };
+
+  const labelForKey = (key: string) => {
+    const map: Record<string, string> = {
+      minPrice: 'Minimum Fiyat',
+      maxPrice: 'Maksimum Fiyat',
+      minBudget: 'Minimum Bütçe',
+      budget: 'Maksimum Bütçe',
+      marka: 'Marka',
+      model: 'Model',
+      seri: 'Motor / Seri',
+      paket: 'Donanım / Paket',
+      yil: 'Yıl',
+      km: 'Kilometre',
+      yakit: 'Yakıt',
+      vites: 'Vites',
+      kasaTipi: 'Kasa Tipi',
+      motorGucu: 'Motor Gücü',
+      motorHacmi: 'Motor Hacmi',
+      plakaUyruk: 'Plaka / Uyruk',
+      aracDurumu: 'Araç Durumu',
+      agirhasarKayitli: 'Ağır Hasar Kayıtlı',
+      aracDurumu1: 'Araç Durumu',
+      motorSeri: 'Motor / Seri',
+      donanimPaket: 'Donanım / Paket',
+      'motor-seri': 'Motor / Seri',
+      'donanim-paket': 'Donanım / Paket',
+      'arac-durumu': 'Araç Durumu',
+      'agirhasar-kayitli': 'Ağır Hasar Kayıtlı',
+      'kasa-tipi': 'Kasa Tipi',
+      'motor-gucu': 'Motor Gücü',
+      'motor-hacmi': 'Motor Hacmi',
+      'plaka-uyruk': 'Plaka / Uyruk',
+    };
+    if (map[key]) return map[key];
+    return humanizeKeyTR(key);
+  };
+
+  const formatValueTR = (value: any, key?: string): string => {
+    if (value === null || value === undefined) return '—';
+    const noGroupForKey = (k?: string) => {
+      if (!k) return false;
+      return k === 'yil' || k.endsWith('yil') || k.endsWith('yilMin') || k.endsWith('yilMax');
+    };
+    const fmtNum = (n: number, k?: string) => {
+      if (!Number.isFinite(n)) return String(n);
+      if (noGroupForKey(k)) return new Intl.NumberFormat('tr-TR', { useGrouping: false }).format(n);
+      return new Intl.NumberFormat('tr-TR').format(n);
+    };
+    if (typeof value === 'string') {
+      const v = value.trim();
+      if (!v) return '—';
+      if (/^\d+$/.test(v)) return fmtNum(Number(v), key);
+      return titleCaseTR(v);
+    }
+    if (typeof value === 'number') return fmtNum(value, key);
+    if (typeof value === 'bigint') return fmtNum(Number(value), key);
+    if (typeof value === 'boolean') return value ? 'Evet' : 'Hayır';
+    if (Array.isArray(value)) return value.map((x) => formatValueTR(x, key)).filter(Boolean).join(', ') || '—';
+    if (typeof value === 'object') {
+      try {
+        return JSON.stringify(value);
+      } catch {
+        return String(value);
+      }
+    }
+    return String(value);
+  };
+
+  const detailItems = (() => {
+    const reserved = new Set(['minPrice', 'maxPrice', 'minBudget', 'budget']);
+    const priority = new Map<string, number>([
+      ['marka', 1],
+      ['model', 2],
+      ['seri', 3],
+      ['paket', 4],
+      ['yil', 50],
+      ['km', 51],
+    ]);
+
+    const ranges = new Map<string, { min?: any; max?: any; order: number }>();
+    const normal: Array<{ key: string; label: string; value: string; order: number }> = [];
+
+    const entries = Object.entries(attributes);
+    for (let i = 0; i < entries.length; i++) {
+      const [key, value] = entries[i];
+      if (reserved.has(key)) continue;
+      if (key.endsWith('Min') || key.endsWith('Max')) {
+        const base = key.slice(0, -3);
+        const current = ranges.get(base) || { order: i };
+        if (key.endsWith('Min')) current.min = value;
+        if (key.endsWith('Max')) current.max = value;
+        ranges.set(base, current);
+        continue;
+      }
+      normal.push({ key, label: labelForKey(key), value: formatValueTR(value, key), order: i });
+    }
+
+    const rangeRows: Array<{ key: string; label: string; value: string; order: number }> = [];
+    for (const [base, r] of ranges.entries()) {
+      const hasMin = r.min !== undefined && String(r.min).trim() !== '';
+      const hasMax = r.max !== undefined && String(r.max).trim() !== '';
+      if (!hasMin && !hasMax) continue;
+      const minText = hasMin ? formatValueTR(r.min, base) : '';
+      const maxText = hasMax ? formatValueTR(r.max, base) : '';
+      const value =
+        hasMin && hasMax ? `${minText} - ${maxText}` : hasMin ? `En Az ${minText}` : `En Çok ${maxText}`;
+      rangeRows.push({ key: base, label: labelForKey(base), value, order: r.order });
+    }
+
+    const combined = [...normal, ...rangeRows];
+    combined.sort((a, b) => {
+      const pa = priority.get(a.key) ?? 1000;
+      const pb = priority.get(b.key) ?? 1000;
+      if (pa !== pb) return pa - pb;
+      return a.order - b.order;
+    });
+
+    return combined;
+  })();
 
   // Fetch similar listings
   const { data: similarListings } = await getListings({
@@ -191,18 +391,24 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       : `${baseUrl}${images[0]}`
     : undefined;
 
+  const questions = await prisma.question.findMany({
+    where: { listingId: listing.id, answer: { not: null } },
+    orderBy: { createdAt: "desc" },
+    take: 50,
+  });
+
   const demandJsonLd = {
     "@context": "https://schema.org",
     "@type": "Demand",
     name: listing.title,
     description: listing.description,
-    url: `${baseUrl}/talep/${listing.id}`,
+    url: `${baseUrl}/talep/${canonicalSlug}`,
     itemOffered: {
       "@type": "Product",
       name: listing.title,
       category: listing.subCategory
-        ? `${listing.category.name} / ${listing.subCategory.name}`
-        : listing.category.name,
+        ? `${titleCaseTR(listing.category.name)} / ${titleCaseTR(listing.subCategory.name)}`
+        : titleCaseTR(listing.category.name),
     },
     areaServed: listing.city
       ? listing.district
@@ -221,6 +427,28 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
     image: imageUrl ? [imageUrl] : undefined,
   };
 
+  const faqItems = questions
+    .map((q) => ({
+      question: q.body.trim(),
+      answer: q.answer?.trim() || "",
+    }))
+    .filter((q) => q.question && q.answer);
+
+  const faqJsonLd = faqItems.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -234,28 +462,28 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
       {
         "@type": "ListItem",
         position: 2,
-        name: listing.category.name,
+        name: titleCaseTR(listing.category.name),
         item: `${baseUrl}/kategori/${listing.category.slug}`,
       },
       listing.subCategory
         ? {
             "@type": "ListItem",
             position: 3,
-            name: listing.subCategory.name,
+            name: titleCaseTR(listing.subCategory.name),
             item: `${baseUrl}/kategori/${listing.category.slug}/${listing.subCategory.slug}`,
           }
         : {
             "@type": "ListItem",
             position: 3,
             name: listing.title,
-            item: `${baseUrl}/talep/${listing.id}`,
+            item: `${baseUrl}/talep/${canonicalSlug}`,
           },
       listing.subCategory
         ? {
             "@type": "ListItem",
             position: 4,
             name: listing.title,
-            item: `${baseUrl}/talep/${listing.id}`,
+            item: `${baseUrl}/talep/${canonicalSlug}`,
           }
         : null,
     ].filter(Boolean),
@@ -270,6 +498,15 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
           __html: JSON.stringify(demandJsonLd),
         }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqJsonLd),
+          }}
+        />
+      )}
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -287,15 +524,15 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
             <div className="flex items-center gap-2 text-sm text-gray-500 hidden sm:flex">
               <Link href="/" className="hover:text-cyan-600">Ana Sayfa</Link>
               <span>/</span>
-              <Link href={`/kategori/${listing.category.slug}`} className="hover:text-cyan-600">{listing.category.name}</Link>
+              <Link href={`/kategori/${listing.category.slug}`} className="hover:text-cyan-600">{titleCaseTR(listing.category.name)}</Link>
               <span>/</span>
-              <span className="text-gray-900 font-medium line-clamp-1">{listing.title}</span>
+              <span className="text-gray-900 font-medium line-clamp-1">{displayTitle}</span>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <ShareListing id={listing.id} title={listing.title} />
-            <FavoriteButton listingId={listing.id} initial={false} />
+            <ShareListing id={listing.id} title={displayTitle} />
+            <FavoriteButton listingId={listing.id} initial={false} disabled={listing.ownerId === session?.user?.id} />
           </div>
         </div>
       </div>
@@ -309,24 +546,44 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
             {/* Gallery */}
             {images.length > 0 && (
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                <div className="aspect-video relative">
-                  <Image
-                    src={images[0]}
-                    alt={listing.title}
-                    fill
-                    className={images[0].startsWith('/images/brands/') ? "object-contain p-12" : "object-cover"}
-                    priority
-                  />
-                </div>
-                {images.length > 1 && (
+                {mainIsDefault ? (
+                  <div className="p-8 bg-gray-50 flex items-center justify-center">
+                    <Image
+                      src={mainImage}
+                      alt={listing.title}
+                      width={420}
+                      height={420}
+                      unoptimized
+                      quality={100}
+                      className="object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-video relative">
+                    <Image
+                      src={mainImage}
+                      alt={listing.title}
+                      fill
+                      className={mainImage.startsWith('/images/brands/') ? "object-contain p-12" : "object-cover"}
+                      priority
+                      quality={95}
+                      unoptimized={mainIsRemote || mainIsJfif}
+                      sizes="(max-width: 1024px) 100vw, 66vw"
+                    />
+                  </div>
+                )}
+                {otherImages.length > 0 && (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2">
-                    {images.slice(1).map((img: string, i: number) => (
+                    {otherImages.map((img: string, i: number) => (
                       <div key={i} className="aspect-video relative rounded-lg overflow-hidden">
                         <Image
                           src={img}
                           alt={`${listing.title} - ${i + 2}`}
                           fill
                           className={`${img.startsWith('/images/brands/') ? 'object-contain p-2' : 'object-cover'} hover:scale-110 transition-transform duration-300`}
+                          quality={85}
+                          unoptimized={img.startsWith('http://') || img.startsWith('https://') || /\.jfif($|\?)/i.test(img) || /\.jif($|\?)/i.test(img)}
+                          sizes="(max-width: 640px) 50vw, 25vw"
                         />
                       </div>
                     ))}
@@ -349,7 +606,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
                 </div>
               )}
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
-                <h1 className="text-xl md:text-2xl font-bold text-gray-900 break-words">{listing.title}</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 break-words">{displayTitle}</h1>
                 <div className="w-full md:w-auto flex flex-row md:flex-col justify-between md:justify-start items-center md:items-end md:text-right shrink-0 bg-gray-50 md:bg-transparent p-3 md:p-0 rounded-lg md:rounded-none border md:border-none border-gray-100">
                   <p className="text-sm text-gray-500 mb-0 md:mb-1">Talep Bütçesi</p>
                   {(() => {
@@ -432,14 +689,14 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
               </div>
 
               {/* Attributes */}
-              {Object.keys(attributes).length > 0 && (
+              {detailItems.length > 0 && (
                 <div className="pt-6 border-t border-gray-100">
                   <h2 className="text-lg font-bold text-gray-900 mb-4">Detaylar</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {Object.entries(attributes).map(([key, value]) => (
-                      <div key={key} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                        <span className="text-gray-500 capitalize">{key}</span>
-                        <span className="font-medium text-gray-900">{String(value)}</span>
+                    {detailItems.map((item) => (
+                      <div key={`${item.key}-${item.order}`} className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl">
+                        <span className="text-gray-500">{item.label}</span>
+                        <span className="font-medium text-gray-900 text-right">{item.value}</span>
                       </div>
                     ))}
                   </div>
@@ -505,7 +762,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
               )}
             </div>
 
-            <SafetyTips listingId={listing.id} listingTitle={listing.title} isAuthenticated={!!session?.user} />
+            <SafetyTips listingId={listing.id} listingTitle={displayTitle} isAuthenticated={!!session?.user} />
 
           </div>
 

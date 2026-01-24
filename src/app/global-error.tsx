@@ -12,8 +12,27 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error('Global error:', error);
+
+    const message = String((error as any)?.message || '');
+    const isChunkLoadError =
+      /ChunkLoadError/i.test(message) ||
+      /Loading chunk \d+ failed/i.test(message) ||
+      /Failed to fetch dynamically imported module/i.test(message);
+
+    if (typeof window !== 'undefined' && isChunkLoadError) {
+      try {
+        const key = '__varsagel_chunk_reload_at';
+        const last = Number(sessionStorage.getItem(key) || '0');
+        const now = Date.now();
+        if (!Number.isFinite(last) || now - last > 60_000) {
+          sessionStorage.setItem(key, String(now));
+          const url = new URL(window.location.href);
+          url.searchParams.set('__r', String(now));
+          window.location.replace(url.toString());
+        }
+      } catch {}
+    }
   }, [error]);
 
   return (

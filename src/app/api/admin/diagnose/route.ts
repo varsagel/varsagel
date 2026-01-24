@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { logErrorToDb } from "@/lib/logger-service";
 
 // Force rebuild comment - version 5
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const session = await auth();
     // @ts-ignore

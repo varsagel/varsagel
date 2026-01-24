@@ -1,0 +1,2738 @@
+[
+  {
+    "brand": "Citroen",
+    "model": "AMI",
+    "series": "Ami Buggy",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "AMI",
+    "series": "Electric",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "AMI",
+    "series": "Peps",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "AMI",
+    "series": "POP",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "AMI",
+    "series": "Tonic",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.0",
+    "trim": "E"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.0",
+    "trim": "Sport"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.1",
+    "trim": "Caban"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.1",
+    "trim": "First"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.1",
+    "trim": "Hit"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.1",
+    "trim": "Sport"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.4",
+    "trim": "Furio"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.4",
+    "trim": "GT"
+  },
+  {
+    "brand": "Citroen",
+    "model": "AX",
+    "series": "1.5",
+    "trim": "TD"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.2 PureTech Feel",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.4 Multispace",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.4 SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.4 X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.4",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI Feel Bold",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI Feel Stil",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI Feel",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI Max",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI Plus",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI Shine Bold",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI Shine",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI You",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.5 BlueHDI",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 BlueHDI Feel",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 BlueHDI Maxi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 BlueHDI Selection Adventure Pack",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 BlueHDI Selection",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 BlueHDI Shine",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 BlueHDI SX Adventure Pack",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 BlueHDI",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 Feeling",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Combi Silverline",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Combi SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Combi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Combi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Family",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Maxi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Multispace",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi Selection",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 HDi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.6 SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.8 SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.9 D Combi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.9 D FG",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.9 D Multispace",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.9 D SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.9 D X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "1.9 D",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "2.0 HDi Combi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "2.0 HDi Feeling",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "2.0 HDi Multispace",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "2.0 HDi SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Berlingo",
+    "series": "2.0 HDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "14",
+    "trim": "TE"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "14",
+    "trim": "TGE"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "15",
+    "trim": "TGE"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "16",
+    "trim": "Millesime"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "16",
+    "trim": "RI"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "16",
+    "trim": "TRS"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "17",
+    "trim": "TGD"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "19",
+    "trim": "TGD"
+  },
+  {
+    "brand": "Citroen",
+    "model": "BX",
+    "series": "19",
+    "trim": "TRD"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.2 VTi",
+    "trim": "Attraction"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.2 VTi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.2 VTi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.2",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.5 BlueHDI",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.5 BlueHDI",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.5 BlueHDI",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.5 BlueHDI",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 BlueHDI",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 BlueHDI",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 BlueHDI",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 HDi",
+    "trim": "Attraction"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 HDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 HDi",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 HDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C-Elysée",
+    "series": "1.6 VTi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C1",
+    "series": "1.0 VTi",
+    "trim": "Airscape"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C1",
+    "series": "1.0 VTi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C1",
+    "series": "1.0 VTi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C1",
+    "series": "1.0",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C1",
+    "series": "1.0",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C1",
+    "series": "1.0",
+    "trim": "SX Sensodrive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C1",
+    "series": "1.4 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C15",
+    "series": "C15 D Familiale",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C15",
+    "series": "C15 D",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C15",
+    "series": "C15 E 040",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C15",
+    "series": "C15 E",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.1",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.4 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.4 HDi",
+    "trim": "Tonic"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.4 HDi",
+    "trim": "VTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.4 HDi",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.4 HDi",
+    "trim": "X Pack"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.4",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.4",
+    "trim": "X Pack"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.6",
+    "trim": "GT"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.6",
+    "trim": "VTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C2",
+    "series": "1.6",
+    "trim": "VTS"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C25",
+    "series": "1000",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C25",
+    "series": "1400",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C25",
+    "series": "1800",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C25",
+    "series": "2.0",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross Elektrik",
+    "series": "Max",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 Hybrid",
+    "trim": "Max"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 Hybrid",
+    "trim": "Plus"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 PureTech",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 PureTech",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 PureTech",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 PureTech",
+    "trim": "Feel Business"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 PureTech",
+    "trim": "Feel S Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 PureTech",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.2 PureTech",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.5 BlueHDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.5 BlueHDi",
+    "trim": "Exclusive Business"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.5 BlueHDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.5 BlueHDi",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.5 BlueHDi",
+    "trim": "Live Plus"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.5 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.6 BlueHDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 AirCross",
+    "series": "1.6 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 Picasso",
+    "series": "1.4",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 Picasso",
+    "series": "1.6 e-HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 Picasso",
+    "series": "1.6 HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 Picasso",
+    "series": "1.6 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3 Picasso",
+    "series": "1.6 HDi",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.1",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.1",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Elle"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Feel Adventure"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Feel Business"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Feel S Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Selection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Shine Business"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Shine S Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 PureTech",
+    "trim": "Shine SX Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.2 VTi",
+    "trim": "Cool"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 e-HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 HDi",
+    "trim": "Attraction"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 HDi",
+    "trim": "Collection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 HDi",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 HDi",
+    "trim": "X Furio"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 VTi",
+    "trim": "Collection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4 VTi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4",
+    "trim": "Attraction"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4",
+    "trim": "Collection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4",
+    "trim": "Comfort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4",
+    "trim": "Pluriel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4",
+    "trim": "SensoDrive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.4",
+    "trim": "X Furio"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 BlueHDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 BlueHDi",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 VTi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 VTi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 VTi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6 VTi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6",
+    "trim": "Pluriel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C3",
+    "series": "1.6",
+    "trim": "XTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 e-VTi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 e-VTi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 PureTech",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 PureTech",
+    "trim": "Feel Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 PureTech",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 PureTech",
+    "trim": "Shine Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 VTi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 VTi",
+    "trim": "Feel Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 VTi",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.2 VTi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.5 BlueHDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.5 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.6 BlueHDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.6 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.6 e-HDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Cactus",
+    "series": "1.6 e-HDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.5 BlueHDI",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.6 BlueHDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.6 BlueHDi",
+    "trim": "Intensive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.6 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.6 e-HDi",
+    "trim": "Dynamic"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.6 e-HDi",
+    "trim": "Intensive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.6 HDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "1.6 VTi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "2.0 HDi",
+    "trim": "Dynamique"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Grand Picasso",
+    "series": "2.0 HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 BlueHDi",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 BlueHDi",
+    "trim": "Intensive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 e-HDi",
+    "trim": "Dynamique"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 e-HDi",
+    "trim": "Intensive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 HDi",
+    "trim": "Dynamique"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 HDi",
+    "trim": "SX PK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "1.6 HDi",
+    "trim": "VTR PK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 Picasso",
+    "series": "Exclusive",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.2 PureTech",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.2 PureTech",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.2 PureTech",
+    "trim": "Max"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.2 PureTech",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.2 PureTech",
+    "trim": "Shine Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.2 PureTech",
+    "trim": "You"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.5 BlueHDi",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.5 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4 X",
+    "series": "1.5 BlueHDi",
+    "trim": "Shine Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 Hybrid",
+    "trim": "Max"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "Max"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "Shine Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.2 PureTech",
+    "trim": "You"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.4 VTi",
+    "trim": "Attraction"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.4 VTi",
+    "trim": "Easy"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.4",
+    "trim": "Collection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.4",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.5 BlueHDi",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.5 BlueHDi",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.5 BlueHDi",
+    "trim": "Shine Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 BlueHDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 BlueHDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 e-HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 e-HDi",
+    "trim": "Confort Plus"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 e-HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 HDi",
+    "trim": "Attraction"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 HDi",
+    "trim": "Confort Plus"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 HDi",
+    "trim": "Easy"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 HDi",
+    "trim": "SX PK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6 HDi",
+    "trim": "VTRPK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "Collection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "Prestige"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "SX PK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "VTi Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "VTi VTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "VTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "VTRPK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "1.6",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "2.0 HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C4",
+    "series": "2.0",
+    "trim": "VTS"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.2 Hybrid",
+    "trim": "E-Series"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.2 Hybrid",
+    "trim": "Max"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.2 Hybrid",
+    "trim": "Plus"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.2 Puretech",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.2 Puretech",
+    "trim": "Feel Adventure"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.2 Puretech",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Feel"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Feel Adventure"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Feel Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Feel S Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Live Business"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Max"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Selection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Selection Business"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Shine Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.5 BlueHDI",
+    "trim": "Shine S Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Feel Adventure"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Live"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Selection"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Selection Business"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Shine"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Shine Bold"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Shine S Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5 AirCross",
+    "series": "1.6 PureTech",
+    "trim": "Shine SX Edition"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 e-HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 e-HDi",
+    "trim": "Dynamique"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 e-HDi",
+    "trim": "Executive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 HDi",
+    "trim": "Confort"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 HDi",
+    "trim": "Dynamique"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 HDi",
+    "trim": "Executive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.6 HDi",
+    "trim": "SX PK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "1.8",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0 HDi",
+    "trim": "Break"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0 HDi",
+    "trim": "Dynamique"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0 HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0 HDi",
+    "trim": "Hdi"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0 HDi",
+    "trim": "SX PK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0",
+    "trim": "2.0"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.0",
+    "trim": "SX PK"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.2 HDi",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "2.7 HDi",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "3.0",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "Confort",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "Dynamique",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C5",
+    "series": "Exclusive",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C6",
+    "series": "2.7 HDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C6",
+    "series": "3.0",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C8",
+    "series": "2.0 HDi Collection",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C8",
+    "series": "2.0 HDi SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C8",
+    "series": "2.0 X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C8",
+    "series": "2.2 HDi SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C8",
+    "series": "2.2 SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "C8",
+    "series": "3.0 SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C3 AirCross",
+    "series": "Max",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C3",
+    "series": "Max",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C3",
+    "series": "Plus",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C4 X",
+    "series": "Max",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C4 X",
+    "series": "Shine Bold",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C4",
+    "series": "Max",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C4",
+    "series": "Shine Bold",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C5 AirCross",
+    "series": "Max",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "e-C5 AirCross",
+    "series": "Plus",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Evasion",
+    "series": "1.9 TD SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Evasion",
+    "series": "2.0 SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Evasion",
+    "series": "2.0 X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "2.0 BlueHDI L4H2",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "2.2 BlueHDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "2.2 HDi L3H2",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "2.2 HDi L4H2",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "27 C",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "29 C",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "29 CH",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "31 C",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "31 CH",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "31 LH",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "31 M",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "31 MH",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "33 M",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "35 L",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "35 LH",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "35 LS",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "35 MH",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumper",
+    "series": "35 MS",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.5 BlueHDi Business",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.5 BlueHDi Long",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.5 BlueHDi Space",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.5 BlueHDi Spacetourer",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.5 BlueHDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.6 BlueHDi Space",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.6 BlueHDi Spacetourer",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.6 HDi Combi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.6 HDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.9 D Confort",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.9 D X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.9 TD Combi SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "1.9 TD Confort",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.0 BlueHDI Cityvan",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.0 BlueHDI Spacetourer",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.0 BlueHDI",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.0 HDi Combi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.0 HDi Confort",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.0 HDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.2 BlueHDI Business",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.2 BlueHDI Long",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.2 BlueHDI Spacetourer",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Jumpy",
+    "series": "2.2 BlueHDI",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "1.3 HDi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "1.4 HDi FT",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "1.4 HDi X Pack",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "1.4 HDi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "1.4 HDi",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.3 HDi SX Plus Vizyon",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.3 HDi SX Plus",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.3 HDi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.4 HDI SX",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.4 HDI",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.4 HDi SX Plus Vizyon",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.4 HDi SX Plus",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.4 HDi X",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Nemo",
+    "series": "Combi 1.4 HDi XTR Plus",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.0",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.1",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.4",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.4",
+    "trim": "VSX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.4",
+    "trim": "VTS"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.5D",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.5D",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.6",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.6",
+    "trim": "VTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Saxo",
+    "series": "1.6",
+    "trim": "VTS"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.6",
+    "trim": "1.6"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.6",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.8",
+    "trim": "1.8"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.8",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.9",
+    "trim": "1.9 D"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.9",
+    "trim": "D SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.9",
+    "trim": "SD SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "1.9",
+    "trim": "TD SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "2.0",
+    "trim": "2.0i"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "2.0",
+    "trim": "HDI"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "2.0",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "2.0",
+    "trim": "T Activa"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "2.0",
+    "trim": "T VSX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "2.1 TD",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xantia",
+    "series": "3.0",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "XM",
+    "series": "2.0",
+    "trim": "Classic"
+  },
+  {
+    "brand": "Citroen",
+    "model": "XM",
+    "series": "2.0",
+    "trim": "CT VSX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "XM",
+    "series": "2.0",
+    "trim": "Presence"
+  },
+  {
+    "brand": "Citroen",
+    "model": "XM",
+    "series": "3.0",
+    "trim": ""
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.4",
+    "trim": "1.4"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.4",
+    "trim": "HDI"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.4",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.4",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.6",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.6",
+    "trim": "VTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.8",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.9",
+    "trim": "D"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "1.9",
+    "trim": "TD SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "2.0",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "2.0",
+    "trim": "HDI"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "2.0",
+    "trim": "VTR"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "2.0",
+    "trim": "VTS"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "Picasso 1.6",
+    "trim": "1.6"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "Picasso 1.6",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "Picasso 1.6",
+    "trim": "HDI"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "Picasso 1.8",
+    "trim": "1.8"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "Picasso 1.8",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "Picasso 2.0",
+    "trim": "Exclusive"
+  },
+  {
+    "brand": "Citroen",
+    "model": "Xsara",
+    "series": "Picasso 2.0",
+    "trim": "HDI"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.4",
+    "trim": "Avantage"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.4",
+    "trim": "Harmonie"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.4",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.4",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.6",
+    "trim": "Aura"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.6",
+    "trim": "Avantage"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.8",
+    "trim": "Aura"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.8",
+    "trim": "Avantage"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.8",
+    "trim": "Furio"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.8",
+    "trim": "SX"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.9 D",
+    "trim": "Aura"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.9 D",
+    "trim": "Avantage"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.9 D",
+    "trim": "Reflex"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "1.9 D",
+    "trim": "X"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "2.0",
+    "trim": "2.0"
+  },
+  {
+    "brand": "Citroen",
+    "model": "ZX",
+    "series": "2.0",
+    "trim": "Volcane"
+  }
+]

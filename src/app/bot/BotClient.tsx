@@ -10,11 +10,6 @@ export default function BotClient() {
   const [brands, setBrands] = useState<string[]>([]);
   const [filter, setFilter] = useState("");
   const [selectedBrand, setSelectedBrand] = useState<string>("");
-  const [models, setModels] = useState<string[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>("");
-  const [series, setSeries] = useState<string[]>([]);
-  const [selectedSeries, setSelectedSeries] = useState<string>("");
-  const [trims, setTrims] = useState<string[]>([]);
   const [tree, setTree] = useState<{ brand?: string; models?: { name: string; series: { name: string; trims: string[] }[] }[] }>({});
   const [openModels, setOpenModels] = useState<Record<string, boolean>>({});
   const [openSeries, setOpenSeries] = useState<Record<string, boolean>>({});
@@ -22,6 +17,7 @@ export default function BotClient() {
   const [watchHeadful, setWatchHeadful] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [wasRunning, setWasRunning] = useState(false);
+  const statusRunning = !!(status?.running?.scrape || status?.running?.import);
 
   const loadStatus = async () => {
     setError(null);
@@ -29,7 +25,7 @@ export default function BotClient() {
       const res = await fetch("/api/scraper/status", { cache: "no-store" });
       const data = await res.json();
       setStatus(data);
-    } catch (e) {
+    } catch {
       setError("Durum alınamadı");
     }
   };
@@ -41,7 +37,7 @@ export default function BotClient() {
       const res = await fetch("/api/scraper/run", { method: "POST", headers: watchHeadful ? { "Content-Type": "application/json" } : undefined, body: watchHeadful ? JSON.stringify({ headful: true }) : undefined });
       if (!res.ok) throw new Error("Çalıştırma hatası");
       await loadStatus();
-    } catch (e) {
+    } catch {
       setError("Bot çalıştırılamadı");
     } finally {
       setRunning(false);
@@ -58,12 +54,13 @@ export default function BotClient() {
       const res = await fetch("/api/scraper/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ brands: all, headful: watchHeadful }) });
       if (!res.ok) throw new Error("Çalıştırma hatası");
       setSelectedBrand("");
-      setModels([]);
-      setSeries([]);
-      setTrims([]);
+      setTree({});
+      setOpenModels({});
+      setOpenSeries({});
+      setRawRows([]);
       await loadStatus();
       await loadLogs();
-    } catch (e) {
+    } catch {
       setError("Toplu çekme başlatılamadı");
     } finally {
       setRunning(false);
@@ -86,7 +83,7 @@ export default function BotClient() {
         a.click();
         document.body.removeChild(a);
       } catch {}
-    } catch (e) {
+    } catch {
       setError("Bot durdurulamadı");
     }
   };
@@ -101,13 +98,32 @@ export default function BotClient() {
 
   useEffect(() => {
     loadStatus();
-    loadLogs();
-    const id = setInterval(() => { loadLogs(); if (running) loadStatus(); }, 1000);
-    return () => clearInterval(id);
-  }, [running]);
+  }, []);
 
   useEffect(() => {
-    const currentRunning = !!(status?.running?.scrape || status?.running?.import);
+    loadLogs();
+  }, []);
+
+  useEffect(() => {
+    const intervalMs = statusRunning ? 3000 : 15000;
+    const id = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      loadStatus();
+    }, intervalMs);
+    return () => clearInterval(id);
+  }, [statusRunning]);
+
+  useEffect(() => {
+    const intervalMs = statusRunning ? 2000 : 8000;
+    const id = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      loadLogs();
+    }, intervalMs);
+    return () => clearInterval(id);
+  }, [statusRunning]);
+
+  useEffect(() => {
+    const currentRunning = statusRunning;
     if (currentRunning) setWasRunning(true);
     if (wasRunning && !currentRunning) {
       try {
@@ -120,7 +136,7 @@ export default function BotClient() {
       } catch {}
       setWasRunning(false);
     }
-  }, [status]);
+  }, [statusRunning, wasRunning]);
 
   const loadBrands = async () => {
     try {
@@ -138,53 +154,15 @@ export default function BotClient() {
       const res = await fetch("/api/scraper/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ brand }) });
       if (!res.ok) throw new Error("Çalıştırma hatası");
       setSelectedBrand(brand);
-      setSelectedModel("");
-      setSelectedSeries("");
-      setModels([]);
-      setSeries([]);
-      setTrims([]);
       await loadStatus();
       await loadLogs();
-      await loadModels(brand);
       await loadTree(brand);
       await loadRaw(brand);
-    } catch (e) {
+    } catch {
       setError("Bot çalıştırılamadı");
     } finally {
       setRunning(false);
     }
-  };
-
-  const loadModels = async (brand: string) => {
-    try {
-      const res = await fetch(`/api/scraper/data?brand=${encodeURIComponent(brand)}`, { cache: "no-store" });
-      const data = await res.json();
-      setModels(Array.isArray(data?.models) ? data.models : []);
-    } catch {}
-  };
-
-  const pickModel = async (model: string) => {
-    setSelectedModel(model);
-    setSelectedSeries("");
-    setSeries([]);
-    setTrims([]);
-    try {
-      const res = await fetch(`/api/scraper/data?brand=${encodeURIComponent(selectedBrand)}&model=${encodeURIComponent(model)}`, { cache: "no-store" });
-      const data = await res.json();
-      setSeries(Array.isArray(data?.series) ? data.series : []);
-      await loadTree(selectedBrand);
-    } catch {}
-  };
-
-  const pickSeries = async (s: string) => {
-    setSelectedSeries(s);
-    setTrims([]);
-    try {
-      const res = await fetch(`/api/scraper/data?brand=${encodeURIComponent(selectedBrand)}&model=${encodeURIComponent(selectedModel)}&series=${encodeURIComponent(s)}`, { cache: "no-store" });
-      const data = await res.json();
-      setTrims(Array.isArray(data?.trims) ? data.trims : []);
-      await loadTree(selectedBrand);
-    } catch {}
   };
 
   const loadTree = async (brand: string) => {
@@ -214,18 +192,25 @@ export default function BotClient() {
   };
 
   useEffect(() => {
-    const id = setInterval(() => { if (watchHeadful) loadImages(); }, 1500);
+    if (!watchHeadful) return;
+    const intervalMs = statusRunning ? 2500 : 10000;
+    const id = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      if (!watchHeadful) return;
+      loadImages();
+    }, intervalMs);
     return () => clearInterval(id);
-  }, [watchHeadful]);
+  }, [watchHeadful, statusRunning]);
 
   useEffect(() => {
     if (!selectedBrand) return;
     const id = setInterval(() => {
+      if (document.visibilityState !== "visible") return;
       loadRaw(selectedBrand);
       loadTree(selectedBrand);
-    }, 2000);
+    }, statusRunning ? 3000 : 10000);
     return () => clearInterval(id);
-  }, [selectedBrand]);
+  }, [selectedBrand, statusRunning]);
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
@@ -352,7 +337,7 @@ export default function BotClient() {
             {selectedBrand && <button onClick={()=> loadRaw(selectedBrand)} className="rounded-md bg-slate-900 text-white px-3 py-1 text-sm">CSVâ€™yi Yenile</button>}
           </div>
           {selectedBrand && (
-            <div className="mt-2 text-sm text-slate-700">Marka: <span className="font-medium">{selectedBrand}</span> â€¢ Satır: {rawRows.length}</div>
+            <div className="mt-2 text-sm text-slate-700">Marka: <span className="font-medium">{selectedBrand}</span> • Satır: {rawRows.length}</div>
           )}
           <div className="mt-3 max-h-64 overflow-auto text-xs">
             {rawRows.length ? (
@@ -383,4 +368,3 @@ export default function BotClient() {
     </div>
   );
 }
-

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Check, X, Trash2, Eye, Filter, Search, Edit } from "lucide-react";
+import { Check, X, Trash2, Eye, Edit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
-export default function ListingTable({ listings, statusFilter }: { listings: any[], statusFilter: string }) {
+export default function ListingTable({ listings }: { listings: any[] }) {
   const router = useRouter();
   const { toast } = useToast();
   const [loadingId, setLoadingId] = useState<string | null>(null);

@@ -59,7 +59,7 @@ export function SavedSearchesTab() {
       } else {
         throw new Error("Silinemedi");
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Hata",
         description: "Bir hata oluştu.",
@@ -87,7 +87,7 @@ export function SavedSearchesTab() {
       } else {
         throw new Error("Güncellenemedi");
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Hata",
         description: "Alarm durumu değiştirilemedi.",
@@ -115,7 +115,7 @@ export function SavedSearchesTab() {
       } else {
         throw new Error("Güncellenemedi");
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Hata",
         description: "İşlem başarısız.",

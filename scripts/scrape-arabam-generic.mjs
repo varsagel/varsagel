@@ -148,21 +148,21 @@ async function main() {
   if (brands.length < 5) {
     let fallback = []
     if (CATEGORY_SLUG === 'otomobil') {
-      fallback = ['Opel','Renault','Volkswagen','Toyota','Honda','Hyundai','Kia','Ford','Peugeot','Citroën','Audi','BMW','Mercedes','Skoda','Nissan','Alfa Romeo']
+      fallback = ['Opel','Renault','Volkswagen','Toyota','Honda','Hyundai','Kia','Ford','Peugeot','Audi','BMW','Mercedes','Skoda','Nissan','Alfa Romeo']
     } else if (CATEGORY_SLUG === 'arazi-suv-pick-up') {
       fallback = ['Dacia','Nissan','Volkswagen','Ford','Toyota','Land Rover','Jeep','Kia','Hyundai','Peugeot','Audi','BMW','Mercedes-Benz','Chevrolet','Suzuki','Honda','Mitsubishi','SsangYong','Isuzu','Daihatsu','Subaru','Porsche','Chery']
     } else if (CATEGORY_SLUG === 'motosiklet') {
       fallback = ['Honda','Yamaha','Mondial','Kuba','RKS','Arora','Bajaj','Sym','Suzuki','Kawasaki','BMW','Harley Davidson','Vespa','KTM','Hero','Tvs']
     } else if (CATEGORY_SLUG === 'ticari-araclar' || CATEGORY_SLUG === 'minivan-panelvan') {
-      fallback = ['Ford','Fiat','Renault','Volkswagen','Mercedes-Benz','Peugeot','Citroën','Opel','Hyundai','Toyota']
+      fallback = ['Ford','Fiat','Renault','Volkswagen','Mercedes-Benz','Peugeot','Opel','Hyundai','Toyota']
     } else if (CATEGORY_SLUG === 'kamyon-cekici') {
       fallback = ['Mercedes-Benz','Ford','Scania','MAN','Volvo','Iveco','Renault','DAF','Isuzu','Mitsubishi','Otokar','BMC']
     } else if (CATEGORY_SLUG === 'minibus-midibus') {
-      fallback = ['Ford','Fiat','Mercedes-Benz','Volkswagen','Peugeot','Citroën','Renault','Iveco','Karsan','Otokar']
+      fallback = ['Ford','Fiat','Mercedes-Benz','Volkswagen','Peugeot','Renault','Iveco','Karsan','Otokar']
     } else if (CATEGORY_SLUG === 'otobus') {
       fallback = ['Mercedes-Benz','Otokar','Temsa','MAN','Setra','Neoplan','Isuzu','Karsan']
     } else if (CATEGORY_SLUG === 'elektrikli-araclar') {
-      fallback = ['Togg', 'Tesla', 'Renault', 'BMW', 'Citroën', 'Skywell', 'MG', 'Mercedes-Benz', 'Opel', 'Peugeot', 'Hyundai', 'Kia', 'Volvo', 'Porsche', 'Audi', 'Leapmotor', 'Dacia', 'Fiat', 'Mini', 'Ford', 'Seres', 'Jeep', 'Nissan', 'Subaru', 'Toyota', 'Jaguar', 'Honda', 'Smart', 'SsangYong', 'Suzuki']
+      fallback = ['Togg', 'Tesla', 'Renault', 'BMW', 'Skywell', 'MG', 'Mercedes-Benz', 'Opel', 'Peugeot', 'Hyundai', 'Kia', 'Volvo', 'Porsche', 'Audi', 'Leapmotor', 'Dacia', 'Fiat', 'Mini', 'Ford', 'Seres', 'Jeep', 'Nissan', 'Subaru', 'Toyota', 'Jaguar', 'Honda', 'Smart', 'SsangYong', 'Suzuki']
     }
 
     if (fallback.length) {

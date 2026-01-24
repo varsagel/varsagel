@@ -1,0 +1,1119 @@
+{
+  "name": "Yedek Parça, Aksesuar, Donanım & Tuning",
+  "slug": "yedek-parca-aksesuar-donanim-tuning",
+  "fullSlug": "yedek-parca-aksesuar-donanim-tuning",
+  "subcategories": [
+    {
+      "name": "Otomotiv Ekipmanları",
+      "slug": "otomotiv-ekipmanlari",
+      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari",
+      "subcategories": [
+        {
+          "name": "Yedek Parça",
+          "slug": "yedek-parca",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca",
+          "subcategories": [
+            {
+              "name": "Otomobil & Arazi Aracı",
+              "slug": "otomobil-arazi-araci",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci",
+              "subcategories": [
+                {
+                  "name": "Ateşleme & Yakıt",
+                  "slug": "atesleme-yakit",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-atesleme-yakit",
+                  "subcategories": []
+                },
+                {
+                  "name": "Egzoz",
+                  "slug": "egzoz",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-egzoz",
+                  "subcategories": []
+                },
+                {
+                  "name": "Elektrik",
+                  "slug": "elektrik",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-elektrik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Filtre",
+                  "slug": "filtre",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-filtre",
+                  "subcategories": []
+                },
+                {
+                  "name": "Fren & Debriyaj",
+                  "slug": "fren-debriyaj",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-fren-debriyaj",
+                  "subcategories": []
+                },
+                {
+                  "name": "Isıtma & Havalandırma & Klima",
+                  "slug": "isitma-havalandirma-klima",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-isitma-havalandirma-klima",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kaporta & Karoser",
+                  "slug": "kaporta-karoser",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-kaporta-karoser",
+                  "subcategories": []
+                },
+                {
+                  "name": "Mekanik",
+                  "slug": "mekanik",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-mekanik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Motor",
+                  "slug": "motor",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-motor",
+                  "subcategories": []
+                },
+                {
+                  "name": "Şanzıman & Vites",
+                  "slug": "sanziman-vites",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-sanziman-vites",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yürüyen & Direksiyon",
+                  "slug": "yuruyen-direksiyon",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-otomobil-arazi-araci-yuruyen-direksiyon",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Minivan & Panelvan",
+              "slug": "minivan-panelvan",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan",
+              "subcategories": [
+                {
+                  "name": "Yürüyen & Direksiyon",
+                  "slug": "yuruyen-direksiyon",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-yuruyen-direksiyon",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ateşleme & Yakıt",
+                  "slug": "atesleme-yakit",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-atesleme-yakit",
+                  "subcategories": []
+                },
+                {
+                  "name": "Egzoz",
+                  "slug": "egzoz",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-egzoz",
+                  "subcategories": []
+                },
+                {
+                  "name": "Elektrik",
+                  "slug": "elektrik",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-elektrik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Fren & Debriyaj",
+                  "slug": "fren-debriyaj",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-fren-debriyaj",
+                  "subcategories": []
+                },
+                {
+                  "name": "Isıtma & Havalandırma & Klima",
+                  "slug": "isitma-havalandirma-klima",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-isitma-havalandirma-klima",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kaporta & Karoser",
+                  "slug": "kaporta-karoser",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-kaporta-karoser",
+                  "subcategories": []
+                },
+                {
+                  "name": "Mekanik",
+                  "slug": "mekanik",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-mekanik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Şanzıman & Vites",
+                  "slug": "sanziman-vites",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-sanziman-vites",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Ticari Araçlar",
+              "slug": "ticari-araclar",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar",
+              "subcategories": [
+                {
+                  "name": "Minibüs & Otobüs",
+                  "slug": "minibus-otobus",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus",
+                  "subcategories": [
+                    {
+                      "name": "Ateşleme & Yakıt",
+                      "slug": "atesleme-yakit",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-atesleme-yakit",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Egzoz",
+                      "slug": "egzoz",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-egzoz",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Elektrik",
+                      "slug": "elektrik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-elektrik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Filtre",
+                      "slug": "filtre",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-filtre",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Fren & Debriyaj",
+                      "slug": "fren-debriyaj",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-fren-debriyaj",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Isıtma & Havalandırma & Klima",
+                      "slug": "isitma-havalandirma-klima",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-isitma-havalandirma-klima",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Kaporta & Karoser",
+                      "slug": "kaporta-karoser",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-kaporta-karoser",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Mekanik",
+                      "slug": "mekanik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-mekanik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Motor",
+                      "slug": "motor",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-motor",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Şanzıman & Vites",
+                      "slug": "sanziman-vites",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-sanziman-vites",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Yürüyen & Direksiyon",
+                      "slug": "yuruyen-direksiyon",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-minibus-otobus-yuruyen-direksiyon",
+                      "subcategories": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Kamyon & Çekici",
+                  "slug": "kamyon-cekici",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici",
+                  "subcategories": [
+                    {
+                      "name": "Yürüyen & Direksiyon",
+                      "slug": "yuruyen-direksiyon",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-yuruyen-direksiyon",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Ateşleme & Yakıt",
+                      "slug": "atesleme-yakit",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-atesleme-yakit",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Egzoz",
+                      "slug": "egzoz",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-egzoz",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Elektrik",
+                      "slug": "elektrik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-elektrik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Filtre",
+                      "slug": "filtre",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-filtre",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Fren & Debriyaj",
+                      "slug": "fren-debriyaj",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-fren-debriyaj",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Isıtma & Havalandırma & Klima",
+                      "slug": "isitma-havalandirma-klima",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-isitma-havalandirma-klima",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Kaporta & Karoser",
+                      "slug": "kaporta-karoser",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-kaporta-karoser",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Mekanik",
+                      "slug": "mekanik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-mekanik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Motor",
+                      "slug": "motor",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-motor",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Şanzıman & Vites",
+                      "slug": "sanziman-vites",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-sanziman-vites",
+                      "subcategories": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Kamyonet & Pickup",
+                  "slug": "kamyonet-pickup",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup",
+                  "subcategories": [
+                    {
+                      "name": "Yürüyen & Direksiyon",
+                      "slug": "yuruyen-direksiyon",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-yuruyen-direksiyon",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Ateşleme & Yakıt",
+                      "slug": "atesleme-yakit",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-atesleme-yakit",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Egzoz",
+                      "slug": "egzoz",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-egzoz",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Elektrik",
+                      "slug": "elektrik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-elektrik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Filtre",
+                      "slug": "filtre",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-filtre",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Fren & Debriyaj",
+                      "slug": "fren-debriyaj",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-fren-debriyaj",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Isıtma & Havalandırma & Klima",
+                      "slug": "isitma-havalandirma-klima",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-isitma-havalandirma-klima",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Kaporta & Karoser",
+                      "slug": "kaporta-karoser",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-kaporta-karoser",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Mekanik",
+                      "slug": "mekanik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-mekanik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Motor",
+                      "slug": "motor",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-motor",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Şanzıman & Vites",
+                      "slug": "sanziman-vites",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-sanziman-vites",
+                      "subcategories": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Oto Kurtarıcı & Taşıyıcı",
+                  "slug": "oto-kurtarici-tasiyici",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici",
+                  "subcategories": [
+                    {
+                      "name": "Yürüyen & Direksiyon",
+                      "slug": "yuruyen-direksiyon",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-yuruyen-direksiyon",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Ateşleme & Yakıt",
+                      "slug": "atesleme-yakit",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-atesleme-yakit",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Egzoz",
+                      "slug": "egzoz",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-egzoz",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Elektrik",
+                      "slug": "elektrik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-elektrik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Filtre",
+                      "slug": "filtre",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-filtre",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Fren & Debriyaj",
+                      "slug": "fren-debriyaj",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-fren-debriyaj",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Isıtma & Havalandırma & Klima",
+                      "slug": "isitma-havalandirma-klima",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-isitma-havalandirma-klima",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Kaporta & Karoser",
+                      "slug": "kaporta-karoser",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-kaporta-karoser",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Mekanik",
+                      "slug": "mekanik",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-mekanik",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Motor",
+                      "slug": "motor",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-motor",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Şanzıman & Vites",
+                      "slug": "sanziman-vites",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-sanziman-vites",
+                      "subcategories": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Treyler",
+                  "slug": "treyler",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-treyler",
+                  "subcategories": []
+                },
+                {
+                  "name": "Karavan",
+                  "slug": "karavan",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-karavan",
+                  "subcategories": []
+                },
+                {
+                  "name": "Go Kart",
+                  "slug": "go-kart",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-go-kart",
+                  "subcategories": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Aksesuar & Tuning",
+          "slug": "aksesuar-tuning",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning",
+          "subcategories": [
+            {
+              "name": "Otomobil & Arazi Aracı",
+              "slug": "otomobil-arazi-araci",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci",
+              "subcategories": [
+                {
+                  "name": "Go Kart",
+                  "slug": "go-kart",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci-go-kart",
+                  "subcategories": []
+                },
+                {
+                  "name": "İç Aksesuar",
+                  "slug": "i-c-aksesuar",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci-i-c-aksesuar",
+                  "subcategories": []
+                },
+                {
+                  "name": "Dış Aksesuar",
+                  "slug": "dis-aksesuar",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci-dis-aksesuar",
+                  "subcategories": []
+                },
+                {
+                  "name": "Performans",
+                  "slug": "performans",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci-performans",
+                  "subcategories": []
+                },
+                {
+                  "name": "Elektronik",
+                  "slug": "elektronik",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci-elektronik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Bakım & Onarım Ürünleri",
+                  "slug": "bakim-onarim-urunleri",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci-bakim-onarim-urunleri",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Minivan & Panelvan",
+              "slug": "minivan-panelvan",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan",
+              "subcategories": [
+                {
+                  "name": "Bakım & Onarım Ürünleri",
+                  "slug": "bakim-onarim-urunleri",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan-bakim-onarim-urunleri",
+                  "subcategories": []
+                },
+                {
+                  "name": "İç Aksesuar",
+                  "slug": "i-c-aksesuar",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan-i-c-aksesuar",
+                  "subcategories": []
+                },
+                {
+                  "name": "Dış Aksesuar",
+                  "slug": "dis-aksesuar",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan-dis-aksesuar",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Ticari Araçlar",
+              "slug": "ticari-araclar",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar",
+              "subcategories": [
+                {
+                  "name": "Minibüs & Otobüs",
+                  "slug": "minibus-otobus",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-minibus-otobus",
+                  "subcategories": [
+                    {
+                      "name": "İç Aksesuar",
+                      "slug": "i-c-aksesuar",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-minibus-otobus-i-c-aksesuar",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Dış Aksesuar",
+                      "slug": "dis-aksesuar",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-minibus-otobus-dis-aksesuar",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Bakım & Onarım Ürünleri",
+                      "slug": "bakim-onarim-urunleri",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-minibus-otobus-bakim-onarim-urunleri",
+                      "subcategories": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Kamyon & Çekici",
+                  "slug": "kamyon-cekici",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici",
+                  "subcategories": [
+                    {
+                      "name": "Bakım & Onarım Ürünleri",
+                      "slug": "bakim-onarim-urunleri",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici-bakim-onarim-urunleri",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "İç Aksesuar",
+                      "slug": "i-c-aksesuar",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici-i-c-aksesuar",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Dış Aksesuar",
+                      "slug": "dis-aksesuar",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici-dis-aksesuar",
+                      "subcategories": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Kamyonet & Pickup",
+                  "slug": "kamyonet-pickup",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup",
+                  "subcategories": [
+                    {
+                      "name": "Bakım & Onarım Ürünleri",
+                      "slug": "bakim-onarim-urunleri",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup-bakim-onarim-urunleri",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "İç Aksesuar",
+                      "slug": "i-c-aksesuar",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup-i-c-aksesuar",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Dış Aksesuar",
+                      "slug": "dis-aksesuar",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup-dis-aksesuar",
+                      "subcategories": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Karavan",
+                  "slug": "karavan",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-karavan",
+                  "subcategories": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Jant & Lastik",
+          "slug": "jant-lastik",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-jant-lastik",
+          "subcategories": [
+            {
+              "name": "Ticari Araçlar",
+              "slug": "ticari-araclar",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-jant-lastik-ticari-araclar",
+              "subcategories": [
+                {
+                  "name": "Jant",
+                  "slug": "jant",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-jant-lastik-ticari-araclar-jant",
+                  "subcategories": []
+                },
+                {
+                  "name": "Lastik",
+                  "slug": "lastik",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-jant-lastik-ticari-araclar-lastik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Jant & Lastik Takımları",
+                  "slug": "jant-lastik-takimlari",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-jant-lastik-ticari-araclar-jant-lastik-takimlari",
+                  "subcategories": []
+                },
+                {
+                  "name": "Jant Kapakları",
+                  "slug": "jant-kapaklari",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-jant-lastik-ticari-araclar-jant-kapaklari",
+                  "subcategories": []
+                },
+                {
+                  "name": "Aksesuar & Ekipman",
+                  "slug": "aksesuar-ekipman",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-jant-lastik-ticari-araclar-aksesuar-ekipman",
+                  "subcategories": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Ses & Görüntü Sistemleri",
+          "slug": "ses-goruntu-sistemleri",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri",
+          "subcategories": [
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar",
+              "subcategories": [
+                {
+                  "name": "CD Changer",
+                  "slug": "cd-changer",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-cd-changer",
+                  "subcategories": []
+                },
+                {
+                  "name": "Crossover",
+                  "slug": "crossover",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-crossover",
+                  "subcategories": []
+                },
+                {
+                  "name": "Deck Çevirici",
+                  "slug": "deck-cevirici",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-deck-cevirici",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ekolayzer",
+                  "slug": "ekolayzer",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-ekolayzer",
+                  "subcategories": []
+                },
+                {
+                  "name": "FM Transmitter",
+                  "slug": "fm-transmitter",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-fm-transmitter",
+                  "subcategories": []
+                },
+                {
+                  "name": "Hoparlör Kapağı",
+                  "slug": "hoparlor-kapagi",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-hoparlor-kapagi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Hoparlör Pandizotu",
+                  "slug": "hoparlor-pandizotu",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-hoparlor-pandizotu",
+                  "subcategories": []
+                },
+                {
+                  "name": "İnvertör",
+                  "slug": "i-nvertor",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-i-nvertor",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kabin",
+                  "slug": "kabin",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-kabin",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kablo",
+                  "slug": "kablo",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-kablo",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kapasitör",
+                  "slug": "kapasitor",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-kapasitor",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kaset Adaptörü",
+                  "slug": "kaset-adaptoru",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-kaset-adaptoru",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ses İşlemcisi",
+                  "slug": "ses-i-slemcisi",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-ses-i-slemcisi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Sigortalık",
+                  "slug": "sigortalik",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-sigortalik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Teyp Çerçevesi",
+                  "slug": "teyp-cercevesi",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-teyp-cercevesi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Uzaktan Kumanda",
+                  "slug": "uzaktan-kumanda",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-uzaktan-kumanda",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yalıtım Malzemeleri",
+                  "slug": "yalitim-malzemeleri",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-yalitim-malzemeleri",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Multimedya Oynatıcı",
+              "slug": "multimedya-oynatici",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-multimedya-oynatici",
+              "subcategories": []
+            },
+            {
+              "name": "Amfi",
+              "slug": "amfi",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-amfi",
+              "subcategories": []
+            },
+            {
+              "name": "Monitör",
+              "slug": "monitor",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-monitor",
+              "subcategories": []
+            },
+            {
+              "name": "Müzik Çalar",
+              "slug": "muzik-calar",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-muzik-calar",
+              "subcategories": []
+            },
+            {
+              "name": "Navigasyon Cihazı",
+              "slug": "navigasyon-cihazi",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-navigasyon-cihazi",
+              "subcategories": []
+            },
+            {
+              "name": "Koaksiyel (Coax)",
+              "slug": "koaksiyel-coax",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-koaksiyel-coax",
+              "subcategories": []
+            },
+            {
+              "name": "Komponent",
+              "slug": "komponent",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-komponent",
+              "subcategories": []
+            },
+            {
+              "name": "Midrange",
+              "slug": "midrange",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-midrange",
+              "subcategories": []
+            },
+            {
+              "name": "Subwoofer",
+              "slug": "subwoofer",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-subwoofer",
+              "subcategories": []
+            },
+            {
+              "name": "Tweeter",
+              "slug": "tweeter",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-tweeter",
+              "subcategories": []
+            },
+            {
+              "name": "Woofer",
+              "slug": "woofer",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-woofer",
+              "subcategories": []
+            },
+            {
+              "name": "Araç İçi Kamera",
+              "slug": "arac-i-ci-kamera",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-arac-i-ci-kamera",
+              "subcategories": []
+            },
+            {
+              "name": "Geri Görüş Kamerası",
+              "slug": "geri-gorus-kamerasi",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-geri-gorus-kamerasi",
+              "subcategories": []
+            },
+            {
+              "name": "Paket Ses Sistemi",
+              "slug": "paket-ses-sistemi",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-paket-ses-sistemi",
+              "subcategories": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Motosiklet Ekipmanları",
+      "slug": "motosiklet-ekipmanlari",
+      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari",
+      "subcategories": [
+        {
+          "name": "Kask, Kıyafet & Ekipman",
+          "slug": "kask-kiyafet-ekipman",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman",
+          "subcategories": [
+            {
+              "name": "Ayakkabı & Bot",
+              "slug": "ayakkabi-bot",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-ayakkabi-bot",
+              "subcategories": []
+            },
+            {
+              "name": "Kask",
+              "slug": "kask",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-kask",
+              "subcategories": []
+            },
+            {
+              "name": "Mont",
+              "slug": "mont",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-mont",
+              "subcategories": []
+            },
+            {
+              "name": "Pantolon",
+              "slug": "pantolon",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-pantolon",
+              "subcategories": []
+            },
+            {
+              "name": "Sweatshirt",
+              "slug": "sweatshirt",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-sweatshirt",
+              "subcategories": []
+            },
+            {
+              "name": "Tişört",
+              "slug": "tisort",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-tisort",
+              "subcategories": []
+            },
+            {
+              "name": "Tulum",
+              "slug": "tulum",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-tulum",
+              "subcategories": []
+            },
+            {
+              "name": "Yağmurluk",
+              "slug": "yagmurluk",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-yagmurluk",
+              "subcategories": []
+            },
+            {
+              "name": "Eldiven",
+              "slug": "eldiven",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-eldiven",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuarlar",
+              "slug": "aksesuarlar",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-kask-kiyafet-ekipman-aksesuarlar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Yedek Parça",
+          "slug": "yedek-parca",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca",
+          "subcategories": [
+            {
+              "name": "Aksesuarlar",
+              "slug": "aksesuarlar",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-aksesuarlar",
+              "subcategories": []
+            },
+            {
+              "name": "Debriyaj",
+              "slug": "debriyaj",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-debriyaj",
+              "subcategories": []
+            },
+            {
+              "name": "Egzoz",
+              "slug": "egzoz",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-egzoz",
+              "subcategories": []
+            },
+            {
+              "name": "Elektrik",
+              "slug": "elektrik",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-elektrik",
+              "subcategories": []
+            },
+            {
+              "name": "Fren",
+              "slug": "fren",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-fren",
+              "subcategories": []
+            },
+            {
+              "name": "Grenaj",
+              "slug": "grenaj",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-grenaj",
+              "subcategories": []
+            },
+            {
+              "name": "Havalandırma",
+              "slug": "havalandirma",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-havalandirma",
+              "subcategories": []
+            },
+            {
+              "name": "Motor",
+              "slug": "motor",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-motor",
+              "subcategories": []
+            },
+            {
+              "name": "Süspansiyon",
+              "slug": "suspansiyon",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-suspansiyon",
+              "subcategories": []
+            },
+            {
+              "name": "Şanzıman",
+              "slug": "sanziman",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-sanziman",
+              "subcategories": []
+            },
+            {
+              "name": "Yağlama",
+              "slug": "yaglama",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-yaglama",
+              "subcategories": []
+            },
+            {
+              "name": "Yakıt Sistemi",
+              "slug": "yakit-sistemi",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-yakit-sistemi",
+              "subcategories": []
+            },
+            {
+              "name": "Yönlendirme",
+              "slug": "yonlendirme",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-yonlendirme",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Aksesuar & Tuning",
+          "slug": "aksesuar-tuning",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-aksesuar-tuning",
+          "subcategories": [
+            {
+              "name": "Yönlendirme",
+              "slug": "yonlendirme",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-aksesuar-tuning-yonlendirme",
+              "subcategories": []
+            },
+            {
+              "name": "Görünüm",
+              "slug": "gorunum",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-aksesuar-tuning-gorunum",
+              "subcategories": []
+            },
+            {
+              "name": "Koruma",
+              "slug": "koruma",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-aksesuar-tuning-koruma",
+              "subcategories": []
+            },
+            {
+              "name": "Bakım Ürünleri",
+              "slug": "bakim-urunleri",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-aksesuar-tuning-bakim-urunleri",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Elektronik Ekipman",
+          "slug": "elektronik-ekipman",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-elektronik-ekipman",
+          "subcategories": []
+        },
+        {
+          "name": "Jant & Lastik",
+          "slug": "jant-lastik",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-jant-lastik",
+          "subcategories": [
+            {
+              "name": "Jant",
+              "slug": "jant",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-jant-lastik-jant",
+              "subcategories": []
+            },
+            {
+              "name": "Lastik",
+              "slug": "lastik",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-jant-lastik-lastik",
+              "subcategories": []
+            },
+            {
+              "name": "Jant & Lastik Takımı",
+              "slug": "jant-lastik-takimi",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-jant-lastik-jant-lastik-takimi",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar & Ekipman",
+              "slug": "aksesuar-ekipman",
+              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-jant-lastik-aksesuar-ekipman",
+              "subcategories": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Deniz Aracı Ekipmanları",
+      "slug": "deniz-araci-ekipmanlari",
+      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-deniz-araci-ekipmanlari",
+      "subcategories": [
+        {
+          "name": "Deniz Aracı Ekipmanları",
+          "slug": "deniz-araci-ekipmanlari",
+          "fullSlug": "yedek-parca-aksesuar-donanim-tuning-deniz-araci-ekipmanlari-deniz-araci-ekipmanlari",
+          "subcategories": []
+        }
+      ]
+    }
+  ]
+}

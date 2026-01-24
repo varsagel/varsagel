@@ -21,7 +21,6 @@ export default function QuestionsSection({ listingId, isOwner = false }: { listi
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   
-  // State for answer inputs (keyed by question ID)
   const [replyTexts, setReplyTexts] = useState<Record<string, string>>({});
   const [replyingId, setReplyingId] = useState<string | null>(null);
 
@@ -120,7 +119,6 @@ export default function QuestionsSection({ listingId, isOwner = false }: { listi
                  </div>
             </div>
 
-            {/* Answer Display */}
             {q.answer && (
                 <div className="mt-3 ml-4 pl-3 border-l-2 border-cyan-200">
                     <div className="text-sm font-semibold text-cyan-800 flex items-center gap-1">
@@ -131,7 +129,6 @@ export default function QuestionsSection({ listingId, isOwner = false }: { listi
                 </div>
             )}
 
-            {/* Answer Input (Only for owner and if not answered yet) */}
             {isOwner && !q.answer && (
                 <div className="mt-3 flex gap-2">
                     <input 

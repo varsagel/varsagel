@@ -77,6 +77,18 @@ class WriteWebpackStatsPlugin {
   }
 }
 
+const extraRemotePatterns: { protocol: "http" | "https"; hostname: string }[] = [];
+const publicBaseUrl = (process.env.S3_PUBLIC_BASE_URL || "").trim();
+if (publicBaseUrl) {
+  try {
+    const url = new URL(publicBaseUrl);
+    const protocol = url.protocol.replace(":", "");
+    if (protocol === "http" || protocol === "https") {
+      extraRemotePatterns.push({ protocol, hostname: url.hostname });
+    }
+  } catch {}
+}
+
 const nextConfig: NextConfig = {
   // RSC ve streaming optimize edildi
   experimental: {
@@ -85,6 +97,7 @@ const nextConfig: NextConfig = {
     },
     // RSC abort hatalarını azaltmak için
     optimizeCss: process.env.NODE_ENV === 'production',
+    optimizePackageImports: ["lucide-react"],
   },
   
   // Image optimization
@@ -96,6 +109,14 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "logo.clearbit.com" },
       { protocol: "https", hostname: "cdn.simpleicons.org" },
       { protocol: "https", hostname: "upload.wikimedia.org" },
+      { protocol: "https", hostname: "varsagel.com" },
+      { protocol: "https", hostname: "www.varsagel.com" },
+      { protocol: "https", hostname: "*.cloudfront.net" },
+      { protocol: "https", hostname: "*.s3.amazonaws.com" },
+      { protocol: "https", hostname: "*.s3.*.amazonaws.com" },
+      { protocol: "http", hostname: "localhost" },
+      { protocol: "http", hostname: "127.0.0.1" },
+      ...extraRemotePatterns,
     ],
   },
   
@@ -163,7 +184,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  
+
   // Redirects
   async redirects() {
     return [

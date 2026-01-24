@@ -1,8 +1,43 @@
-import { AUTOMOBILE_BRAND_MODELS, AUTOMOBILE_MODEL_SERIES } from '@/data/automobile-data';
+import hierarchyData from '@/data/vehicle-hierarchy.json';
+
+// Type definitions
+type Hierarchy = {
+    [category: string]: {
+        [brand: string]: {
+            [model: string]: {
+                [seri: string]: string[] // Packages
+            }
+        }
+    }
+};
+
+const hierarchy = hierarchyData as Hierarchy;
 
 export default function AutomobileDataTest() {
+  const otomobilData = hierarchy['otomobil'] || {};
+  const brands = Object.keys(otomobilData).sort((a, b) => a.localeCompare(b, 'tr'));
+  
+  // Statistics
+  const totalBrands = brands.length;
+  let totalModels = 0;
+  let totalSeries = 0;
+  let totalPackages = 0;
+
+  brands.forEach(brand => {
+      const models = otomobilData[brand] || {};
+      totalModels += Object.keys(models).length;
+      Object.values(models).forEach(seriesMap => {
+          totalSeries += Object.keys(seriesMap).length;
+          Object.values(seriesMap).forEach(packages => {
+              if (Array.isArray(packages)) {
+                  totalPackages += packages.length;
+              }
+          });
+      });
+  });
+
   // Sample data for demonstration
-  const sampleBrands = Object.keys(AUTOMOBILE_BRAND_MODELS).slice(0, 10);
+  const sampleBrands = brands.slice(0, 10);
   
   return (
     <div className="p-8">
@@ -10,24 +45,22 @@ export default function AutomobileDataTest() {
       
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Veri Özeti</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-blue-100 p-4 rounded-lg">
             <h3 className="font-semibold text-blue-800">Toplam Marka</h3>
-            <p className="text-2xl font-bold text-blue-600">{Object.keys(AUTOMOBILE_BRAND_MODELS).length}</p>
+            <p className="text-2xl font-bold text-blue-600">{totalBrands}</p>
           </div>
           <div className="bg-green-100 p-4 rounded-lg">
             <h3 className="font-semibold text-green-800">Toplam Model</h3>
-            <p className="text-2xl font-bold text-green-600">
-              {Object.values(AUTOMOBILE_BRAND_MODELS).reduce((sum, models) => sum + models.length, 0)}
-            </p>
+            <p className="text-2xl font-bold text-green-600">{totalModels}</p>
           </div>
           <div className="bg-purple-100 p-4 rounded-lg">
             <h3 className="font-semibold text-purple-800">Toplam Seri</h3>
-            <p className="text-2xl font-bold text-purple-600">
-              {Object.values(AUTOMOBILE_MODEL_SERIES).reduce((brandSum: number, brandData: any) => 
-                brandSum + Object.values(brandData).reduce((modelSum: number, series: any) => modelSum + series.length, 0)
-              , 0)}
-            </p>
+            <p className="text-2xl font-bold text-purple-600">{totalSeries}</p>
+          </div>
+          <div className="bg-orange-100 p-4 rounded-lg">
+            <h3 className="font-semibold text-orange-800">Toplam Paket</h3>
+            <p className="text-2xl font-bold text-orange-600">{totalPackages}</p>
           </div>
         </div>
       </div>
@@ -36,13 +69,17 @@ export default function AutomobileDataTest() {
         <h2 className="text-xl font-semibold mb-4">Örnek Marka-Model Hiyerarşisi</h2>
         <div className="bg-gray-50 p-4 rounded-lg">
           {sampleBrands.map(brand => {
-            const models = AUTOMOBILE_BRAND_MODELS[brand as keyof typeof AUTOMOBILE_BRAND_MODELS]?.slice(0, 3) || [];
+            const models = Object.keys(otomobilData[brand] || {});
+            const displayModels = models.slice(0, 3);
+            
             return (
               <div key={brand} className="mb-4">
                 <h3 className="font-semibold text-lg text-gray-800">{brand}</h3>
                 <div className="ml-4">
-                  {models.map(model => {
-                    const series = (AUTOMOBILE_MODEL_SERIES as any)[brand]?.[model] || [];
+                  {displayModels.map(model => {
+                    const seriesMap = otomobilData[brand][model] || {};
+                    const series = Object.keys(seriesMap);
+                    
                     return (
                       <div key={model} className="mb-2">
                         <span className="font-medium text-gray-700">{model}</span>
@@ -54,9 +91,9 @@ export default function AutomobileDataTest() {
                       </div>
                     );
                   })}
-                  {AUTOMOBILE_BRAND_MODELS[brand as keyof typeof AUTOMOBILE_BRAND_MODELS]?.length > 3 && (
+                  {models.length > 3 && (
                     <p className="text-sm text-gray-500 ml-4">
-                      +{AUTOMOBILE_BRAND_MODELS[brand as keyof typeof AUTOMOBILE_BRAND_MODELS].length - 3} daha fazla model...
+                      +{models.length - 3} daha fazla model...
                     </p>
                   )}
                 </div>
@@ -69,11 +106,8 @@ export default function AutomobileDataTest() {
       <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
         <h3 className="font-semibold text-yellow-800 mb-2">Veri Kaynağı</h3>
         <p className="text-yellow-700">
-          Bu veriler sahibinden_data_full.xlsx dosyasından otomatik olarak işlenmiştir. 
-          Toplam {Object.keys(AUTOMOBILE_BRAND_MODELS).length} marka, {Object.values(AUTOMOBILE_BRAND_MODELS).reduce((sum, models) => sum + models.length, 0)} model ve 
-          {Object.values(AUTOMOBILE_MODEL_SERIES).reduce((brandSum: number, brandData: any) => 
-            brandSum + Object.values(brandData).reduce((modelSum: number, series: any) => modelSum + series.length, 0)
-          , 0)} seri içermektedir.
+          Bu veriler vehicle-hierarchy.json dosyasından okunmaktadır. 
+          Toplam {totalBrands} marka, {totalModels} model, {totalSeries} seri ve {totalPackages} paket içermektedir.
         </p>
       </div>
     </div>

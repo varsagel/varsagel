@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Plus, Trash2, GripVertical, Settings2, ChevronUp, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { toast } from "@/components/ui/use-toast";
+import { titleCaseTR } from "@/lib/title-case-tr";
 
 type Attribute = {
   id: string;
@@ -364,7 +365,7 @@ export default function EditCategoryPage({ params }: { params: Promise<{ id: str
           <ArrowLeft className="w-5 h-5 text-gray-600" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{data.name}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{titleCaseTR(data.name)}</h1>
           <p className="text-sm text-gray-500">Kategori detaylarını ve form alanlarını yönetin.</p>
         </div>
       </div>

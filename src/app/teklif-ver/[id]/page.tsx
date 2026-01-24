@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { AttrField } from "@/data/attribute-schemas";
-import { MODEL_SERIES_EXTRA, SERIES_TRIMS_EXTRA } from "@/data/attribute-overrides";
+import { humanizeKeyTR } from "@/lib/humanize-key-tr";
 import { 
   Upload, X, Image as ImageIcon, Check, AlertCircle, ChevronRight, 
   ChevronLeft, FileText, Send, MapPin, 
-  Info, Lightbulb, ArrowLeft, ArrowRight, ShieldCheck, AlertTriangle,
+  Info, ArrowLeft, ArrowRight, ShieldCheck, AlertTriangle,
   Loader2, CheckCircle2, MessageSquare, List, Tag
 } from 'lucide-react';
 
@@ -34,31 +34,295 @@ type FormData = { price: string; message: string; images: string[] };
 // CategoryAttributes definitions
 type AttrFieldLocal = AttrField;
 
+type AttrFieldLocalWithOrder = AttrFieldLocal & { __order?: number };
+
+const stableAttrFieldId = (f: AttrField) => {
+  if (f.type === 'range-number' && f.minKey && f.maxKey) {
+    const minBase = f.minKey.endsWith('Min') ? f.minKey.slice(0, -3) : null;
+    const maxBase = f.maxKey.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
+    if (minBase && maxBase && minBase === maxBase) return `r:${minBase}`;
+    return `r:${f.minKey}:${f.maxKey}`;
+  }
+  if (f.key) return `k:${f.key}`;
+  return `l:${f.label}`;
+};
+
+const stripReservedAttrFields = (fields: AttrField[]) =>
+  fields.filter((f) => {
+    if (f.key === 'minPrice' || f.key === 'maxPrice') return false;
+    if (f.key === 'minBudget' || f.key === 'budget') return false;
+
+    if (f.type !== 'range-number') return true;
+
+    if (f.minKey === 'minPrice' && f.maxKey === 'maxPrice') return false;
+    if (f.minKey === 'minBudget' && f.maxKey === 'budget') return false;
+
+    const minBase = f.minKey?.endsWith('Min') ? f.minKey.slice(0, -3) : null;
+    const maxBase = f.maxKey?.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
+    const base = minBase && maxBase && minBase === maxBase ? minBase : null;
+    if (base === 'minPrice' || base === 'minBudget') return false;
+
+    return true;
+  });
+
+const isS3Image = (src: string) => {
+  if (!/^https?:\/\//i.test(src)) return false;
+  try {
+    return new URL(src).hostname.toLowerCase().includes(".s3.");
+  } catch {
+    return false;
+  }
+};
+const isCloudFrontImage = (src: string) => {
+  if (!/^https?:\/\//i.test(src)) return false;
+  try {
+    return new URL(src).hostname.toLowerCase().includes(".cloudfront.net");
+  } catch {
+    return false;
+  }
+};
+const toProxyImageSrc = (src: string) => {
+  const raw = String(src || '').trim();
+  if (!raw) return raw;
+  if (!/^https?:\/\//i.test(raw)) return raw;
+  try {
+    const parsed = new URL(raw);
+    const host = parsed.hostname.toLowerCase();
+    if (host.includes(".s3.") || host.includes(".cloudfront.net")) {
+      return `/api/upload?url=${encodeURIComponent(raw)}`;
+    }
+  } catch {}
+  return raw;
+};
+
+const normalizeSubcategoryCompare = (s: any) =>
+  String(s || '')
+    .trim()
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/\/+/g, '/');
+
+const subcategoryMatches = (attrSlugRaw: any, selectedRaw: any) => {
+  const attrSlug = normalizeSubcategoryCompare(attrSlugRaw);
+  const selected = normalizeSubcategoryCompare(selectedRaw);
+  if (!attrSlug || !selected) return false;
+  if (attrSlug === selected) return true;
+
+  const attrDash = attrSlug.split('/').filter(Boolean).join('-');
+  const selectedDash = selected.split('/').filter(Boolean).join('-');
+  if (attrDash && selectedDash && attrDash === selectedDash) return true;
+
+  if (attrSlug.endsWith(`-${selected}`) || selected.endsWith(`-${attrSlug}`)) return true;
+  if (attrDash.endsWith(`-${selectedDash}`) || selectedDash.endsWith(`-${attrDash}`)) return true;
+
+  return false;
+};
+
+const attributesToRequestFields = (category: string, subcategory: string, attrs: any[]): AttrFieldLocalWithOrder[] => {
+  const list = Array.isArray(attrs) ? attrs : [];
+  if (!category || list.length === 0) return [];
+
+  const PRIORITY_KEYS = ['marka', 'model', 'seri', 'paket'];
+
+  const source = list
+    .filter((a) => {
+      if (!a) return false;
+      const isRequired = !!a.required;
+      if (a.showInOffer === false && !isRequired) return false;
+      if (!a.subCategoryId) return true;
+      if (!subcategory) return isRequired;
+      const attrSlug = a?.subCategory?.slug;
+      if (!attrSlug) return isRequired;
+      return subcategoryMatches(attrSlug, subcategory) || isRequired;
+    })
+    .sort((a, b) => {
+      const aSpecific = a?.subCategoryId ? 1 : 0;
+      const bSpecific = b?.subCategoryId ? 1 : 0;
+      return aSpecific - bSpecific;
+    });
+
+  const mapped = source
+    .map((a) => {
+      const slug = String(a.slug || '').trim();
+      const normalizedType = a.type === 'checkbox' ? 'boolean' : a.type;
+      const isVehicleHierarchy = slug && PRIORITY_KEYS.includes(slug);
+      const type = isVehicleHierarchy ? 'select' : normalizedType;
+
+      let options: string[] | undefined = undefined;
+      try {
+        const parsed = a.optionsJson ? JSON.parse(a.optionsJson) : null;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const cleaned = parsed.filter((x) => x != null).map(String);
+          if (cleaned.length > 0) options = cleaned;
+        }
+      } catch {}
+
+      const minKey = type === 'range-number' ? (a.minKey || `${slug}Min`) : undefined;
+      const maxKey = type === 'range-number' ? (a.maxKey || `${slug}Max`) : undefined;
+      const order = Number.isFinite(Number(a?.order)) ? Number(a.order) : 9999;
+
+      const isM2 = slug === 'm2' || slug === 'metrekare' || a.name === 'Metrekare' || a.name === 'm2';
+      const required = isM2 ? false : !!a.required;
+
+      return {
+        key: type === 'range-number' ? undefined : slug,
+        label: a.name || slug || 'Alan',
+        type,
+        required,
+        options,
+        minKey,
+        maxKey,
+        minLabel: type === 'range-number' ? (a.minLabel || 'En düşük') : undefined,
+        maxLabel: type === 'range-number' ? (a.maxLabel || 'En yüksek') : undefined,
+        min: a.min,
+        max: a.max,
+        __order: order,
+      } as AttrFieldLocalWithOrder;
+    })
+    .filter(Boolean) as AttrFieldLocalWithOrder[];
+
+  const uniq = new Map<string, AttrFieldLocalWithOrder>();
+  stripReservedAttrFields(mapped).forEach((f) => uniq.set(stableAttrFieldId(f), f));
+
+  const baseSorted = Array.from(uniq.values()).sort((a, b) => {
+    const aKey = a.key || '';
+    const bKey = b.key || '';
+    const aIndex = PRIORITY_KEYS.indexOf(aKey);
+    const bIndex = PRIORITY_KEYS.indexOf(bKey);
+    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+    if (aIndex !== -1) return -1;
+    if (bIndex !== -1) return 1;
+    const ao = typeof a.__order === 'number' ? a.__order : 9999;
+    const bo = typeof b.__order === 'number' ? b.__order : 9999;
+    if (ao !== bo) return ao - bo;
+    return String(a.label || '').localeCompare(String(b.label || ''), 'tr');
+  });
+
+  if (category === 'vasita') {
+    const priorityKeys = ['marka', 'model', 'motor', 'seri', 'donanim', 'paket'];
+    const rank = (f: AttrField) => {
+      if (f.key) {
+        const i = priorityKeys.indexOf(f.key);
+        if (i !== -1) return i;
+      }
+      if (f.type === 'range-number' && f.minKey && f.minKey.endsWith('Min')) {
+        const base = f.minKey.slice(0, -3);
+        if (base === 'yil') return 10;
+        if (base === 'km') return 11;
+      }
+      return 100;
+    };
+    return baseSorted
+      .map((f, idx) => ({ f, idx }))
+      .sort((a, b) => {
+        const ra = rank(a.f);
+        const rb = rank(b.f);
+        if (ra !== rb) return ra - rb;
+        return a.idx - b.idx;
+      })
+      .map((x) => x.f);
+  }
+
+  return baseSorted;
+};
+
+const isMeaningfulAttributeValue = (v: any) => {
+  if (v === null || v === undefined) return false;
+  if (typeof v === 'boolean') return true;
+  if (typeof v === 'number') return Number.isFinite(v);
+  const s = String(v).trim();
+  return s.length > 0;
+};
+
+const listingEnteredAttributeKeys = (listingAttrs: Record<string, any> | null | undefined) => {
+  const attrs = listingAttrs && typeof listingAttrs === 'object' ? listingAttrs : {};
+  const reserved = new Set(['minPrice', 'maxPrice', 'minBudget', 'budget']);
+  const keys = new Set<string>();
+  for (const [k, v] of Object.entries(attrs)) {
+    if (!k || reserved.has(k)) continue;
+    if (!isMeaningfulAttributeValue(v)) continue;
+    keys.add(k);
+  }
+  return keys;
+};
+
+const fieldsMatchingListingAttributes = (fields: AttrFieldLocal[], listingKeySet: Set<string>) => {
+  const list = Array.isArray(fields) ? fields : [];
+  if (list.length === 0) return [];
+  return list.filter((f) => {
+    if (!f) return false;
+    if (f.required) return true;
+    if (f.type === 'range-number' && f.minKey && f.maxKey) {
+      return listingKeySet.has(f.minKey) || listingKeySet.has(f.maxKey);
+    }
+    if (f.key) return listingKeySet.has(f.key);
+    return false;
+  });
+};
+
 const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, error }: { images: string[]; updateImages: (imgs: string[]) => void; error?: string }) {
   const [uploading, setUploading] = useState(false);
+  const [justAddedUrl, setJustAddedUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!justAddedUrl) return;
+    const id = window.setTimeout(() => setJustAddedUrl(null), 2500);
+    return () => window.clearTimeout(id);
+  }, [justAddedUrl]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
+    if (images.length >= 10) {
+      toast({ title: 'Limit', description: 'En fazla 10 görsel ekleyebilirsiniz.', variant: 'warning' });
+      e.target.value = '';
+      return;
+    }
     
     setUploading(true);
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
+    
+    if (file.size === 0) {
+      toast({ title: 'Hata', description: 'Seçilen dosya boş', variant: 'destructive' });
+      setUploading(false);
+      return;
+    }
 
+    const formData = new FormData();
+    // Sanitize filename to avoid encoding issues
+    const ext = file.name.split('.').pop() || 'jpg';
+    const safeName = `image-${Date.now()}.${ext}`;
+    formData.append('file', file, safeName);
+    
     try {
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
+        cache: 'no-store',
       });
-      const data = await res.json();
+      const raw = await res.text();
+      const data = (() => {
+        try { return JSON.parse(raw); } catch { return null; }
+      })();
+      if (!data) {
+        throw new Error(raw || 'Yükleme başarısız');
+      }
       if (data.success) {
-        updateImages([...images, data.url]);
+        const next = [...images, data.url];
+        updateImages(next);
+        setJustAddedUrl(data.url);
+        const scanStatus = String(data?.scan?.status || '').toUpperCase();
+        const pending = scanStatus && scanStatus !== 'CLEAN';
+        toast({
+          title: pending ? 'Tarama Bekleniyor' : 'Yüklendi',
+          description: pending ? 'Görsel yüklendi, güvenlik taraması bekleniyor.' : 'Görsel eklendi.',
+          variant: pending ? 'warning' : 'success',
+        });
       } else {
         toast({ title: 'Hata', description: 'Yükleme başarısız: ' + (data.error || 'Bilinmeyen hata'), variant: 'destructive' });
       }
     } catch (err) {
       console.error(err);
-      toast({ title: 'Hata', description: 'Yükleme sırasında hata oluştu', variant: 'destructive' });
+      const msg = err instanceof Error ? err.message : 'Yükleme sırasında hata oluştu';
+      toast({ title: 'Hata', description: msg, variant: 'destructive' });
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -96,13 +360,32 @@ const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, er
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {images.map((img, idx) => (
             <div key={`${img}-${idx}`} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
+              {(() => {
+                const displaySrc = toProxyImageSrc(img);
+                const unoptimized =
+                  displaySrc.startsWith('/api/upload') ||
+                  img.startsWith('/uploads/') ||
+                  /\.jfif($|\?)/i.test(img) ||
+                  /\.jif($|\?)/i.test(img) ||
+                  isS3Image(img) ||
+                  isCloudFrontImage(img);
+                return (
               <Image 
-                src={img} 
-                alt={`Uploaded ${idx}`} 
+                src={displaySrc} 
+                alt={`Yüklenen Görsel ${idx + 1}`} 
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
                 className="object-cover transition-transform duration-300 group-hover:scale-110" 
+                unoptimized={unoptimized}
               />
+                );
+              })()}
+              {justAddedUrl === img && (
+                <div className="absolute top-2 left-2 inline-flex items-center gap-1 bg-emerald-600/90 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm">
+                  <Check className="w-3 h-3" />
+                  Yüklendi
+                </div>
+              )}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button
                   type="button"
@@ -117,7 +400,7 @@ const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, er
           
           <label className={`
             relative aspect-square rounded-xl border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center gap-3
-            ${uploading ? 'border-cyan-300 bg-cyan-50' : 'border-gray-300 hover:border-cyan-500 hover:bg-cyan-50'}
+            ${images.length >= 10 ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-70' : (uploading ? 'border-cyan-300 bg-cyan-50' : 'border-gray-300 hover:border-cyan-500 hover:bg-cyan-50')}
           `}>
             {uploading ? (
               <>
@@ -131,11 +414,13 @@ const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, er
                 </div>
                 <div className="text-center px-2">
                   <span className="text-xs font-bold text-gray-700 block">Resim Ekle</span>
-                  <span className="text-[10px] text-gray-500">Max 5MB</span>
+                  <span className="text-[10px] text-gray-500">
+                    {images.length >= 10 ? 'Limit doldu (10/10)' : `Maks. 20MB • ${images.length}/10`}
+                  </span>
                 </div>
               </>
             )}
-            <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={uploading} />
+            <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={uploading || images.length >= 10} />
           </label>
         </div>
       </div>
@@ -143,7 +428,7 @@ const ImageUploadStep = memo(function ImageUploadStep({ images, updateImages, er
   );
 });
 
-const CategoryAttributes = memo(function CategoryAttributes({ category, subcategory, attributes, errors, onChange, listingAttributes, dynamicAttributes }: { category: string; subcategory: string; attributes: Record<string, any>; errors: Record<string, string>; onChange: (key: string, val: any) => void; listingAttributes?: Record<string, any>; dynamicAttributes?: any[] }) {
+const CategoryAttributes = memo(function CategoryAttributes({ category, subcategory, fields, attributes, errors, onChange, listingAttributes }: { category: string; subcategory: string; fields: AttrFieldLocal[]; attributes: Record<string, any>; errors: Record<string, string>; onChange: (key: string, val: any) => void; listingAttributes?: Record<string, any> }) {
   const [manualModes, setManualModes] = useState<Record<string, boolean>>({});
   const [models, setModels] = useState<string[]>([]);
   const [series, setSeries] = useState<string[]>([]);
@@ -162,8 +447,7 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
     fetch(`/api/vehicle-data?type=models&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}`)
       .then(res => res.json())
       .then(data => {
-         const extra = Object.keys(((MODEL_SERIES_EXTRA[overrideKeyLocal] || {})[brand] || {}));
-         const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+         const arr = Array.isArray(data) ? data : [];
          setModels(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
       })
       .catch(() => setModels([]));
@@ -177,11 +461,7 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
     fetch(`/api/vehicle-data?type=series&category=${overrideKeyLocal}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(modelVal)}`)
       .then(res => res.json())
       .then(data => {
-        const seriesExtra = (MODEL_SERIES_EXTRA[overrideKeyLocal] || {}) as Record<string, Record<string, string[]>>;
-        const brandSeries = seriesExtra[brand] || {};
-        const extra = brandSeries[modelVal] || [];
-        
-        const arr = Array.isArray(data) ? [...data, ...extra] : [...extra];
+        const arr = Array.isArray(data) ? data : [];
         const sorted = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
         setSeries(sorted.length ? sorted : ['Standart']);
       })
@@ -201,68 +481,6 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
       })
       .catch(() => setTrims([]));
   }, [brand, modelVal, seriesVal, overrideKeyLocal]);
-
-  const fields = useMemo(() => {
-    const PRIORITY_KEYS = ['marka', 'model', 'seri', 'paket'];
-
-    const sortFields = (items: AttrFieldLocal[]) => {
-      return items.slice().sort((a, b) => {
-        const aKey = a.key || '';
-        const bKey = b.key || '';
-        const aIndex = PRIORITY_KEYS.indexOf(aKey);
-        const bIndex = PRIORITY_KEYS.indexOf(bKey);
-        if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-        if (aIndex !== -1) return -1;
-        if (bIndex !== -1) return 1;
-        return 0;
-      });
-    };
-
-    if (Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0) {
-      const withScope = dynamicAttributes.filter((attr: any) => {
-        if (!attr) return false;
-        // Filter by showInOffer
-        if (attr.showInOffer === false) return false;
-
-        if (!attr.subCategoryId) return true;
-        if (!attr.subCategory) return false;
-        if (!subcategory) return false;
-        return attr.subCategory.slug === subcategory;
-      });
-
-      const source = withScope.length > 0 ? withScope : dynamicAttributes.filter((attr: any) => attr && !attr.subCategoryId && attr.showInOffer !== false);
-
-      const mapped = source.map((attr: any) => {
-        if (!attr) return null;
-        let options: string[] = [];
-        try {
-          if (attr.optionsJson) {
-            const parsed = JSON.parse(attr.optionsJson);
-            if (Array.isArray(parsed)) {
-              options = parsed;
-            }
-          }
-        } catch {}
-
-        return {
-          key: attr.slug,
-          label: attr.name,
-          type: attr.type === 'checkbox' ? 'boolean' : attr.type,
-          required: attr.required,
-          options: Array.isArray(options) && options.length > 0 ? options : undefined,
-          minKey: attr.type === 'range-number' ? `${attr.slug}Min` : undefined,
-          maxKey: attr.type === 'range-number' ? `${attr.slug}Max` : undefined,
-          minLabel: attr.type === 'range-number' ? 'En az' : undefined,
-          maxLabel: attr.type === 'range-number' ? 'En çok' : undefined,
-        } as AttrFieldLocal;
-      }).filter((item): item is AttrFieldLocal => !!item);
-
-      return sortFields(mapped);
-    }
-
-    // REMOVED: Static Fallback
-    return [];
-  }, [category, subcategory, dynamicAttributes, models, series, trims]);
   
   if (!fields.length) return (
     <div className="flex flex-col items-center justify-center py-12 text-center bg-white rounded-2xl border border-gray-200 shadow-sm">
@@ -290,22 +508,34 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
           {fields.map((f)=> {
             const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
             const isManual = f.key ? manualModes[f.key] : false;
-            const isRangeAsSingle = f.type === 'range-number';
-            const specialKey = isRangeAsSingle && f.minKey ? f.minKey.replace('Min', '') : '';
             
             let warning = null;
             if (listingAttributes) {
-               if (isRangeAsSingle && specialKey) {
-                  if (attributes[specialKey]) {
-                     const val = Number(attributes[specialKey]);
-                     const min = Number(listingAttributes[f.minKey!]);
-                     const max = Number(listingAttributes[f.maxKey!]);
-                     const hasMin = listingAttributes[f.minKey!] !== undefined && listingAttributes[f.minKey!] !== '' && !isNaN(min);
-                     const hasMax = listingAttributes[f.maxKey!] !== undefined && listingAttributes[f.maxKey!] !== '' && !isNaN(max);
-             
-                     if ((hasMin && val < min) || (hasMax && val > max)) {
-                        warning = `Talep kriterlerine (${hasMin ? min : '...'} - ${hasMax ? max : '...'}) uymuyor`;
-                     }
+               if (f.type === 'range-number' && f.minKey && f.maxKey) {
+                  const lMinRaw = listingAttributes[f.minKey];
+                  const lMaxRaw = listingAttributes[f.maxKey];
+                  const lMin = Number(lMinRaw);
+                  const lMax = Number(lMaxRaw);
+                  const hasLMin = lMinRaw !== undefined && String(lMinRaw).trim() !== '' && !isNaN(lMin);
+                  const hasLMax = lMaxRaw !== undefined && String(lMaxRaw).trim() !== '' && !isNaN(lMax);
+
+                  const oMinRaw = attributes[f.minKey];
+                  const oMaxRaw = attributes[f.maxKey];
+                  const oMin = Number(oMinRaw);
+                  const oMax = Number(oMaxRaw);
+                  const hasOMin = oMinRaw !== undefined && String(oMinRaw).trim() !== '' && !isNaN(oMin);
+                  const hasOMax = oMaxRaw !== undefined && String(oMaxRaw).trim() !== '' && !isNaN(oMax);
+
+                  const offerLo = hasOMin ? oMin : hasOMax ? oMax : null;
+                  const offerHi = hasOMax ? oMax : hasOMin ? oMin : null;
+
+                  if ((hasLMin || hasLMax) && offerLo !== null && offerHi !== null) {
+                    const violates =
+                      (hasLMin && offerHi < lMin) ||
+                      (hasLMax && offerLo > lMax);
+                    if (violates) {
+                      warning = `Talep kriterlerine (${hasLMin ? lMin : '...'} - ${hasLMax ? lMax : '...'}) uymuyor`;
+                    }
                   }
                } else if (f.type === 'boolean') {
                   const listingVal = listingAttributes[f.key!];
@@ -328,22 +558,6 @@ const CategoryAttributes = memo(function CategoryAttributes({ category, subcateg
                      }
                   }
                }
-            }
-
-            if (isRangeAsSingle && specialKey) {
-              return (
-                <div key={id}>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{f.label} {f.required ? <span className="text-red-500">*</span> : ''}</label>
-                  <input
-                    type="number"
-                    value={attributes[specialKey] ?? ''}
-                    onChange={(e)=>onChange(specialKey, e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[specialKey] ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}
-                  />
-                  {errors[specialKey] && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors[specialKey]}</p>}
-                  {warning && <p className="text-amber-600 text-xs mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> {warning}</p>}
-                </div>
-              );
             }
 
             return (
@@ -533,21 +747,6 @@ const StepIndicator = memo(function StepIndicator({ currentStep }: { currentStep
 const PricingStep = memo(function PricingStep({ formData, errors, updateFormData, listingPrice }: { formData: FormData; errors: Partial<Record<keyof FormData, string>>; updateFormData: (field: keyof FormData, value: any) => void; listingPrice: number | null }) {
   return (
   <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="bg-gradient-to-br from-cyan-50 to-indigo-50 rounded-2xl p-6 border border-cyan-100 shadow-sm">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm text-cyan-600 shrink-0">
-          <Lightbulb className="w-6 h-6" />
-        </div>
-        <div>
-          <h3 className="text-lg font-bold text-gray-900 mb-1">Fiyatlandırma Önerisi</h3>
-          <p className="text-sm text-gray-600 mb-3">Piyasa analizine göre bu Ürün veya İş için önerilen fiyat aralığı:</p>
-          <p className="text-2xl font-bold text-cyan-700 tracking-tight">
-            {typeof listingPrice === 'number' ? `${Math.max(1, Math.floor(listingPrice * 0.9)).toLocaleString('tr-TR')} - ${Math.floor(listingPrice).toLocaleString('tr-TR')} TL` : '2.500 - 4.000 TL'}
-          </p>
-        </div>
-      </div>
-    </div>
-
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
@@ -620,7 +819,6 @@ const PricingStep = memo(function PricingStep({ formData, errors, updateFormData
       <div>
         <h3 className="text-sm font-bold text-amber-800">Dikkat Edilmesi Gerekenler</h3>
         <ul className="mt-1 text-xs text-amber-700 space-y-1 list-disc list-inside">
-          <li>Komisyon oranı teklif kabul edildiğinde kesilecektir.</li>
           <li>Teklifiniz müşteriye doğrudan iletilecektir.</li>
           <li>Rekabetçi fiyatlar şansınızı artırır.</li>
         </ul>
@@ -630,19 +828,15 @@ const PricingStep = memo(function PricingStep({ formData, errors, updateFormData
   );
 });
 
-const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, errors, dynamicAttributes }: { formData: FormData, attrs: any, updateFormData: (field: keyof FormData, value: any) => void, errors: Partial<Record<keyof FormData, string>>, dynamicAttributes: any[] | null }) {
+const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, errors, fields }: { formData: FormData, attrs: any, updateFormData: (field: keyof FormData, value: any) => void, errors: Partial<Record<keyof FormData, string>>, fields: AttrFieldLocal[] }) {
   
   const attrLabelMap = useMemo(() => {
     const map = new Map<string, string>();
-    if (Array.isArray(dynamicAttributes)) {
-      dynamicAttributes.forEach((attr: any) => {
-        if (attr) {
-          map.set(attr.slug, attr.name);
-        }
-      });
-    }
+    (fields || []).forEach((f) => {
+      if (f?.key) map.set(f.key, f.label);
+    });
     return map;
-  }, [dynamicAttributes]);
+  }, [fields]);
 
   return (
   <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -681,13 +875,26 @@ const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, e
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
               {formData.images.map((img, i) => (
                 <div key={`${img}-${i}`} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition-all">
-                  <Image 
-                    src={img} 
-                    alt={`Teklif görseli ${i+1}`} 
-                    fill
-                    sizes="(max-width: 768px) 25vw, 20vw"
-                    className="object-cover" 
-                  />
+                  {(() => {
+                    const displaySrc = toProxyImageSrc(img);
+                    const unoptimized =
+                      displaySrc.startsWith('/api/upload') ||
+                      img.startsWith('/uploads/') ||
+                      /\.jfif($|\?)/i.test(img) ||
+                      /\.jif($|\?)/i.test(img) ||
+                      isS3Image(img) ||
+                      isCloudFrontImage(img);
+                    return (
+                      <Image 
+                        src={displaySrc} 
+                        alt={`Teklif görseli ${i+1}`} 
+                        fill
+                        sizes="(max-width: 768px) 25vw, 20vw"
+                        className="object-cover" 
+                        unoptimized={unoptimized}
+                      />
+                    );
+                  })()}
                 </div>
               ))}
             </div>
@@ -707,7 +914,7 @@ const ReviewStep = memo(function ReviewStep({ formData, attrs, updateFormData, e
                 const parts = s.split(',').map(p => p.trim()).filter(Boolean);
                 
                 // Use dynamic map first, then fallback to title case
-                const label = attrLabelMap.get(k) || k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').trim();
+                const label = attrLabelMap.get(k) || humanizeKeyTR(k);
                 
                 return (
                   <div key={k} className="flex flex-col bg-gray-50 p-3 rounded-xl border border-gray-100 hover:border-gray-300 transition-colors">
@@ -891,7 +1098,7 @@ const ListingDetailsCard = memo(function ListingDetailsCard({ listing }: { listi
                   garanti: 'Garanti',
                   plakaUyruk: 'Plaka / Uyruk'
                 };
-                const label = map[k] || k.charAt(0).toUpperCase() + k.slice(1).replace(/([A-Z])/g, ' $1').trim();
+                const label = map[k] || humanizeKeyTR(k);
                 return (
                     <div key={k} className="flex items-center justify-between group">
                         <span className="text-xs text-gray-500 font-medium shrink-0 group-hover:text-gray-700 transition-colors">{label}</span>
@@ -920,11 +1127,67 @@ export default function TeklifVerPage() {
   const [listing, setListing] = useState<any>(null);
   const [attributes, setAttributes] = useState<any>({});
   const [dynamicAttributes, setDynamicAttributes] = useState<any[] | null>(null);
+  const requestFields = useMemo(() => {
+    const cat = listing?.category?.slug;
+    const sub = listing?.subCategory?.slug;
+    if (!cat || !Array.isArray(dynamicAttributes)) return [];
+    return attributesToRequestFields(String(cat), String(sub || ''), dynamicAttributes);
+  }, [listing?.category?.slug, listing?.subCategory?.slug, dynamicAttributes]);
+  const listingKeySet = useMemo(() => listingEnteredAttributeKeys(listing?.attributes), [listing?.attributes]);
+  const offerFieldsFromSchema = useMemo(() => fieldsMatchingListingAttributes(requestFields, listingKeySet), [requestFields, listingKeySet]);
+  const offerFields = useMemo(() => {
+    const covered = new Set<string>();
+    offerFieldsFromSchema.forEach((f) => {
+      if (!f) return;
+      if (f.type === 'range-number' && f.minKey && f.maxKey) {
+        covered.add(f.minKey);
+        covered.add(f.maxKey);
+        return;
+      }
+      if (f.key) covered.add(f.key);
+    });
+
+    const unknown: AttrFieldLocal[] = Array.from(listingKeySet)
+      .filter((k) => !covered.has(k))
+      .sort((a, b) => a.localeCompare(b, 'tr'))
+      .map((k) => ({
+        key: k,
+        label: humanizeKeyTR(k),
+        type: 'text',
+        required: false,
+      }));
+
+    const combined = [...offerFieldsFromSchema, ...unknown];
+    const merged = new Map<string, AttrFieldLocal>();
+    combined.forEach((f) => {
+      if (!f) return;
+      const id = stableAttrFieldId(f);
+      if (!merged.has(id)) {
+        merged.set(id, f);
+        return;
+      }
+      const existing = merged.get(id)!;
+      if (!existing.required && f.required) {
+        merged.set(id, f);
+        return;
+      }
+      if (!existing.options && f.options) {
+        merged.set(id, f);
+        return;
+      }
+      if (existing.type === 'text' && f.type !== 'text') {
+        merged.set(id, f);
+      }
+    });
+    return Array.from(merged.values());
+  }, [offerFieldsFromSchema, listingKeySet]);
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>> & { images?: string }>({});
   const [attributeErrors, setAttributeErrors] = useState<Record<string, string>>({});
   const [missingRequiredFields, setMissingRequiredFields] = useState<string[]>([]);
   const [blockedReason, setBlockedReason] = useState<string>("");
+  const [elig, setElig] = useState<any>(null);
+  const [tick, setTick] = useState<number>(Date.now());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState("");
@@ -935,75 +1198,62 @@ export default function TeklifVerPage() {
 
     if (step === 1) {
       if (listing) {
-        const category = listing.category?.slug;
-        const subcategory = listing.subCategory?.slug;
-        if (category) {
-           const overrideKey = `${category}/${subcategory || ''}`;
-           const labelMap: Record<string, string> = {};
-           let fieldsForValidation: AttrField[] = [];
+        const labelMap: Record<string, string> = {};
+        const visibleKeys = new Set<string>();
+        offerFields.forEach((f) => {
+          if (!f) return;
+          if (f.key) labelMap[f.key] = f.label;
+          if (f.key) visibleKeys.add(f.key);
+          if (f.type === 'range-number') {
+            if (f.minKey) labelMap[f.minKey] = f.label;
+            if (f.maxKey) labelMap[f.maxKey] = f.label;
+            if (f.minKey) visibleKeys.add(f.minKey);
+            if (f.maxKey) visibleKeys.add(f.maxKey);
+            const minBase = f.minKey?.endsWith('Min') ? f.minKey.slice(0, -3) : null;
+            const maxBase = f.maxKey?.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
+            const base = minBase && maxBase && minBase === maxBase ? minBase : null;
+            if (base) labelMap[base] = f.label;
+            if (base) visibleKeys.add(base);
+          }
+        });
 
-           if (Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0) {
-             const withScope = dynamicAttributes.filter((attr: any) => {
-               if (!attr) return false;
-               if (!attr.subCategoryId) return true;
-               if (!attr.subCategory) return false;
-               if (!subcategory) return false;
-               return attr.subCategory.slug === subcategory;
-             });
-             const source = withScope.length > 0 ? withScope : dynamicAttributes.filter((attr: any) => attr && !attr.subCategoryId);
-             fieldsForValidation = source.map((attr: any) => {
-               if (!attr) return null;
-               let options: string[] = [];
-               try {
-                 if (attr.optionsJson) {
-                   const parsed = JSON.parse(attr.optionsJson);
-                   if (Array.isArray(parsed)) {
-                     options = parsed;
-                   }
-                 }
-               } catch {}
-               return {
-                 key: attr.slug,
-                 label: attr.name,
-                 type: attr.type === 'checkbox' ? 'boolean' : attr.type,
-                 required: attr.required,
-                 options: Array.isArray(options) && options.length > 0 ? options : undefined,
-                 minKey: attr.type === 'range-number' ? `${attr.slug}Min` : undefined,
-                 maxKey: attr.type === 'range-number' ? `${attr.slug}Max` : undefined,
-               } as AttrField;
-             }).filter((item): item is AttrField => !!item);
-           }
+        offerFields.forEach((f) => {
+          if (!f || !f.required) return;
+          if (f.type === 'range-number' && f.minKey && f.maxKey) {
+            const minBase = f.minKey.endsWith('Min') ? f.minKey.slice(0, -3) : null;
+            const maxBase = f.maxKey.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
+            const baseKey = minBase && maxBase && minBase === maxBase ? minBase : null;
+            if (baseKey && !visibleKeys.has(baseKey)) return;
+            if (!visibleKeys.has(f.minKey) && !visibleKeys.has(f.maxKey)) return;
+            const baseVal = baseKey ? attributes[baseKey] : undefined;
+            const a = attributes[f.minKey];
+            const b = attributes[f.maxKey];
+            const hasBase = baseVal !== undefined && String(baseVal).trim() !== '';
+            const hasA = a !== undefined && String(a).trim() !== '';
+            const hasB = b !== undefined && String(b).trim() !== '';
+            if (!hasBase && !hasA && !hasB) {
+              if (baseKey) newAttrErrors[baseKey] = 'Zorunlu';
+              else newAttrErrors[f.minKey] = 'Zorunlu';
+            }
+            return;
+          }
+          if (f.key) {
+            if (!visibleKeys.has(f.key)) return;
+            const v = attributes[f.key];
+            const present =
+              f.type === 'boolean'
+                ? (f.key in attributes)
+                : (v !== undefined && String(v).trim() !== '' && (!Array.isArray(v) || v.length > 0));
+            if (!present) newAttrErrors[f.key] = 'Zorunlu';
+          }
+        });
 
-           const fieldMap = new Map<string, AttrField>();
-           fieldsForValidation.forEach((f) => {
-             const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
-             fieldMap.set(id, f);
-             if (f.key) {
-               labelMap[f.key] = f.label;
-             }
-             if (f.type === 'range-number' && f.minKey) {
-               const specialKey = f.minKey.replace('Min', '');
-               labelMap[specialKey] = f.label;
-             }
-           });
-           fieldMap.forEach((f) => {
-             if (f.type === 'range-number' && f.minKey && f.required) {
-                const specialKey = f.minKey.replace('Min', '');
-                const v = attributes[specialKey];
-                const present = v !== undefined && String(v).trim() !== '';
-                if (!present) newAttrErrors[specialKey] = 'Zorunlu';
-             } else if (f.key && f.required) {
-               const v = attributes[f.key];
-               const present = f.type === 'boolean' ? (f.key in attributes) : (v !== undefined && String(v).trim() !== '');
-               if (!present) newAttrErrors[f.key] = 'Zorunlu';
-             }
-           });
-           if (String(attributes['marka'] || '').trim() && !String(attributes['model'] || '').trim()) {
-             newAttrErrors['model'] = 'Zorunlu';
-           }
-           const missingLabels = Object.keys(newAttrErrors).map((key) => labelMap[key] || key);
-           setMissingRequiredFields(missingLabels);
+        if (visibleKeys.has('model') && String(attributes['marka'] || '').trim() && !String(attributes['model'] || '').trim()) {
+          newAttrErrors['model'] = 'Zorunlu';
         }
+
+        const missingLabels = Object.keys(newAttrErrors).map((key) => labelMap[key] || key);
+        setMissingRequiredFields(missingLabels);
       }
       if (Object.keys(newAttrErrors).length > 0) {
         setAttributeErrors(newAttrErrors);
@@ -1035,7 +1285,7 @@ export default function TeklifVerPage() {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData, attributes, listing, dynamicAttributes]);
+  }, [formData, attributes, listing, offerFields]);
 
   const updateFormData = useCallback((field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -1084,10 +1334,6 @@ export default function TeklifVerPage() {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
-    if (blockedReason) {
-      toast({ title: 'Hata', description: blockedReason, variant: 'destructive' });
-      return;
-    }
     
     if (currentStep < STEPS.length) {
       nextStep();
@@ -1112,6 +1358,55 @@ export default function TeklifVerPage() {
           : Array.isArray(params?.id)
             ? params?.id[0]
             : "");
+
+      const priceForCheck = String(formData.price || '').trim();
+      const eligRes = await fetch(
+        `/api/offers/eligibility?listingId=${encodeURIComponent(listingId)}${priceForCheck ? `&price=${encodeURIComponent(priceForCheck)}` : ''}`,
+        { cache: 'no-store' }
+      );
+      const eligData = await eligRes.json().catch(() => null);
+      if (eligData && eligData.canOffer === false) {
+        const msg =
+          eligData.reason === 'DAILY_LIMIT'
+            ? 'Aynı talebe günde en fazla 2 defa teklif verebilirsiniz.'
+            : eligData.reason === 'COOLDOWN'
+              ? 'Tekrar teklif vermek için 1 saat beklemelisiniz.'
+              : eligData.reason === 'PENDING_EXISTS'
+                ? 'Bu talep için zaten bekleyen bir teklifiniz var.'
+                : eligData.reason === 'OVER_BUDGET_ONCE'
+                  ? 'Bütçe üzeri teklifi bu talep için en fazla 1 defa verebilirsiniz.'
+                  : eligData.reason === 'BLOCKED'
+                    ? 'Bu talep için teklif verme yetkiniz bulunmuyor.'
+                    : eligData.reason === 'UNAUTHENTICATED'
+                      ? 'Teklif vermek için giriş yapmanız gerekiyor.'
+                      : 'Şu anda teklif verilemiyor.'
+        setBlockedReason(msg);
+        toast({ title: 'Hata', description: msg, variant: 'destructive' });
+        return;
+      }
+
+      const allowedAttributeKeys = new Set<string>();
+      offerFields.forEach((f) => {
+        if (!f) return;
+        if (f.type === 'range-number' && f.minKey && f.maxKey) {
+          allowedAttributeKeys.add(f.minKey);
+          allowedAttributeKeys.add(f.maxKey);
+          return;
+        }
+        if (f.key) allowedAttributeKeys.add(f.key);
+      });
+
+      const sanitizedAttributes: Record<string, any> = {};
+      Object.entries(attributes || {}).forEach(([k, v]) => {
+        if (!allowedAttributeKeys.has(k)) return;
+        if (typeof v === 'boolean') {
+          sanitizedAttributes[k] = v;
+          return;
+        }
+        if (!isMeaningfulAttributeValue(v)) return;
+        sanitizedAttributes[k] = v;
+      });
+
       const res = await fetch('/api/teklif-ver', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1119,13 +1414,13 @@ export default function TeklifVerPage() {
           listingId,
           price: formData.price,
           message: formData.message,
-          attributes,
+          attributes: sanitizedAttributes,
           images: formData.images,
         }),
       });
       if (res.status === 401) {
         const callbackUrl = `/teklif-ver/${listingId || params?.id || ''}`;
-        toast({ title: 'Oturum Gerekli', description: 'Teklif vermek için tekrar giriş yapmalısınız.', variant: 'destructive' });
+        toast({ title: 'Oturum Gerekli', description: 'Teklif vermek için tekrar giriş yapmalısınız.', variant: 'warning' });
         router.push(`/giris?callbackUrl=${encodeURIComponent(callbackUrl)}`);
         return;
       }
@@ -1151,7 +1446,7 @@ export default function TeklifVerPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, params?.id, currentStep, validateStep, router, attributes, isSubmitting, listing?.id, listing?.status, nextStep, blockedReason]);
+  }, [formData, params?.id, currentStep, validateStep, router, attributes, isSubmitting, listing?.id, listing?.status, nextStep, offerFields]);
 
   useEffect(() => {
     let active = true;
@@ -1174,28 +1469,34 @@ export default function TeklifVerPage() {
           } else {
             setBlockedReason('');
           }
-          if (!formData.price && typeof data.price === 'number') {
-            setFormData(prev => ({ ...prev, price: String(Math.max(1, Math.floor(data.price * 0.9))) }));
+          if (typeof data.price === 'number') {
+            setFormData(prev => {
+              if (prev.price) return prev;
+              return { ...prev, price: String(Math.max(1, Math.floor(data.price * 0.9))) };
+            });
           }
 
           const catSlug = data?.category?.slug;
+          const subCatSlug = data?.subCategory?.slug;
+
           if (catSlug) {
             try {
-              console.log("Fetching categories for slug:", catSlug);
-              const catRes = await fetch('/api/categories');
-              if (catRes.ok) {
-                const cats = await catRes.json();
+              const query = new URLSearchParams();
+              if (subCatSlug) {
+                query.append('subcategory', subCatSlug);
+              }
+
+              const attrRes = await fetch(`/api/categories/${catSlug}/attributes?${query.toString()}`);
+              
+              if (attrRes.ok) {
+                const attrs = await attrRes.json();
                 if (!active) return;
-                if (Array.isArray(cats)) {
-                  const cat = cats.find((c: any) => c.slug === catSlug);
-                  console.log("Found category:", cat ? cat.name : "None", "Attributes:", cat?.attributes?.length);
-                  if (cat && Array.isArray(cat.attributes)) {
-                    setDynamicAttributes(cat.attributes);
-                  }
+                if (Array.isArray(attrs)) {
+                  setDynamicAttributes(attrs);
                 }
               }
             } catch (err) {
-              console.error("Error fetching categories:", err);
+              console.error("Özellikler alınırken hata oluştu:", err);
             }
           }
         }
@@ -1204,6 +1505,62 @@ export default function TeklifVerPage() {
     return () => { active = false; };
   }, [params?.id]);
 
+  useEffect(() => {
+    const listingId =
+      (listing?.id as string | undefined) ||
+      (typeof params?.id === "string"
+        ? params.id
+        : Array.isArray(params?.id)
+          ? params?.id[0]
+          : "");
+    if (!listingId) return;
+    const priceForCheck = String(formData.price || '').trim();
+    fetch(`/api/offers/eligibility?listingId=${encodeURIComponent(listingId)}${priceForCheck ? `&price=${encodeURIComponent(priceForCheck)}` : ''}`, { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => setElig(data))
+      .catch(() => setElig(null));
+  }, [listing?.id, params?.id, formData.price]);
+
+  useEffect(() => {
+    if (!elig) return;
+    if (elig.canOffer) {
+      if (listing?.status === 'OPEN') setBlockedReason('');
+      return;
+    }
+    const msg =
+      elig.reason === 'DAILY_LIMIT'
+        ? 'Aynı talebe günde en fazla 2 defa teklif verebilirsiniz.'
+        : elig.reason === 'COOLDOWN'
+          ? 'Tekrar teklif vermek için 1 saat beklemelisiniz.'
+          : elig.reason === 'PENDING_EXISTS'
+            ? 'Bu talep için zaten bekleyen bir teklifiniz var. Talep sahibi yanıtlayana kadar yeni teklif veremezsiniz.'
+            : elig.reason === 'OVER_BUDGET_ONCE'
+              ? 'Bütçe üzeri teklifi bu talep için en fazla 1 defa verebilirsiniz.'
+              : elig.reason === 'BLOCKED'
+                ? 'Bu talep için teklif verme yetkiniz bulunmuyor.'
+                : elig.reason === 'UNAUTHENTICATED'
+                  ? 'Teklif vermek için giriş yapmanız gerekiyor.'
+                  : 'Şu anda teklif verilemiyor.'
+    setBlockedReason(msg);
+  }, [elig, listing?.status]);
+
+  useEffect(() => {
+    if (!elig?.nextAllowedAt) return;
+    const id = window.setInterval(() => setTick(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [elig?.nextAllowedAt]);
+
+  const countdownText = useMemo(() => {
+    if (!elig?.nextAllowedAt) return null;
+    const until = new Date(elig.nextAllowedAt).getTime();
+    const diff = Math.max(0, until - tick);
+    const s = Math.floor(diff / 1000);
+    const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+    const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+    const ss = String(s % 60).padStart(2, '0');
+    return `${hh}:${mm}:${ss}`;
+  }, [elig?.nextAllowedAt, tick]);
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
@@ -1211,11 +1568,11 @@ export default function TeklifVerPage() {
           <CategoryAttributes
             category={listing?.category?.slug}
             subcategory={listing?.subCategory?.slug}
+            fields={offerFields}
             attributes={attributes}
             errors={attributeErrors}
             onChange={handleAttributeChange}
             listingAttributes={listing?.attributes}
-            dynamicAttributes={dynamicAttributes || []}
           />
         );
       case 2:
@@ -1223,7 +1580,7 @@ export default function TeklifVerPage() {
       case 3:
         return <ImageUploadStep images={formData.images} updateImages={updateImages} error={errors.images} />;
       case 4:
-        return <ReviewStep formData={formData} attrs={attributes} updateFormData={updateFormData} errors={errors} dynamicAttributes={dynamicAttributes} />;
+        return <ReviewStep formData={formData} attrs={attributes} updateFormData={updateFormData} errors={errors} fields={offerFields} />;
       default:
         return null;
     }
@@ -1283,6 +1640,9 @@ export default function TeklifVerPage() {
                   <div>
                     <h4 className="font-bold text-sm">Teklif Verilemedi</h4>
                     <p className="text-sm mt-1">{blockedReason}</p>
+                    {countdownText && (
+                      <p className="text-sm mt-1 font-bold">{countdownText}</p>
+                    )}
                   </div>
                 </div>
               )}

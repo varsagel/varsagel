@@ -65,7 +65,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
       images,
       offers: listing.offers.map((o) => ({ id: o.id, price: Number(o.price as any), message: o.body, createdAt: o.createdAt, sellerName: o.seller?.name || 'Teklif Veren' })),
     })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Talep detay getirilirken hata' }, { status: 500 })
   }
 }

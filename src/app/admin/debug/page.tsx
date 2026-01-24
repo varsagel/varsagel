@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 import { Eye, Copy, RefreshCw, Search, AlertCircle, Server, Monitor, Globe, Activity, CheckCircle, XCircle } from "lucide-react";
@@ -31,7 +31,7 @@ export default function DebugPage() {
   const [scanResults, setScanResults] = useState<any>(null);
   const { toast } = useToast();
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -43,7 +43,7 @@ export default function DebugPage() {
       
       const data = await res.json();
       setLogs(data.logs);
-    } catch (error) {
+    } catch {
       toast({
         title: "Hata",
         description: "Loglar getirilirken bir sorun oluştu.",
@@ -52,7 +52,7 @@ export default function DebugPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, sourceFilter, toast]);
 
   const handleScan = async () => {
     setScanning(true);
@@ -72,7 +72,7 @@ export default function DebugPage() {
       } else {
         throw new Error(data.error);
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Tarama Hatası",
         description: "Sistem taranırken bir sorun oluştu.",
@@ -85,7 +85,7 @@ export default function DebugPage() {
 
   useEffect(() => {
     fetchLogs();
-  }, [sourceFilter]);
+  }, [fetchLogs]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

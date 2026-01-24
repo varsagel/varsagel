@@ -3,23 +3,26 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Clock, Heart } from "lucide-react";
+import { Clock, Heart, MapPin, Hash } from "lucide-react";
 import BRAND_LOGOS from "@/data/brand-logos.json";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { getSubcategoryImage } from '@/data/subcategory-images';
 import { useToast } from "@/components/ui/use-toast";
+import { listingHref } from '@/lib/listing-url';
+import { titleCaseTR } from '@/lib/title-case-tr';
 
 interface ListingAttributes {
-  marka?: string;
-  model?: string;
+  marka?: string | string[];
+  model?: string | string[];
   isPending?: boolean;
   minPrice?: number | string;
   maxPrice?: number | string;
-  [key: string]: string | number | boolean | undefined;
+  [key: string]: string | number | boolean | string[] | undefined;
 }
 
 interface Talep {
   id: string;
+  code?: string | null;
   title: string;
   description: string;
   price: number;
@@ -110,54 +113,34 @@ const PriceRangeDisplay = React.memo(({ minPrice, maxPrice, price }: {
   maxPrice?: number | string; 
   price: number; 
 }) => {
+  const formatter = useMemo(() => new Intl.NumberFormat('tr-TR', {
+    style: 'currency',
+    currency: 'TRY',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }), []);
   const priceRangeText = useMemo(() => {
     const min = typeof minPrice === 'string' ? parseFloat(minPrice) : minPrice;
     const max = typeof maxPrice === 'string' ? parseFloat(maxPrice) : maxPrice;
     
     if (min && max) {
-      return `${new Intl.NumberFormat('tr-TR', {
-        style: 'currency',
-        currency: 'TRY',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(min)} - ${new Intl.NumberFormat('tr-TR', {
-        style: 'currency',
-        currency: 'TRY',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(max)}`;
+      return `${formatter.format(min)} - ${formatter.format(max)}`;
     } else if (min) {
-      return `Min ${new Intl.NumberFormat('tr-TR', {
-        style: 'currency',
-        currency: 'TRY',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(min)}`;
+      return `En Az ${formatter.format(min)}`;
     } else if (max) {
-      return `Max ${new Intl.NumberFormat('tr-TR', {
-        style: 'currency',
-        currency: 'TRY',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(max)}`;
+      return `En Çok ${formatter.format(max)}`;
     }
     
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: 'TRY',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  }, [minPrice, maxPrice, price]);
+    return formatter.format(price);
+  }, [minPrice, maxPrice, price, formatter]);
 
   return <span>{priceRangeText}</span>;
 });
 PriceRangeDisplay.displayName = 'PriceRangeDisplay';
 
 // Memoized brand logo component
-const BrandLogo = React.memo(({ category, subcategory, attributes }: { 
+const BrandLogo = React.memo(({ category, attributes }: { 
   category: string; 
-  subcategory?: string; 
   attributes: ListingAttributes;
 }) => {
   const brandKey =
@@ -185,11 +168,11 @@ const BrandLogo = React.memo(({ category, subcategory, attributes }: {
     );
   }
 
-  return getCategoryPlaceholder(category, subcategory);
+  return getCategoryPlaceholder(category);
 });
 BrandLogo.displayName = 'BrandLogo';
 
-function getCategoryPlaceholder(category: string, _subcategory?: string) {
+function getCategoryPlaceholder(category: string) {
   const categorySvgs = {
     'emlak': (
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-gray-400">
@@ -222,7 +205,7 @@ function getCategoryPlaceholder(category: string, _subcategory?: string) {
   return categorySvgs[category as keyof typeof categorySvgs] || categorySvgs['emlak'];
 }
 
-export default function TalepCard({ listing, onToggleFavorite, priority = false }: TalepCardProps) {
+export default function TalepCard({ listing, onToggleFavorite, priority }: TalepCardProps) {
   const [fav, setFav] = useState(listing.isFavorited);
   const { toast } = useToast();
   
@@ -235,13 +218,60 @@ export default function TalepCard({ listing, onToggleFavorite, priority = false 
     }
   }, [listing.attributes, listing.attributesJson]);
 
+  const locationText = useMemo(() => {
+    const parts: string[] = [];
+    if (listing.location?.district) parts.push(listing.location.district);
+    if (listing.location?.city) parts.push(listing.location.city);
+    const mahalle = typeof (attributes as any)?.mahalle === 'string' ? String((attributes as any).mahalle).trim() : '';
+    if (listing.category === 'emlak' && mahalle) parts.unshift(mahalle);
+    return parts.filter(Boolean).join(", ");
+  }, [attributes, listing.category, listing.location?.city, listing.location?.district]);
+
+  const chips = useMemo(() => {
+    const out: Array<{ label: string; tone: "slate" | "cyan" | "amber" }> = [];
+    const pick = (key: string) => {
+      const v = (attributes as any)?.[key];
+      if (Array.isArray(v)) return v.map((x) => String(x || "").trim()).filter(Boolean).join(", ");
+      if (typeof v === "string") return v.trim();
+      if (typeof v === "number") return String(v);
+      if (typeof v === "boolean") return v ? "Evet" : "Hayır";
+      return "";
+    };
+    const add = (label: string, value: string, tone: "slate" | "cyan" | "amber" = "slate") => {
+      const v = String(value || "").trim();
+      if (!v) return;
+      out.push({ label: `${label}: ${v}`, tone });
+    };
+
+    if (listing.category === "vasita") {
+      add("Marka", pick("marka") || pick("brand"), "cyan");
+      add("Model", pick("model"), "slate");
+      add("Yıl", pick("yil"), "slate");
+      add("Vites", pick("vites"), "slate");
+      add("Yakıt", pick("yakit"), "slate");
+    } else if (listing.category === "emlak") {
+      add("Mahalle", pick("mahalle"), "cyan");
+      add("Oda", pick("oda") || pick("odaSayisi"), "slate");
+      add("m²", pick("m2") || pick("metrekare") || pick("brutMetrekare") || pick("netMetrekare"), "slate");
+      add("Isıtma", pick("isitma"), "slate");
+      add("Eşyalı", pick("esyali"), "slate");
+    } else {
+      add("Marka", pick("marka") || pick("brand"), "cyan");
+      add("Model", pick("model"), "slate");
+    }
+
+    const compact = out.filter((x) => x.label && x.label.length <= 36).slice(0, 3);
+    if (compact.length >= 2) return compact;
+    return out.slice(0, 3);
+  }, [attributes, listing.category]);
+
   const handleToggleFavorite = useCallback(() => {
     // Check if user is logged in by checking if onToggleFavorite is provided
     if (!onToggleFavorite) {
       toast({
         title: "Giriş Yapmalısınız",
         description: "Lütfen üye olun veya giriş yapın.",
-        variant: "destructive",
+        variant: "warning",
       });
       return;
     }
@@ -250,10 +280,29 @@ export default function TalepCard({ listing, onToggleFavorite, priority = false 
   }, [fav, listing.id, onToggleFavorite, toast]);
 
   const subcategoryImage = useMemo(() => {
-    return listing.subcategory ? getSubcategoryImage(listing.subcategory, listing.category) : '/images/placeholder-1.svg';
-  }, [listing.subcategory, listing.category]);
+    return listing.subcategory ? getSubcategoryImage(listing.subcategory) : '/images/placeholder-1.svg';
+  }, [listing.subcategory]);
+
+  const href = useMemo(() => {
+    return listingHref({
+      id: listing.id,
+      code: listing.code,
+      title: listing.title,
+      category: listing.category,
+      subcategory: listing.subcategory,
+    });
+  }, [listing.category, listing.code, listing.id, listing.subcategory, listing.title]);
 
   const [currentSrc, setCurrentSrc] = useState(listing.images?.[0] || subcategoryImage);
+  const isDefaultImage = useMemo(() => {
+    return currentSrc.startsWith('/images/defaults/') || currentSrc.startsWith('/images/placeholder-');
+  }, [currentSrc]);
+  const isRemoteImage = useMemo(() => {
+    return currentSrc.startsWith('http://') || currentSrc.startsWith('https://');
+  }, [currentSrc]);
+  const isJfifImage = useMemo(() => {
+    return /\.jfif($|\?)/i.test(currentSrc) || /\.jif($|\?)/i.test(currentSrc);
+  }, [currentSrc]);
 
   useEffect(() => {
     setCurrentSrc(listing.images?.[0] || subcategoryImage);
@@ -268,24 +317,37 @@ export default function TalepCard({ listing, onToggleFavorite, priority = false 
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden relative group">
-      <Link href={`/talep/${listing.id}`} prefetch={false}>
-        <div className="relative h-48 bg-gray-100">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:shadow-slate-200/60 hover:border-cyan-200 transition-all duration-300 overflow-hidden relative group">
+      <Link href={href} prefetch={false}>
+        <div className="relative h-44 bg-gray-100">
           <Image
             src={currentSrc}
             alt={listing.title}
             onError={handleError}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized={isDefaultImage || isRemoteImage || isJfifImage}
+            quality={isDefaultImage ? 100 : 85}
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             priority={priority}
           />
-          <div className="absolute bottom-2 left-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded text-[10px] sm:text-xs font-medium z-10 max-w-[calc(100%-16px)] truncate">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
+          <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-lg text-[11px] font-bold z-10 max-w-[calc(100%-16px)] truncate">
             <PriceRangeDisplay 
               minPrice={attributes.minPrice} 
               maxPrice={attributes.maxPrice} 
               price={listing.price} 
             />
+          </div>
+          <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
+            <div className="bg-black/45 backdrop-blur-md border border-white/20 text-white px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide">
+              {titleCaseTR(listing.category)}
+            </div>
+            {listing.subcategory && (
+              <div className="bg-white/20 backdrop-blur-md border border-white/20 text-white px-2 py-0.5 rounded text-[10px] font-medium truncate max-w-[140px]">
+                {titleCaseTR(listing.subcategory)}
+              </div>
+            )}
           </div>
         </div>
       </Link>
@@ -296,43 +358,58 @@ export default function TalepCard({ listing, onToggleFavorite, priority = false 
             e.stopPropagation();
             handleToggleFavorite();
           }}
-          className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+          aria-label={fav ? "Favorilerden çıkar" : "Favorilere ekle"}
+          className="p-2 bg-white/90 backdrop-blur-sm rounded-full border border-white/60 hover:bg-white transition-colors shadow-sm"
         >
           <Heart className={`h-4 w-4 ${fav ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
         </button>
       </div>
 
       <div className="p-4">
-        <Link href={`/talep/${listing.id}`} prefetch={false}>
-          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
+        <Link href={href} prefetch={false}>
+          <h3 className="font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-[#1E4355] transition-colors leading-snug">
             {listing.title}
           </h3>
         </Link>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-          <MapPin className="h-4 w-4" />
-          <span className="truncate">
-            {listing.location.district}, {listing.location.city}
-          </span>
+        <div className="flex items-start gap-2 text-xs text-slate-600">
+          <MapPin className="h-4 w-4 text-slate-400 mt-0.5" />
+          <span className="line-clamp-1">{locationText}</span>
         </div>
 
-        <div className="flex items-center justify-between text-sm text-gray-500">
+        <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
+            <Clock className="h-4 w-4 text-slate-400" />
             <TimeAgo createdAt={listing.createdAt} />
           </div>
-          <div className="bg-gray-100 px-2 py-1 rounded text-xs font-medium capitalize">
-            {listing.category}
-          </div>
+          {listing.code && (
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500">
+              <Hash className="h-3.5 w-3.5 text-slate-400" />
+              <span className="truncate max-w-[90px]">{listing.code}</span>
+            </div>
+          )}
         </div>
 
-        {Object.keys(attributes).length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
+        {(chips.length > 0 || Object.keys(attributes).length > 0) && (
+          <div className="mt-3 pt-3 border-t border-slate-100">
             <div className="flex items-center gap-2">
-              <BrandLogo category={listing.category} subcategory={listing.subcategory} attributes={attributes} />
-              <span className="text-xs text-gray-600 truncate">
-                {attributes.marka || attributes.brand || attributes.model || listing.subcategory || ''}
-              </span>
+              <BrandLogo category={listing.category} attributes={attributes} />
+              <div className="flex flex-wrap gap-1.5 min-w-0">
+                {chips.map((c) => (
+                  <span
+                    key={c.label}
+                    className={
+                      c.tone === "cyan"
+                        ? "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-50 text-cyan-700 border border-cyan-100"
+                        : c.tone === "amber"
+                          ? "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-100"
+                          : "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-50 text-slate-600 border border-slate-100"
+                    }
+                  >
+                    <span className="truncate max-w-[150px]">{c.label}</span>
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         )}

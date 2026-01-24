@@ -13,7 +13,7 @@ export async function GET() {
       orderBy: { updatedAt: "desc" }
     });
     return NextResponse.json(pages);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch pages" }, { status: 500 });
   }
 }
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(page);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create page" }, { status: 500 });
   }
 }

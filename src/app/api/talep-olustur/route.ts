@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
-import { ATTR_SCHEMAS } from '@/data/attribute-schemas';
-import { ATTR_SUBSCHEMAS } from '@/data/attribute-overrides';
 import { sendEmail } from "@/lib/email";
+import { CATEGORIES } from '@/data/categories';
+import { rateLimiters } from '@/lib/rate-limit';
+
+const findStaticSubcategory = (subcategories: any[], target: string): any | undefined => {
+  for (const s of subcategories) {
+    if (s?.fullSlug === target || s?.slug === target) return s;
+    if (Array.isArray(s?.subcategories) && s.subcategories.length > 0) {
+      const found = findStaticSubcategory(s.subcategories, target);
+      if (found) return found;
+    }
+  }
+  return undefined;
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,58 +54,11 @@ export async function POST(request: NextRequest) {
     if (!district) missingFields.push('district');
     if (!budget) missingFields.push('budget');
 
-    // Kategoriye özel zorunlu alanlar
-    const attrs: Record<string, any> = body.attributes || {};
-    const overrideKey = `${category}/${subcategory || ''}`;
-    const combined = [ ...(ATTR_SCHEMAS[category] || []), ...((ATTR_SUBSCHEMAS[overrideKey] || [])) ];
-    combined.forEach((f: any) => {
-      if (!f?.required) return;
-      if (f.type === 'range-number' && f.minKey && f.maxKey) {
-        const a = attrs[f.minKey];
-        const b = attrs[f.maxKey];
-        const hasA = a !== undefined && String(a) !== '';
-        const hasB = b !== undefined && String(b) !== '';
-        // Range-number alanlar için en az bir değer (min veya max) girilmiş olmalı
-        if (!hasA && !hasB) {
-          missingFields.push(f.minKey);
-          missingFields.push(f.maxKey);
-        }
-        // Eğer hem min hem max değerleri girilmişse, min <= max olmalı
-        if (hasA && hasB) {
-          const minVal = Number(a);
-          const maxVal = Number(b);
-          if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
-            return NextResponse.json(
-              { error: `${f.label} için minimum değer maksimum değerden büyük olamaz` },
-              { status: 400 }
-            );
-          }
-        }
-      } else if (f.key) {
-        const v = attrs[f.key];
-        const present = f.type === 'boolean' ? (f.key in attrs) : (v !== undefined && String(v).trim() !== '');
-        if (!present) missingFields.push(f.key);
-      }
-    });
-    if (String(attrs['marka'] || '').trim() && !String(attrs['model'] || '').trim()) missingFields.push('model');
-    
     if (missingFields.length > 0) {
       return NextResponse.json(
         { error: `Eksik alanlar: ${missingFields.join(', ')}` },
         { status: 400 }
       );
-    }
-    // Bütçe aralığı tutarlılığı
-    const minPrice = body.attributes?.minPrice;
-    const maxPrice = body.attributes?.maxPrice;
-    if (minPrice !== undefined && maxPrice !== undefined) {
-      const a = Number(minPrice); const b = Number(maxPrice);
-      if (!Number.isNaN(a) && !Number.isNaN(b) && a > b) {
-        return NextResponse.json(
-          { error: 'Minimum fiyat, maksimum fiyattan büyük olamaz' },
-          { status: 400 }
-        );
-      }
     }
 
     let imagesArr: string[] = [];
@@ -103,7 +67,6 @@ export async function POST(request: NextRequest) {
         .filter((u: any) => typeof u === 'string')
         .slice(0, 10);
     }
-
     // Kullanıcıyı bul
     const user = await prisma.user.findUnique({
       where: { email: session.user.email }
@@ -116,18 +79,116 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const limiterRequest = new Request(request.url, { headers: new Headers(request.headers) });
+    limiterRequest.headers.set('x-user-id', user.id);
+    const rl = await rateLimiters.listing.checkLimit(limiterRequest);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Çok fazla talep oluşturma denemesi' },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Remaining': rl.remaining.toString(),
+            'X-RateLimit-Reset': new Date(rl.resetTime).toISOString(),
+          },
+        }
+      );
+    }
+
     // Kategorileri bul
     const categoryRecord = await prisma.category.findFirst({
       where: { slug: category }
     });
 
-    const subCategoryRecord = await prisma.subCategory.findFirst({
-      where: { slug: subcategory }
+    let subCategoryRecord = await prisma.subCategory.findFirst({
+      where: { slug: subcategory, category: { slug: category } }
     });
 
     if (!categoryRecord) {
       return NextResponse.json(
         { error: 'Geçersiz kategori' },
+        { status: 400 }
+      );
+    }
+
+    if (!subCategoryRecord) {
+      const staticCategory = CATEGORIES.find((c) => c.slug === category);
+      const staticSub = staticCategory ? findStaticSubcategory(staticCategory.subcategories || [], subcategory) : undefined;
+
+      if (staticSub) {
+        const dbSlug = staticSub.fullSlug || staticSub.slug || subcategory;
+        subCategoryRecord = await prisma.subCategory.upsert({
+          where: { slug: dbSlug },
+          update: { name: staticSub.name, categoryId: categoryRecord.id },
+          create: { name: staticSub.name, slug: dbSlug, categoryId: categoryRecord.id },
+        });
+      }
+    }
+
+    if (!subCategoryRecord) {
+      return NextResponse.json({ error: 'Geçersiz alt kategori' }, { status: 400 });
+    }
+
+    // Kategoriye özel zorunlu alanlar
+    const attrs: Record<string, any> = body.attributes || {};
+
+    const dbAttrs = await prisma.categoryAttribute.findMany({
+      where: {
+        categoryId: categoryRecord.id,
+        showInRequest: true,
+        OR: [{ subCategoryId: null }, { subCategoryId: subCategoryRecord.id }],
+      },
+      orderBy: [{ subCategoryId: 'asc' }, { order: 'asc' }],
+    });
+
+    if (Array.isArray(dbAttrs) && dbAttrs.length > 0) {
+      const bySlug = new Map<string, (typeof dbAttrs)[number]>();
+      dbAttrs.forEach((a) => {
+        if (!a?.slug) return;
+        bySlug.set(a.slug, a);
+      });
+
+      for (const a of bySlug.values()) {
+        if (!a.required) continue;
+        const normalizedType = a.type === 'checkbox' ? 'boolean' : a.type;
+        if (normalizedType === 'range-number') {
+          const minKey = `${a.slug}Min`;
+          const maxKey = `${a.slug}Max`;
+          const minVal = attrs[minKey];
+          const maxVal = attrs[maxKey];
+          const hasMin = minVal !== undefined && String(minVal) !== '';
+          const hasMax = maxVal !== undefined && String(maxVal) !== '';
+          if (!hasMin && !hasMax) {
+            missingFields.push(minKey);
+            missingFields.push(maxKey);
+          }
+          if (hasMin && hasMax) {
+            const minNum = Number(minVal);
+            const maxNum = Number(maxVal);
+            if (!Number.isNaN(minNum) && !Number.isNaN(maxNum) && minNum > maxNum) {
+              return NextResponse.json(
+                { error: `${a.name} için minimum değer maksimum değerden büyük olamaz` },
+                { status: 400 }
+              );
+            }
+          }
+          continue;
+        }
+
+        const v = attrs[a.slug];
+        const present =
+          normalizedType === 'boolean'
+            ? (a.slug in attrs)
+            : (v !== undefined && String(v).trim() !== '');
+        if (!present) missingFields.push(a.slug);
+      }
+    }
+
+    if (String(attrs['marka'] || '').trim() && !String(attrs['model'] || '').trim()) missingFields.push('model');
+
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        { error: `Eksik alanlar: ${missingFields.join(', ')}` },
         { status: 400 }
       );
     }
@@ -235,8 +296,15 @@ export async function POST(request: NextRequest) {
           } else {
             const actual = attrs[k];
             if (actual === undefined) continue;
-            const reqParts = String(v).split(',').map((s: string) => s.trim().toLowerCase()).filter(Boolean);
-            const actParts = String(actual).split(',').map((s: string) => s.trim().toLowerCase()).filter(Boolean);
+
+            const toArray = (val: any): string[] => {
+              if (Array.isArray(val)) return val.map(String).map(s => s.trim().toLowerCase()).filter(Boolean);
+              return String(val).split(',').map((s: string) => s.trim().toLowerCase()).filter(Boolean);
+            };
+
+            const reqParts = toArray(v);
+            const actParts = toArray(actual);
+            
             if (reqParts.length === 0) continue;
             const ok = reqParts.some((rp) => actParts.includes(rp));
             if (!ok) return false;

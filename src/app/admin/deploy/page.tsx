@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { AlertCircle, Terminal, Play, RefreshCw, CheckCircle2 } from "lucide-react";
+import { AlertCircle, Terminal, Play, RefreshCw } from "lucide-react";
 
 export default function DeployPage() {
   const [loading, setLoading] = useState(false);
@@ -49,7 +49,7 @@ export default function DeployPage() {
         setStatus("error");
         alert("Hata: " + data.error);
       }
-    } catch (err) {
+    } catch {
       setStatus("error");
       alert("Bir hata oluştu.");
     } finally {

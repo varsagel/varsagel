@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import fs from 'node:fs'
 import path from 'node:path'
 import { getAdminUserId } from '@/auth'
+import { readTextTailCached } from '@/lib/file-cache'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -13,10 +14,9 @@ export async function GET() {
 
     const fp = path.join(process.cwd(), 'import', 'scraper.log')
     if (!fs.existsSync(fp)) return NextResponse.json({ lines: [] })
-    const raw = fs.readFileSync(fp, 'utf-8')
-    const lines = raw.split(/\r?\n/).slice(-500)
+    const lines = readTextTailCached(fp, 500, 1500)
     return NextResponse.json({ lines })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ lines: [], error: 'read_failed' }, { status: 500 })
   }
 }

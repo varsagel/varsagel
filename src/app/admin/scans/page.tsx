@@ -6,18 +6,25 @@ export const dynamic = "force-dynamic";
 export default async function AdminScansPage() {
   let scans: any[] = [];
   let canQuery = true;
+  const uploadScan = (prisma as any).uploadScan as
+    | {
+        findMany: (args: any) => Promise<any[]>;
+      }
+    | undefined;
   try {
     const res: Array<{ name: string | null }> = await prisma.$queryRaw`
-      SELECT to_regclass('public."UploadScan"') as name
+      SELECT to_regclass('public."UploadScan"')::text as name
     `;
     if (Array.isArray(res) && res.length > 0 && !res[0]?.name) {
       canQuery = false;
     }
-  } catch {}
+  } catch {
+    canQuery = false;
+  }
 
-  if (canQuery) {
+  if (canQuery && uploadScan) {
     try {
-      scans = await prisma.uploadScan.findMany({
+      scans = await uploadScan.findMany({
         orderBy: { createdAt: "desc" },
         include: { owner: { select: { name: true, email: true } } },
         take: 50,

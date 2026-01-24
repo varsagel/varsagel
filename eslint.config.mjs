@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
     "scripts/**",
     "import/**",
     "prisma/**",
+    "varsagel/**",
   ]),
   {
     rules: {

@@ -24,9 +24,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const rawParams: Record<string, string> = {};
+    const rawParamLists: Record<string, string[]> = {};
     
     searchParams.forEach((value, key) => {
-      rawParams[key] = value;
+      if (!rawParamLists[key]) rawParamLists[key] = [];
+      rawParamLists[key].push(value);
+      if (!(key in rawParams)) rawParams[key] = value;
     });
 
     // Validate known parameters
@@ -44,9 +47,10 @@ export async function GET(request: NextRequest) {
     const knownKeys = new Set(Object.keys(listingQuerySchema.shape));
     const dynamicParams: Record<string, any> = {};
     
-    Object.keys(rawParams).forEach(key => {
+    Object.keys(rawParamLists).forEach(key => {
       if (!knownKeys.has(key)) {
-        dynamicParams[key] = rawParams[key];
+        const values = rawParamLists[key] || [];
+        dynamicParams[key] = values.length > 1 ? values : values[0];
       }
     });
 

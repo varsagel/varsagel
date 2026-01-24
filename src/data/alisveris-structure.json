@@ -1,0 +1,4154 @@
+{
+  "name": "İkinci El ve Sıfır Alışveriş",
+  "slug": "alisveris",
+  "fullSlug": "alisveris",
+  "subcategories": [
+    {
+      "name": "Bilgisayar",
+      "slug": "bilgisayar",
+      "fullSlug": "bilgisayar",
+      "subcategories": [
+        {
+          "name": "Dizüstü (Notebook)",
+          "slug": "dizustu-notebook",
+          "fullSlug": "bilgisayar-dizustu-notebook",
+          "subcategories": [
+            {
+              "name": "Laptop",
+              "slug": "laptop",
+              "fullSlug": "bilgisayar-dizustu-notebook-laptop",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Donanım",
+          "slug": "donanim",
+          "fullSlug": "bilgisayar-donanim",
+          "subcategories": [
+            {
+              "name": "İşlemci",
+              "slug": "islemci",
+              "fullSlug": "bilgisayar-donanim-islemci",
+              "subcategories": []
+            },
+            {
+              "name": "Harddisk",
+              "slug": "harddisk",
+              "fullSlug": "bilgisayar-donanim-harddisk",
+              "subcategories": []
+            },
+            {
+              "name": "PCMCIA Kartlar",
+              "slug": "pcmcia-kartlar",
+              "fullSlug": "bilgisayar-donanim-pcmcia-kartlar",
+              "subcategories": []
+            },
+            {
+              "name": "RAM Bellek",
+              "slug": "ram-bellek",
+              "fullSlug": "bilgisayar-donanim-ram-bellek",
+              "subcategories": []
+            },
+            {
+              "name": "SSD (Solid State Drive)",
+              "slug": "ssd-solid-state-drive",
+              "fullSlug": "bilgisayar-donanim-ssd-solid-state-drive",
+              "subcategories": []
+            },
+            {
+              "name": "CD Sürücü / Yazıcı",
+              "slug": "cd-surucu-yazici",
+              "fullSlug": "bilgisayar-donanim-cd-surucu-yazici",
+              "subcategories": []
+            },
+            {
+              "name": "DVD Sürücü / Yazıcı",
+              "slug": "dvd-surucu-yazici",
+              "fullSlug": "bilgisayar-donanim-dvd-surucu-yazici",
+              "subcategories": []
+            },
+            {
+              "name": "Blu-ray Sürücü / Yazıcı",
+              "slug": "blu-ray-surucu-yazici",
+              "fullSlug": "bilgisayar-donanim-blu-ray-surucu-yazici",
+              "subcategories": []
+            },
+            {
+              "name": "Yedek Parça",
+              "slug": "yedek-parca",
+              "fullSlug": "bilgisayar-donanim-yedek-parca",
+              "subcategories": [
+                {
+                  "name": "Arızalı Laptop, Netbook",
+                  "slug": "arizali-laptop-netbook",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-arizali-laptop-netbook",
+                  "subcategories": []
+                },
+                {
+                  "name": "Adaptör",
+                  "slug": "adaptor",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-adaptor",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ağ Kartı",
+                  "slug": "ag-karti",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-ag-karti",
+                  "subcategories": []
+                },
+                {
+                  "name": "Anakart",
+                  "slug": "anakart",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-anakart",
+                  "subcategories": []
+                },
+                {
+                  "name": "Anten",
+                  "slug": "anten",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-anten",
+                  "subcategories": []
+                },
+                {
+                  "name": "Batarya",
+                  "slug": "batarya",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-batarya",
+                  "subcategories": []
+                },
+                {
+                  "name": "Bios Pili",
+                  "slug": "bios-pili",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-bios-pili",
+                  "subcategories": []
+                },
+                {
+                  "name": "Bluetooth Kartı",
+                  "slug": "bluetooth-karti",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-bluetooth-karti",
+                  "subcategories": []
+                },
+                {
+                  "name": "Dahili Hoparlör",
+                  "slug": "dahili-hoparlor",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-dahili-hoparlor",
+                  "subcategories": []
+                },
+                {
+                  "name": "Dahili Kamera",
+                  "slug": "dahili-kamera",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-dahili-kamera",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ekran",
+                  "slug": "ekran",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-ekran",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ekran Kartı",
+                  "slug": "ekran-karti",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-ekran-karti",
+                  "subcategories": []
+                },
+                {
+                  "name": "Flex Kablo",
+                  "slug": "flex-kablo",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-flex-kablo",
+                  "subcategories": []
+                },
+                {
+                  "name": "İnvertör",
+                  "slug": "invertor",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-invertor",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kasa & Parçaları",
+                  "slug": "kasa-parcalari",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-kasa-parcalari",
+                  "subcategories": []
+                },
+                {
+                  "name": "Klavye",
+                  "slug": "klavye",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-klavye",
+                  "subcategories": []
+                },
+                {
+                  "name": "Menteşe",
+                  "slug": "mentese",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-mentese",
+                  "subcategories": []
+                },
+                {
+                  "name": "Modem",
+                  "slug": "modem",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-modem",
+                  "subcategories": []
+                },
+                {
+                  "name": "Parmak İzi Okuyucu",
+                  "slug": "parmak-izi-okuyucu",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-parmak-izi-okuyucu",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ses Kartı",
+                  "slug": "ses-karti",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-ses-karti",
+                  "subcategories": []
+                },
+                {
+                  "name": "Soğutucu Fan",
+                  "slug": "sogutucu-fan",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-sogutucu-fan",
+                  "subcategories": []
+                },
+                {
+                  "name": "Soket",
+                  "slug": "soket",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-soket",
+                  "subcategories": []
+                },
+                {
+                  "name": "Touch Pad",
+                  "slug": "touch-pad",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-touch-pad",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yonga Seti",
+                  "slug": "yonga-seti",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-yonga-seti",
+                  "subcategories": []
+                },
+                {
+                  "name": "Toplu Satış",
+                  "slug": "toplu-satis",
+                  "fullSlug": "bilgisayar-donanim-yedek-parca-toplu-satis",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Anakart",
+              "slug": "anakart",
+              "fullSlug": "bilgisayar-donanim-anakart",
+              "subcategories": []
+            },
+            {
+              "name": "OC Panel",
+              "slug": "oc-panel",
+              "fullSlug": "bilgisayar-donanim-oc-panel",
+              "subcategories": []
+            },
+            {
+              "name": "Harddisk (Dahili)",
+              "slug": "harddisk-dahili",
+              "fullSlug": "bilgisayar-donanim-harddisk-dahili",
+              "subcategories": []
+            },
+            {
+              "name": "SSD (Dahili)",
+              "slug": "ssd-dahili",
+              "fullSlug": "bilgisayar-donanim-ssd-dahili",
+              "subcategories": []
+            },
+            {
+              "name": "Ekran Kartı",
+              "slug": "ekran-karti",
+              "fullSlug": "bilgisayar-donanim-ekran-karti",
+              "subcategories": []
+            },
+            {
+              "name": "Ses Kartı",
+              "slug": "ses-karti",
+              "fullSlug": "bilgisayar-donanim-ses-karti",
+              "subcategories": []
+            },
+            {
+              "name": "Güç Kaynağı",
+              "slug": "guc-kaynagi",
+              "fullSlug": "bilgisayar-donanim-guc-kaynagi",
+              "subcategories": []
+            },
+            {
+              "name": "Kasa",
+              "slug": "kasa",
+              "fullSlug": "bilgisayar-donanim-kasa",
+              "subcategories": []
+            },
+            {
+              "name": "Fan & Soğutucu",
+              "slug": "fan-sogutucu",
+              "fullSlug": "bilgisayar-donanim-fan-sogutucu",
+              "subcategories": []
+            },
+            {
+              "name": "Ağ Kartı",
+              "slug": "ag-karti",
+              "fullSlug": "bilgisayar-donanim-ag-karti",
+              "subcategories": []
+            },
+            {
+              "name": "TV & Video Kartı",
+              "slug": "tv-video-karti",
+              "fullSlug": "bilgisayar-donanim-tv-video-karti",
+              "subcategories": []
+            },
+            {
+              "name": "Disket Sürücü",
+              "slug": "disket-surucu",
+              "fullSlug": "bilgisayar-donanim-disket-surucu",
+              "subcategories": []
+            },
+            {
+              "name": "PCI Kartlar",
+              "slug": "pci-kartlar",
+              "fullSlug": "bilgisayar-donanim-pci-kartlar",
+              "subcategories": []
+            },
+            {
+              "name": "PCI Express Kartlar",
+              "slug": "pci-express-kartlar",
+              "fullSlug": "bilgisayar-donanim-pci-express-kartlar",
+              "subcategories": []
+            },
+            {
+              "name": "Arıza Tespit Kartı",
+              "slug": "ariza-tespit-karti",
+              "fullSlug": "bilgisayar-donanim-ariza-tespit-karti",
+              "subcategories": []
+            },
+            {
+              "name": "Güç Kaynağı Test Cihazı",
+              "slug": "guc-kaynagi-test-cihazi",
+              "fullSlug": "bilgisayar-donanim-guc-kaynagi-test-cihazi",
+              "subcategories": []
+            },
+            {
+              "name": "Işıklandırma",
+              "slug": "isiklandirma",
+              "fullSlug": "bilgisayar-donanim-isiklandirma",
+              "subcategories": []
+            },
+            {
+              "name": "Mining Ekipmanları",
+              "slug": "mining-ekipmanlari",
+              "fullSlug": "bilgisayar-donanim-mining-ekipmanlari",
+              "subcategories": []
+            },
+            {
+              "name": "Toplu Satış",
+              "slug": "toplu-satis",
+              "fullSlug": "bilgisayar-donanim-toplu-satis",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Masaüstü",
+          "slug": "masaustu",
+          "fullSlug": "bilgisayar-masaustu",
+          "subcategories": []
+        },
+        {
+          "name": "Tablet",
+          "slug": "tablet",
+          "fullSlug": "bilgisayar-tablet",
+          "subcategories": []
+        },
+        {
+          "name": "Yedek Parça",
+          "slug": "yedek-parca",
+          "fullSlug": "bilgisayar-yedek-parca",
+          "subcategories": [
+            {
+              "name": "Arızalı Tablet",
+              "slug": "arizali-tablet",
+              "fullSlug": "bilgisayar-yedek-parca-arizali-tablet",
+              "subcategories": []
+            },
+            {
+              "name": "Adaptör",
+              "slug": "adaptor",
+              "fullSlug": "bilgisayar-yedek-parca-adaptor",
+              "subcategories": []
+            },
+            {
+              "name": "Anakart",
+              "slug": "anakart",
+              "fullSlug": "bilgisayar-yedek-parca-anakart",
+              "subcategories": []
+            },
+            {
+              "name": "Batarya (Pil)",
+              "slug": "batarya-pil",
+              "fullSlug": "bilgisayar-yedek-parca-batarya-pil",
+              "subcategories": []
+            },
+            {
+              "name": "Ekran",
+              "slug": "ekran",
+              "fullSlug": "bilgisayar-yedek-parca-ekran",
+              "subcategories": []
+            },
+            {
+              "name": "Kablo & Flexi Film",
+              "slug": "kablo-flexi-film",
+              "fullSlug": "bilgisayar-yedek-parca-kablo-flexi-film",
+              "subcategories": []
+            },
+            {
+              "name": "Kasa & Parçaları",
+              "slug": "kasa-parcalari",
+              "fullSlug": "bilgisayar-yedek-parca-kasa-parcalari",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Yazıcı, Tarayıcı & Plotter",
+          "slug": "yazici-tarayici-plotter",
+          "fullSlug": "bilgisayar-yazici-tarayici-plotter",
+          "subcategories": [
+            {
+              "name": "Ekipman / Yedek Parça",
+              "slug": "ekipman-yedek-parca",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-ekipman-yedek-parca",
+              "subcategories": []
+            },
+            {
+              "name": "Çok Fonksiyonlu Yazıcılar",
+              "slug": "cok-fonksiyonlu-yazicilar",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-cok-fonksiyonlu-yazicilar",
+              "subcategories": []
+            },
+            {
+              "name": "Lazer Yazıcılar",
+              "slug": "lazer-yazicilar",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-lazer-yazicilar",
+              "subcategories": []
+            },
+            {
+              "name": "Lazer Gravür Makinesi",
+              "slug": "lazer-gravur-makinesi",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-lazer-gravur-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Nokta Vuruşlu Yazıcılar",
+              "slug": "nokta-vuruslu-yazicilar",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-nokta-vuruslu-yazicilar",
+              "subcategories": []
+            },
+            {
+              "name": "Püskürtmeli Yazıcılar",
+              "slug": "puskurtmeli-yazicilar",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-puskurtmeli-yazicilar",
+              "subcategories": []
+            },
+            {
+              "name": "Duvar Yazıcısı",
+              "slug": "duvar-yazicisi",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-duvar-yazicisi",
+              "subcategories": []
+            },
+            {
+              "name": "Termal Yazıcılar",
+              "slug": "termal-yazicilar",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-termal-yazicilar",
+              "subcategories": []
+            },
+            {
+              "name": "Taşınabilir Yazıcılar",
+              "slug": "tasinabilir-yazicilar",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-tasinabilir-yazicilar",
+              "subcategories": []
+            },
+            {
+              "name": "Baskı Makineleri",
+              "slug": "baski-makineleri",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-baski-makineleri",
+              "subcategories": []
+            },
+            {
+              "name": "Fiş Yazıcısı",
+              "slug": "fis-yazicisi",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-fis-yazicisi",
+              "subcategories": []
+            },
+            {
+              "name": "Plastik Kart Yazıcısı",
+              "slug": "plastik-kart-yazicisi",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-plastik-kart-yazicisi",
+              "subcategories": []
+            },
+            {
+              "name": "CD Baskı Makinesi",
+              "slug": "cd-baski-makinesi",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-cd-baski-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "3D Yazıcı",
+              "slug": "3d-yazici",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-3d-yazici",
+              "subcategories": []
+            },
+            {
+              "name": "Tarayıcı",
+              "slug": "tarayici",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-tarayici",
+              "subcategories": []
+            },
+            {
+              "name": "3D Tarayıcı",
+              "slug": "3d-tarayici",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-3d-tarayici",
+              "subcategories": []
+            },
+            {
+              "name": "Plotter",
+              "slug": "plotter",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-plotter",
+              "subcategories": []
+            },
+            {
+              "name": "Toner",
+              "slug": "toner",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-toner",
+              "subcategories": []
+            },
+            {
+              "name": "Kartuş",
+              "slug": "kartus",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-kartus",
+              "subcategories": []
+            },
+            {
+              "name": "Mürekkep",
+              "slug": "murekkep",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-murekkep",
+              "subcategories": []
+            },
+            {
+              "name": "Filament",
+              "slug": "filament",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-filament",
+              "subcategories": []
+            },
+            {
+              "name": "Reçine",
+              "slug": "recine",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-recine",
+              "subcategories": []
+            },
+            {
+              "name": "Şerit",
+              "slug": "serit",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-serit",
+              "subcategories": []
+            },
+            {
+              "name": "Termal Ribon",
+              "slug": "termal-ribon",
+              "fullSlug": "bilgisayar-yazici-tarayici-plotter-termal-ribon",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Modem & Ağ Ürünleri",
+          "slug": "modem-ag-urunleri",
+          "fullSlug": "bilgisayar-modem-ag-urunleri",
+          "subcategories": [
+            {
+              "name": "ADSL Modem",
+              "slug": "adsl-modem",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-adsl-modem",
+              "subcategories": []
+            },
+            {
+              "name": "Mobil Modem",
+              "slug": "mobil-modem",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-mobil-modem",
+              "subcategories": []
+            },
+            {
+              "name": "Uydunet / Kablonet Modem",
+              "slug": "uydunet-kablonet-modem",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-uydunet-kablonet-modem",
+              "subcategories": []
+            },
+            {
+              "name": "Access Point",
+              "slug": "access-point",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-access-point",
+              "subcategories": []
+            },
+            {
+              "name": "Ağ Adaptörü",
+              "slug": "ag-adaptoru",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-ag-adaptoru",
+              "subcategories": []
+            },
+            {
+              "name": "Voip Gateway",
+              "slug": "voip-gateway",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-voip-gateway",
+              "subcategories": []
+            },
+            {
+              "name": "Router",
+              "slug": "router",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-router",
+              "subcategories": []
+            },
+            {
+              "name": "Switch, Hub & Splitter",
+              "slug": "switch-hub-splitter",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-switch-hub-splitter",
+              "subcategories": []
+            },
+            {
+              "name": "VDSL Modem",
+              "slug": "vdsl-modem",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-vdsl-modem",
+              "subcategories": []
+            },
+            {
+              "name": "Sinyal Yükselteci",
+              "slug": "sinyal-yukselteci",
+              "fullSlug": "bilgisayar-modem-ag-urunleri-sinyal-yukselteci",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Mouse",
+          "slug": "mouse",
+          "fullSlug": "bilgisayar-mouse",
+          "subcategories": []
+        },
+        {
+          "name": "Klavye",
+          "slug": "klavye",
+          "fullSlug": "bilgisayar-klavye",
+          "subcategories": []
+        },
+        {
+          "name": "Mouse & Klavye Seti",
+          "slug": "mouse-klavye-seti",
+          "fullSlug": "bilgisayar-mouse-klavye-seti",
+          "subcategories": []
+        },
+        {
+          "name": "Harici Harddisk",
+          "slug": "harici-harddisk",
+          "fullSlug": "bilgisayar-harici-harddisk",
+          "subcategories": []
+        },
+        {
+          "name": "Taşınabilir SSD",
+          "slug": "tasinabilir-ssd",
+          "fullSlug": "bilgisayar-tasinabilir-ssd",
+          "subcategories": []
+        },
+        {
+          "name": "USB Bellek",
+          "slug": "usb-bellek",
+          "fullSlug": "bilgisayar-usb-bellek",
+          "subcategories": []
+        },
+        {
+          "name": "Harddisk Kutusu",
+          "slug": "harddisk-kutusu",
+          "fullSlug": "bilgisayar-harddisk-kutusu",
+          "subcategories": []
+        },
+        {
+          "name": "Boş Medya",
+          "slug": "bos-medya",
+          "fullSlug": "bilgisayar-bos-medya",
+          "subcategories": []
+        },
+        {
+          "name": "Webcam",
+          "slug": "webcam",
+          "fullSlug": "bilgisayar-webcam",
+          "subcategories": []
+        },
+        {
+          "name": "Hoparlör / Ses Sistemi",
+          "slug": "hoparlor-ses-sistemi",
+          "fullSlug": "bilgisayar-hoparlor-ses-sistemi",
+          "subcategories": []
+        },
+        {
+          "name": "Kulaklık & Mikrofon",
+          "slug": "kulaklik-mikrofon",
+          "fullSlug": "bilgisayar-kulaklik-mikrofon",
+          "subcategories": []
+        },
+        {
+          "name": "Kablo & Çevirici",
+          "slug": "kablo-cevirici",
+          "fullSlug": "bilgisayar-kablo-cevirici",
+          "subcategories": []
+        },
+        {
+          "name": "USB Çoklayıcı",
+          "slug": "usb-coklayici",
+          "fullSlug": "bilgisayar-usb-coklayici",
+          "subcategories": []
+        },
+        {
+          "name": "Barkod Cihazı & El Terminali",
+          "slug": "barkod-cihazi-el-terminali",
+          "fullSlug": "bilgisayar-barkod-cihazi-el-terminali",
+          "subcategories": []
+        },
+        {
+          "name": "Harici CD Sürücü",
+          "slug": "harici-cd-surucu",
+          "fullSlug": "bilgisayar-harici-cd-surucu",
+          "subcategories": []
+        },
+        {
+          "name": "Harici DVD Sürücü",
+          "slug": "harici-dvd-surucu",
+          "fullSlug": "bilgisayar-harici-dvd-surucu",
+          "subcategories": []
+        },
+        {
+          "name": "Harici Disket Sürücü",
+          "slug": "harici-disket-surucu",
+          "fullSlug": "bilgisayar-harici-disket-surucu",
+          "subcategories": []
+        },
+        {
+          "name": "Kart Okuyucu",
+          "slug": "kart-okuyucu",
+          "fullSlug": "bilgisayar-kart-okuyucu",
+          "subcategories": []
+        },
+        {
+          "name": "Kesintisiz Güç Kaynağı (UPS)",
+          "slug": "kesintisiz-guc-kaynagi-ups",
+          "fullSlug": "bilgisayar-kesintisiz-guc-kaynagi-ups",
+          "subcategories": []
+        },
+        {
+          "name": "Grafik Tablet",
+          "slug": "grafik-tablet",
+          "fullSlug": "bilgisayar-grafik-tablet",
+          "subcategories": []
+        },
+        {
+          "name": "KVM Dönüştürücü",
+          "slug": "kvm-donusturucu",
+          "fullSlug": "bilgisayar-kvm-donusturucu",
+          "subcategories": []
+        },
+        {
+          "name": "Grafik Yükseltici",
+          "slug": "grafik-yukseltici",
+          "fullSlug": "bilgisayar-grafik-yukseltici",
+          "subcategories": []
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "bilgisayar-toplu-satis",
+          "subcategories": []
+        },
+        {
+          "name": "Aksesuarlar",
+          "slug": "aksesuarlar",
+          "fullSlug": "bilgisayar-aksesuarlar",
+          "subcategories": [
+            {
+              "name": "Bakım & Onarım Ürünleri",
+              "slug": "bakim-onarim-urunleri",
+              "fullSlug": "bilgisayar-aksesuarlar-bakim-onarim-urunleri",
+              "subcategories": []
+            },
+            {
+              "name": "CD & DVD Çantası",
+              "slug": "cd-dvd-cantasi",
+              "fullSlug": "bilgisayar-aksesuarlar-cd-dvd-cantasi",
+              "subcategories": []
+            },
+            {
+              "name": "Kablo Tutucu",
+              "slug": "kablo-tutucu",
+              "fullSlug": "bilgisayar-aksesuarlar-kablo-tutucu",
+              "subcategories": []
+            },
+            {
+              "name": "Kulaklık Standı",
+              "slug": "kulaklik-standi",
+              "fullSlug": "bilgisayar-aksesuarlar-kulaklik-standi",
+              "subcategories": []
+            },
+            {
+              "name": "Mousepad",
+              "slug": "mousepad",
+              "fullSlug": "bilgisayar-aksesuarlar-mousepad",
+              "subcategories": []
+            },
+            {
+              "name": "Sunum Kumandası",
+              "slug": "sunum-kumandasi",
+              "fullSlug": "bilgisayar-aksesuarlar-sunum-kumandasi",
+              "subcategories": []
+            },
+            {
+              "name": "Toplu Satış",
+              "slug": "toplu-satis",
+              "fullSlug": "bilgisayar-aksesuarlar-toplu-satis",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Monitör",
+          "slug": "monitor",
+          "fullSlug": "bilgisayar-monitor",
+          "subcategories": [
+            {
+              "name": "LED & LCD Monitör",
+              "slug": "led-lcd-monitor",
+              "fullSlug": "bilgisayar-monitor-led-lcd-monitor",
+              "subcategories": []
+            },
+            {
+              "name": "CRT Monitör (Tüplü)",
+              "slug": "crt-monitor-tuplu",
+              "fullSlug": "bilgisayar-monitor-crt-monitor-tuplu",
+              "subcategories": []
+            },
+            {
+              "name": "Monitör Aksesuarları",
+              "slug": "monitor-aksesuarlari",
+              "fullSlug": "bilgisayar-monitor-monitor-aksesuarlari",
+              "subcategories": []
+            },
+            {
+              "name": "Toplu Satış",
+              "slug": "toplu-satis",
+              "fullSlug": "bilgisayar-monitor-toplu-satis",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Sunucu (Server)",
+          "slug": "sunucu-server",
+          "fullSlug": "bilgisayar-sunucu-server",
+          "subcategories": [
+            {
+              "name": "Sunucular",
+              "slug": "sunucular",
+              "fullSlug": "bilgisayar-sunucu-server-sunucular",
+              "subcategories": []
+            },
+            {
+              "name": "Donanım",
+              "slug": "donanim",
+              "fullSlug": "bilgisayar-sunucu-server-donanim",
+              "subcategories": []
+            },
+            {
+              "name": "Kabin",
+              "slug": "kabin",
+              "fullSlug": "bilgisayar-sunucu-server-kabin",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Domain, Hosting & Yazılım",
+          "slug": "domain-hosting-yazilim",
+          "fullSlug": "bilgisayar-domain-hosting-yazilim",
+          "subcategories": [
+            {
+              "name": "Kabin",
+              "slug": "kabin",
+              "fullSlug": "bilgisayar-domain-hosting-yazilim-kabin",
+              "subcategories": []
+            },
+            {
+              "name": "Yazılım",
+              "slug": "yazilim",
+              "fullSlug": "bilgisayar-domain-hosting-yazilim-yazilim",
+              "subcategories": []
+            },
+            {
+              "name": "Domain (Alan Adı)",
+              "slug": "domain-alan-adi",
+              "fullSlug": "bilgisayar-domain-hosting-yazilim-domain-alan-adi",
+              "subcategories": []
+            },
+            {
+              "name": "Hosting",
+              "slug": "hosting",
+              "fullSlug": "bilgisayar-domain-hosting-yazilim-hosting",
+              "subcategories": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cep Telefonu & Aksesuar",
+      "slug": "cep-telefonu-aksesuar",
+      "fullSlug": "cep-telefonu-aksesuar",
+      "subcategories": [
+        {
+          "name": "Cep Telefonu",
+          "slug": "cep-telefonu",
+          "fullSlug": "cep-telefonu-aksesuar-cep-telefonu",
+          "subcategories": []
+        },
+        {
+          "name": "Aksesuar",
+          "slug": "aksesuar",
+          "fullSlug": "cep-telefonu-aksesuar-aksesuar",
+          "subcategories": [
+            {
+              "name": "Bluetooth Kulaklık",
+              "slug": "bluetooth-kulaklik",
+              "fullSlug": "cep-telefonu-aksesuar-aksesuar-bluetooth-kulaklik",
+              "subcategories": []
+            },
+            {
+              "name": "Kablolu Kulaklık",
+              "slug": "kablolu-kulaklik",
+              "fullSlug": "cep-telefonu-aksesuar-aksesuar-kablolu-kulaklik",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Kılıf",
+          "slug": "kilif",
+          "fullSlug": "cep-telefonu-aksesuar-kilif",
+          "subcategories": []
+        },
+        {
+          "name": "Ekran Koruyucu",
+          "slug": "ekran-koruyucu",
+          "fullSlug": "cep-telefonu-aksesuar-ekran-koruyucu",
+          "subcategories": []
+        },
+        {
+          "name": "Şarj Cihazı",
+          "slug": "sarj-cihazi",
+          "fullSlug": "cep-telefonu-aksesuar-sarj-cihazi",
+          "subcategories": []
+        },
+        {
+          "name": "Kablo & Aparat",
+          "slug": "kablo-aparat",
+          "fullSlug": "cep-telefonu-aksesuar-kablo-aparat",
+          "subcategories": []
+        },
+        {
+          "name": "Çevirici & Dönüştürücü",
+          "slug": "cevirici-donusturucu",
+          "fullSlug": "cep-telefonu-aksesuar-cevirici-donusturucu",
+          "subcategories": []
+        },
+        {
+          "name": "Araç İçi Tutucu",
+          "slug": "arac-ici-tutucu",
+          "fullSlug": "cep-telefonu-aksesuar-arac-ici-tutucu",
+          "subcategories": []
+        },
+        {
+          "name": "Dock & Stand",
+          "slug": "dock-stand",
+          "fullSlug": "cep-telefonu-aksesuar-dock-stand",
+          "subcategories": []
+        },
+        {
+          "name": "Hafıza Kartı",
+          "slug": "hafiza-karti",
+          "fullSlug": "cep-telefonu-aksesuar-hafiza-karti",
+          "subcategories": []
+        },
+        {
+          "name": "Kapak",
+          "slug": "kapak",
+          "fullSlug": "cep-telefonu-aksesuar-kapak",
+          "subcategories": []
+        },
+        {
+          "name": "Modül Kamera",
+          "slug": "modul-kamera",
+          "fullSlug": "cep-telefonu-aksesuar-modul-kamera",
+          "subcategories": []
+        },
+        {
+          "name": "Lens",
+          "slug": "lens",
+          "fullSlug": "cep-telefonu-aksesuar-lens",
+          "subcategories": []
+        },
+        {
+          "name": "Bluetooth Takip Cihazı",
+          "slug": "bluetooth-takip-cihazi",
+          "fullSlug": "cep-telefonu-aksesuar-bluetooth-takip-cihazi",
+          "subcategories": []
+        },
+        {
+          "name": "Bluetooth Ürünler",
+          "slug": "bluetooth-urunler",
+          "fullSlug": "cep-telefonu-aksesuar-bluetooth-urunler",
+          "subcategories": []
+        },
+        {
+          "name": "Oyun Aksesuarları",
+          "slug": "oyun-aksesuarlari",
+          "fullSlug": "cep-telefonu-aksesuar-oyun-aksesuarlari",
+          "subcategories": []
+        },
+        {
+          "name": "Selfie Çubuğu",
+          "slug": "selfie-cubugu",
+          "fullSlug": "cep-telefonu-aksesuar-selfie-cubugu",
+          "subcategories": []
+        },
+        {
+          "name": "Boş Kutu",
+          "slug": "bos-kutu",
+          "fullSlug": "cep-telefonu-aksesuar-bos-kutu",
+          "subcategories": []
+        },
+        {
+          "name": "Akıllı Tuş",
+          "slug": "akilli-tus",
+          "fullSlug": "cep-telefonu-aksesuar-akilli-tus",
+          "subcategories": []
+        },
+        {
+          "name": "Hoparlör (Harici)",
+          "slug": "hoparlor-harici",
+          "fullSlug": "cep-telefonu-aksesuar-hoparlor-harici",
+          "subcategories": []
+        },
+        {
+          "name": "Kalem (Stylus)",
+          "slug": "kalem-stylus",
+          "fullSlug": "cep-telefonu-aksesuar-kalem-stylus",
+          "subcategories": []
+        },
+        {
+          "name": "Bakım & Onarım Ürünleri",
+          "slug": "bakim-onarim-urunleri",
+          "fullSlug": "cep-telefonu-aksesuar-bakim-onarim-urunleri",
+          "subcategories": []
+        },
+        {
+          "name": "Maket Cep Telefonu",
+          "slug": "maket-cep-telefonu",
+          "fullSlug": "cep-telefonu-aksesuar-maket-cep-telefonu",
+          "subcategories": []
+        },
+        {
+          "name": "Sinyal Güçlendirici",
+          "slug": "sinyal-guclendirici",
+          "fullSlug": "cep-telefonu-aksesuar-sinyal-guclendirici",
+          "subcategories": []
+        },
+        {
+          "name": "Sticker (Çıkartma)",
+          "slug": "sticker-cikartma",
+          "fullSlug": "cep-telefonu-aksesuar-sticker-cikartma",
+          "subcategories": []
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "cep-telefonu-aksesuar-toplu-satis",
+          "subcategories": []
+        },
+        {
+          "name": "Yedek Parça",
+          "slug": "yedek-parca",
+          "fullSlug": "cep-telefonu-aksesuar-yedek-parca",
+          "subcategories": [
+            {
+              "name": "Arızalı Cep Telefonu",
+              "slug": "arizali-cep-telefonu",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-arizali-cep-telefonu",
+              "subcategories": []
+            },
+            {
+              "name": "Anakart",
+              "slug": "anakart",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-anakart",
+              "subcategories": []
+            },
+            {
+              "name": "Anten",
+              "slug": "anten",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-anten",
+              "subcategories": []
+            },
+            {
+              "name": "Batarya",
+              "slug": "batarya",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-batarya",
+              "subcategories": []
+            },
+            {
+              "name": "Dahili Flaş",
+              "slug": "dahili-flas",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-dahili-flas",
+              "subcategories": []
+            },
+            {
+              "name": "Dahili Hoparlör & Kulaklık",
+              "slug": "dahili-hoparlor-kulaklik",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-dahili-hoparlor-kulaklik",
+              "subcategories": []
+            },
+            {
+              "name": "Dahili Kamera",
+              "slug": "dahili-kamera",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-dahili-kamera",
+              "subcategories": []
+            },
+            {
+              "name": "Dahili Mikrofon",
+              "slug": "dahili-mikrofon",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-dahili-mikrofon",
+              "subcategories": []
+            },
+            {
+              "name": "Ekran",
+              "slug": "ekran",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-ekran",
+              "subcategories": []
+            },
+            {
+              "name": "Fleks Kablo",
+              "slug": "fleks-kablo",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-fleks-kablo",
+              "subcategories": []
+            },
+            {
+              "name": "Kasa & Kapak",
+              "slug": "kasa-kapak",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-kasa-kapak",
+              "subcategories": []
+            },
+            {
+              "name": "SIM Kart Yuvası",
+              "slug": "sim-kart-yuvasi",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-sim-kart-yuvasi",
+              "subcategories": []
+            },
+            {
+              "name": "Soket",
+              "slug": "soket",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-soket",
+              "subcategories": []
+            },
+            {
+              "name": "Titreşim Motoru",
+              "slug": "titresim-motoru",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-titresim-motoru",
+              "subcategories": []
+            },
+            {
+              "name": "Tuş",
+              "slug": "tus",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-tus",
+              "subcategories": []
+            },
+            {
+              "name": "Toplu Satış",
+              "slug": "toplu-satis",
+              "fullSlug": "cep-telefonu-aksesuar-yedek-parca-toplu-satis",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Giyilebilir Teknoloji",
+          "slug": "giyilebilir-teknoloji",
+          "fullSlug": "cep-telefonu-aksesuar-giyilebilir-teknoloji",
+          "subcategories": []
+        },
+        {
+          "name": "Akıllı Bileklik",
+          "slug": "akilli-bileklik",
+          "fullSlug": "cep-telefonu-aksesuar-akilli-bileklik",
+          "subcategories": []
+        },
+        {
+          "name": "Akıllı Yüzük",
+          "slug": "akilli-yuzuk",
+          "fullSlug": "cep-telefonu-aksesuar-akilli-yuzuk",
+          "subcategories": []
+        },
+        {
+          "name": "Akıllı Gözlük",
+          "slug": "akilli-gozluk",
+          "fullSlug": "cep-telefonu-aksesuar-akilli-gozluk",
+          "subcategories": []
+        },
+        {
+          "name": "VR Gözlük",
+          "slug": "vr-gozluk",
+          "fullSlug": "cep-telefonu-aksesuar-vr-gozluk",
+          "subcategories": []
+        },
+        {
+          "name": "Aksesuar & Yedek Parça",
+          "slug": "aksesuar-yedek-parca",
+          "fullSlug": "cep-telefonu-aksesuar-aksesuar-yedek-parca",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Fotoğraf & Kamera",
+      "slug": "fotograf-kamera",
+      "fullSlug": "fotograf-kamera",
+      "subcategories": [
+        {
+          "name": "Dijital Fotoğraf Makinesi",
+          "slug": "dijital-fotograf-makinesi",
+          "fullSlug": "fotograf-kamera-dijital-fotograf-makinesi",
+          "subcategories": [
+            {
+              "name": "Kompakt",
+              "slug": "kompakt",
+              "fullSlug": "fotograf-kamera-dijital-fotograf-makinesi-kompakt",
+              "subcategories": []
+            },
+            {
+              "name": "DSLR",
+              "slug": "dslr",
+              "fullSlug": "fotograf-kamera-dijital-fotograf-makinesi-dslr",
+              "subcategories": []
+            },
+            {
+              "name": "Aynasız",
+              "slug": "aynasiz",
+              "fullSlug": "fotograf-kamera-dijital-fotograf-makinesi-aynasiz",
+              "subcategories": []
+            },
+            {
+              "name": "Orta Format",
+              "slug": "orta-format",
+              "fullSlug": "fotograf-kamera-dijital-fotograf-makinesi-orta-format",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Lens & Filtre",
+          "slug": "lens-filtre",
+          "fullSlug": "fotograf-kamera-lens-filtre",
+          "subcategories": [
+            {
+              "name": "Lensler",
+              "slug": "lensler",
+              "fullSlug": "fotograf-kamera-lens-filtre-lensler",
+              "subcategories": []
+            },
+            {
+              "name": "Filtreler",
+              "slug": "filtreler",
+              "fullSlug": "fotograf-kamera-lens-filtre-filtreler",
+              "subcategories": []
+            },
+            {
+              "name": "Lens Aksesuarları",
+              "slug": "lens-aksesuarlari",
+              "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari",
+              "subcategories": [
+                {
+                  "name": "Filtre Adaptörü",
+                  "slug": "filtre-adaptoru",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-filtre-adaptoru",
+                  "subcategories": []
+                },
+                {
+                  "name": "Lens Adaptörü",
+                  "slug": "lens-adaptoru",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-lens-adaptoru",
+                  "subcategories": []
+                },
+                {
+                  "name": "Lens Kapağı",
+                  "slug": "lens-kapagi",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-lens-kapagi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Lens Kılıfı",
+                  "slug": "lens-kilifi",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-lens-kilifi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Makro Uzatma Tüpü",
+                  "slug": "makro-uzatma-tupu",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-makro-uzatma-tupu",
+                  "subcategories": []
+                },
+                {
+                  "name": "Parasoley",
+                  "slug": "parasoley",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-parasoley",
+                  "subcategories": []
+                },
+                {
+                  "name": "Teleconverter",
+                  "slug": "teleconverter",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-teleconverter",
+                  "subcategories": []
+                },
+                {
+                  "name": "Temizleme Malzemeleri",
+                  "slug": "temizleme-malzemeleri",
+                  "fullSlug": "fotograf-kamera-lens-filtre-lens-aksesuarlari-temizleme-malzemeleri",
+                  "subcategories": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Kamera",
+          "slug": "video-kamera",
+          "fullSlug": "fotograf-kamera-video-kamera",
+          "subcategories": [
+            {
+              "name": "Dijital Kamera",
+              "slug": "dijital-kamera",
+              "fullSlug": "fotograf-kamera-video-kamera-dijital-kamera",
+              "subcategories": [
+                {
+                  "name": "HDD (Harddiskli)",
+                  "slug": "hdd-harddiskli",
+                  "fullSlug": "fotograf-kamera-video-kamera-dijital-kamera-hdd-harddiskli",
+                  "subcategories": []
+                },
+                {
+                  "name": "SD, MS Karta Kayıt",
+                  "slug": "sd-ms-karta-kayit",
+                  "fullSlug": "fotograf-kamera-video-kamera-dijital-kamera-sd-ms-karta-kayit",
+                  "subcategories": []
+                },
+                {
+                  "name": "Entegre Flash Bellek",
+                  "slug": "entegre-flash-bellek",
+                  "fullSlug": "fotograf-kamera-video-kamera-dijital-kamera-entegre-flash-bellek",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Aksiyon Kamera",
+              "slug": "aksiyon-kamera",
+              "fullSlug": "fotograf-kamera-video-kamera-aksiyon-kamera",
+              "subcategories": []
+            },
+            {
+              "name": "Gizli Kamera",
+              "slug": "gizli-kamera",
+              "fullSlug": "fotograf-kamera-video-kamera-gizli-kamera",
+              "subcategories": []
+            },
+            {
+              "name": "Analog Fotoğraf Makinesi",
+              "slug": "analog-fotograf-makinesi",
+              "fullSlug": "fotograf-kamera-video-kamera-analog-fotograf-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuarlar",
+              "slug": "aksesuarlar",
+              "fullSlug": "fotograf-kamera-video-kamera-aksesuarlar",
+              "subcategories": []
+            },
+            {
+              "name": "Yedek Parça",
+              "slug": "yedek-parca",
+              "fullSlug": "fotograf-kamera-video-kamera-yedek-parca",
+              "subcategories": []
+            },
+            {
+              "name": "Stüdyo",
+              "slug": "studyo",
+              "fullSlug": "fotograf-kamera-video-kamera-studyo",
+              "subcategories": []
+            },
+            {
+              "name": "Dürbün",
+              "slug": "durbun",
+              "fullSlug": "fotograf-kamera-video-kamera-durbun",
+              "subcategories": []
+            },
+            {
+              "name": "Mikroskop",
+              "slug": "mikroskop",
+              "fullSlug": "fotograf-kamera-video-kamera-mikroskop",
+              "subcategories": []
+            },
+            {
+              "name": "Teleskop",
+              "slug": "teleskop",
+              "fullSlug": "fotograf-kamera-video-kamera-teleskop",
+              "subcategories": []
+            },
+            {
+              "name": "Toplu Satış",
+              "slug": "toplu-satis",
+              "fullSlug": "fotograf-kamera-video-kamera-toplu-satis",
+              "subcategories": []
+            },
+            {
+              "name": "Kiralık Ürünler",
+              "slug": "kiralik-urunler",
+              "fullSlug": "fotograf-kamera-video-kamera-kiralik-urunler",
+              "subcategories": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ev Dekorasyon",
+      "slug": "ev-dekorasyon",
+      "fullSlug": "ev-dekorasyon",
+      "subcategories": [
+        {
+          "name": "Video Kamera",
+          "slug": "video-kamera",
+          "fullSlug": "ev-dekorasyon-video-kamera",
+          "subcategories": []
+        },
+        {
+          "name": "Mobilya",
+          "slug": "mobilya",
+          "fullSlug": "ev-dekorasyon-mobilya",
+          "subcategories": [
+            {
+              "name": "Oturma Odası & Salon",
+              "slug": "oturma-odasi-salon",
+              "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon",
+              "subcategories": [
+                {
+                  "name": "Berjer, Tekli Koltuk",
+                  "slug": "berjer-tekli-koltuk",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-berjer-tekli-koltuk",
+                  "subcategories": []
+                },
+                {
+                  "name": "Çekyat, Kanepe",
+                  "slug": "cekyat-kanepe",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-cekyat-kanepe",
+                  "subcategories": []
+                },
+                {
+                  "name": "Josefin",
+                  "slug": "josefin",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-josefin",
+                  "subcategories": []
+                },
+                {
+                  "name": "Koltuk Takımı",
+                  "slug": "koltuk-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-koltuk-takimi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Köşe Koltuk Takımı",
+                  "slug": "kose-koltuk-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-kose-koltuk-takimi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Salon Takımı",
+                  "slug": "salon-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-salon-takimi",
+                  "subcategories": []
+                },
+                {
+                  "name": "TV Koltuğu",
+                  "slug": "tv-koltugu",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-tv-koltugu",
+                  "subcategories": []
+                },
+                {
+                  "name": "TV Ünitesi",
+                  "slug": "tv-unitesi",
+                  "fullSlug": "ev-dekorasyon-mobilya-oturma-odasi-salon-tv-unitesi",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Mutfak",
+              "slug": "mutfak",
+              "fullSlug": "ev-dekorasyon-mobilya-mutfak",
+              "subcategories": [
+                {
+                  "name": "Mutfak Masası",
+                  "slug": "mutfak-masasi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-mutfak-masasi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Masa Takımı",
+                  "slug": "masa-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-masa-takimi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Sandalye",
+                  "slug": "sandalye",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-sandalye",
+                  "subcategories": []
+                },
+                {
+                  "name": "Mutfak Dolabı",
+                  "slug": "mutfak-dolabi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-mutfak-dolabi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Hazır Mutfak",
+                  "slug": "hazir-mutfak",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-hazir-mutfak",
+                  "subcategories": []
+                },
+                {
+                  "name": "Erzak Dolabı",
+                  "slug": "erzak-dolabi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-erzak-dolabi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kiler Dolabı",
+                  "slug": "kiler-dolabi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-kiler-dolabi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ekmek Dolabı",
+                  "slug": "ekmek-dolabi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-ekmek-dolabi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Fırın Dolabı",
+                  "slug": "firin-dolabi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-firin-dolabi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kahve Köşesi",
+                  "slug": "kahve-kosesi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-kahve-kosesi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Raf & Terek",
+                  "slug": "raf-terek",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-raf-terek",
+                  "subcategories": []
+                },
+                {
+                  "name": "Köşe Takımı",
+                  "slug": "kose-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-kose-takimi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Servis Arabası",
+                  "slug": "servis-arabasi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-servis-arabasi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yer Sofrası",
+                  "slug": "yer-sofrasi",
+                  "fullSlug": "ev-dekorasyon-mobilya-mutfak-yer-sofrasi",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Yemek Odası",
+              "slug": "yemek-odasi",
+              "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi",
+              "subcategories": [
+                {
+                  "name": "Büfe & Vitrin",
+                  "slug": "bufe-vitrin",
+                  "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi-bufe-vitrin",
+                  "subcategories": []
+                },
+                {
+                  "name": "Gümüşlük",
+                  "slug": "gumusluk",
+                  "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi-gumusluk",
+                  "subcategories": []
+                },
+                {
+                  "name": "Konsol",
+                  "slug": "konsol",
+                  "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi-konsol",
+                  "subcategories": []
+                },
+                {
+                  "name": "Masa",
+                  "slug": "masa",
+                  "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi-masa",
+                  "subcategories": []
+                },
+                {
+                  "name": "Sandalye",
+                  "slug": "sandalye",
+                  "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi-sandalye",
+                  "subcategories": []
+                },
+                {
+                  "name": "Şaraplık",
+                  "slug": "saraplik",
+                  "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi-saraplik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yemek Odası Takımı",
+                  "slug": "yemek-odasi-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-yemek-odasi-yemek-odasi-takimi",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Yatak Odası",
+              "slug": "yatak-odasi",
+              "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi",
+              "subcategories": [
+                {
+                  "name": "Yemek Odası Takımı",
+                  "slug": "yemek-odasi-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-yemek-odasi-takimi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yatak",
+                  "slug": "yatak",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-yatak",
+                  "subcategories": []
+                },
+                {
+                  "name": "Baza",
+                  "slug": "baza",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-baza",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yatak Odası Takımı",
+                  "slug": "yatak-odasi-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-yatak-odasi-takimi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Etajer",
+                  "slug": "etajer",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-etajer",
+                  "subcategories": []
+                },
+                {
+                  "name": "Gardırop",
+                  "slug": "gardirop",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-gardirop",
+                  "subcategories": []
+                },
+                {
+                  "name": "Karyola",
+                  "slug": "karyola",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-karyola",
+                  "subcategories": []
+                },
+                {
+                  "name": "Koltuk",
+                  "slug": "koltuk",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-koltuk",
+                  "subcategories": []
+                },
+                {
+                  "name": "Komodin",
+                  "slug": "komodin",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-komodin",
+                  "subcategories": []
+                },
+                {
+                  "name": "Makyaj Masası",
+                  "slug": "makyaj-masasi",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-makyaj-masasi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Şifonyer",
+                  "slug": "sifonyer",
+                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-sifonyer",
+                  "subcategories": []
+                }
+              ]
+            },
+            {
+              "name": "Çocuk & Genç Odası",
+              "slug": "cocuk-genc-odasi",
+              "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi",
+              "subcategories": [
+                {
+                  "name": "Arabalı Yatak",
+                  "slug": "arabali-yatak",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-arabali-yatak",
+                  "subcategories": []
+                },
+                {
+                  "name": "Bilgisayar Masası",
+                  "slug": "bilgisayar-masasi",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-bilgisayar-masasi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Çalışma Masası",
+                  "slug": "calisma-masasi",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-calisma-masasi",
+                  "subcategories": []
+                },
+                {
+                  "name": "Dolap",
+                  "slug": "dolap",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-dolap",
+                  "subcategories": []
+                },
+                {
+                  "name": "Karyola & Yatak",
+                  "slug": "karyola-yatak",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-karyola-yatak",
+                  "subcategories": []
+                },
+                {
+                  "name": "Kitaplık",
+                  "slug": "kitaplik",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-kitaplik",
+                  "subcategories": []
+                },
+                {
+                  "name": "Koltuk",
+                  "slug": "koltuk",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-koltuk",
+                  "subcategories": []
+                },
+                {
+                  "name": "Komodin",
+                  "slug": "komodin",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-komodin",
+                  "subcategories": []
+                },
+                {
+                  "name": "Ranza",
+                  "slug": "ranza",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-ranza",
+                  "subcategories": []
+                },
+                {
+                  "name": "Sandalye",
+                  "slug": "sandalye",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-sandalye",
+                  "subcategories": []
+                },
+                {
+                  "name": "Şifonyer",
+                  "slug": "sifonyer",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-sifonyer",
+                  "subcategories": []
+                },
+                {
+                  "name": "Çocuk Odası Takımı",
+                  "slug": "cocuk-odasi-takimi",
+                  "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-cocuk-odasi-takimi",
+                  "subcategories": [
+                    {
+                      "name": "Genç Odası Takımı",
+                      "slug": "genc-odasi-takimi",
+                      "fullSlug": "ev-dekorasyon-mobilya-cocuk-genc-odasi-cocuk-odasi-takimi-genc-odasi-takimi",
+                      "subcategories": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Tamamlayıcı Ürünler",
+              "slug": "tamamlayici-urunler",
+              "fullSlug": "ev-dekorasyon-mobilya-tamamlayici-urunler",
+              "subcategories": [
+                {
+                  "name": "Antre",
+                  "slug": "antre",
+                  "fullSlug": "ev-dekorasyon-mobilya-tamamlayici-urunler-antre",
+                  "subcategories": []
+                },
+                {
+                  "name": "Oturma Odası & Salon",
+                  "slug": "oturma-odasi-salon",
+                  "fullSlug": "ev-dekorasyon-mobilya-tamamlayici-urunler-oturma-odasi-salon",
+                  "subcategories": []
+                },
+                {
+                  "name": "Yatak Odası",
+                  "slug": "yatak-odasi",
+                  "fullSlug": "ev-dekorasyon-mobilya-tamamlayici-urunler-yatak-odasi",
+                  "subcategories": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Dekoratif Ürünler",
+          "slug": "dekoratif-urunler",
+          "fullSlug": "ev-dekorasyon-dekoratif-urunler",
+          "subcategories": [
+            {
+              "name": "Ayna",
+              "slug": "ayna",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-ayna",
+              "subcategories": []
+            },
+            {
+              "name": "Biblo / Figür / Obje",
+              "slug": "biblo-figur-obje",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-biblo-figur-obje",
+              "subcategories": []
+            },
+            {
+              "name": "Çerçeve",
+              "slug": "cerceve",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-cerceve",
+              "subcategories": []
+            },
+            {
+              "name": "Dekoratif Sabun",
+              "slug": "dekoratif-sabun",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-dekoratif-sabun",
+              "subcategories": []
+            },
+            {
+              "name": "Duvar Kağıdı",
+              "slug": "duvar-kagidi",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-duvar-kagidi",
+              "subcategories": []
+            },
+            {
+              "name": "Duvar Ürünleri",
+              "slug": "duvar-urunleri",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-duvar-urunleri",
+              "subcategories": []
+            },
+            {
+              "name": "Kase & Tabak",
+              "slug": "kase-tabak",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-kase-tabak",
+              "subcategories": []
+            },
+            {
+              "name": "Kül Tablası",
+              "slug": "kul-tablasi",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-kul-tablasi",
+              "subcategories": []
+            },
+            {
+              "name": "Mum",
+              "slug": "mum",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-mum",
+              "subcategories": []
+            },
+            {
+              "name": "Mumluk & Şamdan",
+              "slug": "mumluk-samdan",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-mumluk-samdan",
+              "subcategories": []
+            },
+            {
+              "name": "Nargile",
+              "slug": "nargile",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-nargile",
+              "subcategories": []
+            },
+            {
+              "name": "Sepet",
+              "slug": "sepet",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-sepet",
+              "subcategories": []
+            },
+            {
+              "name": "Tablo",
+              "slug": "tablo",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-tablo",
+              "subcategories": []
+            },
+            {
+              "name": "Taşlar",
+              "slug": "taslar",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-taslar",
+              "subcategories": []
+            },
+            {
+              "name": "Tütsü & Tütsülük",
+              "slug": "tutsu-tutsuluk",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-tutsu-tutsuluk",
+              "subcategories": []
+            },
+            {
+              "name": "Vazo / Çiçeklik",
+              "slug": "vazo-ciceklik",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-vazo-ciceklik",
+              "subcategories": []
+            },
+            {
+              "name": "Yapay Çiçek",
+              "slug": "yapay-cicek",
+              "fullSlug": "ev-dekorasyon-dekoratif-urunler-yapay-cicek",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "El İşi & Sanat",
+          "slug": "el-isi-sanat",
+          "fullSlug": "ev-dekorasyon-el-isi-sanat",
+          "subcategories": [
+            {
+              "name": "Dantel",
+              "slug": "dantel",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-dantel",
+              "subcategories": []
+            },
+            {
+              "name": "Dikiş & Nakış",
+              "slug": "dikis-nakis",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-dikis-nakis",
+              "subcategories": []
+            },
+            {
+              "name": "Etamin & Kanaviçe",
+              "slug": "etamin-kanavice",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-etamin-kanavice",
+              "subcategories": []
+            },
+            {
+              "name": "Örgü",
+              "slug": "orgu",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-orgu",
+              "subcategories": []
+            },
+            {
+              "name": "Patchwork",
+              "slug": "patchwork",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-patchwork",
+              "subcategories": []
+            },
+            {
+              "name": "Ahşap",
+              "slug": "ahsap",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-ahsap",
+              "subcategories": []
+            },
+            {
+              "name": "Baskı & Gravür",
+              "slug": "baski-gravur",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-baski-gravur",
+              "subcategories": []
+            },
+            {
+              "name": "Cam, Mozaik & Çini",
+              "slug": "cam-mozaik-cini",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-cam-mozaik-cini",
+              "subcategories": []
+            },
+            {
+              "name": "Geleneksel Türk Sanatları",
+              "slug": "geleneksel-turk-sanatlari",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-geleneksel-turk-sanatlari",
+              "subcategories": []
+            },
+            {
+              "name": "Heykel",
+              "slug": "heykel",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-heykel",
+              "subcategories": []
+            },
+            {
+              "name": "Resim",
+              "slug": "resim",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-resim",
+              "subcategories": []
+            },
+            {
+              "name": "Seramik",
+              "slug": "seramik",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-seramik",
+              "subcategories": []
+            },
+            {
+              "name": "Taş",
+              "slug": "tas",
+              "fullSlug": "ev-dekorasyon-el-isi-sanat-tas",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Aydınlatma",
+          "slug": "aydinlatma",
+          "fullSlug": "ev-dekorasyon-aydinlatma",
+          "subcategories": [
+            {
+              "name": "Abajur & Masa Lambası",
+              "slug": "abajur-masa-lambasi",
+              "fullSlug": "ev-dekorasyon-aydinlatma-abajur-masa-lambasi",
+              "subcategories": []
+            },
+            {
+              "name": "Aplik",
+              "slug": "aplik",
+              "fullSlug": "ev-dekorasyon-aydinlatma-aplik",
+              "subcategories": []
+            },
+            {
+              "name": "Avize & Sarkıt",
+              "slug": "avize-sarkit",
+              "fullSlug": "ev-dekorasyon-aydinlatma-avize-sarkit",
+              "subcategories": []
+            },
+            {
+              "name": "Çalışma Lambası",
+              "slug": "calisma-lambasi",
+              "fullSlug": "ev-dekorasyon-aydinlatma-calisma-lambasi",
+              "subcategories": []
+            },
+            {
+              "name": "Gaz Lambası",
+              "slug": "gaz-lambasi",
+              "fullSlug": "ev-dekorasyon-aydinlatma-gaz-lambasi",
+              "subcategories": []
+            },
+            {
+              "name": "Gece Lambası",
+              "slug": "gece-lambasi",
+              "fullSlug": "ev-dekorasyon-aydinlatma-gece-lambasi",
+              "subcategories": []
+            },
+            {
+              "name": "Lambader",
+              "slug": "lambader",
+              "fullSlug": "ev-dekorasyon-aydinlatma-lambader",
+              "subcategories": []
+            },
+            {
+              "name": "Dur",
+              "slug": "dur",
+              "fullSlug": "ev-dekorasyon-aydinlatma-dur",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Ev Tekstili",
+          "slug": "ev-tekstili",
+          "fullSlug": "ev-dekorasyon-ev-tekstili",
+          "subcategories": [
+            {
+              "name": "Halı & Kilim",
+              "slug": "hali-kilim",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-hali-kilim",
+              "subcategories": []
+            },
+            {
+              "name": "Perde & Tül",
+              "slug": "perde-tul",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-perde-tul",
+              "subcategories": []
+            },
+            {
+              "name": "Yastık & Minder",
+              "slug": "yastik-minder",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-yastik-minder",
+              "subcategories": []
+            },
+            {
+              "name": "Yorgan & Battaniye",
+              "slug": "yorgan-battaniye",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-yorgan-battaniye",
+              "subcategories": []
+            },
+            {
+              "name": "Nevresim & Uyku Seti",
+              "slug": "nevresim-uyku-seti",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-nevresim-uyku-seti",
+              "subcategories": []
+            },
+            {
+              "name": "Örtü",
+              "slug": "ortu",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-ortu",
+              "subcategories": []
+            },
+            {
+              "name": "Yatak Örtüsü",
+              "slug": "yatak-ortusu",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-yatak-ortusu",
+              "subcategories": []
+            },
+            {
+              "name": "Koltuk Örtüsü",
+              "slug": "koltuk-ortusu",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-koltuk-ortusu",
+              "subcategories": []
+            },
+            {
+              "name": "Kumaş & İplik",
+              "slug": "kumas-iplik",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-kumas-iplik",
+              "subcategories": []
+            },
+            {
+              "name": "Yün, Keçe & Pamuk",
+              "slug": "yun-kece-pamuk",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-yun-kece-pamuk",
+              "subcategories": []
+            },
+            {
+              "name": "Banyo Tekstili",
+              "slug": "banyo-tekstili",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-banyo-tekstili",
+              "subcategories": []
+            },
+            {
+              "name": "Mutfak Tekstili",
+              "slug": "mutfak-tekstili",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-mutfak-tekstili",
+              "subcategories": []
+            },
+            {
+              "name": "Seccade",
+              "slug": "seccade",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-seccade",
+              "subcategories": []
+            },
+            {
+              "name": "Bohça & Hurç",
+              "slug": "bohca-hurc",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-bohca-hurc",
+              "subcategories": []
+            },
+            {
+              "name": "Duru",
+              "slug": "duru",
+              "fullSlug": "ev-dekorasyon-ev-tekstili-duru",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Mutfak Gereçleri",
+          "slug": "mutfak-gerecleri",
+          "fullSlug": "ev-dekorasyon-mutfak-gerecleri",
+          "subcategories": [
+            {
+              "name": "Saklama Ekipmanları",
+              "slug": "saklama-ekipmanlari",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-saklama-ekipmanlari",
+              "subcategories": []
+            },
+            {
+              "name": "Yardımcı Ürünler",
+              "slug": "yardimci-urunler",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-yardimci-urunler",
+              "subcategories": []
+            },
+            {
+              "name": "Bardak",
+              "slug": "bardak",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-bardak",
+              "subcategories": []
+            },
+            {
+              "name": "Fincan",
+              "slug": "fincan",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-fincan",
+              "subcategories": []
+            },
+            {
+              "name": "Kupa",
+              "slug": "kupa",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-kupa",
+              "subcategories": []
+            },
+            {
+              "name": "Cezve",
+              "slug": "cezve",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-cezve",
+              "subcategories": []
+            },
+            {
+              "name": "Çatal, Kaşık & Bıçak",
+              "slug": "catal-kasik-bicak",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-catal-kasik-bicak",
+              "subcategories": []
+            },
+            {
+              "name": "Çaydanlık",
+              "slug": "caydanlik",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-caydanlik",
+              "subcategories": []
+            },
+            {
+              "name": "Kahvaltı & Piknik Seti",
+              "slug": "kahvalti-piknik-seti",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-kahvalti-piknik-seti",
+              "subcategories": []
+            },
+            {
+              "name": "Kek / Kurabiye Kalıbı",
+              "slug": "kek-kurabiye-kalibi",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-kek-kurabiye-kalibi",
+              "subcategories": []
+            },
+            {
+              "name": "Tabak, Kase & Tepsi",
+              "slug": "tabak-kase-tepsi",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-tabak-kase-tepsi",
+              "subcategories": []
+            },
+            {
+              "name": "Takımlar",
+              "slug": "takimlar",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-takimlar",
+              "subcategories": []
+            },
+            {
+              "name": "Tava",
+              "slug": "tava",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-tava",
+              "subcategories": []
+            },
+            {
+              "name": "Tencere",
+              "slug": "tencere",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-tencere",
+              "subcategories": []
+            },
+            {
+              "name": "Düdüklü Tencere",
+              "slug": "duduklu-tencere",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-duduklu-tencere",
+              "subcategories": []
+            },
+            {
+              "name": "Termos, Sürahi & Şişe",
+              "slug": "termos-surahi-sise",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-termos-surahi-sise",
+              "subcategories": []
+            },
+            {
+              "name": "Tuzluk, Biberlik & Baharatlık",
+              "slug": "tuzluk-biberlik-baharatlik",
+              "fullSlug": "ev-dekorasyon-mutfak-gerecleri-tuzluk-biberlik-baharatlik",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Temizlik Malzemeleri",
+          "slug": "temizlik-malzemeleri",
+          "fullSlug": "ev-dekorasyon-temizlik-malzemeleri",
+          "subcategories": [
+            {
+              "name": "Bez",
+              "slug": "bez",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-bez",
+              "subcategories": []
+            },
+            {
+              "name": "Çöp Kutusu & Torbası",
+              "slug": "cop-kutusu-torbasi",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-cop-kutusu-torbasi",
+              "subcategories": []
+            },
+            {
+              "name": "Deterjan",
+              "slug": "deterjan",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-deterjan",
+              "subcategories": []
+            },
+            {
+              "name": "Eldiven",
+              "slug": "eldiven",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-eldiven",
+              "subcategories": []
+            },
+            {
+              "name": "Fırça & Süpürge",
+              "slug": "firca-supurge",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-firca-supurge",
+              "subcategories": []
+            },
+            {
+              "name": "Kağıt Ürünler",
+              "slug": "kagit-urunler",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-kagit-urunler",
+              "subcategories": []
+            },
+            {
+              "name": "Mop Çeşitleri",
+              "slug": "mop-cesitleri",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-mop-cesitleri",
+              "subcategories": []
+            },
+            {
+              "name": "Oda Kokusu & Koku Giderici",
+              "slug": "oda-kokusu-koku-giderici",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-oda-kokusu-koku-giderici",
+              "subcategories": []
+            },
+            {
+              "name": "Sünger & Ovma Teli",
+              "slug": "sunger-ovma-teli",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-sunger-ovma-teli",
+              "subcategories": []
+            },
+            {
+              "name": "Süpürge Toz Torbası",
+              "slug": "supurge-toz-torbasi",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-supurge-toz-torbasi",
+              "subcategories": []
+            },
+            {
+              "name": "Teslim",
+              "slug": "teslim",
+              "fullSlug": "ev-dekorasyon-temizlik-malzemeleri-teslim",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "ev-dekorasyon-toplu-satis",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Ev Elektroniği",
+      "slug": "ev-elektronigi",
+      "fullSlug": "ev-elektronigi",
+      "subcategories": [
+        {
+          "name": "Televizyon",
+          "slug": "televizyon",
+          "fullSlug": "ev-elektronigi-televizyon",
+          "subcategories": [
+            {
+              "name": "LED & LCD TV",
+              "slug": "led-lcd-tv",
+              "fullSlug": "ev-elektronigi-televizyon-led-lcd-tv",
+              "subcategories": []
+            },
+            {
+              "name": "OLED TV",
+              "slug": "oled-tv",
+              "fullSlug": "ev-elektronigi-televizyon-oled-tv",
+              "subcategories": []
+            },
+            {
+              "name": "Yedek Parça",
+              "slug": "yedek-parca",
+              "fullSlug": "ev-elektronigi-televizyon-yedek-parca",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Uydu & Ekipmanları",
+          "slug": "uydu-ekipmanlari",
+          "fullSlug": "ev-elektronigi-uydu-ekipmanlari",
+          "subcategories": [
+            {
+              "name": "Yedek Parça",
+              "slug": "yedek-parca",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-yedek-parca",
+              "subcategories": []
+            },
+            {
+              "name": "Uydu Alıcısı (Receiver)",
+              "slug": "uydu-alicisi-receiver",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-uydu-alicisi-receiver",
+              "subcategories": []
+            },
+            {
+              "name": "Anten",
+              "slug": "anten",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-anten",
+              "subcategories": []
+            },
+            {
+              "name": "Çanak Anten",
+              "slug": "canak-anten",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-canak-anten",
+              "subcategories": []
+            },
+            {
+              "name": "DiSEqC",
+              "slug": "diseqc",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-diseqc",
+              "subcategories": []
+            },
+            {
+              "name": "Kablo",
+              "slug": "kablo",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-kablo",
+              "subcategories": []
+            },
+            {
+              "name": "Konnektör",
+              "slug": "konnektor",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-konnektor",
+              "subcategories": []
+            },
+            {
+              "name": "LNB",
+              "slug": "lnb",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-lnb",
+              "subcategories": []
+            },
+            {
+              "name": "Modül & Kart",
+              "slug": "modul-kart",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-modul-kart",
+              "subcategories": []
+            },
+            {
+              "name": "Uydu Bulucu",
+              "slug": "uydu-bulucu",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-uydu-bulucu",
+              "subcategories": []
+            },
+            {
+              "name": "Uydu Kumandası",
+              "slug": "uydu-kumandasi",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-uydu-kumandasi",
+              "subcategories": []
+            },
+            {
+              "name": "Uydu Santrali",
+              "slug": "uydu-santrali",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-uydu-santrali",
+              "subcategories": []
+            },
+            {
+              "name": "Uydu Telefonu",
+              "slug": "uydu-telefonu",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-uydu-telefonu",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuarlar",
+              "slug": "aksesuarlar",
+              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-aksesuarlar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Ev Sinema Sistemleri",
+          "slug": "ev-sinema-sistemleri",
+          "fullSlug": "ev-elektronigi-ev-sinema-sistemleri",
+          "subcategories": [
+            {
+              "name": "Projeksiyon Cihazı",
+              "slug": "projeksiyon-cihazi",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-projeksiyon-cihazi",
+              "subcategories": []
+            },
+            {
+              "name": "Media Player",
+              "slug": "media-player",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-media-player",
+              "subcategories": []
+            },
+            {
+              "name": "Komple Setler",
+              "slug": "komple-setler",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-komple-setler",
+              "subcategories": []
+            },
+            {
+              "name": "Blu-ray Oynatıcı",
+              "slug": "blu-ray-oynatici",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-blu-ray-oynatici",
+              "subcategories": []
+            },
+            {
+              "name": "DVD Oynatıcı",
+              "slug": "dvd-oynatici",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-dvd-oynatici",
+              "subcategories": []
+            },
+            {
+              "name": "VCD Oynatıcı",
+              "slug": "vcd-oynatici",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-vcd-oynatici",
+              "subcategories": []
+            },
+            {
+              "name": "Video Kaset Oynatıcı",
+              "slug": "video-kaset-oynatici",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-video-kaset-oynatici",
+              "subcategories": []
+            },
+            {
+              "name": "AV Receiver",
+              "slug": "av-receiver",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-av-receiver",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar & Yedek Parça",
+              "slug": "aksesuar-yedek-parca",
+              "fullSlug": "ev-elektronigi-ev-sinema-sistemleri-aksesuar-yedek-parca",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Ev Müzik Sistemleri",
+          "slug": "ev-muzik-sistemleri",
+          "fullSlug": "ev-elektronigi-ev-muzik-sistemleri",
+          "subcategories": [
+            {
+              "name": "Amfi",
+              "slug": "amfi",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-amfi",
+              "subcategories": []
+            },
+            {
+              "name": "Hoparlör",
+              "slug": "hoparlor",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-hoparlor",
+              "subcategories": []
+            },
+            {
+              "name": "Müzik Seti & Teyp",
+              "slug": "muzik-seti-teyp",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-muzik-seti-teyp",
+              "subcategories": []
+            },
+            {
+              "name": "CD Çalar & Kaydedici",
+              "slug": "cd-calar-kaydedici",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-cd-calar-kaydedici",
+              "subcategories": []
+            },
+            {
+              "name": "Pikap",
+              "slug": "pikap",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-pikap",
+              "subcategories": []
+            },
+            {
+              "name": "Ekolayzer",
+              "slug": "ekolayzer",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-ekolayzer",
+              "subcategories": []
+            },
+            {
+              "name": "DAC",
+              "slug": "dac",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-dac",
+              "subcategories": []
+            },
+            {
+              "name": "Tuner",
+              "slug": "tuner",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-tuner",
+              "subcategories": []
+            },
+            {
+              "name": "Network Player",
+              "slug": "network-player",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-network-player",
+              "subcategories": []
+            },
+            {
+              "name": "Deck Kasetçalar",
+              "slug": "deck-kasetcalar",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-deck-kasetcalar",
+              "subcategories": []
+            },
+            {
+              "name": "Makaralı Teyp",
+              "slug": "makarali-teyp",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-makarali-teyp",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar & Yedek Parça",
+              "slug": "aksesuar-yedek-parca",
+              "fullSlug": "ev-elektronigi-ev-muzik-sistemleri-aksesuar-yedek-parca",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Taşınabilir Ses Sistemleri",
+          "slug": "tasinabilir-ses-sistemleri",
+          "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri",
+          "subcategories": [
+            {
+              "name": "Bluetooth Hoparlör",
+              "slug": "bluetooth-hoparlor",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-bluetooth-hoparlor",
+              "subcategories": []
+            },
+            {
+              "name": "Kulaklık",
+              "slug": "kulaklik",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-kulaklik",
+              "subcategories": []
+            },
+            {
+              "name": "MP3 Çalar",
+              "slug": "mp3-calar",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-mp3-calar",
+              "subcategories": []
+            },
+            {
+              "name": "Ses Kayıt Cihazı",
+              "slug": "ses-kayit-cihazi",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-ses-kayit-cihazi",
+              "subcategories": []
+            },
+            {
+              "name": "Alarm Saatli Radyo",
+              "slug": "alarm-saatli-radyo",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-alarm-saatli-radyo",
+              "subcategories": []
+            },
+            {
+              "name": "Radyo",
+              "slug": "radyo",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-radyo",
+              "subcategories": []
+            },
+            {
+              "name": "Walkman & Discman",
+              "slug": "walkman-discman",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-walkman-discman",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar & Yedek Parça",
+              "slug": "aksesuar-yedek-parca",
+              "fullSlug": "ev-elektronigi-tasinabilir-ses-sistemleri-aksesuar-yedek-parca",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Güvenlik Sistemleri",
+          "slug": "guvenlik-sistemleri",
+          "fullSlug": "ev-elektronigi-guvenlik-sistemleri",
+          "subcategories": [
+            {
+              "name": "Kamera & CCTV",
+              "slug": "kamera-cctv",
+              "fullSlug": "ev-elektronigi-guvenlik-sistemleri-kamera-cctv",
+              "subcategories": []
+            },
+            {
+              "name": "Deprem Alarmı",
+              "slug": "deprem-alarmi",
+              "fullSlug": "ev-elektronigi-guvenlik-sistemleri-deprem-alarmi",
+              "subcategories": []
+            },
+            {
+              "name": "Hırsız Alarm",
+              "slug": "hirsiz-alarm",
+              "fullSlug": "ev-elektronigi-guvenlik-sistemleri-hirsiz-alarm",
+              "subcategories": []
+            },
+            {
+              "name": "Kapı Kontrol",
+              "slug": "kapi-kontrol",
+              "fullSlug": "ev-elektronigi-guvenlik-sistemleri-kapi-kontrol",
+              "subcategories": []
+            },
+            {
+              "name": "Yangın Alarmı",
+              "slug": "yangin-alarmi",
+              "fullSlug": "ev-elektronigi-guvenlik-sistemleri-yangin-alarmi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Akıllı Ev Sistemleri",
+          "slug": "akilli-ev-sistemleri",
+          "fullSlug": "ev-elektronigi-akilli-ev-sistemleri",
+          "subcategories": [
+            {
+              "name": "Ağ Sistemleri",
+              "slug": "ag-sistemleri",
+              "fullSlug": "ev-elektronigi-akilli-ev-sistemleri-ag-sistemleri",
+              "subcategories": []
+            },
+            {
+              "name": "Akıllı Ev Asistanları",
+              "slug": "akilli-ev-asistanlari",
+              "fullSlug": "ev-elektronigi-akilli-ev-sistemleri-akilli-ev-asistanlari",
+              "subcategories": []
+            },
+            {
+              "name": "Enerji ve İklimlendirme",
+              "slug": "enerji-ve-iklimlendirme",
+              "fullSlug": "ev-elektronigi-akilli-ev-sistemleri-enerji-ve-iklimlendirme",
+              "subcategories": []
+            },
+            {
+              "name": "Kontrol Üniteleri",
+              "slug": "kontrol-uniteleri",
+              "fullSlug": "ev-elektronigi-akilli-ev-sistemleri-kontrol-uniteleri",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "ev-elektronigi-toplu-satis",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Elektrikli Ev Aletleri",
+      "slug": "elektrikli-ev-aletleri",
+      "fullSlug": "elektrikli-ev-aletleri",
+      "subcategories": [
+        {
+          "name": "Küçük Ev Aletleri",
+          "slug": "kucuk-ev-aletleri",
+          "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri",
+          "subcategories": [
+            {
+              "name": "Yedek Parça & Ekipman",
+              "slug": "yedek-parca-ekipman",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-yedek-parca-ekipman",
+              "subcategories": []
+            },
+            {
+              "name": "Baskül & Tartı",
+              "slug": "baskul-tarti",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-baskul-tarti",
+              "subcategories": []
+            },
+            {
+              "name": "Blender",
+              "slug": "blender",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-blender",
+              "subcategories": []
+            },
+            {
+              "name": "Buharlı Pişirici",
+              "slug": "buharli-pisirici",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-buharli-pisirici",
+              "subcategories": []
+            },
+            {
+              "name": "Buharlı Temizlik Makinesi",
+              "slug": "buharli-temizlik-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-buharli-temizlik-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Buz Makinesi",
+              "slug": "buz-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-buz-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Cam Silme Makinesi",
+              "slug": "cam-silme-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-cam-silme-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Çay Makinesi",
+              "slug": "cay-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-cay-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Çikolata Şelalesi",
+              "slug": "cikolata-selalesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-cikolata-selalesi",
+              "subcategories": []
+            },
+            {
+              "name": "Çöp Öğütme Makinesi",
+              "slug": "cop-ogutme-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-cop-ogutme-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Dikey & Şarjlı Süpürge",
+              "slug": "dikey-sarjli-supurge",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-dikey-sarjli-supurge",
+              "subcategories": []
+            },
+            {
+              "name": "Dikiş Makinesi",
+              "slug": "dikis-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-dikis-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Dondurma Makinesi",
+              "slug": "dondurma-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-dondurma-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Ekmek Kızartma Makinesi",
+              "slug": "ekmek-kizartma-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-ekmek-kizartma-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Ekmek Yapma Makinesi",
+              "slug": "ekmek-yapma-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-ekmek-yapma-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Elektrikli Izgara",
+              "slug": "elektrikli-izgara",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-elektrikli-izgara",
+              "subcategories": []
+            },
+            {
+              "name": "Elektrikli Pişirici",
+              "slug": "elektrikli-pisirici",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-elektrikli-pisirici",
+              "subcategories": []
+            },
+            {
+              "name": "Elektrikli Süpürge (Yatay)",
+              "slug": "elektrikli-supurge-yatay",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-elektrikli-supurge-yatay",
+              "subcategories": []
+            },
+            {
+              "name": "Fritöz & Airfryer",
+              "slug": "fritoz-airfryer",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-fritoz-airfryer",
+              "subcategories": []
+            },
+            {
+              "name": "Gıda Kurutucu",
+              "slug": "gida-kurutucu",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-gida-kurutucu",
+              "subcategories": []
+            },
+            {
+              "name": "Halı Yıkama Makinesi",
+              "slug": "hali-yikama-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-hali-yikama-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Hamur Yoğurma Makinesi",
+              "slug": "hamur-yogurma-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-hamur-yogurma-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Kahve Makinesi",
+              "slug": "kahve-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-kahve-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Katı Meyve Sıkacağı",
+              "slug": "kati-meyve-sikacagi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-kati-meyve-sikacagi",
+              "subcategories": []
+            },
+            {
+              "name": "Kıyma Makinesi",
+              "slug": "kiyma-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-kiyma-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Mısır Patlatma Makinesi",
+              "slug": "misir-patlatma-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-misir-patlatma-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Mikser",
+              "slug": "mikser",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-mikser",
+              "subcategories": []
+            },
+            {
+              "name": "Mutfak Robotu",
+              "slug": "mutfak-robotu",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-mutfak-robotu",
+              "subcategories": []
+            },
+            {
+              "name": "Mutfak Tartısı",
+              "slug": "mutfak-tartisi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-mutfak-tartisi",
+              "subcategories": []
+            },
+            {
+              "name": "Narenciye Sıkacağı",
+              "slug": "narenciye-sikacagi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-narenciye-sikacagi",
+              "subcategories": []
+            },
+            {
+              "name": "Pamuk Şeker Makinesi",
+              "slug": "pamuk-seker-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-pamuk-seker-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Robot Süpürge",
+              "slug": "robot-supurge",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-robot-supurge",
+              "subcategories": []
+            },
+            {
+              "name": "Rondo (Doğrayıcı)",
+              "slug": "rondo-dograyici",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-rondo-dograyici",
+              "subcategories": []
+            },
+            {
+              "name": "Su Isıtıcı (Kettle)",
+              "slug": "su-isitici-kettle",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-su-isitici-kettle",
+              "subcategories": []
+            },
+            {
+              "name": "Tost Makinesi",
+              "slug": "tost-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-tost-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Ütü",
+              "slug": "utu",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-utu",
+              "subcategories": []
+            },
+            {
+              "name": "Ütü Masası",
+              "slug": "utu-masasi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-utu-masasi",
+              "subcategories": []
+            },
+            {
+              "name": "Vakum Makinesi",
+              "slug": "vakum-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-vakum-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Waffle Makinesi",
+              "slug": "waffle-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-waffle-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Yoğurt Makinesi",
+              "slug": "yogurt-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-yogurt-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Yumurta Pişirici",
+              "slug": "yumurta-pisirici",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-yumurta-pisirici",
+              "subcategories": []
+            },
+            {
+              "name": "Toplu Satış",
+              "slug": "toplu-satis",
+              "fullSlug": "elektrikli-ev-aletleri-kucuk-ev-aletleri-toplu-satis",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Beyaz Eşya",
+          "slug": "beyaz-esya",
+          "fullSlug": "elektrikli-ev-aletleri-beyaz-esya",
+          "subcategories": [
+            {
+              "name": "Yedek Parça & Ekipman",
+              "slug": "yedek-parca-ekipman",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-yedek-parca-ekipman",
+              "subcategories": []
+            },
+            {
+              "name": "Ankastre Set",
+              "slug": "ankastre-set",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-ankastre-set",
+              "subcategories": []
+            },
+            {
+              "name": "Aspiratör & Davlumbaz",
+              "slug": "aspirator-davlumbaz",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-aspirator-davlumbaz",
+              "subcategories": []
+            },
+            {
+              "name": "Bulaşık Makinesi",
+              "slug": "bulasik-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-bulasik-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Buzdolabı",
+              "slug": "buzdolabi",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-buzdolabi",
+              "subcategories": []
+            },
+            {
+              "name": "Çamaşır Makinesi",
+              "slug": "camasir-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-camasir-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Çamaşır Kurutma Makinesi",
+              "slug": "camasir-kurutma-makinesi",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-camasir-kurutma-makinesi",
+              "subcategories": []
+            },
+            {
+              "name": "Derin Dondurucu",
+              "slug": "derin-dondurucu",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-derin-dondurucu",
+              "subcategories": []
+            },
+            {
+              "name": "Fırın",
+              "slug": "firin",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-firin",
+              "subcategories": []
+            },
+            {
+              "name": "Mikrodalga Fırın",
+              "slug": "mikrodalga-firin",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-mikrodalga-firin",
+              "subcategories": []
+            },
+            {
+              "name": "Set Üstü Ocak",
+              "slug": "set-ustu-ocak",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-set-ustu-ocak",
+              "subcategories": []
+            },
+            {
+              "name": "Su Arıtma Cihazı",
+              "slug": "su-aritma-cihazi",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-su-aritma-cihazi",
+              "subcategories": []
+            },
+            {
+              "name": "Su Sebili",
+              "slug": "su-sebili",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-su-sebili",
+              "subcategories": []
+            },
+            {
+              "name": "Toplu Satış",
+              "slug": "toplu-satis",
+              "fullSlug": "elektrikli-ev-aletleri-beyaz-esya-toplu-satis",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Isıtma, Soğutma & Havalandırma",
+          "slug": "isitma-sogutma-havalandirma",
+          "fullSlug": "elektrikli-ev-aletleri-isitma-sogutma-havalandirma",
+          "subcategories": [
+            {
+              "name": "Yedek Parça & Ekipman",
+              "slug": "yedek-parca-ekipman",
+              "fullSlug": "elektrikli-ev-aletleri-isitma-sogutma-havalandirma-yedek-parca-ekipman",
+              "subcategories": []
+            },
+            {
+              "name": "Klima",
+              "slug": "klima",
+              "fullSlug": "elektrikli-ev-aletleri-isitma-sogutma-havalandirma-klima",
+              "subcategories": []
+            },
+            {
+              "name": "Kombi",
+              "slug": "kombi",
+              "fullSlug": "elektrikli-ev-aletleri-isitma-sogutma-havalandirma-kombi",
+              "subcategories": []
+            },
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-isitma-sogutma-havalandirma-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Şofben & Termosifon",
+          "slug": "sofben-termosifon",
+          "fullSlug": "elektrikli-ev-aletleri-sofben-termosifon",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-sofben-termosifon-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Vantilatör",
+          "slug": "vantilator",
+          "fullSlug": "elektrikli-ev-aletleri-vantilator",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-vantilator-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Tavan Pervanesi",
+          "slug": "tavan-pervanesi",
+          "fullSlug": "elektrikli-ev-aletleri-tavan-pervanesi",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-tavan-pervanesi-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Hava Soğutucu",
+          "slug": "hava-sogutucu",
+          "fullSlug": "elektrikli-ev-aletleri-hava-sogutucu",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-hava-sogutucu-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Havalandırma Fanı",
+          "slug": "havalandirma-fani",
+          "fullSlug": "elektrikli-ev-aletleri-havalandirma-fani",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-havalandirma-fani-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Hava Temizleme Cihazı",
+          "slug": "hava-temizleme-cihazi",
+          "fullSlug": "elektrikli-ev-aletleri-hava-temizleme-cihazi",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-hava-temizleme-cihazi-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Elektrikli Isıtıcı",
+          "slug": "elektrikli-isitici",
+          "fullSlug": "elektrikli-ev-aletleri-elektrikli-isitici",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-elektrikli-isitici-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Elektrikli Şömine",
+          "slug": "elektrikli-somine",
+          "fullSlug": "elektrikli-ev-aletleri-elektrikli-somine",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-elektrikli-somine-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Fanlı Isıtıcı",
+          "slug": "fanli-isitici",
+          "fullSlug": "elektrikli-ev-aletleri-fanli-isitici",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-fanli-isitici-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Ayak Isıtıcı",
+          "slug": "ayak-isitici",
+          "fullSlug": "elektrikli-ev-aletleri-ayak-isitici",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-ayak-isitici-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Konvektör Panel Isıtıcı",
+          "slug": "konvektor-panel-isitici",
+          "fullSlug": "elektrikli-ev-aletleri-konvektor-panel-isitici",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-konvektor-panel-isitici-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Yağlı Radyatör",
+          "slug": "yagli-radyator",
+          "fullSlug": "elektrikli-ev-aletleri-yagli-radyator",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-yagli-radyator-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Doğalgaz Sobası",
+          "slug": "dogalgaz-sobasi",
+          "fullSlug": "elektrikli-ev-aletleri-dogalgaz-sobasi",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-dogalgaz-sobasi-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Katalitik Soba",
+          "slug": "katalitik-soba",
+          "fullSlug": "elektrikli-ev-aletleri-katalitik-soba",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-katalitik-soba-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Isı Pompası",
+          "slug": "isi-pompasi",
+          "fullSlug": "elektrikli-ev-aletleri-isi-pompasi",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-isi-pompasi-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Hava Perdesi",
+          "slug": "hava-perdesi",
+          "fullSlug": "elektrikli-ev-aletleri-hava-perdesi",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-hava-perdesi-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Fancoil",
+          "slug": "fancoil",
+          "fullSlug": "elektrikli-ev-aletleri-fancoil",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-fancoil-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Nem Alma Cihazı",
+          "slug": "nem-alma-cihazi",
+          "fullSlug": "elektrikli-ev-aletleri-nem-alma-cihazi",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-nem-alma-cihazi-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "elektrikli-ev-aletleri-toplu-satis",
+          "subcategories": [
+            {
+              "name": "Kat Kaloriferi",
+              "slug": "kat-kaloriferi",
+              "fullSlug": "elektrikli-ev-aletleri-toplu-satis-kat-kaloriferi",
+              "subcategories": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Giyim & Aksesuar",
+      "slug": "giyim-aksesuar",
+      "fullSlug": "giyim-aksesuar",
+      "subcategories": [
+        {
+          "name": "Kadın",
+          "slug": "kadin",
+          "fullSlug": "giyim-aksesuar-kadin",
+          "subcategories": [
+            {
+              "name": "Ayakkabı",
+              "slug": "ayakkabi",
+              "fullSlug": "giyim-aksesuar-kadin-ayakkabi",
+              "subcategories": []
+            },
+            {
+              "name": "Giyim",
+              "slug": "giyim",
+              "fullSlug": "giyim-aksesuar-kadin-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "Tesettür Giyim",
+              "slug": "tesettur-giyim",
+              "fullSlug": "giyim-aksesuar-kadin-tesettur-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "Hamile Giyim",
+              "slug": "hamile-giyim",
+              "fullSlug": "giyim-aksesuar-kadin-hamile-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "İç Giyim",
+              "slug": "ic-giyim",
+              "fullSlug": "giyim-aksesuar-kadin-ic-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "giyim-aksesuar-kadin-aksesuar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Erkek",
+          "slug": "erkek",
+          "fullSlug": "giyim-aksesuar-erkek",
+          "subcategories": [
+            {
+              "name": "Ayakkabı",
+              "slug": "ayakkabi",
+              "fullSlug": "giyim-aksesuar-erkek-ayakkabi",
+              "subcategories": []
+            },
+            {
+              "name": "Giyim",
+              "slug": "giyim",
+              "fullSlug": "giyim-aksesuar-erkek-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "İç Giyim",
+              "slug": "ic-giyim",
+              "fullSlug": "giyim-aksesuar-erkek-ic-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "giyim-aksesuar-erkek-aksesuar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Üniseks",
+          "slug": "uniseks",
+          "fullSlug": "giyim-aksesuar-uniseks",
+          "subcategories": [
+            {
+              "name": "Ayakkabı",
+              "slug": "ayakkabi",
+              "fullSlug": "giyim-aksesuar-uniseks-ayakkabi",
+              "subcategories": []
+            },
+            {
+              "name": "Giyim",
+              "slug": "giyim",
+              "fullSlug": "giyim-aksesuar-uniseks-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "giyim-aksesuar-uniseks-aksesuar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Çocuk Giyim",
+          "slug": "cocuk-giyim",
+          "fullSlug": "giyim-aksesuar-cocuk-giyim",
+          "subcategories": [
+            {
+              "name": "Ayakkabı",
+              "slug": "ayakkabi",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-ayakkabi",
+              "subcategories": []
+            },
+            {
+              "name": "Elbise",
+              "slug": "elbise",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-elbise",
+              "subcategories": []
+            },
+            {
+              "name": "Eşofman",
+              "slug": "esofman",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-esofman",
+              "subcategories": []
+            },
+            {
+              "name": "Etek",
+              "slug": "etek",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-etek",
+              "subcategories": []
+            },
+            {
+              "name": "Gömlek",
+              "slug": "gomlek",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-gomlek",
+              "subcategories": []
+            },
+            {
+              "name": "Hırka & Yelek",
+              "slug": "hirka-yelek",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-hirka-yelek",
+              "subcategories": []
+            },
+            {
+              "name": "İç Giyim",
+              "slug": "ic-giyim",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-ic-giyim",
+              "subcategories": []
+            },
+            {
+              "name": "Kazak & Süveter",
+              "slug": "kazak-suveter",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-kazak-suveter",
+              "subcategories": []
+            },
+            {
+              "name": "Mayo & Bikini",
+              "slug": "mayo-bikini",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-mayo-bikini",
+              "subcategories": []
+            },
+            {
+              "name": "Mont, Ceket & Kaban",
+              "slug": "mont-ceket-kaban",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-mont-ceket-kaban",
+              "subcategories": []
+            },
+            {
+              "name": "Pantolon & Şort",
+              "slug": "pantolon-sort",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-pantolon-sort",
+              "subcategories": []
+            },
+            {
+              "name": "Pijama",
+              "slug": "pijama",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-pijama",
+              "subcategories": []
+            },
+            {
+              "name": "Sweatshirt",
+              "slug": "sweatshirt",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-sweatshirt",
+              "subcategories": []
+            },
+            {
+              "name": "Tişört",
+              "slug": "tisort",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-tisort",
+              "subcategories": []
+            },
+            {
+              "name": "Takım",
+              "slug": "takim",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-takim",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "giyim-aksesuar-cocuk-giyim-aksesuar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Evlilik & Düğün",
+          "slug": "evlilik-dugun",
+          "fullSlug": "giyim-aksesuar-evlilik-dugun",
+          "subcategories": [
+            {
+              "name": "Damatlık",
+              "slug": "damatlik",
+              "fullSlug": "giyim-aksesuar-evlilik-dugun-damatlik",
+              "subcategories": []
+            },
+            {
+              "name": "Gelinlik",
+              "slug": "gelinlik",
+              "fullSlug": "giyim-aksesuar-evlilik-dugun-gelinlik",
+              "subcategories": []
+            },
+            {
+              "name": "Nişan Elbisesi",
+              "slug": "nisan-elbisesi",
+              "fullSlug": "giyim-aksesuar-evlilik-dugun-nisan-elbisesi",
+              "subcategories": []
+            },
+            {
+              "name": "Kına Kıyafeti",
+              "slug": "kina-kiyafeti",
+              "fullSlug": "giyim-aksesuar-evlilik-dugun-kina-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Sünnet Kıyafeti",
+              "slug": "sunnet-kiyafeti",
+              "fullSlug": "giyim-aksesuar-evlilik-dugun-sunnet-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "giyim-aksesuar-evlilik-dugun-aksesuar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Kostüm",
+          "slug": "kostum",
+          "fullSlug": "giyim-aksesuar-kostum",
+          "subcategories": [
+            {
+              "name": "Dans Kıyafeti",
+              "slug": "dans-kiyafeti",
+              "fullSlug": "giyim-aksesuar-kostum-dans-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Dönem Kıyafeti",
+              "slug": "donem-kiyafeti",
+              "fullSlug": "giyim-aksesuar-kostum-donem-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Gösteri Kıyafeti",
+              "slug": "gosteri-kiyafeti",
+              "fullSlug": "giyim-aksesuar-kostum-gosteri-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Hayvan Kostümü",
+              "slug": "hayvan-kostumu",
+              "fullSlug": "giyim-aksesuar-kostum-hayvan-kostumu",
+              "subcategories": []
+            },
+            {
+              "name": "Karakter Kostümü",
+              "slug": "karakter-kostumu",
+              "fullSlug": "giyim-aksesuar-kostum-karakter-kostumu",
+              "subcategories": []
+            },
+            {
+              "name": "Korku Kostümü",
+              "slug": "korku-kostumu",
+              "fullSlug": "giyim-aksesuar-kostum-korku-kostumu",
+              "subcategories": []
+            },
+            {
+              "name": "Maskot Kostümü",
+              "slug": "maskot-kostumu",
+              "fullSlug": "giyim-aksesuar-kostum-maskot-kostumu",
+              "subcategories": []
+            },
+            {
+              "name": "Mezuniyet Kıyafeti",
+              "slug": "mezuniyet-kiyafeti",
+              "fullSlug": "giyim-aksesuar-kostum-mezuniyet-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Palyaço Kıyafeti",
+              "slug": "palyaco-kiyafeti",
+              "fullSlug": "giyim-aksesuar-kostum-palyaco-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Tarihsel Kostüm",
+              "slug": "tarihsel-kostum",
+              "fullSlug": "giyim-aksesuar-kostum-tarihsel-kostum",
+              "subcategories": []
+            },
+            {
+              "name": "Yılbaşı Kıyafeti",
+              "slug": "yilbasi-kiyafeti",
+              "fullSlug": "giyim-aksesuar-kostum-yilbasi-kiyafeti",
+              "subcategories": []
+            },
+            {
+              "name": "Yöresel Kostüm",
+              "slug": "yoresel-kostum",
+              "fullSlug": "giyim-aksesuar-kostum-yoresel-kostum",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "giyim-aksesuar-kostum-aksesuar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Valiz & Bavul",
+          "slug": "valiz-bavul",
+          "fullSlug": "giyim-aksesuar-valiz-bavul",
+          "subcategories": [
+            {
+              "name": "Tekli",
+              "slug": "tekli",
+              "fullSlug": "giyim-aksesuar-valiz-bavul-tekli",
+              "subcategories": []
+            },
+            {
+              "name": "Set",
+              "slug": "set",
+              "fullSlug": "giyim-aksesuar-valiz-bavul-set",
+              "subcategories": []
+            },
+            {
+              "name": "Aksesuar",
+              "slug": "aksesuar",
+              "fullSlug": "giyim-aksesuar-valiz-bavul-aksesuar",
+              "subcategories": []
+            }
+          ]
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "giyim-aksesuar-toplu-satis",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Saat",
+      "slug": "saat",
+      "fullSlug": "saat",
+      "subcategories": [
+        {
+          "name": "Kol Saati",
+          "slug": "kol-saati",
+          "fullSlug": "saat-kol-saati",
+          "subcategories": []
+        },
+        {
+          "name": "Kum Saati",
+          "slug": "kum-saati",
+          "fullSlug": "saat-kum-saati",
+          "subcategories": []
+        },
+        {
+          "name": "Cep Saati",
+          "slug": "cep-saati",
+          "fullSlug": "saat-cep-saati",
+          "subcategories": []
+        },
+        {
+          "name": "Masa Saati",
+          "slug": "masa-saati",
+          "fullSlug": "saat-masa-saati",
+          "subcategories": []
+        },
+        {
+          "name": "Duvar Saati",
+          "slug": "duvar-saati",
+          "fullSlug": "saat-duvar-saati",
+          "subcategories": []
+        },
+        {
+          "name": "Takı Saat",
+          "slug": "taki-saat",
+          "fullSlug": "saat-taki-saat",
+          "subcategories": []
+        },
+        {
+          "name": "Parça & Aksesuar",
+          "slug": "parca-aksesuar",
+          "fullSlug": "saat-parca-aksesuar",
+          "subcategories": []
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "saat-toplu-satis",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Anne & Bebek",
+      "slug": "anne-bebek",
+      "fullSlug": "anne-bebek",
+      "subcategories": [
+        {
+          "name": "Anı & Kutlama",
+          "slug": "ani-kutlama",
+          "fullSlug": "anne-bebek-ani-kutlama",
+          "subcategories": []
+        },
+        {
+          "name": "Banyo Ürünleri",
+          "slug": "banyo-urunleri",
+          "fullSlug": "anne-bebek-banyo-urunleri",
+          "subcategories": []
+        },
+        {
+          "name": "Bebek Bezi",
+          "slug": "bebek-bezi",
+          "fullSlug": "anne-bebek-bebek-bezi",
+          "subcategories": []
+        },
+        {
+          "name": "Bebek Giyim",
+          "slug": "bebek-giyim",
+          "fullSlug": "anne-bebek-bebek-giyim",
+          "subcategories": []
+        },
+        {
+          "name": "Bebek Oyuncakları",
+          "slug": "bebek-oyuncaklari",
+          "fullSlug": "anne-bebek-bebek-oyuncaklari",
+          "subcategories": []
+        },
+        {
+          "name": "Beslenme",
+          "slug": "beslenme",
+          "fullSlug": "anne-bebek-beslenme",
+          "subcategories": []
+        },
+        {
+          "name": "Emzirme",
+          "slug": "emzirme",
+          "fullSlug": "anne-bebek-emzirme",
+          "subcategories": []
+        },
+        {
+          "name": "Ev Tekstili",
+          "slug": "ev-tekstili",
+          "fullSlug": "anne-bebek-ev-tekstili",
+          "subcategories": []
+        },
+        {
+          "name": "Sağlık & Hijyen",
+          "slug": "saglik-hijyen",
+          "fullSlug": "anne-bebek-saglik-hijyen",
+          "subcategories": []
+        },
+        {
+          "name": "Taşıma",
+          "slug": "tasima",
+          "fullSlug": "anne-bebek-tasima",
+          "subcategories": []
+        },
+        {
+          "name": "Mobilya",
+          "slug": "mobilya",
+          "fullSlug": "anne-bebek-mobilya",
+          "subcategories": []
+        },
+        {
+          "name": "Oda Süsü",
+          "slug": "oda-susu",
+          "fullSlug": "anne-bebek-oda-susu",
+          "subcategories": []
+        },
+        {
+          "name": "Güvenlik",
+          "slug": "guvenlik",
+          "fullSlug": "anne-bebek-guvenlik",
+          "subcategories": []
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "anne-bebek-toplu-satis",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Kişisel Bakım & Kozmetik",
+      "slug": "kisisel-bakim-kozmetik",
+      "fullSlug": "kisisel-bakim-kozmetik",
+      "subcategories": [
+        {
+          "name": "Parfüm",
+          "slug": "parfum",
+          "fullSlug": "kisisel-bakim-kozmetik-parfum",
+          "subcategories": []
+        },
+        {
+          "name": "Saç Bakımı",
+          "slug": "sac-bakimi",
+          "fullSlug": "kisisel-bakim-kozmetik-sac-bakimi",
+          "subcategories": []
+        },
+        {
+          "name": "Vücut Bakımı",
+          "slug": "vucut-bakimi",
+          "fullSlug": "kisisel-bakim-kozmetik-vucut-bakimi",
+          "subcategories": []
+        },
+        {
+          "name": "Yüz Bakımı",
+          "slug": "yuz-bakimi",
+          "fullSlug": "kisisel-bakim-kozmetik-yuz-bakimi",
+          "subcategories": []
+        },
+        {
+          "name": "Makyaj",
+          "slug": "makyaj",
+          "fullSlug": "kisisel-bakim-kozmetik-makyaj",
+          "subcategories": []
+        },
+        {
+          "name": "Tıraş",
+          "slug": "tiras",
+          "fullSlug": "kisisel-bakim-kozmetik-tiras",
+          "subcategories": []
+        },
+        {
+          "name": "Epilasyon",
+          "slug": "epilasyon",
+          "fullSlug": "kisisel-bakim-kozmetik-epilasyon",
+          "subcategories": []
+        },
+        {
+          "name": "Ağız & Diş",
+          "slug": "agiz-dis",
+          "fullSlug": "kisisel-bakim-kozmetik-agiz-dis",
+          "subcategories": []
+        },
+        {
+          "name": "El, Ayak & Tırnak",
+          "slug": "el-ayak-tirnak",
+          "fullSlug": "kisisel-bakim-kozmetik-el-ayak-tirnak",
+          "subcategories": []
+        },
+        {
+          "name": "Hijyenik Ürünler",
+          "slug": "hijyenik-urunler",
+          "fullSlug": "kisisel-bakim-kozmetik-hijyenik-urunler",
+          "subcategories": []
+        },
+        {
+          "name": "Zayıflama Ürünleri",
+          "slug": "zayiflama-urunleri",
+          "fullSlug": "kisisel-bakim-kozmetik-zayiflama-urunleri",
+          "subcategories": []
+        },
+        {
+          "name": "Profesyonel Ekipmanlar",
+          "slug": "profesyonel-ekipmanlar",
+          "fullSlug": "kisisel-bakim-kozmetik-profesyonel-ekipmanlar",
+          "subcategories": []
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "kisisel-bakim-kozmetik-toplu-satis",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Hobi & Oyuncak",
+      "slug": "hobi-oyuncak",
+      "fullSlug": "hobi-oyuncak",
+      "subcategories": [
+        {
+          "name": "Diecast Model",
+          "slug": "diecast-model",
+          "fullSlug": "hobi-oyuncak-diecast-model",
+          "subcategories": []
+        },
+        {
+          "name": "RC Araçlar",
+          "slug": "rc-araclar",
+          "fullSlug": "hobi-oyuncak-rc-araclar",
+          "subcategories": []
+        },
+        {
+          "name": "Oyuncak",
+          "slug": "oyuncak",
+          "fullSlug": "hobi-oyuncak-oyuncak",
+          "subcategories": []
+        },
+        {
+          "name": "Aksiyon Figürleri",
+          "slug": "aksiyon-figurleri",
+          "fullSlug": "hobi-oyuncak-aksiyon-figurleri",
+          "subcategories": []
+        },
+        {
+          "name": "Koleksiyon Kartları",
+          "slug": "koleksiyon-kartlari",
+          "fullSlug": "hobi-oyuncak-koleksiyon-kartlari",
+          "subcategories": []
+        },
+        {
+          "name": "Maket",
+          "slug": "maket",
+          "fullSlug": "hobi-oyuncak-maket",
+          "subcategories": []
+        },
+        {
+          "name": "Puzzle & Yapboz",
+          "slug": "puzzle-yapboz",
+          "fullSlug": "hobi-oyuncak-puzzle-yapboz",
+          "subcategories": []
+        },
+        {
+          "name": "Masa & Kutu Oyunları",
+          "slug": "masa-kutu-oyunlari",
+          "fullSlug": "hobi-oyuncak-masa-kutu-oyunlari",
+          "subcategories": []
+        },
+        {
+          "name": "Ticari Oyun Ürünleri",
+          "slug": "ticari-oyun-urunleri",
+          "fullSlug": "hobi-oyuncak-ticari-oyun-urunleri",
+          "subcategories": []
+        },
+        {
+          "name": "Toplu Satış",
+          "slug": "toplu-satis",
+          "fullSlug": "hobi-oyuncak-toplu-satis",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Oyunculara Özel",
+      "slug": "oyunculara-ozel",
+      "fullSlug": "oyunculara-ozel",
+      "subcategories": [
+        {
+          "name": "Oyun Bilgisayarı",
+          "slug": "oyun-bilgisayari",
+          "fullSlug": "oyunculara-ozel-oyun-bilgisayari",
+          "subcategories": []
+        },
+        {
+          "name": "Oyun Konsolu",
+          "slug": "oyun-konsolu",
+          "fullSlug": "oyunculara-ozel-oyun-konsolu",
+          "subcategories": []
+        },
+        {
+          "name": "Oyuncu Ekipmanları",
+          "slug": "oyuncu-ekipmanlari",
+          "fullSlug": "oyunculara-ozel-oyuncu-ekipmanlari",
+          "subcategories": []
+        },
+        {
+          "name": "Oyunlar",
+          "slug": "oyunlar",
+          "fullSlug": "oyunculara-ozel-oyunlar",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Kitap, Dergi & Film",
+      "slug": "kitap-dergi-film",
+      "fullSlug": "kitap-dergi-film",
+      "subcategories": []
+    },
+    {
+      "name": "Müzik",
+      "slug": "muzik",
+      "fullSlug": "muzik",
+      "subcategories": []
+    },
+    {
+      "name": "Spor",
+      "slug": "spor",
+      "fullSlug": "spor",
+      "subcategories": []
+    },
+    {
+      "name": "Takı & Mücevher",
+      "slug": "taki-mucevher",
+      "fullSlug": "taki-mucevher",
+      "subcategories": []
+    },
+    {
+      "name": "Koleksiyon",
+      "slug": "koleksiyon",
+      "fullSlug": "koleksiyon",
+      "subcategories": []
+    },
+    {
+      "name": "Antika",
+      "slug": "antika",
+      "fullSlug": "antika",
+      "subcategories": []
+    },
+    {
+      "name": "Bahçe & Yapı Market",
+      "slug": "bahce-yapi-market",
+      "fullSlug": "bahce-yapi-market",
+      "subcategories": []
+    },
+    {
+      "name": "Teknik Elektronik",
+      "slug": "teknik-elektronik",
+      "fullSlug": "teknik-elektronik",
+      "subcategories": []
+    },
+    {
+      "name": "Ofis & Kırtasiye",
+      "slug": "ofis-kirtasiye",
+      "fullSlug": "ofis-kirtasiye",
+      "subcategories": []
+    },
+    {
+      "name": "Yiyecek & İçecek",
+      "slug": "yiyecek-icecek",
+      "fullSlug": "yiyecek-icecek",
+      "subcategories": []
+    },
+    {
+      "name": "Diğer Her Şey",
+      "slug": "diger-her-sey",
+      "fullSlug": "diger-her-sey",
+      "subcategories": []
+    }
+  ]
+}

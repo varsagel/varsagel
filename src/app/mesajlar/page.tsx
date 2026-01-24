@@ -1,13 +1,16 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Message = { id: string; listingId: string; senderId: string; toUserId: string; content: string; createdAt: string };
 
 export default function MessagesIndexPage() {
   const sessionData = useSession();
-  const { data: session, status } = sessionData || { data: null, status: "loading" };
+  const { data: session } = sessionData || { data: null, status: "loading" };
+  const router = useRouter();
+  const didMarkRef = useRef(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [listingInfo, setListingInfo] = useState<Record<string, any>>({});
@@ -28,6 +31,15 @@ export default function MessagesIndexPage() {
     })();
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    if (didMarkRef.current) return;
+    didMarkRef.current = true;
+    fetch('/api/messages', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
+      .then(() => router.refresh())
+      .catch(() => {});
+  }, [session?.user?.id, router]);
 
   // Grup by listingId AND conversation partner
   const groups = useMemo(() => {
@@ -75,7 +87,7 @@ export default function MessagesIndexPage() {
         ) : groups.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">ğŸ’¬</span>
+              <span className="text-2xl">💬</span>
             </div>
             <h3 className="text-lg font-medium text-gray-900">Henüz mesajınız yok</h3>
             <p className="text-gray-500 mt-1">Taleplere teklif vererek veya soru sorarak mesajlaşmaya başlayabilirsiniz.</p>
@@ -101,7 +113,7 @@ export default function MessagesIndexPage() {
                     <span>{new Date(g.latest.createdAt).toLocaleString('tr-TR')}</span>
                     {listingInfo[g.listingId]?.location?.city && (
                       <>
-                        <span>â€¢</span>
+                        <span>•</span>
                         <span>{listingInfo[g.listingId]?.location?.city}/{listingInfo[g.listingId]?.location?.district}</span>
                       </>
                     )}

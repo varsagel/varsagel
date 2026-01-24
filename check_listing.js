@@ -4,11 +4,15 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    const l = await prisma.listing.findUnique({
-      where: { id: 'cmix9ihlf0002zgnl26m9j20o' },
-      include: { category: true }
+    const l = await prisma.listing.findFirst({
+      orderBy: { createdAt: 'desc' },
+      include: { category: true, subCategory: true }
     });
-    console.log('Kategori:', l.category);
+    console.log('Found listing id:', l?.id);
+    console.log('Found listing code:', l?.code);
+    console.log('Found listing title:', l?.title);
+    console.log('Category:', l?.category);
+    console.log('SubCategory:', l?.subCategory);
     console.log(JSON.stringify(l, (key, value) =>
       typeof value === 'bigint'
         ? value.toString()

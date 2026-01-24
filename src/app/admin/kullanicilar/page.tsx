@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Search, User, Shield, ShieldAlert, Check } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Search, User, ShieldAlert } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import Image from "next/image";
 
@@ -23,11 +23,7 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    fetchUsers();
-  }, [search]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (search) params.set("q", search);
@@ -42,7 +38,11 @@ export default function UsersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     if (!confirm(`Kullanıcı rolünü ${newRole} olarak değiştirmek istediğinize emin misiniz?`)) return;

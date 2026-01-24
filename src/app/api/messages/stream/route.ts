@@ -53,9 +53,7 @@ export async function GET(req: NextRequest) {
             })
             const evt = `event: messages\n` + `data: ${JSON.stringify(msgs)}\n\n`
             controller.enqueue(encoder.encode(evt))
-          } catch (error) {
-            // console.error('Message Stream Error:', error)
-          }
+          } catch {}
         }
         await send()
         timer = setInterval(send, 2000)

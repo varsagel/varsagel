@@ -13,10 +13,6 @@ export default async function AdminPage() {
   const SUPER_EMAIL = 'varsagel.com@gmail.com';
   const isSuper = me?.email === SUPER_EMAIL;
   const isAdmin = (me?.role || '').toUpperCase() === 'ADMIN';
-  
-  if (isSuper && !isAdmin) {
-    await prisma.user.update({ where: { id: me!.id }, data: { role: 'ADMIN' } }).catch(() => {});
-  }
   if (!(isAdmin || isSuper)) redirect('/');
 
   let userCount = 0;

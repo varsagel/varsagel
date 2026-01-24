@@ -110,6 +110,21 @@ export const rateLimiters = {
       return `listing_rate:${userId}`;
     },
   }),
+  userAction: new RateLimiter({
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 60,
+    keyGenerator: (req) => {
+      const userId = req.headers.get('x-user-id');
+      if (userId) return `user_action:${userId}`;
+      const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+      return `user_action:${ip}`;
+    },
+  }),
+
+  upload: new RateLimiter({
+    windowMs: 60 * 60 * 1000,
+    maxRequests: 120,
+  }),
   
   // Admin endpoints: 1000 requests per 5 minutes
   admin: new RateLimiter({

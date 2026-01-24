@@ -13,7 +13,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       where: { id: params.id }
     });
     return NextResponse.json(page);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch page" }, { status: 500 });
   }
 }
@@ -33,7 +33,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       data: { title, slug, content, published }
     });
     return NextResponse.json(page);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update page" }, { status: 500 });
   }
 }
@@ -49,7 +49,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       where: { id: params.id }
     });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete page" }, { status: 500 });
   }
 }

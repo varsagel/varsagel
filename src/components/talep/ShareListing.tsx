@@ -14,10 +14,9 @@ export default function ShareListing({ title, id }: ShareListingProps) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
 
-  // URL generation - safe for client side
   const getUrl = () => {
     if (typeof window !== 'undefined') {
-      return window.location.href;
+      return `${window.location.origin}/talep/${id}`;
     }
     return `${process.env.NEXT_PUBLIC_SITE_URL || 'https://varsagel.com'}/talep/${id}`;
   };
@@ -28,11 +27,9 @@ export default function ShareListing({ title, id }: ShareListingProps) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
       } else {
-        // Fallback for older browsers or non-secure contexts
         const textArea = document.createElement("textarea");
         textArea.value = text;
         
-        // Avoid scrolling to bottom
         textArea.style.top = "0";
         textArea.style.left = "0";
         textArea.style.position = "fixed";
@@ -45,7 +42,7 @@ export default function ShareListing({ title, id }: ShareListingProps) {
         try {
           document.execCommand('copy');
         } catch (err) {
-          console.error('Fallback: Oops, unable to copy', err);
+          console.error('Kopyalama başarısız', err);
           throw err;
         }
 
@@ -60,7 +57,7 @@ export default function ShareListing({ title, id }: ShareListingProps) {
       });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error('Kopyalama başarısız:', err);
       toast({
         title: "Hata",
         description: "Bağlantı kopyalanamadı. Lütfen manuel olarak kopyalayın.",
@@ -77,37 +74,38 @@ export default function ShareListing({ title, id }: ShareListingProps) {
       url: url,
     };
 
-    // Use native share if available (Mobile)
     if (navigator.share) {
       try {
         await navigator.share(shareData);
         return;
       } catch (err) {
-        console.log('Error sharing:', err);
+        console.log('Paylaşım hatası:', err);
       }
     }
 
-    // Fallback to modal
     setIsOpen(true);
   };
+
+  const url = getUrl();
+  const shareText = `Varsagel'de bu talebe göz at: ${title}\n\n${url}`;
 
   const shareLinks = [
     {
       name: 'WhatsApp',
       icon: <MessageCircle className="w-6 h-6 text-lime-500" />,
-      url: `https://wa.me/?text=${encodeURIComponent(`Varsagel'de bu talebe göz at: ${title} \n\n ${typeof window !== 'undefined' ? window.location.href : ''}`)}`,
+      url: `https://wa.me/?text=${encodeURIComponent(shareText)}`,
       color: 'bg-lime-50 hover:bg-lime-100'
     },
     {
       name: 'Twitter',
       icon: <Twitter className="w-6 h-6 text-cyan-400" />,
-      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Varsagel'de bu talebe göz at: ${title}`)}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`,
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Varsagel'de bu talebe göz at: ${title}`)}&url=${encodeURIComponent(url)}`,
       color: 'bg-cyan-50 hover:bg-cyan-100'
     },
     {
       name: 'Facebook',
       icon: <Facebook className="w-6 h-6 text-cyan-600" />,
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       color: 'bg-cyan-50 hover:bg-cyan-100'
     }
   ];
@@ -154,7 +152,7 @@ export default function ShareListing({ title, id }: ShareListingProps) {
               <input 
                 type="text" 
                 readOnly 
-                value={typeof window !== 'undefined' ? window.location.href : ''}
+                value={url}
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-4 pr-12 text-sm text-gray-600 focus:outline-none"
               />
               <button
@@ -174,4 +172,3 @@ export default function ShareListing({ title, id }: ShareListingProps) {
     </>
   );
 }
-

@@ -2,16 +2,40 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import TalepCard from '@/components/home/TalepCardOptimized';
-import { CATEGORIES } from '@/data/categories';
+import { CATEGORIES, SubCategory } from '@/data/categories';
 import { TURKEY_PROVINCES } from '@/data/turkey-locations';
-import { ATTR_SCHEMAS, AttrField } from '@/data/attribute-schemas';
-import { ATTR_SUBSCHEMAS, BRAND_MODELS, MODEL_SERIES, SERIES_TRIMS, PACKAGE_EQUIPMENT } from '@/data/attribute-overrides';
-import { BellRing, Check, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { AttrField } from '@/data/attribute-schemas';
+import { BellRing, Check, Loader2, ChevronDown, ChevronUp, ChevronLeft } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from '@/components/ui/use-toast';
 import { SavedSearchModal } from '@/components/talep/SavedSearchModal';
+import { titleCaseTR } from '@/lib/title-case-tr';
+
+const findSubcategoryByPath = (categories: SubCategory[], path: string[]): SubCategory | undefined => {
+  let currentCategories = categories;
+  let found: SubCategory | undefined = undefined;
+
+  for (const slug of path) {
+    const normalizedSlug = decodeURIComponent(slug).trim();
+    found = currentCategories.find(c => c.slug === normalizedSlug);
+    
+    // Fallback: Try case-insensitive match
+    if (!found) {
+       found = currentCategories.find(c => c.slug.toLowerCase() === normalizedSlug.toLowerCase());
+    }
+
+    if (!found) return undefined;
+    
+    if (found.subcategories) {
+      currentCategories = found.subcategories;
+    } else {
+      currentCategories = [];
+    }
+  }
+  return found;
+};
 
 interface Talep {
   id: string;
@@ -33,10 +57,10 @@ interface Talep {
   status: "active" | "pending" | "sold";
   viewCount: number;
   isFavorited: boolean;
-  attributes?: Record<string, string | number | boolean>;
+  attributes?: Record<string, string | number | boolean | string[]>;
 }
 
-type FilterAttrs = Record<string, string | number>;
+type FilterAttrs = Record<string, string | number | (string | number)[]>;
 
 const FilterSelect = ({ 
   label, 
@@ -48,7 +72,7 @@ const FilterSelect = ({
   placeholder = "Tümü"
 }: {
   label: string;
-  value: string | number;
+  value: string | number | (string | number)[];
   onChange: (val: string) => void;
   options: (string | { value: string | number, label: string })[];
   disabled?: boolean;
@@ -56,18 +80,18 @@ const FilterSelect = ({
   placeholder?: string;
 }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-900 mb-2">{label}</label>
+    <label className="block text-sm font-bold text-gray-800 mb-2">{titleCaseTR(label)}</label>
     <select 
-      value={value} 
+      value={Array.isArray(value) ? (value[0] || '') : value} 
       onChange={(e) => onChange(e.target.value)} 
       disabled={disabled}
-      className={`w-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${disabled ? 'bg-gray-100' : ''} ${className ? className : 'bg-white border border-gray-300 text-gray-900'}`}
+      className={`w-full rounded-xl px-4 py-3 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${disabled ? 'bg-gray-100 border-2 border-gray-200 text-gray-500' : 'bg-white border-2 border-gray-300 text-gray-900 hover:border-cyan-400 shadow-sm'} ${className || ''}`}
     >
       <option value="" className="text-gray-900">{placeholder}</option>
       {options.map((o) => {
         const val = typeof o === 'object' ? o.value : o;
         const lbl = typeof o === 'object' ? o.label : o;
-        return <option key={val} value={val} className="text-gray-900">{lbl}</option>;
+        return <option key={val} value={val} className="text-gray-900">{titleCaseTR(String(lbl))}</option>;
       })}
     </select>
   </div>
@@ -89,13 +113,13 @@ const FilterInput = ({
   className?: string;
 }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-900 mb-2">{label}</label>
+    <label className="block text-sm font-bold text-gray-800 mb-2">{titleCaseTR(label)}</label>
     <input 
       type={type} 
       value={value} 
       onChange={(e) => onChange(e.target.value)} 
       placeholder={placeholder}
-      className={`w-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${className ? className : 'bg-white border border-gray-300 text-gray-900'}`}
+      className={`w-full rounded-xl px-4 py-3 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white border-2 border-gray-300 text-gray-900 hover:border-cyan-400 shadow-sm ${className || ''}`}
     />
   </div>
 );
@@ -108,8 +132,8 @@ const FilterRange = ({
   onMaxChange, 
   type = 'number', 
   className,
-  minPlaceholder = "Min",
-  maxPlaceholder = "Max"
+  minPlaceholder = "En az",
+  maxPlaceholder = "En çok"
 }: {
   label: string;
   minValue: string | number;
@@ -122,8 +146,8 @@ const FilterRange = ({
   maxPlaceholder?: string;
 }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-900 mb-2">{label}</label>
-    <div className="grid grid-cols-2 gap-2">
+    <label className="block text-sm font-bold text-gray-800 mb-2">{titleCaseTR(label)}</label>
+    <div className="grid grid-cols-2 gap-3">
       <input 
         type={type} 
         min={type === 'number' ? "0" : undefined}
@@ -135,7 +159,7 @@ const FilterRange = ({
           }
         }} 
         placeholder={minPlaceholder}
-        className={`w-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${className ? className : 'bg-white border border-gray-300 text-gray-900'}`}
+        className={`w-full rounded-xl px-4 py-3 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white border-2 border-gray-300 text-gray-900 hover:border-cyan-400 shadow-sm ${className || ''}`}
       />
       <input 
         type={type} 
@@ -148,18 +172,203 @@ const FilterRange = ({
           }
         }} 
         placeholder={maxPlaceholder}
-        className={`w-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${className ? className : 'bg-white border border-gray-300 text-gray-900'}`}
+        className={`w-full rounded-xl px-4 py-3 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white border-2 border-gray-300 text-gray-900 hover:border-cyan-400 shadow-sm ${className || ''}`}
       />
     </div>
   </div>
 );
 
+const MultiSelect = ({ 
+  label, 
+  value, 
+  onChange, 
+  options, 
+  disabled = false, 
+  className,
+  placeholder = "Seçiniz"
+}: {
+  label: string;
+  value: string | string[];
+  onChange: (val: string[]) => void;
+  options: (string | { value: string | number, label: string })[];
+  disabled?: boolean;
+  className?: string;
+  placeholder?: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selected = React.useMemo(
+    () => (Array.isArray(value) ? value : (value ? [String(value)] : [])),
+    [value]
+  );
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+  const optionLabelForValue = React.useMemo(() => {
+    const map = new Map<string, string>();
+    options.forEach((o) => {
+      const v = String(typeof o === 'object' ? o.value : o);
+      const lbl = String(typeof o === 'object' ? o.label : o);
+      map.set(v, titleCaseTR(lbl));
+    });
+    return map;
+  }, [options]);
+
+  const selectedText = React.useMemo(() => {
+    if (selected.length === 0) return placeholder;
+    const labels = selected.map((v) => optionLabelForValue.get(String(v)) || titleCaseTR(String(v)));
+    if (labels.length <= 2) return labels.join(', ');
+    return `${labels.slice(0, 2).join(', ')} +${labels.length - 2}`;
+  }, [selected, optionLabelForValue, placeholder]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [wrapperRef]);
+
+  return (
+    <div className="relative" ref={wrapperRef}>
+      <label className="block text-sm font-bold text-gray-800 mb-2">{titleCaseTR(label)}</label>
+      <div 
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        className={`w-full rounded-xl px-4 py-3 font-medium transition-all duration-200 bg-white border-2 border-gray-300 text-gray-900 shadow-sm flex items-center justify-between cursor-pointer ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'hover:border-cyan-400'} ${className || ''}`}
+      >
+        <span className="truncate">
+          {selectedText}
+        </span>
+        {isOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+      </div>
+      
+      {isOpen && !disabled && (
+        <div className="absolute z-50 w-full bg-white border-2 border-gray-100 rounded-xl mt-2 shadow-xl max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2">
+          {options.length === 0 ? (
+            <div className="p-3 text-gray-500 text-center text-sm">Seçenek yok</div>
+          ) : (
+            options.map((o) => {
+              const val = String(typeof o === 'object' ? o.value : o);
+              const lbl = typeof o === 'object' ? o.label : o;
+              const isSelected = selected.includes(val);
+              
+              return (
+                <div 
+                  key={val} 
+                  className={`px-4 py-3 hover:bg-cyan-50 cursor-pointer flex items-center gap-3 transition-colors ${isSelected ? 'bg-cyan-50/50' : ''}`}
+                  onClick={() => {
+                    const newValue = isSelected 
+                      ? selected.filter(s => s !== val)
+                      : [...selected, val];
+                    onChange(newValue);
+                    setIsOpen(false);
+                  }}
+                >
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-cyan-500 border-cyan-500' : 'border-gray-300'}`}>
+                    {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                  </div>
+                  <span className={`text-sm ${isSelected ? 'font-semibold text-cyan-900' : 'text-gray-700'}`}>{lbl}</span>
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const getSingleValue = (val: string | number | (string | number)[] | undefined): string | number => {
+  if (Array.isArray(val)) {
+    return val.length > 0 ? val[0] : '';
+  }
+  return val === undefined || val === null ? '' : val;
+};
+
+const getArrayValue = (val: string | number | (string | number)[] | undefined): string[] => {
+  if (Array.isArray(val)) {
+    return val.map(v => v.toString());
+  }
+  return val !== undefined && val !== null && val !== '' ? [val.toString()] : [];
+};
+
 export default function CategoryClient() {
   const params = useParams();
+  const router = useRouter();
   const sp = useSearchParams();
   const categorySlug = params.category as string;
-  const subcategorySlug = params.subcategory as string | undefined;
+  const subcategorySlugParam = params.subcategory;
   
+  const rawSlugParts = Array.isArray(subcategorySlugParam) 
+    ? subcategorySlugParam 
+    : (subcategorySlugParam ? [subcategorySlugParam as string] : []);
+  
+  // Explicitly decode all parts to handle URL encoding issues
+  const slugParts = rawSlugParts.map(part => decodeURIComponent(part));
+
+  const category = CATEGORIES.find(cat => cat.slug === categorySlug);
+  
+  useEffect(() => {
+    if (!categorySlug) return;
+    if (slugParts.length > 0) return;
+    const first = category?.subcategories?.[0];
+    if (!first) return;
+    const target = first.fullSlug || first.slug;
+    if (!target) return;
+    const qs = sp.toString();
+    router.replace(qs ? `/kategori/${categorySlug}/${target}?${qs}` : `/kategori/${categorySlug}/${target}`);
+  }, [categorySlug, slugParts.length, category, router, sp]);
+  
+  // Resolve using full path to ensure correct hierarchy traversal
+  const subcategory = slugParts.length > 0 
+    ? findSubcategoryByPath(category?.subcategories || [], slugParts)
+    : undefined;
+
+  const subcategorySlug = subcategory?.slug || (slugParts.length > 0 ? slugParts[slugParts.length - 1] : undefined);
+  const subcategoryFilter = subcategory?.fullSlug || subcategorySlug;
+
+  // Parent subcategory is the one corresponding to path minus last segment
+  const parentSubcategory = slugParts.length > 1
+    ? findSubcategoryByPath(category?.subcategories || [], slugParts.slice(0, -1))
+    : undefined;
+
+  // Base path for link generation
+  const basePath = React.useMemo(() => {
+     // If we have children, we append to current path
+     if (subcategory?.subcategories && subcategory.subcategories.length > 0) {
+         return `/kategori/${categorySlug}/${slugParts.join('/')}`;
+     }
+     // If no children (leaf), we are showing siblings, so we replace last segment (i.e. use parent path)
+     if (slugParts.length > 0) {
+         const parentPath = slugParts.slice(0, -1).join('/');
+         return parentPath ? `/kategori/${categorySlug}/${parentPath}` : `/kategori/${categorySlug}`;
+     }
+     // Root level
+     return `/kategori/${categorySlug}`;
+  }, [categorySlug, slugParts, subcategory]);
+
+  const overrideKey = subcategory?.fullSlug 
+    ? `${categorySlug}/${subcategory.fullSlug}` 
+    : (subcategorySlug ? `${categorySlug}/${subcategorySlug}` : categorySlug);
+
+  const prevOverrideKeyRef = React.useRef<string | null>(null);
+  useEffect(() => {
+    const prev = prevOverrideKeyRef.current;
+    prevOverrideKeyRef.current = overrideKey;
+    if (!prev || prev === overrideKey) return;
+    setFilterAttrs((curr) => {
+      const next = { ...(curr || {}) } as FilterAttrs;
+      delete (next as any)['marka'];
+      delete (next as any)['model'];
+      delete (next as any)['seri'];
+      delete (next as any)['paket'];
+      return next;
+    });
+    setModelOptions([]);
+    setSeriesOptions([]);
+    setTrimOptions([]);
+    setEquipmentOptions([]);
+  }, [overrideKey]);
+
   const [listings, setListings] = useState<Talep[]>([]);
   const [filteredListings, setFilteredListings] = useState<Talep[]>([]);
   const [loading, setLoading] = useState(true);
@@ -168,70 +377,325 @@ export default function CategoryClient() {
   // Common Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000]);
-  const [selectedCity, setSelectedCity] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedCity, setSelectedCity] = useState<string[]>([]);
+  const [selectedDistrict, setSelectedDistrict] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   
   // Dynamic Filters
   const [filterAttrs, setFilterAttrs] = useState<FilterAttrs>({});
-  const [isSubcategoriesOpen, setIsSubcategoriesOpen] = useState(true);
+  const [isSubcategoriesOpen, setIsSubcategoriesOpen] = useState(false);
+  const [dynamicCategory, setDynamicCategory] = useState<any>(null);
+  const [dynamicAttributes, setDynamicAttributes] = useState<any[]>([]);
+  const filterBrand = filterAttrs['marka'];
+  const filterModel = filterAttrs['model'];
+  const filterSeries = filterAttrs['seri'];
+  const filterTrim = filterAttrs['paket'];
+
+  // Dynamic Options State
+  const [brandOptions, setBrandOptions] = useState<string[]>([]);
+  const [modelOptions, setModelOptions] = useState<string[]>([]);
+  const [seriesOptions, setSeriesOptions] = useState<string[]>([]);
+  const [trimOptions, setTrimOptions] = useState<string[]>([]);
+  const [equipmentOptions, setEquipmentOptions] = useState<string[]>([]);
+
+  const subcategoriesToRender = React.useMemo(() => {
+     if (subcategory?.subcategories && subcategory.subcategories.length > 0) return subcategory.subcategories;
+     if (parentSubcategory?.subcategories) return parentSubcategory.subcategories;
+     // Prefer static structure from JSON (category) over dynamic (DB) to ensure correct hierarchy with short slugs
+     const toRender = category?.subcategories || dynamicCategory?.subcategories || [];
+     return toRender;
+  }, [subcategory, parentSubcategory, dynamicCategory, category]);
+
+  const listParent = React.useMemo(() => {
+     if (subcategory?.subcategories && subcategory.subcategories.length > 0) return subcategory;
+     if (parentSubcategory) return parentSubcategory;
+     return category;
+  }, [subcategory, parentSubcategory, category]);
+
+  const listParentPathParts = React.useMemo(() => {
+    if (slugParts.length === 0) return [];
+    if (subcategory?.subcategories && subcategory.subcategories.length > 0) return slugParts;
+    if (parentSubcategory) return slugParts.slice(0, -1);
+    return [];
+  }, [slugParts, subcategory, parentSubcategory]);
+
+  const upHref = React.useMemo(() => {
+    if (listParentPathParts.length === 0) return `/kategori/${categorySlug}`;
+    const upParts = listParentPathParts.slice(0, -1);
+    return upParts.length > 0 ? `/kategori/${categorySlug}/${upParts.join('/')}` : `/kategori/${categorySlug}`;
+  }, [categorySlug, listParentPathParts]);
+
+  useEffect(() => {
+    const brand = filterBrand;
+    if (!brand || (Array.isArray(brand) && brand.length === 0)) {
+      setModelOptions([]);
+      return;
+    }
+    
+    const params = new URLSearchParams();
+    params.set('type', 'models');
+    params.set('category', overrideKey);
+    const brands = Array.isArray(brand) ? brand : [brand];
+    brands.forEach(b => params.append('brand', String(b)));
+    
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then(res => res.json())
+      .then(data => {
+         if (Array.isArray(data)) setModelOptions(data);
+         else setModelOptions([]);
+      })
+      .catch(() => setModelOptions([]));
+  }, [filterBrand, overrideKey]);
+
+  useEffect(() => {
+    const brand = filterBrand;
+    const model = filterModel;
+    if (!brand || !model || (Array.isArray(brand) && brand.length === 0) || (Array.isArray(model) && model.length === 0)) {
+      setSeriesOptions([]);
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set('type', 'series');
+    params.set('category', overrideKey);
+    const brands = Array.isArray(brand) ? brand : [brand];
+    brands.forEach(b => params.append('brand', String(b)));
+    const models = Array.isArray(model) ? model : [model];
+    models.forEach(m => params.append('model', String(m)));
+
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then(res => res.json())
+      .then(data => {
+         if (Array.isArray(data)) setSeriesOptions(data);
+         else setSeriesOptions([]);
+      })
+      .catch(() => setSeriesOptions([]));
+  }, [filterBrand, filterModel, overrideKey]);
+
+  useEffect(() => {
+    const brand = filterBrand;
+    const model = filterModel;
+    const series = filterSeries;
+    if (!brand || !model || !series || (Array.isArray(series) && series.length === 0)) {
+      setTrimOptions([]);
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set('type', 'trims');
+    params.set('category', overrideKey);
+    const brands = Array.isArray(brand) ? brand : [brand];
+    brands.forEach(b => params.append('brand', String(b)));
+    const models = Array.isArray(model) ? model : [model];
+    models.forEach(m => params.append('model', String(m)));
+    const seriess = Array.isArray(series) ? series : [series];
+    seriess.forEach(s => params.append('series', String(s)));
+
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then(res => res.json())
+      .then(data => {
+         if (Array.isArray(data)) setTrimOptions(data);
+         else setTrimOptions([]);
+      })
+      .catch(() => setTrimOptions([]));
+  }, [filterBrand, filterModel, filterSeries, overrideKey]);
+
+  useEffect(() => {
+    const brand = filterBrand;
+    const model = filterModel;
+    const series = filterSeries;
+    const trim = filterTrim;
+    if (!brand || !model || !series || !trim || (Array.isArray(trim) && trim.length === 0)) {
+      setEquipmentOptions([]);
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set('type', 'equipments');
+    params.set('category', overrideKey);
+    const brands = Array.isArray(brand) ? brand : [brand];
+    brands.forEach(b => params.append('brand', String(b)));
+    const models = Array.isArray(model) ? model : [model];
+    models.forEach(m => params.append('model', String(m)));
+    const seriess = Array.isArray(series) ? series : [series];
+    seriess.forEach(s => params.append('series', String(s)));
+    const trims = Array.isArray(trim) ? trim : [trim];
+    trims.forEach(t => params.append('trim', String(t)));
+
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setEquipmentOptions(data);
+        else setEquipmentOptions([]);
+      })
+      .catch(() => setEquipmentOptions([]));
+  }, [filterBrand, filterModel, filterSeries, filterTrim, overrideKey]);
+
+
+  useEffect(() => {
+    if (categorySlug) {
+      fetch(`/api/categories/${categorySlug}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.error) {
+            setDynamicCategory(data);
+          }
+        })
+        .catch(err => console.error('Error fetching category attributes:', err));
+    }
+  }, [categorySlug]);
+
+  useEffect(() => {
+    if (!categorySlug) {
+      setDynamicAttributes([]);
+      return;
+    }
+    const query = new URLSearchParams();
+    const sub = subcategory?.fullSlug || subcategorySlug || '';
+    if (sub) query.set('subcategory', sub);
+    const url = query.toString()
+      ? `/api/categories/${categorySlug}/attributes?${query.toString()}`
+      : `/api/categories/${categorySlug}/attributes`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setDynamicAttributes(data);
+        else setDynamicAttributes([]);
+      })
+      .catch(() => setDynamicAttributes([]));
+  }, [categorySlug, subcategory?.fullSlug, subcategorySlug]);
   
   useEffect(() => {
     setFavorites(new Set(listings.filter(l => l.isFavorited).map(l => l.id)));
   }, [listings]);
 
-  const category = CATEGORIES.find(cat => cat.slug === categorySlug);
-  const subcategory = subcategorySlug ? category?.subcategories.find(sub => sub.slug === subcategorySlug) : undefined;
-  
-  const overrideKey = subcategorySlug ? `${categorySlug}/${subcategorySlug}` : categorySlug;
-  
   const combinedSchema = React.useMemo<AttrField[]>(() => {
-    const base = ATTR_SCHEMAS[categorySlug] || [];
-    const sub = subcategorySlug ? (ATTR_SUBSCHEMAS[overrideKey] || []) : [];
-    
-    const map = new Map<string, AttrField>();
-    base.forEach((f) => {
-      const id = f.key || (f.minKey && f.maxKey ? `${f.minKey}-${f.maxKey}` : f.label);
-      map.set(id, f);
-    });
-    sub.forEach((f) => {
-      const id = f.key || (f.minKey && f.maxKey ? `${f.minKey}-${f.maxKey}` : f.label);
-      map.set(id, f);
-    });
-    
-    let result = Array.from(map.values());
+    const isReservedField = (field: AttrField) => {
+      if (field.key === 'minPrice' || field.key === 'maxPrice') return true;
+      if (field.key === 'minBudget' || field.key === 'budget') return true;
+      if (field.type !== 'range-number') return false;
+      if (field.minKey === 'minPrice' && field.maxKey === 'maxPrice') return true;
+      if (field.minKey === 'minBudget' && field.maxKey === 'budget') return true;
+      const minBase = field.minKey?.endsWith('Min') ? field.minKey.slice(0, -3) : null;
+      const maxBase = field.maxKey?.endsWith('Max') ? field.maxKey.slice(0, -3) : null;
+      const base = minBase && maxBase && minBase === maxBase ? minBase : null;
+      if (base === 'minPrice' || base === 'minBudget') return true;
+      return false;
+    };
 
-    // Custom reordering for 'vasita'
-    if (categorySlug === 'vasita') {
-      const priorityKeys = ['marka', 'model', 'seri', 'paket', 'donanim'];
-      const prioritized: AttrField[] = [];
-      const others: AttrField[] = [];
-      
-      // Separate priority items
-      priorityKeys.forEach(key => {
-        const found = result.find(f => f.key === key);
-        if (found) {
-          prioritized.push(found);
+    const stableFieldId = (field: AttrField) => {
+      if (field.key) return `k:${field.key}`;
+      if (field.type === 'range-number' && field.minKey && field.maxKey) {
+        const min = field.minKey;
+        const max = field.maxKey;
+        const minBase = min.endsWith('Min') ? min.slice(0, -3) : null;
+        const maxBase = max.endsWith('Max') ? max.slice(0, -3) : null;
+        if (minBase && maxBase && minBase === maxBase) return `r:${minBase}`;
+        return `r:${min}:${max}`;
+      }
+      return `l:${field.label}`;
+    };
+
+    // If we have dynamic category data, use it
+    const map = new Map<string, AttrField>();
+
+    const fromApi = Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0;
+    const directAttrs = fromApi ? dynamicAttributes : (dynamicCategory?.attributes || []);
+
+    if (directAttrs && directAttrs.length > 0) {
+        const subCat = subcategorySlug
+          ? (dynamicCategory?.subcategories || []).find((s: any) => s.slug === subcategorySlug)
+          : null;
+
+        const relevantAttrs = fromApi
+          ? directAttrs.filter((attr: any) => attr?.showInRequest !== false)
+          : directAttrs.filter((attr: any) => {
+              if (attr?.showInRequest === false) return false;
+              if (!attr.subCategoryId) return true;
+              if (subCat && attr.subCategoryId === subCat.id) return true;
+              return false;
+            });
+
+        if (relevantAttrs.length > 0) {
+            const orderedAttrs = [...relevantAttrs].sort((a: any, b: any) => {
+              const aSpecific = a?.subCategoryId ? 1 : 0;
+              const bSpecific = b?.subCategoryId ? 1 : 0;
+              return aSpecific - bSpecific;
+            });
+            
+            orderedAttrs.forEach((attr: any) => {
+                let normalizedType = attr.type === 'checkbox' ? 'boolean' : attr.type;
+                
+                // Force multiselect for EMLAK/VASITA attributes that are select or specific keys
+                if ((overrideKey.startsWith('vasita') || overrideKey.startsWith('emlak')) && 
+                    (normalizedType === 'select' || ['marka', 'model', 'seri', 'paket'].includes(attr.slug))) {
+                    normalizedType = 'multiselect';
+                }
+
+                const isRange = normalizedType === 'number' || normalizedType === 'range-number';
+                let options: string[] = [];
+                if (attr.optionsJson) {
+                    try {
+                        const parsed = JSON.parse(attr.optionsJson);
+                        options = Array.isArray(parsed) ? parsed : [];
+                    } catch {
+                        options = [];
+                    }
+                }
+
+                const field: AttrField = {
+                    label: attr.name,
+                    key: isRange ? undefined : attr.slug,
+                    type: isRange ? 'range-number' : normalizedType,
+                    options: options.length > 0 ? options : undefined,
+                    minKey: isRange ? (attr.minKey || (attr.slug ? `${attr.slug}Min` : undefined)) : undefined,
+                    maxKey: isRange ? (attr.maxKey || (attr.slug ? `${attr.slug}Max` : undefined)) : undefined,
+                    required: attr.required
+                };
+
+                const id = attr.slug ? `s:${attr.slug}` : stableFieldId(field);
+                map.set(id, field);
+            });
         }
-      });
-      
-      // Add non-priority items
-      result.forEach(f => {
-        if (!priorityKeys.includes(f.key || '')) {
-          others.push(f);
-        }
-      });
-      
-      result = [...prioritized, ...others];
     }
-    
-    return result;
-  }, [categorySlug, subcategorySlug, overrideKey]);
+
+    if (map.size > 0) {
+        return Array.from(map.values()).filter((f) => !isReservedField(f)).sort((a: any, b: any) => {
+            // Preserve order: static schema usually defines order.
+            // But we mixed them.
+            // Simple sort by label or key might be weird.
+            // We can rely on insertion order of Map for iteration, but Array.from preserves it.
+            // However, the sort at the end of original code sorted by 'order'.
+            // Static fields don't have 'order' property explicitly in AttrField type (it's optional in some types).
+            // Let's remove the sort by 'order' if it's not robust, or keep it safe.
+            const orderA = a.order || 0;
+            const orderB = b.order || 0;
+            return orderA - orderB;
+        });
+    }
+
+    return [];
+  }, [subcategorySlug, overrideKey, dynamicCategory, dynamicAttributes]);
+
+  useEffect(() => {
+    const hasBrandField = combinedSchema.some((f) => f.key === 'marka' && (f.type === 'select' || f.type === 'multiselect'));
+    if (!hasBrandField) {
+      setBrandOptions([]);
+      return;
+    }
+
+    fetch(`/api/vehicle-data?type=brands&category=${overrideKey}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setBrandOptions(data);
+        else setBrandOptions([]);
+      })
+      .catch(() => setBrandOptions([]));
+  }, [combinedSchema, overrideKey]);
 
   // URL -> State Sync
   useEffect(() => {
-    const get = (k: string) => sp.get(k) || '';
     const num = (k: string): number | '' => {
       const v = sp.get(k);
       if (!v) return '';
@@ -239,10 +703,12 @@ export default function CategoryClient() {
       return Number.isNaN(n) ? '' : n;
     };
     
+    const q = sp.get('q') || '';
+    setSearchTerm(q);
     const s = sp.get('sort'); if (s) setSortBy(s);
     
-    const cityQ = get('city'); if (cityQ) setSelectedCity(cityQ);
-    const distQ = get('district'); if (distQ) setSelectedDistrict(distQ);
+    const cityQ = sp.getAll('city'); if (cityQ.length > 0) setSelectedCity(cityQ);
+    const distQ = sp.getAll('district'); if (distQ.length > 0) setSelectedDistrict(distQ);
     const minP = num('minPrice'); const maxP = num('maxPrice'); 
     if (minP !== '' || maxP !== '') setPriceRange([minP || 0, maxP || 10000000]);
 
@@ -261,7 +727,7 @@ export default function CategoryClient() {
     setFilterAttrs(nextAttrs);
   }, [sp, categorySlug, subcategorySlug, combinedSchema]);
 
-  const handleFilterChange = (key: string, value: string | number) => {
+  const handleFilterChange = (key: string, value: string | number | (string | number)[]) => {
     setFilterAttrs(prev => {
       const next = { ...prev, [key]: value };
       
@@ -291,10 +757,10 @@ export default function CategoryClient() {
       setLoading(true);
       const params = new URLSearchParams();
       if (categorySlug) params.set('category', categorySlug);
-      if (subcategorySlug) params.set('subcategory', subcategorySlug);
+      if (subcategoryFilter) params.set('subcategory', subcategoryFilter);
       if (searchTerm) params.set('q', searchTerm);
-      if (selectedCity) params.set('city', selectedCity);
-      if (selectedDistrict) params.set('district', selectedDistrict);
+      if (selectedCity.length > 0) selectedCity.forEach(c => params.append('city', c));
+      if (selectedDistrict.length > 0) selectedDistrict.forEach(d => params.append('district', d));
       if (priceRange[0]) params.set('minPrice', String(priceRange[0]));
       if (priceRange[1]) params.set('maxPrice', String(priceRange[1]));
       params.set('sort', sortBy || 'newest');
@@ -307,7 +773,13 @@ export default function CategoryClient() {
           if (maxVal !== undefined && maxVal !== '') params.set(f.maxKey!, String(maxVal));
         } else if (f.key) {
           const val = filterAttrs[f.key];
-          if (val !== undefined && val !== '') params.set(f.key, String(val));
+          if (val !== undefined && val !== '') {
+            if (Array.isArray(val)) {
+                val.forEach(v => params.append(f.key!, String(v)));
+            } else {
+                params.set(f.key!, String(val));
+            }
+          }
         }
       });
 
@@ -316,30 +788,7 @@ export default function CategoryClient() {
         const data = await response.json();
         const rawListings = Array.isArray(data) ? data : (data?.data || []);
         setListings(rawListings);
-        
-        // Generic client-side filtering
-        let next = rawListings as Talep[];
-        next = next.filter((l) => {
-            const a = l.attributes || {};
-            for (const f of combinedSchema) {
-                if (f.type === 'range-number') {
-                    const minVal = filterAttrs[f.minKey!];
-                    const maxVal = filterAttrs[f.maxKey!];
-                    const itemKey = f.minKey?.replace('Min', '') || f.maxKey?.replace('Max', '') || '';
-                    const val = a[itemKey];
-                    if (minVal !== undefined && minVal !== '' && val !== undefined && Number(val) < Number(minVal)) return false;
-                    if (maxVal !== undefined && maxVal !== '' && val !== undefined && Number(val) > Number(maxVal)) return false;
-                } else if (f.key) {
-                    const filterVal = filterAttrs[f.key];
-                    if (filterVal && filterVal !== '' && filterVal !== 'undefined') {
-                         const itemVal = a[f.key];
-                         if (itemVal !== undefined && String(itemVal).toLowerCase() !== String(filterVal).toLowerCase()) return false;
-                    }
-                }
-            }
-            return true;
-        });
-        setFilteredListings(next);
+        setFilteredListings(rawListings as Talep[]);
       }
     } catch (error) {
       console.error('Error fetching listings:', error);
@@ -348,7 +797,7 @@ export default function CategoryClient() {
     }
   }, [
     categorySlug,
-    subcategorySlug,
+    subcategoryFilter,
     searchTerm,
     selectedCity,
     selectedDistrict,
@@ -419,32 +868,95 @@ export default function CategoryClient() {
   };
 
   const getFieldOptions = (field: AttrField) => {
-      const brand = typeof filterAttrs['marka'] === 'string' ? filterAttrs['marka'] : undefined;
-      const model = typeof filterAttrs['model'] === 'string' ? filterAttrs['model'] : undefined;
-      const series = typeof filterAttrs['seri'] === 'string' ? filterAttrs['seri'] : undefined;
-      const paket = typeof filterAttrs['paket'] === 'string' ? filterAttrs['paket'] : undefined;
+      // Dynamic options priority
+      if (field.key === 'marka' && brandOptions.length > 0) return brandOptions;
+      if (field.key === 'model' && modelOptions.length > 0) return modelOptions;
+      if (field.key === 'seri' && seriesOptions.length > 0) return seriesOptions;
+      if (field.key === 'paket' && trimOptions.length > 0) return trimOptions;
+      if (field.key === 'donanim' && equipmentOptions.length > 0) return equipmentOptions;
+      const options: (string | { value: string | number; label: string })[] = field.options || [];
 
-      if (field.key === 'model' && brand) {
-          const map = (BRAND_MODELS[overrideKey] || BRAND_MODELS['vasita/otomobil']) as Record<string, any>; 
-          return (map?.[brand] as string[] | undefined) || [];
-      }
-      if (field.key === 'seri' && brand && model) {
-          const map = (MODEL_SERIES[overrideKey] || MODEL_SERIES['vasita/otomobil']) as Record<string, any>;
-          return (map?.[brand]?.[model] as string[] | undefined) || [];
-      }
-      if (field.key === 'paket' && brand && model && series) {
-          const map = (SERIES_TRIMS[overrideKey] || SERIES_TRIMS['vasita/otomobil']) as Record<string, any>;
-          return (map?.[brand]?.[model]?.[series] as string[] | undefined) || [];
-      }
-      if (field.key === 'donanim' && brand && model && series && paket) {
-          const map = (PACKAGE_EQUIPMENT[overrideKey] || PACKAGE_EQUIPMENT['vasita/otomobil']) as Record<string, any>;
-          return (map?.[brand]?.[model]?.[series]?.[paket] as string[] | undefined) || [];
+      // Sort alphabetically for hierarchical keys and marka
+      if (['marka', 'model', 'seri', 'paket', 'donanim'].includes(field.key || '')) {
+         return [...options].sort((a, b) => {
+             const labelA = typeof a === 'object' ? (a as any).label : a;
+             const labelB = typeof b === 'object' ? (b as any).label : b;
+             return String(labelA).localeCompare(String(labelB), 'tr');
+         });
       }
 
-      return field.options || [];
+      return options;
   };
 
-  const renderFilters = () => (
+  const renderFilters = () => {
+    const priorityKeys = ['marka', 'model', 'seri', 'paket', 'donanim', 'motor'];
+    const priorityAttributes = combinedSchema.filter(f => f.key && priorityKeys.includes(f.key));
+    const otherAttributes = combinedSchema.filter(f => !f.key || !priorityKeys.includes(f.key));
+
+    const renderAttribute = (field: AttrField, i: number) => {
+        let isDisabled = false;
+        
+        // Hiyerarşik alanlar için özel görünürlük ve disabled mantığı
+        // const hierarchicalKeys = ['model', 'seri', 'paket', 'donanim'];
+        
+        // Hiding logic removed to ensure fields are visible (even if disabled)
+        // if (isVasitaOto && hierarchicalKeys.includes(field.key!)) {
+        //    const options = getFieldOptions(field);
+        //    if (options.length === 0) return null;
+        // }
+
+        const isAttrEmpty = (val: any) => !val || (Array.isArray(val) && val.length === 0);
+
+        if (field.key === 'model' && isAttrEmpty(filterAttrs['marka'])) isDisabled = true;
+        if (field.key === 'seri' && isAttrEmpty(filterAttrs['model'])) isDisabled = true;
+        if (field.key === 'paket' && isAttrEmpty(filterAttrs['seri'])) isDisabled = true;
+        if (field.key === 'donanim' && isAttrEmpty(filterAttrs['paket'])) isDisabled = true;
+
+        if (field.type === 'select' || field.type === 'multiselect') {
+             return (
+                <MultiSelect
+                    key={`${field.key}-${i}`}
+                    label={field.label}
+                    value={getArrayValue(filterAttrs[field.key!])}
+                    onChange={(val: string[]) => handleFilterChange(field.key!, val)}
+                    options={getFieldOptions(field)}
+                    disabled={isDisabled}
+                />
+             );
+        } else if (field.type === 'range-number') {
+            return (
+                <FilterRange
+                    key={`${field.minKey}-${field.maxKey}-${i}`}
+                    label={field.label}
+                    minValue={getSingleValue(filterAttrs[field.minKey!])}
+                    maxValue={getSingleValue(filterAttrs[field.maxKey!])}
+                    onMinChange={(val) => handleFilterChange(field.minKey!, val)}
+                    onMaxChange={(val) => handleFilterChange(field.maxKey!, val)}
+                />
+            );
+        } else if (field.type === 'boolean') {
+             return (
+                <FilterSelect
+                    key={`${field.key}-${i}`}
+                    label={field.label}
+                    value={getSingleValue(filterAttrs[field.key!]).toString()}
+                    onChange={(val) => handleFilterChange(field.key!, val)}
+                    options={[{value:'true', label:'Evet'}, {value:'false', label:'Hayır'}]}
+                />
+             );
+        } else {
+            return (
+                <FilterInput
+                    key={`${field.key}-${i}`}
+                    label={field.label}
+                    value={getSingleValue(filterAttrs[field.key!])}
+                    onChange={(val) => handleFilterChange(field.key!, val)}
+                />
+            );
+        }
+    };
+
+    return (
     <div className="bg-white rounded-2xl p-6 shadow-2xl text-gray-900">
       <div className="mb-6 relative">
         <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -452,10 +964,10 @@ export default function CategoryClient() {
         </svg>
         <input
             type="text"
-            placeholder={`${subcategory ? subcategory.name : category.name} taleplerinde ara...`}
+            placeholder={`${titleCaseTR(subcategory ? subcategory.name : category.name)} Taleplerinde Ara...`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200"
+            className="w-full pl-12 pr-4 py-3 bg-white border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 hover:border-cyan-400 shadow-sm transition-all duration-200"
         />
       </div>
 
@@ -476,33 +988,77 @@ export default function CategoryClient() {
       </div>
       
       <div className="space-y-6">
+        <div className="bg-white rounded-xl border-2 border-gray-300 overflow-hidden shadow-sm">
+          <div className="p-4 space-y-2">
+            <div className="text-sm font-bold text-gray-900">Ana Kategoriler</div>
+            <select
+              value={categorySlug || ""}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (!next || next === categorySlug) return;
+                const qs = sp.toString();
+                router.push(qs ? `/kategori/${next}?${qs}` : `/kategori/${next}`);
+              }}
+              className="w-full rounded-xl px-4 py-3 font-medium transition-all duration-200 bg-white border-2 border-gray-300 text-gray-900 shadow-sm hover:border-cyan-400"
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat.slug} value={cat.slug}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         {/* Subcategories Filter */}
-        <div className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl border-2 border-gray-300 overflow-hidden shadow-sm">
              <button 
                 onClick={() => setIsSubcategoriesOpen(!isSubcategoriesOpen)}
-                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors"
              >
-                 <h3 className="text-gray-900 text-sm font-semibold opacity-90">Alt Kategoriler</h3>
+                 <div className="flex flex-col items-start">
+                   <h3 className="text-gray-900 text-sm font-bold">Alt Kategoriler</h3>
+                   <div className="text-xs text-gray-500 font-medium mt-0.5">
+                     {subcategory
+                       ? titleCaseTR(subcategory.name)
+                       : (slugParts.length > 0 ? titleCaseTR(String(slugParts[slugParts.length - 1] || '').replace(/[-_]+/g, ' ')) : 'Tümü')}
+                   </div>
+                 </div>
                  {isSubcategoriesOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
              </button>
              
              {isSubcategoriesOpen && (
-                 <div className="p-4 pt-0 space-y-2 border-t border-gray-200 bg-white">
+                 <div className="p-4 pt-0 space-y-2 border-t-2 border-gray-100 bg-white">
                     <div className="pt-2 space-y-2">
+                        {listParentPathParts.length > 0 && (
+                          <Link
+                            href={upHref}
+                            onClick={() => setIsSubcategoriesOpen(true)}
+                            className="flex items-center gap-2 text-gray-600 hover:text-cyan-600 font-semibold"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                            Üst Kategori
+                          </Link>
+                        )}
                         <Link 
-                            href={`/kategori/${categorySlug}`}
-                            className={`flex items-center justify-between group ${!subcategorySlug ? 'text-cyan-600 font-bold' : 'text-gray-600 hover:text-cyan-600'}`}
+                            href={basePath}
+                            onClick={() => setIsSubcategoriesOpen(false)}
+                            className={`flex items-center justify-between group ${
+                                (listParent === category && !subcategorySlug) || (subcategorySlug === listParent?.slug) 
+                                ? 'text-cyan-600 font-bold' 
+                                : 'text-gray-600 hover:text-cyan-600'
+                            }`}
                         >
                             <span className="text-sm">Tümü</span>
-                            {!subcategorySlug && <span className="w-2 h-2 bg-cyan-600 rounded-full"></span>}
+                            {((listParent === category && !subcategorySlug) || (subcategorySlug === listParent?.slug)) && <span className="w-2 h-2 bg-cyan-600 rounded-full"></span>}
                         </Link>
-                        {category?.subcategories?.map(sub => (
+                        {subcategoriesToRender.map((sub: any) => (
                             <Link
                                 key={sub.slug}
-                                href={`/kategori/${categorySlug}/${sub.slug}`}
+                                href={`${basePath}/${sub.slug}`}
+                                onClick={() => setIsSubcategoriesOpen(!(sub.subcategories && sub.subcategories.length > 0))}
                                 className={`flex items-center justify-between group ${subcategorySlug === sub.slug ? 'text-cyan-600 font-bold' : 'text-gray-600 hover:text-cyan-600'}`}
                             >
-                                <span className="text-sm">{sub.name}</span>
+                                <span className="text-sm">{titleCaseTR(sub.name)}</span>
                                 {subcategorySlug === sub.slug && <span className="w-2 h-2 bg-cyan-600 rounded-full"></span>}
                             </Link>
                         ))}
@@ -511,23 +1067,33 @@ export default function CategoryClient() {
              )}
         </div>
 
-        {/* Standard Filters */}
+        {/* Standard Filters & Priority Attributes */}
         <div className="grid grid-cols-1 gap-4">
-            <FilterSelect
+            <MultiSelect
               label="Şehir"
               value={selectedCity}
-              onChange={(val) => { setSelectedCity(val); setSelectedDistrict(''); }}
+              onChange={(val) => { setSelectedCity(val); if (val.length === 0) setSelectedDistrict([]); }}
               placeholder="Tüm Şehirler"
               options={TURKEY_PROVINCES.map(p => p.name)}
             />
-            <FilterSelect
+            <MultiSelect
               label="İlçe"
               value={selectedDistrict}
               onChange={setSelectedDistrict}
               placeholder="Tüm İlçeler"
-              disabled={!selectedCity}
-              options={selectedCity ? (TURKEY_PROVINCES.find(p => p.name === selectedCity)?.districts?.map(d => d.name) || []) : []}
+              disabled={selectedCity.length === 0}
+              options={(() => {
+                if (selectedCity.length === 0) return [];
+                return TURKEY_PROVINCES
+                  .filter(p => selectedCity.includes(p.name))
+                  .flatMap(p => p.districts.map(d => d.name))
+                  .sort((a, b) => a.localeCompare(b, 'tr'));
+              })()}
             />
+            
+            {/* Priority Attributes (Marka, Model, Seri, Paket...) */}
+            {priorityAttributes.map((field, i) => renderAttribute(field, i))}
+
             <FilterRange
               label={`Fiyat: ${priceRange[0].toLocaleString('tr-TR')} - ${priceRange[1].toLocaleString('tr-TR')} TL`}
               minValue={priceRange[0]}
@@ -538,79 +1104,13 @@ export default function CategoryClient() {
             />
         </div>
 
-        {/* Dynamic Filters from Schema */}
-        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-4">
-            <h3 className="text-gray-900 text-sm font-semibold mb-2 opacity-90">Detaylı Filtreler</h3>
-            {combinedSchema.map((field, i) => {
-                let isDisabled = false;
-                
-                // Hiyerarşik alanlar için özel görünürlük ve disabled mantığı
-                const isVasitaOto = categorySlug === 'vasita' || overrideKey.startsWith('vasita/');
-                const hierarchicalKeys = ['model', 'seri', 'paket', 'donanim'];
-                
-                if (isVasitaOto && hierarchicalKeys.includes(field.key!)) {
-                    const options = getFieldOptions(field);
-                    
-                    // Eğer seçenek yoksa ve parent seçiliyse (veya parent gerekmiyorsa), bu alanı GİZLE.
-                    // Marka seçili değilse Model boş gelir ama disabled görünmeli mi yoksa gizlenmeli mi?
-                    // Kullanıcı "tek tek kontrol et, fazla veri seçmeyelim" dediği için, 
-                    // eğer parent seçili olduğu halde child seçenekleri boşsa (yani zincir bittiyse), o child GİZLENMELİ.
-                    // Ancak parent seçili değilse child disabled olarak kalabilir veya gizlenebilir.
-                    // Mevcut davranışta parent seçili değilse options boş dönüyor.
-                    // Bu durumda parent seçilmeden child'ı göstermemek daha temiz bir UI sağlar.
-                    
-                    if (options.length === 0) return null;
-                }
-
-                if (field.key === 'model' && !filterAttrs['marka']) isDisabled = true;
-                if (field.key === 'seri' && !filterAttrs['model']) isDisabled = true;
-                if (field.key === 'paket' && !filterAttrs['seri']) isDisabled = true;
-                if (field.key === 'donanim' && !filterAttrs['paket']) isDisabled = true;
-
-                if (field.type === 'select') {
-                     return (
-                        <FilterSelect
-                            key={i}
-                            label={field.label}
-                            value={filterAttrs[field.key!] || ''}
-                            onChange={(val) => handleFilterChange(field.key!, val)}
-                            options={getFieldOptions(field)}
-                            disabled={isDisabled}
-                        />
-                     );
-                } else if (field.type === 'range-number') {
-                    return (
-                        <FilterRange
-                            key={i}
-                            label={field.label}
-                            minValue={filterAttrs[field.minKey!] || ''}
-                            maxValue={filterAttrs[field.maxKey!] || ''}
-                            onMinChange={(val) => handleFilterChange(field.minKey!, val)}
-                            onMaxChange={(val) => handleFilterChange(field.maxKey!, val)}
-                        />
-                    );
-                } else if (field.type === 'boolean') {
-                     return (
-                        <FilterSelect
-                            key={i}
-                            label={field.label}
-                            value={filterAttrs[field.key!] || ''}
-                            onChange={(val) => handleFilterChange(field.key!, val)}
-                            options={[{value:'true', label:'Evet'}, {value:'false', label:'Hayır'}]}
-                        />
-                     );
-                } else {
-                    return (
-                        <FilterInput
-                            key={i}
-                            label={field.label}
-                            value={filterAttrs[field.key!] || ''}
-                            onChange={(val) => handleFilterChange(field.key!, val)}
-                        />
-                    );
-                }
-            })}
-        </div>
+        {/* Other Dynamic Filters */}
+        {otherAttributes.length > 0 && (
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-4">
+                <h3 className="text-gray-900 text-sm font-semibold mb-2 opacity-90">Detaylı Filtreler</h3>
+                {otherAttributes.map((field, i) => renderAttribute(field, i + priorityAttributes.length))}
+            </div>
+        )}
 
         {/* Sort & Clear */}
         <div className="flex gap-2 items-end">
@@ -630,7 +1130,7 @@ export default function CategoryClient() {
             </div>
             <button
                 onClick={() => {
-                setSearchTerm(''); setSelectedCity(''); setSelectedDistrict(''); setPriceRange([0, 10000000]);
+                setSearchTerm(''); setSelectedCity([]); setSelectedDistrict([]); setPriceRange([0, 10000000]);
                 setFilterAttrs({}); setSortBy('date');
                 }}
                 className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-all shadow-md mb-[1px]"
@@ -642,22 +1142,23 @@ export default function CategoryClient() {
       </div>
     </div>
   );
+  };
 
   const handleCreateAlarm = async () => {
     if (!session) {
       toast({
         title: "Giriş yapmalısınız",
         description: "Alarm oluşturmak için lütfen giriş yapın.",
-        variant: "destructive"
+        variant: "warning"
       });
       return;
     }
 
-    const query = searchTerm || (subcategory ? subcategory.name : category.name);
+    const query = searchTerm || titleCaseTR(subcategory ? subcategory.name : category.name);
 
     const filters: FilterAttrs = {};
-    if (selectedCity) filters.city = selectedCity;
-    if (selectedDistrict) filters.district = selectedDistrict;
+    if (selectedCity.length > 0) filters.city = selectedCity;
+    if (selectedDistrict.length > 0) filters.district = selectedDistrict;
     if (priceRange[0] > 0) filters.minPrice = priceRange[0];
     if (priceRange[1] < 10000000) filters.maxPrice = priceRange[1];
     Object.assign(filters, filterAttrs);
@@ -732,7 +1233,7 @@ export default function CategoryClient() {
               </svg>
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">{subcategory ? subcategory.name : category.name}</h1>
+              <h1 className="text-xl font-bold text-gray-900">{titleCaseTR(subcategory ? subcategory.name : category.name)}</h1>
               <p className="text-sm text-gray-500">{filteredListings?.length || 0} talep</p>
             </div>
           </div>
@@ -797,7 +1298,7 @@ export default function CategoryClient() {
                 <p className="text-gray-500">Arama kriterlerinize uygun talep bulunmamaktadır.</p>
                 <button 
                   onClick={() => {
-                    setSearchTerm(''); setSelectedCity(''); setSelectedDistrict(''); setPriceRange([0, 10000000]);
+                    setSearchTerm(''); setSelectedCity([]); setSelectedDistrict([]); setPriceRange([0, 10000000]);
                     setFilterAttrs({});
                   }}
                   className="mt-6 px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"

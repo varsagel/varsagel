@@ -7,7 +7,9 @@ import { useMemo, useState, useEffect } from "react";
 import FavoriteButton from '@/components/ui/FavoriteButton';
 import { getSubcategoryImage } from '@/data/subcategory-images';
 import BRAND_LOGOS from "@/data/brand-logos.json";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, Eye, MapPin } from "lucide-react";
+import { listingHref } from '@/lib/listing-url';
+import { titleCaseTR } from '@/lib/title-case-tr';
 
 // Formatters moved outside to avoid recreation on every render
 const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
@@ -60,6 +62,7 @@ function formatTryLocal(price: number) {
 
 export interface ListingItem {
   id: string;
+  code?: string | null;
   title: string;
   description: string;
   price: number;
@@ -110,11 +113,48 @@ function BrandBadge({ category, subcategory, attributes }: { category: string; s
 }
 
 export default function ListingCard({ listing, priority, isAuthenticated }: { listing: ListingItem; priority?: boolean; isAuthenticated: boolean }) {
+  const href = useMemo(() => {
+    return listingHref({
+      id: listing.id,
+      code: listing.code,
+      title: listing.title,
+      category: listing.category,
+      subcategory: listing.subcategory,
+    });
+  }, [listing.category, listing.code, listing.id, listing.subcategory, listing.title]);
+
   const subcategoryImage = useMemo(() => {
-    return listing.subcategory ? getSubcategoryImage(listing.subcategory, listing.category) : '/images/placeholder-1.svg';
-  }, [listing.subcategory, listing.category]);
+    return listing.subcategory ? getSubcategoryImage(listing.subcategory) : '/images/placeholder-1.svg';
+  }, [listing.subcategory]);
 
   const [currentSrc, setCurrentSrc] = useState(listing.images?.[0] || subcategoryImage);
+  const isDefaultImage = useMemo(() => {
+    return currentSrc.startsWith('/images/defaults/') || currentSrc.startsWith('/images/placeholder-');
+  }, [currentSrc]);
+  const isRemoteImage = useMemo(() => {
+    return currentSrc.startsWith('http://') || currentSrc.startsWith('https://');
+  }, [currentSrc]);
+  const isS3Host = useMemo(() => {
+    if (!isRemoteImage) return false;
+    try {
+      const host = new URL(currentSrc).hostname.toLowerCase();
+      return host.includes(".s3.");
+    } catch {
+      return false;
+    }
+  }, [currentSrc, isRemoteImage]);
+  const isAllowedRemote = useMemo(() => {
+    if (!isRemoteImage) return false;
+    try {
+      const host = new URL(currentSrc).hostname.toLowerCase();
+      return host === 'varsagel.com' || host === 'www.varsagel.com' || host === 'localhost' || host === '127.0.0.1' || isS3Host;
+    } catch {
+      return false;
+    }
+  }, [currentSrc, isRemoteImage, isS3Host]);
+  const isJfifImage = useMemo(() => {
+    return /\.jfif($|\?)/i.test(currentSrc) || /\.jif($|\?)/i.test(currentSrc);
+  }, [currentSrc]);
 
   useEffect(() => {
     setCurrentSrc(listing.images?.[0] || subcategoryImage);
@@ -145,18 +185,35 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
       return `${formatTryLocal(min)} - ${formatTryLocal(max)}`;
     } else if (minPrice) {
       const min = typeof minPrice === 'string' ? parseFloat(minPrice) : minPrice;
-      return `Min ${formatTryLocal(min)}`;
+      return `En Az ${formatTryLocal(min)}`;
     } else if (maxPrice) {
       const max = typeof maxPrice === 'string' ? parseFloat(maxPrice) : maxPrice;
-      return `Max ${formatTryLocal(max)}`;
+      return `En Çok ${formatTryLocal(max)}`;
     }
     
     return formatTryLocal(listing.price);
   }, [listing.price, listing.attributes?.minPrice, listing.attributes?.maxPrice]);
 
+  const statusBadge = useMemo(() => {
+    const s = String(listing.status || "").toLowerCase();
+    if (s === "active") return { label: "Aktif", className: "bg-emerald-500/95 text-white border border-white/30" };
+    if (s === "pending") return { label: "Onay Bekliyor", className: "bg-amber-500/95 text-white border border-white/30" };
+    if (s === "sold") return { label: "Kapandı", className: "bg-slate-700/95 text-white border border-white/20" };
+    return null;
+  }, [listing.status]);
+
+  const locationText = useMemo(() => {
+    const parts: string[] = [];
+    const mahalle = typeof (listing.attributes as any)?.mahalle === "string" ? String((listing.attributes as any)?.mahalle).trim() : "";
+    if (listing.category === "emlak" && mahalle) parts.push(mahalle);
+    if (listing.location?.district) parts.push(listing.location.district);
+    if (listing.location?.city) parts.push(listing.location.city);
+    return parts.filter(Boolean).join(", ");
+  }, [listing.attributes, listing.category, listing.location?.city, listing.location?.district]);
+
   return (
-    <div className="group bg-white rounded-xl border border-slate-200 hover:border-cyan-300 shadow-sm hover:shadow-lg hover:shadow-cyan-500/10 transition-all duration-300 overflow-hidden relative flex flex-col h-full">
-      <Link href={`/talep/${listing.id}`} className="block relative aspect-[4/3] overflow-hidden bg-slate-100">
+    <div className="group bg-white rounded-xl border border-slate-200 hover:border-[#85C0CA] shadow-sm hover:shadow-lg hover:shadow-[#3E849E]/10 transition-all duration-300 overflow-hidden relative flex flex-col h-full">
+      <Link href={href} className="block relative aspect-[4/3] overflow-hidden bg-slate-100">
         <Image
           src={currentSrc}
           alt={listing.title}
@@ -164,6 +221,8 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
           priority={priority}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          unoptimized={isDefaultImage || isJfifImage || isS3Host || (isRemoteImage && !isAllowedRemote)}
+          quality={isDefaultImage ? 100 : 85}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         
@@ -176,8 +235,15 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
         </div>
 
         {/* Category Badge */}
-        <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-md border border-white/20 text-white px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
-          {listing.category}
+        <div className="absolute top-2 right-2 flex items-center gap-1.5">
+          {statusBadge && (
+            <div className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide backdrop-blur-md ${statusBadge.className}`}>
+              {statusBadge.label}
+            </div>
+          )}
+          <div className="bg-black/40 backdrop-blur-md border border-white/20 text-white px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
+            {titleCaseTR(listing.category)}
+          </div>
         </div>
       </Link>
       
@@ -186,8 +252,8 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
       </div>
 
       <div className="p-4 flex flex-col flex-1">
-        <Link href={`/talep/${listing.id}`} className="block flex-1">
-          <h3 className="font-semibold text-slate-900 mb-2 text-sm leading-snug line-clamp-2 group-hover:text-cyan-700 transition-colors">
+        <Link href={href} className="block flex-1">
+          <h3 className="font-semibold text-slate-900 mb-2 text-sm leading-snug line-clamp-2 group-hover:text-[#1E4355] transition-colors">
             {listing.title}
           </h3>
         </Link>
@@ -197,12 +263,18 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
             <div className="flex items-center gap-1">
               <MapPin className="w-3.5 h-3.5 text-slate-400" />
               <span suppressHydrationWarning className="truncate max-w-[100px]">
-                {[listing.location.district, listing.location.city].filter(Boolean).join(", ")}
+                {locationText}
               </span>
             </div>
-            <div className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
-              <span suppressHydrationWarning>{timeAgo}</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <Eye className="w-3.5 h-3.5 text-slate-400" />
+                <span className="tabular-nums">{listing.viewCount ?? 0}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-slate-400" />
+                <span suppressHydrationWarning>{timeAgo}</span>
+              </div>
             </div>
           </div>
 

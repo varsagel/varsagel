@@ -29,7 +29,7 @@ async function main() {
               if (!Array.isArray(parsed)) {
                 console.error(`      ERROR: optionsJson is not an array!`);
               }
-            } catch (e) {
+            } catch {
               console.error(`      ERROR: optionsJson is invalid JSON!`);
             }
           }

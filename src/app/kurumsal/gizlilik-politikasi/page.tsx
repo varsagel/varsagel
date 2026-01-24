@@ -2,11 +2,13 @@ import React from 'react';
 import SozlesmeLayout from '@/components/layout/SozlesmeLayout';
 import { Lock } from 'lucide-react';
 import type { Metadata } from 'next';
+import { metadataBase } from '@/lib/metadata-base';
 
 export const metadata: Metadata = {
   title: "Gizlilik Politikası | Varsagel",
   description:
     "Varsagel olarak kişisel verilerinizi nasıl topladığımızı, sakladığımızı ve koruduğumuzu inceleyin. KVKK ve gizlilik ilkelerimiz hakkında detaylı bilgi.",
+  metadataBase: metadataBase,
   alternates: {
     canonical: "/kurumsal/gizlilik-politikasi",
   },

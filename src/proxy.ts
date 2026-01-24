@@ -18,6 +18,11 @@ const securityHeaders = {
 // Rate limiting rules
 const rateLimitRules = [
   {
+    path: '/api/upload',
+    methods: ['POST'],
+    limiter: rateLimiters.upload,
+  },
+  {
     path: '/api/auth/callback/credentials',
     methods: ['POST'],
     limiter: rateLimiters.login,
@@ -55,17 +60,18 @@ const rateLimitRules = [
 ];
 
 export default async function middleware(request: NextRequest) {
-  // Test log to verify proxy is working
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[PROXY] Processing request:', request.nextUrl.pathname);
-  }
   const { pathname, search } = request.nextUrl;
+  const debug = process.env.NODE_ENV === 'development' || process.env.DEBUG_PROXY === 'true';
+  if (debug) {
+    console.log('[PROXY] Processing request:', pathname);
+  }
   const method = request.method;
   const ip = (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown';
-  const userAgent = request.headers.get('user-agent') || 'unknown';
-
-  // Log the request (console.log for Edge Runtime compatibility)
-  console.log(`[${new Date().toISOString()}] Incoming request: ${method} ${pathname}${search} from ${ip}`);
+  const ipRaw = String(ip || '').split(',')[0].trim().toLowerCase();
+  const isLocalIp = ipRaw === '127.0.0.1' || ipRaw === '::1' || ipRaw.startsWith('::ffff:127.0.0.1');
+  if (debug) {
+    console.log(`[${new Date().toISOString()}] Incoming request: ${method} ${pathname}${search} from ${ip}`);
+  }
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
@@ -81,6 +87,10 @@ export default async function middleware(request: NextRequest) {
   Object.entries(securityHeaders).forEach(([key, value]) => {
     response.headers.set(key, value);
   });
+
+  if (pathname.startsWith('/uploads/') && (pathname.toLowerCase().endsWith('.jfif') || pathname.toLowerCase().endsWith('.jif'))) {
+    response.headers.set('Content-Type', 'image/jpeg');
+  }
 
   // Remove server information headers
   response.headers.delete('X-Powered-By');
@@ -109,27 +119,14 @@ export default async function middleware(request: NextRequest) {
 
   // Check for suspicious patterns
   if (isSuspiciousRequest(request)) {
-    console.warn(`[${new Date().toISOString()}] Suspicious request detected: ${method} ${pathname}${search} from ${ip}`);
+    if (!isLocalIp) {
+      console.warn(`[${new Date().toISOString()}] Suspicious request detected: ${method} ${pathname}${search} from ${ip}`);
+    }
 
     return NextResponse.json(
       { error: 'Request blocked due to security policy' },
       { status: 403 }
     );
-  }
-
-  // Force HTTPS in production
-  if (process.env.NODE_ENV === 'production' && !request.nextUrl.protocol.includes('https')) {
-    const httpsUrl = request.nextUrl.clone();
-    httpsUrl.protocol = 'https:';
-    return NextResponse.redirect(httpsUrl);
-  }
-
-  // Force www subdomain in production
-  if (process.env.NODE_ENV === 'production' && 
-      request.nextUrl.hostname === 'varsagel.com') {
-    const wwwUrl = request.nextUrl.clone();
-    wwwUrl.hostname = 'www.varsagel.com';
-    return NextResponse.redirect(wwwUrl);
   }
 
   return response;
@@ -140,10 +137,12 @@ function isSuspiciousRequest(request: NextRequest): boolean {
   const pathname = request.nextUrl.pathname;
   const pathnameLower = pathname.toLowerCase();
   
-  console.log(`[DEBUG] Checking request: ${pathnameLower}`);
+  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROXY === 'true') {
+    console.log(`[DEBUG] Checking request: ${pathnameLower}`);
+  }
   
   // Skip security checks for static assets
-  const staticAssetExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.webp', '.woff', '.woff2', '.ttf', '.eot', '.css', '.js', '.json', '.xml', '.txt'];
+  const staticAssetExtensions = ['.png', '.jpg', '.jpeg', '.jfif', '.jif', '.gif', '.svg', '.ico', '.webp', '.woff', '.woff2', '.ttf', '.eot', '.css', '.js', '.json', '.xml', '.txt'];
   
   // If it's a static asset, skip all security checks
   if (staticAssetExtensions.some(ext => pathnameLower.endsWith(ext))) {
@@ -172,7 +171,12 @@ function isSuspiciousRequest(request: NextRequest): boolean {
 
   if (maliciousUserAgents.some(agent => userAgent.toLowerCase().includes(agent))) {
     const matchedAgent = maliciousUserAgents.find(agent => userAgent.toLowerCase().includes(agent));
-    console.warn(`[${new Date().toISOString()}] Malicious UA blocked: ${userAgent} (matched: ${matchedAgent}) at ${pathname}`);
+    const ip = (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown';
+    const ipRaw = String(ip || '').split(',')[0].trim().toLowerCase();
+    const isLocalIp = ipRaw === '127.0.0.1' || ipRaw === '::1' || ipRaw.startsWith('::ffff:127.0.0.1');
+    if (!isLocalIp) {
+      console.warn(`[${new Date().toISOString()}] Malicious UA blocked: ${userAgent} (matched: ${matchedAgent}) at ${pathname}`);
+    }
     return true;
   }
 
@@ -204,7 +208,12 @@ function isSuspiciousRequest(request: NextRequest): boolean {
 
   if (suspiciousPaths.some(path => pathnameLower.startsWith(path) || pathnameLower.endsWith(path))) {
     const matchedPath = suspiciousPaths.find(path => pathnameLower.startsWith(path) || pathnameLower.endsWith(path));
-    console.warn(`[${new Date().toISOString()}] Suspicious path blocked: ${pathname} (matched: ${matchedPath})`);
+    const ip = (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown';
+    const ipRaw = String(ip || '').split(',')[0].trim().toLowerCase();
+    const isLocalIp = ipRaw === '127.0.0.1' || ipRaw === '::1' || ipRaw.startsWith('::ffff:127.0.0.1');
+    if (!isLocalIp) {
+      console.warn(`[${new Date().toISOString()}] Suspicious path blocked: ${pathname} (matched: ${matchedPath})`);
+    }
     return true;
   }
 
@@ -224,7 +233,12 @@ function isSuspiciousRequest(request: NextRequest): boolean {
   
   if (searchParams && sqlInjectionPatterns.some(pattern => pattern.test(searchParams))) {
     const matchedPattern = sqlInjectionPatterns.find(pattern => pattern.test(searchParams));
-    console.warn(`[${new Date().toISOString()}] SQL Injection pattern blocked in search: ${searchParams} (matched: ${matchedPattern})`);
+    const ip = (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown';
+    const ipRaw = String(ip || '').split(',')[0].trim().toLowerCase();
+    const isLocalIp = ipRaw === '127.0.0.1' || ipRaw === '::1' || ipRaw.startsWith('::ffff:127.0.0.1');
+    if (!isLocalIp) {
+      console.warn(`[${new Date().toISOString()}] SQL Injection pattern blocked in search: ${searchParams} (matched: ${matchedPattern})`);
+    }
     return true;
   }
 
@@ -240,7 +254,12 @@ function isSuspiciousRequest(request: NextRequest): boolean {
 
   if (searchParams && xssPatterns.some(pattern => pattern.test(searchParams))) {
     const matchedPattern = xssPatterns.find(pattern => pattern.test(searchParams));
-    console.warn(`[${new Date().toISOString()}] XSS pattern blocked in search: ${searchParams} (matched: ${matchedPattern})`);
+    const ip = (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown';
+    const ipRaw = String(ip || '').split(',')[0].trim().toLowerCase();
+    const isLocalIp = ipRaw === '127.0.0.1' || ipRaw === '::1' || ipRaw.startsWith('::ffff:127.0.0.1');
+    if (!isLocalIp) {
+      console.warn(`[${new Date().toISOString()}] XSS pattern blocked in search: ${searchParams} (matched: ${matchedPattern})`);
+    }
     return true;
   }
 

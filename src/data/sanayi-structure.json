@@ -1,0 +1,709 @@
+{
+  "name": "İş Makineleri & Sanayi",
+  "slug": "is-makineleri-sanayi",
+  "fullSlug": "is-makineleri-sanayi",
+  "subcategories": [
+    {
+      "name": "Satılık",
+      "slug": "satilik",
+      "fullSlug": "satilik",
+      "subcategories": [
+        {
+          "name": "Asfalt Makinesi",
+          "slug": "asfalt-makinesi",
+          "fullSlug": "satilik-asfalt-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Beko Loder (Kazıcı-Yükleyici)",
+          "slug": "beko-loder-kazici-yukleyici",
+          "fullSlug": "satilik-beko-loder-kazici-yukleyici",
+          "subcategories": []
+        },
+        {
+          "name": "Belden Kırmalı Damper",
+          "slug": "belden-kirmali-damper",
+          "fullSlug": "satilik-belden-kirmali-damper",
+          "subcategories": []
+        },
+        {
+          "name": "Beton Dağıtıcı",
+          "slug": "beton-dagitici",
+          "fullSlug": "satilik-beton-dagitici",
+          "subcategories": []
+        },
+        {
+          "name": "Beton Pompası",
+          "slug": "beton-pompasi",
+          "fullSlug": "satilik-beton-pompasi",
+          "subcategories": []
+        },
+        {
+          "name": "Çöp Kompaktörü",
+          "slug": "cop-kompaktoru",
+          "fullSlug": "satilik-cop-kompaktoru",
+          "subcategories": []
+        },
+        {
+          "name": "Demiryolu Makinesi",
+          "slug": "demiryolu-makinesi",
+          "fullSlug": "satilik-demiryolu-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Dizel Çekiç",
+          "slug": "dizel-cekic",
+          "fullSlug": "satilik-dizel-cekic",
+          "subcategories": []
+        },
+        {
+          "name": "Dozer",
+          "slug": "dozer",
+          "fullSlug": "satilik-dozer",
+          "subcategories": []
+        },
+        {
+          "name": "Ekskavatör (Kepçe)",
+          "slug": "ekskavator-kepce",
+          "fullSlug": "satilik-ekskavator-kepce",
+          "subcategories": []
+        },
+        {
+          "name": "Finişer",
+          "slug": "finiser",
+          "fullSlug": "satilik-finiser",
+          "subcategories": []
+        },
+        {
+          "name": "Fore Kazık Makinesi",
+          "slug": "fore-kazik-makinesi",
+          "fullSlug": "satilik-fore-kazik-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Greyder",
+          "slug": "greyder",
+          "fullSlug": "satilik-greyder",
+          "subcategories": []
+        },
+        {
+          "name": "Kanal & Hendek Kazıcı",
+          "slug": "kanal-hendek-kazici",
+          "fullSlug": "satilik-kanal-hendek-kazici",
+          "subcategories": []
+        },
+        {
+          "name": "Kar Aracı",
+          "slug": "kar-araci",
+          "fullSlug": "satilik-kar-araci",
+          "subcategories": []
+        },
+        {
+          "name": "Kar Küreme Aracı",
+          "slug": "kar-kureme-araci",
+          "fullSlug": "satilik-kar-kureme-araci",
+          "subcategories": []
+        },
+        {
+          "name": "Kar Püskürtme Makinesi",
+          "slug": "kar-puskurtme-makinesi",
+          "fullSlug": "satilik-kar-puskurtme-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Kaya Delici (Ankraj)",
+          "slug": "kaya-delici-ankraj",
+          "fullSlug": "satilik-kaya-delici-ankraj",
+          "subcategories": []
+        },
+        {
+          "name": "Kaya Kamyonu",
+          "slug": "kaya-kamyonu",
+          "fullSlug": "satilik-kaya-kamyonu",
+          "subcategories": []
+        },
+        {
+          "name": "Kırma Eleme Tesisi",
+          "slug": "kirma-eleme-tesisi",
+          "fullSlug": "satilik-kirma-eleme-tesisi",
+          "subcategories": []
+        },
+        {
+          "name": "Kule Vinç",
+          "slug": "kule-vinc",
+          "fullSlug": "satilik-kule-vinc",
+          "subcategories": []
+        },
+        {
+          "name": "Loder (Yükleyici)",
+          "slug": "loder-yukleyici",
+          "fullSlug": "satilik-loder-yukleyici",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Asansör",
+          "slug": "mobil-asansor",
+          "fullSlug": "satilik-mobil-asansor",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Konkasör",
+          "slug": "mobil-konkasor",
+          "fullSlug": "satilik-mobil-konkasor",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Vinç",
+          "slug": "mobil-vinc",
+          "fullSlug": "satilik-mobil-vinc",
+          "subcategories": []
+        },
+        {
+          "name": "Silindir",
+          "slug": "silindir",
+          "fullSlug": "satilik-silindir",
+          "subcategories": []
+        },
+        {
+          "name": "Sondaj Makinesi",
+          "slug": "sondaj-makinesi",
+          "fullSlug": "satilik-sondaj-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Teleskopik Yükleyici",
+          "slug": "teleskopik-yukleyici",
+          "fullSlug": "satilik-teleskopik-yukleyici",
+          "subcategories": []
+        },
+        {
+          "name": "Transmikser",
+          "slug": "transmikser",
+          "fullSlug": "satilik-transmikser",
+          "subcategories": []
+        },
+        {
+          "name": "Yer Altı Makinesi",
+          "slug": "yer-alti-makinesi",
+          "fullSlug": "satilik-yer-alti-makinesi",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Kiralık",
+      "slug": "kiralik",
+      "fullSlug": "kiralik",
+      "subcategories": [
+        {
+          "name": "Asfalt Makinesi",
+          "slug": "asfalt-makinesi",
+          "fullSlug": "kiralik-asfalt-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Beko Loder (Kazıcı-Yükleyici)",
+          "slug": "beko-loder-kazici-yukleyici",
+          "fullSlug": "kiralik-beko-loder-kazici-yukleyici",
+          "subcategories": []
+        },
+        {
+          "name": "Belden Kırmalı Damper",
+          "slug": "belden-kirmali-damper",
+          "fullSlug": "kiralik-belden-kirmali-damper",
+          "subcategories": []
+        },
+        {
+          "name": "Beton Dağıtıcı",
+          "slug": "beton-dagitici",
+          "fullSlug": "kiralik-beton-dagitici",
+          "subcategories": []
+        },
+        {
+          "name": "Beton Pompası",
+          "slug": "beton-pompasi",
+          "fullSlug": "kiralik-beton-pompasi",
+          "subcategories": []
+        },
+        {
+          "name": "Çöp Kompaktörü",
+          "slug": "cop-kompaktoru",
+          "fullSlug": "kiralik-cop-kompaktoru",
+          "subcategories": []
+        },
+        {
+          "name": "Demiryolu Makinesi",
+          "slug": "demiryolu-makinesi",
+          "fullSlug": "kiralik-demiryolu-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Dizel Çekiç",
+          "slug": "dizel-cekic",
+          "fullSlug": "kiralik-dizel-cekic",
+          "subcategories": []
+        },
+        {
+          "name": "Dozer",
+          "slug": "dozer",
+          "fullSlug": "kiralik-dozer",
+          "subcategories": []
+        },
+        {
+          "name": "Ekskavatör (Kepçe)",
+          "slug": "ekskavator-kepce",
+          "fullSlug": "kiralik-ekskavator-kepce",
+          "subcategories": []
+        },
+        {
+          "name": "Finişer",
+          "slug": "finiser",
+          "fullSlug": "kiralik-finiser",
+          "subcategories": []
+        },
+        {
+          "name": "Fore Kazık Makinesi",
+          "slug": "fore-kazik-makinesi",
+          "fullSlug": "kiralik-fore-kazik-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Greyder",
+          "slug": "greyder",
+          "fullSlug": "kiralik-greyder",
+          "subcategories": []
+        },
+        {
+          "name": "Kanal & Hendek Kazıcı",
+          "slug": "kanal-hendek-kazici",
+          "fullSlug": "kiralik-kanal-hendek-kazici",
+          "subcategories": []
+        },
+        {
+          "name": "Kar Aracı",
+          "slug": "kar-araci",
+          "fullSlug": "kiralik-kar-araci",
+          "subcategories": []
+        },
+        {
+          "name": "Kar Küreme Aracı",
+          "slug": "kar-kureme-araci",
+          "fullSlug": "kiralik-kar-kureme-araci",
+          "subcategories": []
+        },
+        {
+          "name": "Kar Püskürtme Makinesi",
+          "slug": "kar-puskurtme-makinesi",
+          "fullSlug": "kiralik-kar-puskurtme-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Kaya Delici (Ankraj)",
+          "slug": "kaya-delici-ankraj",
+          "fullSlug": "kiralik-kaya-delici-ankraj",
+          "subcategories": []
+        },
+        {
+          "name": "Kaya Kamyonu",
+          "slug": "kaya-kamyonu",
+          "fullSlug": "kiralik-kaya-kamyonu",
+          "subcategories": []
+        },
+        {
+          "name": "Kırma Eleme Tesisi",
+          "slug": "kirma-eleme-tesisi",
+          "fullSlug": "kiralik-kirma-eleme-tesisi",
+          "subcategories": []
+        },
+        {
+          "name": "Kule Vinç",
+          "slug": "kule-vinc",
+          "fullSlug": "kiralik-kule-vinc",
+          "subcategories": []
+        },
+        {
+          "name": "Loder (Yükleyici)",
+          "slug": "loder-yukleyici",
+          "fullSlug": "kiralik-loder-yukleyici",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Asansör",
+          "slug": "mobil-asansor",
+          "fullSlug": "kiralik-mobil-asansor",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Konkasör",
+          "slug": "mobil-konkasor",
+          "fullSlug": "kiralik-mobil-konkasor",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Vinç",
+          "slug": "mobil-vinc",
+          "fullSlug": "kiralik-mobil-vinc",
+          "subcategories": []
+        },
+        {
+          "name": "Silindir",
+          "slug": "silindir",
+          "fullSlug": "kiralik-silindir",
+          "subcategories": []
+        },
+        {
+          "name": "Sondaj Makinesi",
+          "slug": "sondaj-makinesi",
+          "fullSlug": "kiralik-sondaj-makinesi",
+          "subcategories": []
+        },
+        {
+          "name": "Teleskopik Yükleyici",
+          "slug": "teleskopik-yukleyici",
+          "fullSlug": "kiralik-teleskopik-yukleyici",
+          "subcategories": []
+        },
+        {
+          "name": "Transmikser",
+          "slug": "transmikser",
+          "fullSlug": "kiralik-transmikser",
+          "subcategories": []
+        },
+        {
+          "name": "Yer Altı Makinesi",
+          "slug": "yer-alti-makinesi",
+          "fullSlug": "kiralik-yer-alti-makinesi",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Yedek Parça & Ataşman",
+      "slug": "yedek-parca-atasman",
+      "fullSlug": "yedek-parca-atasman",
+      "subcategories": [
+        {
+          "name": "Asfalt Makinesi Parçaları",
+          "slug": "asfalt-makinesi-parcalari",
+          "fullSlug": "yedek-parca-atasman-asfalt-makinesi-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Beko Loder Parçaları",
+          "slug": "beko-loder-parcalari",
+          "fullSlug": "yedek-parca-atasman-beko-loder-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Beton Pompası Parçaları",
+          "slug": "beton-pompasi-parcalari",
+          "fullSlug": "yedek-parca-atasman-beton-pompasi-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Demiryolu Makinesi Parçaları",
+          "slug": "demiryolu-makinesi-parcalari",
+          "fullSlug": "yedek-parca-atasman-demiryolu-makinesi-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Dozer Parçaları",
+          "slug": "dozer-parcalari",
+          "fullSlug": "yedek-parca-atasman-dozer-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Ekskavatör Parçaları",
+          "slug": "ekskavator-parcalari",
+          "fullSlug": "yedek-parca-atasman-ekskavator-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Finişer Parçaları",
+          "slug": "finiser-parcalari",
+          "fullSlug": "yedek-parca-atasman-finiser-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Fore Kazık Makinesi Parçaları",
+          "slug": "fore-kazik-makinesi-parcalari",
+          "fullSlug": "yedek-parca-atasman-fore-kazik-makinesi-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Forklift Parçaları",
+          "slug": "forklift-parcalari",
+          "fullSlug": "yedek-parca-atasman-forklift-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Greyder Parçaları",
+          "slug": "greyder-parcalari",
+          "fullSlug": "yedek-parca-atasman-greyder-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Kaya Delici Parçaları",
+          "slug": "kaya-delici-parcalari",
+          "fullSlug": "yedek-parca-atasman-kaya-delici-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Kaya Kamyonu Yedek Parça",
+          "slug": "kaya-kamyonu-yedek-parca",
+          "fullSlug": "yedek-parca-atasman-kaya-kamyonu-yedek-parca",
+          "subcategories": []
+        },
+        {
+          "name": "Kırıcı Parçaları",
+          "slug": "kirici-parcalari",
+          "fullSlug": "yedek-parca-atasman-kirici-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Kule Vinç Parçaları",
+          "slug": "kule-vinc-parcalari",
+          "fullSlug": "yedek-parca-atasman-kule-vinc-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Asansör Parçaları",
+          "slug": "mobil-asansor-parcalari",
+          "fullSlug": "yedek-parca-atasman-mobil-asansor-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Konkasör Parçaları",
+          "slug": "mobil-konkasor-parcalari",
+          "fullSlug": "yedek-parca-atasman-mobil-konkasor-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Mobil Vinç Parçaları",
+          "slug": "mobil-vinc-parcalari",
+          "fullSlug": "yedek-parca-atasman-mobil-vinc-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Silindir Parçaları",
+          "slug": "silindir-parcalari",
+          "fullSlug": "yedek-parca-atasman-silindir-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Sondaj Makinesi Parçaları",
+          "slug": "sondaj-makinesi-parcalari",
+          "fullSlug": "yedek-parca-atasman-sondaj-makinesi-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Teleskopik Yükleyici Parçaları",
+          "slug": "teleskopik-yukleyici-parcalari",
+          "fullSlug": "yedek-parca-atasman-teleskopik-yukleyici-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Transmikser Parçaları",
+          "slug": "transmikser-parcalari",
+          "fullSlug": "yedek-parca-atasman-transmikser-parcalari",
+          "subcategories": []
+        },
+        {
+          "name": "Yer Altı Makinesi Parçaları",
+          "slug": "yer-alti-makinesi-parcalari",
+          "fullSlug": "yedek-parca-atasman-yer-alti-makinesi-parcalari",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Tarım Makineleri",
+      "slug": "tarim-makineleri",
+      "fullSlug": "tarim-makineleri",
+      "subcategories": [
+        {
+          "name": "Traktör",
+          "slug": "traktor",
+          "fullSlug": "tarim-makineleri-traktor",
+          "subcategories": []
+        },
+        {
+          "name": "Toprak İşleme",
+          "slug": "toprak-isleme",
+          "fullSlug": "tarim-makineleri-toprak-isleme",
+          "subcategories": []
+        },
+        {
+          "name": "Hasat & Harman",
+          "slug": "hasat-harman",
+          "fullSlug": "tarim-makineleri-hasat-harman",
+          "subcategories": []
+        },
+        {
+          "name": "Bitki Bakım",
+          "slug": "bitki-bakim",
+          "fullSlug": "tarim-makineleri-bitki-bakim",
+          "subcategories": []
+        },
+        {
+          "name": "Ekim & Dikim",
+          "slug": "ekim-dikim",
+          "fullSlug": "tarim-makineleri-ekim-dikim",
+          "subcategories": []
+        },
+        {
+          "name": "Gübreleme",
+          "slug": "gubreleme",
+          "fullSlug": "tarim-makineleri-gubreleme",
+          "subcategories": []
+        },
+        {
+          "name": "Sulama",
+          "slug": "sulama",
+          "fullSlug": "tarim-makineleri-sulama",
+          "subcategories": []
+        },
+        {
+          "name": "Hayvancılık",
+          "slug": "hayvancilik",
+          "fullSlug": "tarim-makineleri-hayvancilik",
+          "subcategories": []
+        },
+        {
+          "name": "Taşıma",
+          "slug": "tasima",
+          "fullSlug": "tarim-makineleri-tasima",
+          "subcategories": []
+        },
+        {
+          "name": "Ataşman & Yedek Parça",
+          "slug": "atasman-yedek-parca",
+          "fullSlug": "tarim-makineleri-atasman-yedek-parca",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Sanayi",
+      "slug": "sanayi",
+      "fullSlug": "sanayi",
+      "subcategories": [
+        {
+          "name": "Endüstri Makineleri",
+          "slug": "endustri-makineleri",
+          "fullSlug": "sanayi-endustri-makineleri",
+          "subcategories": []
+        },
+        {
+          "name": "Endüstriyel Mutfak",
+          "slug": "endustriyel-mutfak",
+          "fullSlug": "sanayi-endustriyel-mutfak",
+          "subcategories": []
+        },
+        {
+          "name": "Endüstriyel Mobilya",
+          "slug": "endustriyel-mobilya",
+          "fullSlug": "sanayi-endustriyel-mobilya",
+          "subcategories": []
+        },
+        {
+          "name": "Endüstriyel Temizlik",
+          "slug": "endustriyel-temizlik",
+          "fullSlug": "sanayi-endustriyel-temizlik",
+          "subcategories": []
+        },
+        {
+          "name": "Endüstriyel Hırdavat",
+          "slug": "endustriyel-hirdavat",
+          "fullSlug": "sanayi-endustriyel-hirdavat",
+          "subcategories": []
+        },
+        {
+          "name": "Taşıma & İstifleme",
+          "slug": "tasima-istifleme",
+          "fullSlug": "sanayi-tasima-istifleme",
+          "subcategories": []
+        },
+        {
+          "name": "Kompresör",
+          "slug": "kompresor",
+          "fullSlug": "sanayi-kompresor",
+          "subcategories": []
+        },
+        {
+          "name": "Raf & Ürün Teşhir",
+          "slug": "raf-urun-teshir",
+          "fullSlug": "sanayi-raf-urun-teshir",
+          "subcategories": []
+        },
+        {
+          "name": "Çadır, Tente & Kepenk",
+          "slug": "cadir-tente-kepenk",
+          "fullSlug": "sanayi-cadir-tente-kepenk",
+          "subcategories": []
+        },
+        {
+          "name": "Konteyner & Kabin",
+          "slug": "konteyner-kabin",
+          "fullSlug": "sanayi-konteyner-kabin",
+          "subcategories": []
+        },
+        {
+          "name": "Koruma ve Sığınak Sistemleri",
+          "slug": "koruma-ve-siginak-sistemleri",
+          "fullSlug": "sanayi-koruma-ve-siginak-sistemleri",
+          "subcategories": []
+        }
+      ]
+    },
+    {
+      "name": "Elektrik & Enerji",
+      "slug": "elektrik-enerji",
+      "fullSlug": "elektrik-enerji",
+      "subcategories": [
+        {
+          "name": "Jeneratör",
+          "slug": "jenerator",
+          "fullSlug": "elektrik-enerji-jenerator",
+          "subcategories": []
+        },
+        {
+          "name": "Elektrik & Elektronik",
+          "slug": "elektrik-elektronik",
+          "fullSlug": "elektrik-enerji-elektrik-elektronik",
+          "subcategories": []
+        },
+        {
+          "name": "Akaryakıt Ürünleri",
+          "slug": "akaryakit-urunleri",
+          "fullSlug": "elektrik-enerji-akaryakit-urunleri",
+          "subcategories": []
+        },
+        {
+          "name": "Basınçlı Kaplar",
+          "slug": "basincli-kaplar",
+          "fullSlug": "elektrik-enerji-basincli-kaplar",
+          "subcategories": []
+        },
+        {
+          "name": "Güneş Paneli",
+          "slug": "gunes-paneli",
+          "fullSlug": "elektrik-enerji-gunes-paneli",
+          "subcategories": []
+        },
+        {
+          "name": "Rüzgar Türbini",
+          "slug": "ruzgar-turbini",
+          "fullSlug": "elektrik-enerji-ruzgar-turbini",
+          "subcategories": []
+        },
+        {
+          "name": "Su Türbini",
+          "slug": "su-turbini",
+          "fullSlug": "elektrik-enerji-su-turbini",
+          "subcategories": []
+        }
+      ]
+    }
+  ]
+}
