@@ -151,7 +151,7 @@ async function main() {
   
   // Fallback for brands if extraction fails (common main brands)
   if (!brands.length) {
-    const fallback = SEED_BRANDS.length ? SEED_BRANDS : ['Ford','Fiat','Mercedes-Benz','Volkswagen','Peugeot','Renault','Iveco','Karsan','Otokar']
+    const fallback = SEED_BRANDS.length ? SEED_BRANDS : ['Opel','Renault','Volkswagen','Toyota','Honda','Hyundai','Kia','Ford','Peugeot','Audi','BMW','Mercedes','Skoda','Nissan','Alfa Romeo']
     brands = fallback.map(b => ({ href: buildBrandUrl(b), text: b }))
   }
 
