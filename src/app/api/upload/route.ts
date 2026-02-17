@@ -5,6 +5,8 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 import { auth } from "@/auth";
 
+export const runtime = 'nodejs';
+
 const getS3Client = (regionOverride?: string) => {
   const region = (regionOverride || process.env.S3_REGION || process.env.AWS_REGION || '').trim();
   const endpoint = (process.env.S3_ENDPOINT || '').trim();
@@ -37,6 +39,22 @@ const saveLocalFile = (buffer: Buffer, filename: string) => {
 
 const createUploadScan = async () => {
   return { queued: false, id: null, status: 'CLEAN' };
+};
+
+const detectImageMime = (buffer: Buffer) => {
+  if (buffer.length < 12) return '';
+  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) return 'image/jpeg';
+  if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47) return 'image/png';
+  if (buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46) return 'image/gif';
+  if (buffer[0] === 0x42 && buffer[1] === 0x4d) return 'image/bmp';
+  if ((buffer[0] === 0x49 && buffer[1] === 0x49 && buffer[2] === 0x2a && buffer[3] === 0x00) || (buffer[0] === 0x4d && buffer[1] === 0x4d && buffer[2] === 0x00 && buffer[3] === 0x2a)) return 'image/tiff';
+  if (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46 && buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50) return 'image/webp';
+  if (buffer[4] === 0x66 && buffer[5] === 0x74 && buffer[6] === 0x79 && buffer[7] === 0x70) {
+    const brand = buffer.subarray(8, 12).toString('ascii');
+    if (brand === 'avif' || brand === 'avis') return 'image/avif';
+    if (brand === 'heic' || brand === 'heif' || brand === 'heix' || brand === 'mif1' || brand === 'msf1' || brand === 'hevc') return 'image/heic';
+  }
+  return '';
 };
 
 const parseS3Url = (raw: string) => {
@@ -196,30 +214,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Dosya yüklenmedi' }, { status: 400 });
     }
 
-    // Validate file type
-    const validTypes = [
-      'image/jpeg', 'image/png', 'image/webp', 'image/gif', 
-      'image/bmp', 'image/tiff', 'image/avif', 'image/heic', 'image/heif'
-    ];
-    
-    let isValidType = validTypes.includes(file.type) || file.type.startsWith('image/');
-
-    // Fallback: Check extension if type is missing or generic
-    if (!isValidType) {
-      const ext = file.name.split('.').pop()?.toLowerCase();
-      const validExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'tiff', 'avif', 'heic', 'heif', 'jfif', 'jif'];
-      if (ext && validExts.includes(ext)) {
-        isValidType = true;
-      }
-    }
-
-    if (!isValidType) {
-      return NextResponse.json(
-        { success: false, error: `Geçersiz dosya tipi (${file.type || 'bilinmiyor'}). Sadece resim dosyaları yüklenebilir.` },
-        { status: 400 }
-      );
-    }
-
     // Validate file size (20MB match nginx)
     const maxSize = 20 * 1024 * 1024;
     if (file.size > maxSize) {
@@ -228,16 +222,65 @@ export async function POST(request: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const sniffedType = detectImageMime(buffer);
+
+    const validTypes = [
+      'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+      'image/bmp', 'image/tiff', 'image/avif', 'image/heic', 'image/heif',
+      'image/apng', 'image/x-icon', 'image/vnd.microsoft.icon',
+    ];
+
+    let isValidType = (file.type && (validTypes.includes(file.type) || file.type.startsWith('image/'))) || false;
+
+    if (!isValidType) {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      const validExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'tiff', 'avif', 'heic', 'heif', 'jfif', 'jif', 'apng', 'ico'];
+      if (ext && validExts.includes(ext)) {
+        isValidType = true;
+      }
+    }
+
+    if (!isValidType && sniffedType) {
+      isValidType = true;
+    }
+
+    if (!isValidType) {
+      const typeLabel = file.type || sniffedType || 'bilinmiyor';
+      const allowedExtsLabel = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'tiff', 'avif', 'heic', 'heif', 'jfif', 'jif', 'apng', 'ico'].join(', ');
+      return NextResponse.json(
+        { success: false, error: `Geçersiz dosya tipi (${typeLabel}). Kabul edilenler: ${allowedExtsLabel}.` },
+        { status: 400 }
+      );
+    }
 
     // Create unique filename
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '') || 'upload.jpg';
-    const ext = originalName.split('.').pop()?.toLowerCase() || '';
-    const normalizedName =
-      ext === 'jfif' || ext === 'jif'
-        ? originalName.replace(/\.(jfif|jif)$/i, '.jpg')
-        : originalName;
-    const filename = `${uniqueSuffix}-${normalizedName}`;
+    const originalNameRaw = (file.name || '').replace(/[^a-zA-Z0-9.-]/g, '') || 'upload';
+    const nameParts = originalNameRaw.split('.');
+    const baseName = nameParts.length > 1 ? nameParts.slice(0, -1).join('.') : originalNameRaw;
+    let ext = nameParts.length > 1 ? (nameParts[nameParts.length - 1] || '').toLowerCase() : '';
+    const extFromMime: Record<string, string> = {
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/webp': 'webp',
+      'image/gif': 'gif',
+      'image/bmp': 'bmp',
+      'image/tiff': 'tiff',
+      'image/avif': 'avif',
+      'image/apng': 'apng',
+      'image/x-icon': 'ico',
+      'image/vnd.microsoft.icon': 'ico',
+      'image/heic': 'heic',
+      'image/heif': 'heif',
+    };
+    if (ext === 'jfif' || ext === 'jif') ext = 'jpg';
+    if (!ext || ext === 'blob') {
+      const mapped = extFromMime[sniffedType] || extFromMime[file.type];
+      if (mapped) ext = mapped;
+    }
+    const finalName = `${baseName || 'upload'}.${ext || 'jpg'}`;
+    const filename = `${uniqueSuffix}-${finalName}`;
+    const contentType = file.type || sniffedType || 'application/octet-stream';
     
     try {
       const bucket = (process.env.S3_BUCKET || '').trim();
@@ -279,7 +322,7 @@ export async function POST(request: NextRequest) {
         Bucket: bucket,
         Key: key,
         Body: buffer,
-        ContentType: file.type || 'application/octet-stream',
+        ContentType: contentType,
         ...(objectAcl ? { ACL: objectAcl } : {}),
       }));
 

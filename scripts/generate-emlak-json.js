@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const EXCEL_PATH = 'c:\\varsagel\\varsagel\\kategoriler\\EMLAK kategori çalışması en son.xlsx';
+const OUTPUT_PATH = 'c:\\varsagel\\varsagel\\src\\data\\emlak-structure.json';
 
 function trSlug(text) {
   const trMap = { 'ç': 'c', 'ğ': 'g', 'ı': 'i', 'İ': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u', 'Ç': 'c', 'Ğ': 'g', 'Ö': 'o', 'Ş': 's', 'Ü': 'u' };
@@ -21,7 +22,7 @@ function generate() {
         const data = XLSX.utils.sheet_to_json(sheet, {header: 1});
 
         const root = {
-            name: 'Emlak',
+            name: 'EMLAK',
             slug: 'emlak',
             icon: '🏠',
             subcategories: []
@@ -69,8 +70,8 @@ function generate() {
         };
         clean(root);
 
-        fs.writeFileSync(path.join(__dirname, 'emlak-structure.json'), JSON.stringify(root, null, 2));
-        console.log('JSON written to scripts/emlak-structure.json');
+        fs.writeFileSync(OUTPUT_PATH, JSON.stringify(root, null, 2));
+        console.log(`JSON written to ${OUTPUT_PATH}`);
 
     } catch (error) {
         console.error('Error:', error);
@@ -92,4 +93,3 @@ function findOrCreate(parentArray, name, parentSlug) {
 }
 
 generate();
-

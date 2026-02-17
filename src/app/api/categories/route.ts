@@ -31,6 +31,24 @@ async function syncStaticCategoryRoots() {
 }
 
 export async function GET() {
+  if (process.env.NEXT_PHASE === "phase-production-build") {
+    return NextResponse.json(
+      CATEGORIES.map((c) => ({
+        id: c.slug,
+        name: c.name,
+        slug: c.slug,
+        icon: c.icon,
+        subcategories: c.subcategories.map((s: any) => ({
+          id: s.id || s.slug,
+          name: s.name,
+          slug: s.slug,
+          fullSlug: s.fullSlug || undefined,
+        })),
+        attributes: [],
+      }))
+    );
+  }
+
   try {
     const g = globalThis as any;
     if (!g.__varsagel_static_categories_synced) {
@@ -58,7 +76,6 @@ export async function GET() {
               slug: s.slug,
               categoryId: created.id,
             })),
-            skipDuplicates: true,
           });
         }
       }

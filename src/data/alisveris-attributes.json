@@ -2,91 +2,91 @@
   "bilgisayar-dizustu-notebook-laptop": [
     {
       "type": "select",
-      "key": "cozunurluk",
-      "label": "Çözünürlük",
+      "key": "marka",
+      "label": "Marka",
       "options": [
-        "1280 x 800",
-        "1366 x 768",
-        "1440 x 900",
-        "1600 x 900",
-        "1920 x 1080",
-        "1920 x 1200",
-        "2048 x 1536",
-        "2160 x 1440",
-        "2340 x 1440",
-        "2560 x 1440",
-        "2560 x 1600",
-        "2880 x 1800",
-        "3072 x 1620",
-        "3200 x 1800",
-        "3456 x 2234",
-        "3840 x 2160"
+        "Acer",
+        "Advan",
+        "Alienware",
+        "Aorus",
+        "Apple Macbook",
+        "Arçelik",
+        "Ardor",
+        "Asus",
+        "Beko",
+        "BenQ",
+        "Casper",
+        "Cbox",
+        "Chuwi",
+        "Compaq",
+        "Crea",
+        "Datron",
+        "Dell",
+        "Echips",
+        "Escort",
+        "Everest",
+        "EXA",
+        "Exper",
+        "Fujitsu",
+        "Fujitsu Siemens",
+        "GameGaraj",
+        "Gateway",
+        "Getac",
+        "Gigabyte",
+        "Google",
+        "Grundig",
+        "Haier",
+        "Hometech",
+        "Honor",
+        "HP",
+        "Huawei",
+        "I-Life",
+        "IBM",
+        "Icotech",
+        "iXtech",
+        "Jumper",
+        "Keysmart",
+        "Lenovo",
+        "LG",
+        "Mechrevo",
+        "Medion",
+        "Microsoft",
+        "Monster",
+        "MSI",
+        "NEC",
+        "NUC Intel",
+        "Onda",
+        "Packard Bell",
+        "Panasonic",
+        "Peaq",
+        "Porsche Design",
+        "Probook",
+        "Quadro",
+        "Quantum",
+        "Razer",
+        "Reeder",
+        "Samsung",
+        "Smartbook",
+        "Sony",
+        "Sunny",
+        "Technopc",
+        "Teclast",
+        "Tecno",
+        "Terra",
+        "Tigoes",
+        "Toplu Satış",
+        "Toshiba",
+        "Vestel",
+        "Victor",
+        "Woon",
+        "Xiaomi",
+        "Zeuslap"
       ]
     },
     {
-      "type": "select",
-      "key": "ekran-boyutu",
-      "label": "Ekran Boyutu",
-      "options": [
-        "10 ''",
-        "10.1 ''",
-        "10.2 ''",
-        "10.6 ''",
-        "11 ''",
-        "11.1 ''",
-        "11.6 ''",
-        "12 ''",
-        "12.1 ''",
-        "12.5 ''",
-        "13 ''",
-        "13.2 ''",
-        "13.3 ''",
-        "14 ''",
-        "14.1 ''",
-        "15 ''",
-        "15.4 ''",
-        "15.6 ''",
-        "16 ''",
-        "16.1 ''",
-        "16.2 \"",
-        "16.4 ''",
-        "17 ''",
-        "17.3 \"",
-        "18 ''",
-        "18,4 ''",
-        "20.1 ''",
-        "24 ''",
-        "7 ''",
-        "8.9 ''"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "ekran-karti",
-      "label": "Ekran Kartı",
-      "options": [
-        "1 GB",
-        "1.5 GB",
-        "12 GB",
-        "128 MB",
-        "16 GB",
-        "18 GB",
-        "2 GB",
-        "24 GB",
-        "256 MB",
-        "3 GB",
-        "30 GB",
-        "358 MB",
-        "38 GB",
-        "4 GB",
-        "40 GB",
-        "512 MB",
-        "6 GB",
-        "64 MB ve altı",
-        "768 MB",
-        "8 GB",
-        "Paylaşımlı"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
@@ -263,89 +263,6 @@
     },
     {
       "type": "select",
-      "key": "marka",
-      "label": "Marka",
-      "options": [
-        "Acer",
-        "Advan",
-        "Alienware",
-        "Aorus",
-        "Apple Macbook",
-        "Arçelik",
-        "Ardor",
-        "Asus",
-        "Beko",
-        "BenQ",
-        "Casper",
-        "Cbox",
-        "Chuwi",
-        "Compaq",
-        "Crea",
-        "Datron",
-        "Dell",
-        "Echips",
-        "Escort",
-        "Everest",
-        "EXA",
-        "Exper",
-        "Fujitsu",
-        "Fujitsu Siemens",
-        "GameGaraj",
-        "Gateway",
-        "Getac",
-        "Gigabyte",
-        "Google",
-        "Grundig",
-        "Haier",
-        "Hometech",
-        "Honor",
-        "HP",
-        "Huawei",
-        "I-Life",
-        "IBM",
-        "Icotech",
-        "iXtech",
-        "Jumper",
-        "Keysmart",
-        "Lenovo",
-        "LG",
-        "Mechrevo",
-        "Medion",
-        "Microsoft",
-        "Monster",
-        "MSI",
-        "NEC",
-        "NUC Intel",
-        "Onda",
-        "Packard Bell",
-        "Panasonic",
-        "Peaq",
-        "Porsche Design",
-        "Probook",
-        "Quadro",
-        "Quantum",
-        "Razer",
-        "Reeder",
-        "Samsung",
-        "Smartbook",
-        "Sony",
-        "Sunny",
-        "Technopc",
-        "Teclast",
-        "Tecno",
-        "Terra",
-        "Tigoes",
-        "Toplu Satış",
-        "Toshiba",
-        "Vestel",
-        "Victor",
-        "Woon",
-        "Xiaomi",
-        "Zeuslap"
-      ]
-    },
-    {
-      "type": "select",
       "key": "ram",
       "label": "Ram",
       "options": [
@@ -424,95 +341,97 @@
         "8 TB",
         "Yok"
       ]
+    },
+    {
+      "type": "select",
+      "key": "ekran-karti",
+      "label": "Ekran Kartı",
+      "options": [
+        "1 GB",
+        "1.5 GB",
+        "12 GB",
+        "128 MB",
+        "16 GB",
+        "18 GB",
+        "2 GB",
+        "24 GB",
+        "256 MB",
+        "3 GB",
+        "30 GB",
+        "358 MB",
+        "38 GB",
+        "4 GB",
+        "40 GB",
+        "512 MB",
+        "6 GB",
+        "64 MB ve altı",
+        "768 MB",
+        "8 GB",
+        "Paylaşımlı"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "ekran-boyutu",
+      "label": "Ekran Boyutu",
+      "options": [
+        "10 ''",
+        "10.1 ''",
+        "10.2 ''",
+        "10.6 ''",
+        "11 ''",
+        "11.1 ''",
+        "11.6 ''",
+        "12 ''",
+        "12.1 ''",
+        "12.5 ''",
+        "13 ''",
+        "13.2 ''",
+        "13.3 ''",
+        "14 ''",
+        "14.1 ''",
+        "15 ''",
+        "15.4 ''",
+        "15.6 ''",
+        "16 ''",
+        "16.1 ''",
+        "16.2 \"",
+        "16.4 ''",
+        "17 ''",
+        "17.3 \"",
+        "18 ''",
+        "18,4 ''",
+        "20.1 ''",
+        "24 ''",
+        "7 ''",
+        "8.9 ''"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "cozunurluk",
+      "label": "Çözünürlük",
+      "options": [
+        "1280 x 800",
+        "1366 x 768",
+        "1440 x 900",
+        "1600 x 900",
+        "1920 x 1080",
+        "1920 x 1200",
+        "2048 x 1536",
+        "2160 x 1440",
+        "2340 x 1440",
+        "2560 x 1440",
+        "2560 x 1600",
+        "2880 x 1800",
+        "3072 x 1620",
+        "3200 x 1800",
+        "3456 x 2234",
+        "3840 x 2160"
+      ]
     }
   ],
   "bilgisayar-donanim-islemci": [
-    {
-      "type": "select",
-      "key": "marka",
-      "label": "Marka",
-      "options": [
-        "AMD",
-        "Intel"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "on-bellek",
-      "label": "Ön  Bellek",
-      "options": [
-        "1 MB",
-        "10 MB",
-        "12 MB",
-        "128 KB",
-        "128 MB",
-        "14 MB",
-        "15 MB",
-        "16 MB",
-        "2 MB",
-        "20 MB",
-        "256 KB",
-        "3 MB",
-        "32 MB",
-        "36 MB",
-        "4 MB",
-        "512 KB",
-        "6 MB",
-        "64 MB",
-        "8 MB",
-        "9 MB",
-        "96 MB"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "pin-soket",
-      "label": "Pin/Soket",
-      "options": [
-        "1150 Intel",
-        "1151 Intel",
-        "1155 Intel",
-        "1156 Intel",
-        "1166 Intel",
-        "1200 Intel",
-        "1207 AMD",
-        "1366 Intel",
-        "1700 AMD",
-        "1700 Intel",
-        "1851 Intel",
-        "1974 AMD",
-        "2011 Intel",
-        "2066 Intel",
-        "296 Intel",
-        "370 Intel",
-        "423 Intel",
-        "462 AMD",
-        "468 Intel",
-        "478 Intel",
-        "486 AMD",
-        "563 AMD",
-        "638 AMD",
-        "754 AMD",
-        "771 Intel",
-        "775 Intel",
-        "938 AMD",
-        "939 AMD",
-        "940 AMD",
-        "941 AMD",
-        "AM2",
-        "AM2+",
-        "AM3",
-        "AM3+",
-        "AM4",
-        "AM5",
-        "FM2",
-        "Slot",
-        "SP3",
-        "SP3r2 (TR4)",
-        "SP3r3 (sTRX4)",
-        "SP3r4 (sWRX8)"
-      ]
-    },
     {
       "type": "select",
       "key": "seri",
@@ -652,57 +571,100 @@
         "Intel Pentium Gold",
         "Intel Pentium M"
       ]
+    },
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "AMD",
+        "Intel"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "pin-soket",
+      "label": "Pin/Soket",
+      "options": [
+        "1150 Intel",
+        "1151 Intel",
+        "1155 Intel",
+        "1156 Intel",
+        "1166 Intel",
+        "1200 Intel",
+        "1207 AMD",
+        "1366 Intel",
+        "1700 AMD",
+        "1700 Intel",
+        "1851 Intel",
+        "1974 AMD",
+        "2011 Intel",
+        "2066 Intel",
+        "296 Intel",
+        "370 Intel",
+        "423 Intel",
+        "462 AMD",
+        "468 Intel",
+        "478 Intel",
+        "486 AMD",
+        "563 AMD",
+        "638 AMD",
+        "754 AMD",
+        "771 Intel",
+        "775 Intel",
+        "938 AMD",
+        "939 AMD",
+        "940 AMD",
+        "941 AMD",
+        "AM2",
+        "AM2+",
+        "AM3",
+        "AM3+",
+        "AM4",
+        "AM5",
+        "FM2",
+        "Slot",
+        "SP3",
+        "SP3r2 (TR4)",
+        "SP3r3 (sTRX4)",
+        "SP3r4 (sWRX8)"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "on-bellek",
+      "label": "Ön  Bellek",
+      "options": [
+        "1 MB",
+        "10 MB",
+        "12 MB",
+        "128 KB",
+        "128 MB",
+        "14 MB",
+        "15 MB",
+        "16 MB",
+        "2 MB",
+        "20 MB",
+        "256 KB",
+        "3 MB",
+        "32 MB",
+        "36 MB",
+        "4 MB",
+        "512 KB",
+        "6 MB",
+        "64 MB",
+        "8 MB",
+        "9 MB",
+        "96 MB"
+      ]
     }
   ],
   "bilgisayar-donanim-harddisk": [
-    {
-      "type": "select",
-      "key": "arabirim",
-      "label": "Arabirim",
-      "options": [
-        "IDE",
-        "SATA",
-        "SATA II",
-        "SATA III",
-        "SCSI"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "kapasite",
-      "label": "Kapasite",
-      "options": [
-        "1 TB",
-        "1.5 TB",
-        "100 GB",
-        "120 GB",
-        "128 GB",
-        "160 GB",
-        "18 TB",
-        "2 TB",
-        "200 GB",
-        "240 GB",
-        "250 GB",
-        "3 TB",
-        "300 GB",
-        "320 GB",
-        "360 GB",
-        "4 TB",
-        "40 GB ve altı",
-        "400 GB",
-        "480 GB",
-        "5 TB",
-        "500 GB",
-        "6 TB",
-        "60 GB",
-        "600 GB",
-        "640 GB",
-        "750 GB",
-        "8 TB",
-        "80 GB",
-        "Diğer"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -760,6 +722,59 @@
         "Vaseky",
         "Western Digital"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "arabirim",
+      "label": "Arabirim",
+      "options": [
+        "IDE",
+        "SATA",
+        "SATA II",
+        "SATA III",
+        "SCSI"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "kapasite",
+      "label": "Kapasite",
+      "options": [
+        "1 TB",
+        "1.5 TB",
+        "100 GB",
+        "120 GB",
+        "128 GB",
+        "160 GB",
+        "18 TB",
+        "2 TB",
+        "200 GB",
+        "240 GB",
+        "250 GB",
+        "3 TB",
+        "300 GB",
+        "320 GB",
+        "360 GB",
+        "4 TB",
+        "40 GB ve altı",
+        "400 GB",
+        "480 GB",
+        "5 TB",
+        "500 GB",
+        "6 TB",
+        "60 GB",
+        "600 GB",
+        "640 GB",
+        "750 GB",
+        "8 TB",
+        "80 GB",
+        "Diğer"
+      ]
     }
   ],
   "bilgisayar-donanim-pcmcia-kartlar": [
@@ -782,55 +797,6 @@
     }
   ],
   "bilgisayar-donanim-ram-bellek": [
-    {
-      "type": "select",
-      "key": "kapasite",
-      "label": "Kapasite",
-      "options": [
-        "1 GB",
-        "1 TB",
-        "128 GB",
-        "128 MB",
-        "128 MB altı",
-        "12x 32 GB",
-        "16 GB",
-        "2 GB",
-        "256 GB",
-        "256 MB",
-        "2x 1 GB",
-        "2x 128 MB",
-        "2x 16 GB",
-        "2x 2 GB",
-        "2x 24 GB",
-        "2x 256 MB",
-        "2x 32 GB",
-        "2x 4 GB",
-        "2x 48 GB",
-        "2x 512 MB",
-        "2x 64 MB",
-        "2x 8 GB",
-        "32 GB",
-        "3x 1 GB",
-        "3x 2 GB",
-        "3x 4 GB",
-        "4 GB",
-        "48 GB",
-        "4x 1 GB",
-        "4x 16 GB",
-        "4x 2 GB",
-        "4x 24 GB",
-        "4x 4 GB",
-        "4x 8 GB",
-        "512 GB",
-        "512 MB",
-        "6 GB",
-        "64 GB",
-        "64 MB",
-        "8 GB",
-        "8x 16 GB",
-        "8x 8 GB"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -1044,6 +1010,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "tipi",
       "label": "Tipi",
@@ -1060,57 +1031,58 @@
         "SD",
         "SDRAM"
       ]
-    }
-  ],
-  "bilgisayar-donanim-ssd-solid-state-drive": [
-    {
-      "type": "select",
-      "key": "baglanti-tipi",
-      "label": "Bağlantı Tipi",
-      "options": [
-        "M.2 PCIe NVMe",
-        "M.2 Sata",
-        "mSata",
-        "PCIe Gen 3 NVMe",
-        "PCIe Gen 4 NVMe",
-        "Sata",
-        "Sata 2",
-        "Sata 2.5",
-        "Sata 3"
-      ]
     },
     {
       "type": "select",
       "key": "kapasite",
       "label": "Kapasite",
       "options": [
+        "1 GB",
         "1 TB",
-        "100 TB",
-        "120 GB",
         "128 GB",
-        "16 TB",
-        "180 GB",
-        "2 TB",
-        "240 GB",
-        "250 GB",
+        "128 MB",
+        "128 MB altı",
+        "12x 32 GB",
+        "16 GB",
+        "2 GB",
         "256 GB",
-        "3 TB",
-        "30 GB",
-        "30 TB",
-        "300 GB",
+        "256 MB",
+        "2x 1 GB",
+        "2x 128 MB",
+        "2x 16 GB",
+        "2x 2 GB",
+        "2x 24 GB",
+        "2x 256 MB",
+        "2x 32 GB",
+        "2x 4 GB",
+        "2x 48 GB",
+        "2x 512 MB",
+        "2x 64 MB",
+        "2x 8 GB",
         "32 GB",
-        "4 TB",
-        "480 GB",
-        "500 GB",
+        "3x 1 GB",
+        "3x 2 GB",
+        "3x 4 GB",
+        "4 GB",
+        "48 GB",
+        "4x 1 GB",
+        "4x 16 GB",
+        "4x 2 GB",
+        "4x 24 GB",
+        "4x 4 GB",
+        "4x 8 GB",
         "512 GB",
-        "540 MB",
-        "60 GB",
+        "512 MB",
+        "6 GB",
         "64 GB",
-        "750 GB",
-        "8 TB",
-        "960 GB"
+        "64 MB",
+        "8 GB",
+        "8x 16 GB",
+        "8x 8 GB"
       ]
-    },
+    }
+  ],
+  "bilgisayar-donanim-ssd-solid-state-drive": [
     {
       "type": "select",
       "key": "marka",
@@ -1247,9 +1219,71 @@
         "XPG",
         "Xraydisk"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "kapasite",
+      "label": "Kapasite",
+      "options": [
+        "1 TB",
+        "100 TB",
+        "120 GB",
+        "128 GB",
+        "16 TB",
+        "180 GB",
+        "2 TB",
+        "240 GB",
+        "250 GB",
+        "256 GB",
+        "3 TB",
+        "30 GB",
+        "30 TB",
+        "300 GB",
+        "32 GB",
+        "4 TB",
+        "480 GB",
+        "500 GB",
+        "512 GB",
+        "540 MB",
+        "60 GB",
+        "64 GB",
+        "750 GB",
+        "8 TB",
+        "960 GB"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "baglanti-tipi",
+      "label": "Bağlantı Tipi",
+      "options": [
+        "M.2 PCIe NVMe",
+        "M.2 Sata",
+        "mSata",
+        "PCIe Gen 3 NVMe",
+        "PCIe Gen 4 NVMe",
+        "Sata",
+        "Sata 2",
+        "Sata 2.5",
+        "Sata 3"
+      ]
     }
   ],
   "bilgisayar-donanim-cd-surucu-yazici": [
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "CD Sürücüler",
+        "CD Yazıcılar"
+      ]
+    },
     {
       "type": "select",
       "key": "marka",
@@ -1280,16 +1314,21 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    }
+  ],
+  "bilgisayar-donanim-dvd-surucu-yazici": [
+    {
       "type": "select",
       "key": "tipi",
       "label": "Tipi",
       "options": [
-        "CD Sürücüler",
-        "CD Yazıcılar"
+        "DVD Sürücü",
+        "DVD Yazıcı"
       ]
-    }
-  ],
-  "bilgisayar-donanim-dvd-surucu-yazici": [
+    },
     {
       "type": "select",
       "key": "marka",
@@ -1338,16 +1377,21 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    }
+  ],
+  "bilgisayar-donanim-blu-ray-surucu-yazici": [
+    {
       "type": "select",
       "key": "tipi",
       "label": "Tipi",
       "options": [
-        "DVD Sürücü",
-        "DVD Yazıcı"
+        "Blu-ray Sürücü",
+        "Blu-ray Yazıcı"
       ]
-    }
-  ],
-  "bilgisayar-donanim-blu-ray-surucu-yazici": [
+    },
     {
       "type": "select",
       "key": "marka",
@@ -1373,16 +1417,76 @@
       ]
     },
     {
-      "type": "select",
-      "key": "tipi",
-      "label": "Tipi",
-      "options": [
-        "Blu-ray Sürücü",
-        "Blu-ray Yazıcı"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-masaustu": [
+    {
+      "type": "select",
+      "key": "model",
+      "label": "Model",
+      "options": [
+        "Acer",
+        "Aerocool",
+        "Aidata",
+        "Alienware",
+        "Aopen",
+        "Apple",
+        "Arçelik",
+        "Asrock",
+        "Asus",
+        "Avantron",
+        "Beko",
+        "Casper",
+        "Cbox",
+        "Collect",
+        "Dell",
+        "Dente",
+        "Dragos",
+        "Escort",
+        "Esonic",
+        "Exper",
+        "Fujitsu",
+        "Gigabyte",
+        "Grundig",
+        "Hometech",
+        "HP",
+        "Huawei",
+        "I-Life",
+        "IBM",
+        "Intel",
+        "Izoly",
+        "Lenovo",
+        "Microsoft",
+        "Monster",
+        "MSI",
+        "NEC",
+        "Olivetti",
+        "Ottoman Computer",
+        "Philips",
+        "PowerGate",
+        "Pro2000",
+        "Quadro",
+        "Raspberry Pi",
+        "Samsung",
+        "Seclife",
+        "Shuttle",
+        "Sony",
+        "Sun",
+        "Technopc",
+        "Toplama",
+        "Turbox",
+        "Vestel",
+        "ViewSonic",
+        "Warbox",
+        "Woon",
+        "Xaser",
+        "Zeiron",
+        "Zotac"
+      ]
+    },
     {
       "type": "select",
       "key": "ekran-boyutu",
@@ -1455,36 +1559,46 @@
     },
     {
       "type": "select",
-      "key": "harddisk-kapasitesi",
-      "label": "Harddisk Kapasitesi",
+      "key": "kasa",
+      "label": "Kasa",
       "options": [
-        "1 TB",
-        "1,5 TB",
-        "100 GB",
-        "120 GB",
+        "All-in-One",
+        "Dikey (Tower)",
+        "HTPC Cube (Kare)",
+        "HTPC Slim (Mini)",
+        "Mini PC",
+        "Stick PC",
+        "Tek Kartlı (SBC)",
+        "Terminal (Client)",
+        "Yatay"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "ram-bellek",
+      "label": "Ram Bellek",
+      "options": [
+        "1 GB",
+        "12 GB",
         "128 GB",
-        "160 GB",
-        "17 TB",
-        "2 TB",
-        "20 GB ve Altı",
-        "200 GB",
-        "240 GB",
-        "250 GB",
+        "128 MB",
+        "128 MB Altı",
+        "16 GB",
+        "192 GB",
+        "2 GB",
+        "24 GB",
         "256 GB",
-        "3 TB",
-        "30 GB",
-        "320 GB",
-        "4 TB",
-        "40 GB",
-        "400 GB",
-        "480 GB",
-        "500 GB",
+        "256 MB",
+        "3 GB",
+        "32 GB",
+        "4 GB",
+        "48 GB",
         "512 GB",
-        "6 TB",
-        "60 GB",
-        "750 GB",
-        "80 GB",
-        "Yok"
+        "512 MB",
+        "6 GB",
+        "64 GB",
+        "8 GB",
+        "96 GB"
       ]
     },
     {
@@ -1729,110 +1843,36 @@
     },
     {
       "type": "select",
-      "key": "kasa",
-      "label": "Kasa",
+      "key": "harddisk-kapasitesi",
+      "label": "Harddisk Kapasitesi",
       "options": [
-        "All-in-One",
-        "Dikey (Tower)",
-        "HTPC Cube (Kare)",
-        "HTPC Slim (Mini)",
-        "Mini PC",
-        "Stick PC",
-        "Tek Kartlı (SBC)",
-        "Terminal (Client)",
-        "Yatay"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "modeller",
-      "label": "Modeller",
-      "options": [
-        "Acer",
-        "Aerocool",
-        "Aidata",
-        "Alienware",
-        "Aopen",
-        "Apple",
-        "Arçelik",
-        "Asrock",
-        "Asus",
-        "Avantron",
-        "Beko",
-        "Casper",
-        "Cbox",
-        "Collect",
-        "Dell",
-        "Dente",
-        "Dragos",
-        "Escort",
-        "Esonic",
-        "Exper",
-        "Fujitsu",
-        "Gigabyte",
-        "Grundig",
-        "Hometech",
-        "HP",
-        "Huawei",
-        "I-Life",
-        "IBM",
-        "Intel",
-        "Izoly",
-        "Lenovo",
-        "Microsoft",
-        "Monster",
-        "MSI",
-        "NEC",
-        "Olivetti",
-        "Ottoman Computer",
-        "Philips",
-        "PowerGate",
-        "Pro2000",
-        "Quadro",
-        "Raspberry Pi",
-        "Samsung",
-        "Seclife",
-        "Shuttle",
-        "Sony",
-        "Sun",
-        "Technopc",
-        "Toplama",
-        "Turbox",
-        "Vestel",
-        "ViewSonic",
-        "Warbox",
-        "Woon",
-        "Xaser",
-        "Zeiron",
-        "Zotac"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "ram-bellek",
-      "label": "Ram Bellek",
-      "options": [
-        "1 GB",
-        "12 GB",
+        "1 TB",
+        "1,5 TB",
+        "100 GB",
+        "120 GB",
         "128 GB",
-        "128 MB",
-        "128 MB Altı",
-        "16 GB",
-        "192 GB",
-        "2 GB",
-        "24 GB",
+        "160 GB",
+        "17 TB",
+        "2 TB",
+        "20 GB ve Altı",
+        "200 GB",
+        "240 GB",
+        "250 GB",
         "256 GB",
-        "256 MB",
-        "3 GB",
-        "32 GB",
-        "4 GB",
-        "48 GB",
+        "3 TB",
+        "30 GB",
+        "320 GB",
+        "4 TB",
+        "40 GB",
+        "400 GB",
+        "480 GB",
+        "500 GB",
         "512 GB",
-        "512 MB",
-        "6 GB",
-        "64 GB",
-        "8 GB",
-        "96 GB"
+        "6 TB",
+        "60 GB",
+        "750 GB",
+        "80 GB",
+        "Yok"
       ]
     },
     {
@@ -1867,18 +1907,6 @@
     }
   ],
   "bilgisayar-donanim-anakart": [
-    {
-      "type": "select",
-      "key": "islemci",
-      "label": "İşlemci",
-      "options": [
-        "AMD",
-        "ARM",
-        "Dual Socket",
-        "Intel",
-        "Via"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -2008,6 +2036,23 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "islemci",
+      "label": "İşlemci",
+      "options": [
+        "AMD",
+        "ARM",
+        "Dual Socket",
+        "Intel",
+        "Via"
+      ]
+    },
+    {
       "type": "select",
       "key": "ram-slotu",
       "label": "Ram Slotu",
@@ -2024,61 +2069,6 @@
     }
   ],
   "bilgisayar-donanim-harddisk-dahili": [
-    {
-      "type": "select",
-      "key": "arabirim",
-      "label": "Arabirim",
-      "options": [
-        "IDE",
-        "M.2",
-        "SATA",
-        "SATA 2",
-        "SATA 3",
-        "SCSI"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "kapasite",
-      "label": "Kapasite",
-      "options": [
-        "1 TB",
-        "1.5 TB",
-        "10 TB",
-        "100 GB",
-        "12 TB",
-        "120 GB",
-        "128 GB",
-        "14 TB",
-        "146 GB",
-        "16 TB",
-        "160 GB",
-        "18 TB",
-        "2 TB",
-        "20 TB",
-        "200 GB",
-        "240 GB",
-        "250 GB",
-        "256 GB",
-        "3 TB",
-        "300 GB",
-        "320 GB",
-        "360 GB",
-        "4 TB",
-        "40 GB ve Altı",
-        "400 GB",
-        "450 GB",
-        "480 GB",
-        "5 TB",
-        "500 GB",
-        "6 TB",
-        "60 GB",
-        "640 GB",
-        "750 GB",
-        "8 TB",
-        "80 GB"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -2164,26 +2154,23 @@
         "Vivetronic",
         "Western Digital"
       ]
-    }
-  ],
-  "bilgisayar-donanim-ssd-dahili": [
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
     {
       "type": "select",
-      "key": "baglanti-tipi",
-      "label": "Bağlantı Tipi",
+      "key": "arabirim",
+      "label": "Arabirim",
       "options": [
-        "E-Sata",
-        "M.2 2280",
-        "M.2 PCIe",
-        "M.2 PCIe (NVMe)",
-        "M.2 Sata",
-        "mSata",
-        "PCIe 3.0",
-        "PCIe 4.0",
-        "Sata",
-        "Sata 2",
-        "Sata 2.5",
-        "Sata 3"
+        "IDE",
+        "M.2",
+        "SATA",
+        "SATA 2",
+        "SATA 3",
+        "SCSI"
       ]
     },
     {
@@ -2192,26 +2179,44 @@
       "label": "Kapasite",
       "options": [
         "1 TB",
-        "100 TB",
+        "1.5 TB",
+        "10 TB",
+        "100 GB",
+        "12 TB",
         "120 GB",
         "128 GB",
+        "14 TB",
+        "146 GB",
+        "16 TB",
         "160 GB",
-        "180 GB",
+        "18 TB",
         "2 TB",
+        "20 TB",
+        "200 GB",
         "240 GB",
         "250 GB",
         "256 GB",
-        "30 TB",
-        "32 GB",
+        "3 TB",
+        "300 GB",
+        "320 GB",
+        "360 GB",
         "4 TB",
+        "40 GB ve Altı",
+        "400 GB",
+        "450 GB",
         "480 GB",
+        "5 TB",
         "500 GB",
-        "512 GB",
+        "6 TB",
+        "60 GB",
+        "640 GB",
         "750 GB",
         "8 TB",
-        "960 GB"
+        "80 GB"
       ]
-    },
+    }
+  ],
+  "bilgisayar-donanim-ssd-dahili": [
     {
       "type": "select",
       "key": "marka",
@@ -2318,60 +2323,59 @@
         "Xaser",
         "XPG"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "kapasite",
+      "label": "Kapasite",
+      "options": [
+        "1 TB",
+        "100 TB",
+        "120 GB",
+        "128 GB",
+        "160 GB",
+        "180 GB",
+        "2 TB",
+        "240 GB",
+        "250 GB",
+        "256 GB",
+        "30 TB",
+        "32 GB",
+        "4 TB",
+        "480 GB",
+        "500 GB",
+        "512 GB",
+        "750 GB",
+        "8 TB",
+        "960 GB"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "baglanti-tipi",
+      "label": "Bağlantı Tipi",
+      "options": [
+        "E-Sata",
+        "M.2 2280",
+        "M.2 PCIe",
+        "M.2 PCIe (NVMe)",
+        "M.2 Sata",
+        "mSata",
+        "PCIe 3.0",
+        "PCIe 4.0",
+        "Sata",
+        "Sata 2",
+        "Sata 2.5",
+        "Sata 3"
+      ]
     }
   ],
   "bilgisayar-donanim-ekran-karti": [
-    {
-      "type": "select",
-      "key": "bellek-turu",
-      "label": "Bellek Türü",
-      "options": [
-        "DDR2",
-        "DDR3",
-        "DDR5",
-        "DDR5X",
-        "GDDR4",
-        "GDDR5",
-        "GDDR5X",
-        "GDDR6",
-        "GDDR6X",
-        "GDDR7",
-        "HBM",
-        "HBM2"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "dahili-bellek",
-      "label": "Dahili Bellek",
-      "options": [
-        "1 GB",
-        "1.5 GB",
-        "10 GB",
-        "11 GB",
-        "12 GB",
-        "128 MB",
-        "16 GB",
-        "2 GB",
-        "20 GB",
-        "24 GB",
-        "256 MB",
-        "3 GB",
-        "32 GB",
-        "320 MB",
-        "4 GB",
-        "48 GB",
-        "5 GB",
-        "512 MB",
-        "6 GB",
-        "64 MB ve altı",
-        "640 MB",
-        "768 MB",
-        "8 GB",
-        "896 MB",
-        "96 GB"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -2495,6 +2499,77 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "yonga-seti",
+      "label": "Yonga Seti",
+      "options": [
+        "ALI",
+        "AMD ATI",
+        "AMD Radeon",
+        "Avance Logic",
+        "Intel",
+        "Nvidia",
+        "S3",
+        "SIS"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "dahili-bellek",
+      "label": "Dahili Bellek",
+      "options": [
+        "1 GB",
+        "1.5 GB",
+        "10 GB",
+        "11 GB",
+        "12 GB",
+        "128 MB",
+        "16 GB",
+        "2 GB",
+        "20 GB",
+        "24 GB",
+        "256 MB",
+        "3 GB",
+        "32 GB",
+        "320 MB",
+        "4 GB",
+        "48 GB",
+        "5 GB",
+        "512 MB",
+        "6 GB",
+        "64 MB ve altı",
+        "640 MB",
+        "768 MB",
+        "8 GB",
+        "896 MB",
+        "96 GB"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "bellek-turu",
+      "label": "Bellek Türü",
+      "options": [
+        "DDR2",
+        "DDR3",
+        "DDR5",
+        "DDR5X",
+        "GDDR4",
+        "GDDR5",
+        "GDDR5X",
+        "GDDR6",
+        "GDDR6X",
+        "GDDR7",
+        "HBM",
+        "HBM2"
+      ]
+    },
+    {
       "type": "select",
       "key": "veri-yolu-bit",
       "label": "Veri Yolu (bit)",
@@ -2512,21 +2587,6 @@
         "512",
         "64",
         "768 (384x2)"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "yonga-seti",
-      "label": "Yonga Seti",
-      "options": [
-        "ALI",
-        "AMD ATI",
-        "AMD Radeon",
-        "Avance Logic",
-        "Intel",
-        "Nvidia",
-        "S3",
-        "SIS"
       ]
     }
   ],
@@ -2602,6 +2662,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "ses-kalitesi",
       "label": "Ses kalitesi",
@@ -2618,14 +2683,6 @@
     }
   ],
   "bilgisayar-donanim-guc-kaynagi": [
-    {
-      "type": "range-number",
-      "label": "Güç (W)",
-      "minKey": "guc-wMin",
-      "maxKey": "guc-wMax",
-      "minLabel": "Güç (W) min",
-      "maxLabel": "Güç (W) max"
-    },
     {
       "type": "select",
       "key": "marka",
@@ -2902,6 +2959,19 @@
         "Zoko",
         "Zytech"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "range-number",
+      "label": "Güç (W)",
+      "minKey": "guc-wMin",
+      "maxKey": "guc-wMax",
+      "minLabel": "Güç (W) min",
+      "maxLabel": "Güç (W) max"
     }
   ],
   "bilgisayar-donanim-kasa": [
@@ -3154,6 +3224,11 @@
         "Zeiron",
         "Zoko"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-donanim-fan-sogutucu": [
@@ -3190,91 +3265,6 @@
     }
   ],
   "bilgisayar-tablet": [
-    {
-      "type": "select",
-      "key": "depolama-kapasitesi",
-      "label": "Depolama Kapasitesi",
-      "options": [
-        "1 GB",
-        "1 TB",
-        "100 GB",
-        "12 GB",
-        "128 GB",
-        "16 GB",
-        "160 GB",
-        "2 GB",
-        "20 GB",
-        "256 GB",
-        "32 GB",
-        "320 GB",
-        "34 GB",
-        "4 GB",
-        "40 GB",
-        "500 GB",
-        "512 GB",
-        "60 GB",
-        "62 GB",
-        "64 GB",
-        "8 GB",
-        "80 GB"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "ekran-boyutu",
-      "label": "Ekran Boyutu",
-      "options": [
-        "10 inç",
-        "10.1 inç",
-        "10.2 inç",
-        "10.4 inç",
-        "10.5 inç",
-        "10.6 inç",
-        "10.8 inç",
-        "11 inç",
-        "11.6 inç",
-        "12 inç",
-        "12.1 inç",
-        "12.2 inç",
-        "12.3 inç",
-        "12.5 inç",
-        "12.9 inç",
-        "13 inç",
-        "13.3 inç",
-        "14.6 inç",
-        "18.4 inç",
-        "4.3 inç",
-        "5 inç",
-        "5.5 inç",
-        "6 inç",
-        "6.8 inç",
-        "7 inç",
-        "7.7 inç",
-        "7.8 inç",
-        "7.9 inç",
-        "8 inç",
-        "8.1 inç",
-        "8.3 inç",
-        "8.4 inç",
-        "8.9 inç",
-        "9 inç",
-        "9.4 inç",
-        "9.6 inç",
-        "9.7 inç"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "isletim-sistemi",
-      "label": "İşletim Sistemi",
-      "options": [
-        "Android",
-        "Blackberry OS",
-        "iOS",
-        "Microsoft Windows",
-        "WebOS"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -3351,6 +3341,105 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "ekran-boyutu",
+      "label": "Ekran Boyutu",
+      "options": [
+        "10 inç",
+        "10.1 inç",
+        "10.2 inç",
+        "10.4 inç",
+        "10.5 inç",
+        "10.6 inç",
+        "10.8 inç",
+        "11 inç",
+        "11.6 inç",
+        "12 inç",
+        "12.1 inç",
+        "12.2 inç",
+        "12.3 inç",
+        "12.5 inç",
+        "12.9 inç",
+        "13 inç",
+        "13.3 inç",
+        "14.6 inç",
+        "18.4 inç",
+        "4.3 inç",
+        "5 inç",
+        "5.5 inç",
+        "6 inç",
+        "6.8 inç",
+        "7 inç",
+        "7.7 inç",
+        "7.8 inç",
+        "7.9 inç",
+        "8 inç",
+        "8.1 inç",
+        "8.3 inç",
+        "8.4 inç",
+        "8.9 inç",
+        "9 inç",
+        "9.4 inç",
+        "9.6 inç",
+        "9.7 inç"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "depolama-kapasitesi",
+      "label": "Depolama Kapasitesi",
+      "options": [
+        "1 GB",
+        "1 TB",
+        "100 GB",
+        "12 GB",
+        "128 GB",
+        "16 GB",
+        "160 GB",
+        "2 GB",
+        "20 GB",
+        "256 GB",
+        "32 GB",
+        "320 GB",
+        "34 GB",
+        "4 GB",
+        "40 GB",
+        "500 GB",
+        "512 GB",
+        "60 GB",
+        "62 GB",
+        "64 GB",
+        "8 GB",
+        "80 GB"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "isletim-sistemi",
+      "label": "İşletim Sistemi",
+      "options": [
+        "Android",
+        "Blackberry OS",
+        "iOS",
+        "Microsoft Windows",
+        "WebOS"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "sim-kart-destegi",
+      "label": "Sim Kart Desteği",
+      "options": [
+        "Var",
+        "Yok"
+      ]
+    },
+    {
       "type": "select",
       "key": "renk",
       "label": "Renk",
@@ -3369,15 +3458,6 @@
         "Sarı",
         "Siyah",
         "Yeşil"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "sim-kart-destegi",
-      "label": "Sim Kart Desteği",
-      "options": [
-        "Var",
-        "Yok"
       ]
     }
   ],
@@ -3449,6 +3529,11 @@
         "Utax",
         "Xerox"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-lazer-yazicilar": [
@@ -3496,6 +3581,11 @@
         "Xerox",
         "Zetcarve"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-lazer-gravur-makinesi": [
@@ -3516,6 +3606,11 @@
         "Xtool",
         "Zetcarve"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-nokta-vuruslu-yazicilar": [
@@ -3559,6 +3654,11 @@
         "Tally Dascom",
         "Xerox"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-puskurtmeli-yazicilar": [
@@ -3595,6 +3695,11 @@
         "Xerox",
         "Zebra"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-duvar-yazicisi": [
@@ -3605,6 +3710,11 @@
       "options": [
         "WallPen"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-termal-yazicilar": [
@@ -3674,6 +3784,11 @@
         "Zjiang",
         "Zywell"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-tasinabilir-yazicilar": [
@@ -3700,6 +3815,11 @@
         "Xerox",
         "Zebra"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-baski-makineleri": [
@@ -3740,6 +3860,11 @@
         "Xerox",
         "Zebra"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-fis-yazicisi": [
@@ -3769,6 +3894,11 @@
         "Xprinter",
         "Zjiang"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-plastik-kart-yazicisi": [
@@ -3789,6 +3919,11 @@
         "Weidmüller",
         "Zebra"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-cd-baski-makinesi": [
@@ -3801,6 +3936,11 @@
         "OKI",
         "Rowe"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-3d-yazici": [
@@ -3908,6 +4048,11 @@
         "Zetcarve",
         "Zortrax"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-tarayici": [
@@ -3974,6 +4119,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "tarama-cozunurlugu",
       "label": "Tarama Çözünürlüğü",
@@ -4016,54 +4166,14 @@
         "Voron",
         "XYZ"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-plotter": [
-    {
-      "type": "select",
-      "key": "baski-teknolojisi",
-      "label": "Baskı Teknolojisi",
-      "options": [
-        "Micro Piezo",
-        "Mürekkep Püskürtmeli",
-        "Ölçeklenebilir",
-        "Renk Katmanlamalı"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "bellek",
-      "label": "Bellek",
-      "options": [
-        "1 GB",
-        "128 MB",
-        "16 GB",
-        "2 GB",
-        "256 MB",
-        "32 GB",
-        "32 MB",
-        "4 GB",
-        "512 MB",
-        "64 GB",
-        "64 MB",
-        "8 GB"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "kartus-sayisi",
-      "label": "Kartuş Sayısı",
-      "options": [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -4132,6 +4242,56 @@
         "Xerox",
         "Zebra"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "baski-teknolojisi",
+      "label": "Baskı Teknolojisi",
+      "options": [
+        "Micro Piezo",
+        "Mürekkep Püskürtmeli",
+        "Ölçeklenebilir",
+        "Renk Katmanlamalı"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "kartus-sayisi",
+      "label": "Kartuş Sayısı",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "bellek",
+      "label": "Bellek",
+      "options": [
+        "1 GB",
+        "128 MB",
+        "16 GB",
+        "2 GB",
+        "256 MB",
+        "32 GB",
+        "32 MB",
+        "4 GB",
+        "512 MB",
+        "64 GB",
+        "64 MB",
+        "8 GB"
+      ]
     }
   ],
   "bilgisayar-yazici-tarayici-plotter-toner": [
@@ -4157,6 +4317,11 @@
         "Toshiba",
         "Xerox"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
@@ -4188,6 +4353,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "murekkep",
       "label": "Mürekkep",
@@ -4204,17 +4374,6 @@
   "bilgisayar-yazici-tarayici-plotter-murekkep": [
     {
       "type": "select",
-      "key": "renk",
-      "label": "Renk",
-      "options": [
-        "Kırmızı",
-        "Mavi",
-        "Sarı",
-        "Siyah"
-      ]
-    },
-    {
-      "type": "select",
       "key": "uyumlu-marka",
       "label": "Uyumlu Marka",
       "options": [
@@ -4222,6 +4381,17 @@
         "Epson",
         "HP",
         "Lexmark"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "renk",
+      "label": "Renk",
+      "options": [
+        "Kırmızı",
+        "Mavi",
+        "Sarı",
+        "Siyah"
       ]
     },
     {
@@ -4285,6 +4455,11 @@
         "OKI",
         "Panasonic"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-adsl-modem": [
@@ -4424,6 +4599,11 @@
         "Zyxel",
         "Т-Home"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-mobil-modem": [
@@ -4480,6 +4660,11 @@
         "ZTE",
         "Zyxel"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-uydunet-kablonet-modem": [
@@ -4524,6 +4709,11 @@
         "Viasat",
         "ZTE"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-access-point": [
@@ -4631,6 +4821,11 @@
         "ZTE",
         "Zyxel"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-ag-adaptoru": [
@@ -4852,6 +5047,11 @@
         "ZTE",
         "Zyxel"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-voip-gateway": [
@@ -4919,6 +5119,11 @@
         "Yeastar",
         "Zyxel"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-router": [
@@ -5046,6 +5251,11 @@
         "ZTE",
         "Zyxel"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-modem-ag-urunleri-switch-hub-splitter": [
@@ -5290,6 +5500,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "port-sayisi",
       "label": "Port Sayısı",
@@ -5343,20 +5558,14 @@
         "ZTE",
         "Zyxel"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-mouse": [
-    {
-      "type": "select",
-      "key": "baglanti-bicimi",
-      "label": "Bağlantı Biçimi",
-      "options": [
-        "Kablolu",
-        "Kablosuz (Bluetooth)",
-        "Kablosuz (Kızılötesi)",
-        "Kablosuz (Radyo Frekanslı)"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -5675,6 +5884,35 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "3D",
+        "Bluetrack",
+        "Lazer",
+        "Optik",
+        "Toplu",
+        "Trackball"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "baglanti-bicimi",
+      "label": "Bağlantı Biçimi",
+      "options": [
+        "Kablolu",
+        "Kablosuz (Bluetooth)",
+        "Kablosuz (Kızılötesi)",
+        "Kablosuz (Radyo Frekanslı)"
+      ]
+    },
+    {
       "type": "select",
       "key": "tus-sayisi",
       "label": "Tuş Sayısı",
@@ -5696,31 +5934,9 @@
         "8",
         "9"
       ]
-    },
-    {
-      "type": "select",
-      "key": "turu",
-      "label": "Türü",
-      "options": [
-        "3D",
-        "Bluetrack",
-        "Lazer",
-        "Optik",
-        "Toplu",
-        "Trackball"
-      ]
     }
   ],
   "bilgisayar-klavye": [
-    {
-      "type": "select",
-      "key": "baglanti",
-      "label": "Bağlantı",
-      "options": [
-        "Kablolu",
-        "Kablosuz"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -6052,6 +6268,20 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "baglanti",
+      "label": "Bağlantı",
+      "options": [
+        "Kablolu",
+        "Kablosuz"
+      ]
+    },
+    {
       "type": "select",
       "key": "tus-dizimi",
       "label": "Tuş Dizimi",
@@ -6065,27 +6295,6 @@
     }
   ],
   "bilgisayar-mouse-klavye-seti": [
-    {
-      "type": "select",
-      "key": "arabirim",
-      "label": "Arabirim",
-      "options": [
-        "PS/2",
-        "PS/2 ve USB",
-        "USB"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "baglanti-bicimi",
-      "label": "Bağlantı Biçimi",
-      "options": [
-        "Kablolu",
-        "Kablosuz (Bluetooth)",
-        "Kablosuz (Kızılötesi)",
-        "Kablosuz (Radyo Frekanslı)"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -6260,13 +6469,28 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
-      "key": "mause-turu",
-      "label": "Mause Türü",
+      "key": "baglanti-bicimi",
+      "label": "Bağlantı Biçimi",
       "options": [
-        "Lazer",
-        "Optik",
-        "Toplu"
+        "Kablosuz (Bluetooth)",
+        "Kablosuz (Kızılötesi)",
+        "Kablosuz (Radyo Frekanslı)"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "arabirim",
+      "label": "Arabirim",
+      "options": [
+        "PS/2",
+        "PS/2 ve USB",
+        "USB"
       ]
     },
     {
@@ -6279,81 +6503,19 @@
         "Türkçe F",
         "Türkçe Q"
       ]
+    },
+    {
+      "type": "select",
+      "key": "mause-turu",
+      "label": "Mause Türü",
+      "options": [
+        "Lazer",
+        "Optik",
+        "Toplu"
+      ]
     }
   ],
   "bilgisayar-harici-harddisk": [
-    {
-      "type": "select",
-      "key": "arabirim",
-      "label": "Arabirim",
-      "options": [
-        "eSATA",
-        "FireWire",
-        "Jaz",
-        "USB 1.1",
-        "USB 2.0",
-        "USB 3.0",
-        "Zip"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "besleme",
-      "label": "Besleme",
-      "options": [
-        "Adaptörlü",
-        "Adaptörsüz"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "boyut",
-      "label": "Boyut",
-      "options": [
-        "1.8 İnç",
-        "2.5 İnç",
-        "3.5 İnç"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "donus-hizi",
-      "label": "Dönüş Hızı",
-      "options": [
-        "5400 rpm",
-        "7200 rpm"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "kapasite",
-      "label": "Kapasite",
-      "options": [
-        "1 TB",
-        "1.5 TB",
-        "10 TB",
-        "12 TB",
-        "121 GB - 160 GB",
-        "14 TB",
-        "16 TB",
-        "161 GB - 200 GB",
-        "2 TB",
-        "201 GB - 400 GB",
-        "28 TB",
-        "3 TB",
-        "4 TB",
-        "40 - 60 GB",
-        "40 GB altı",
-        "5 TB",
-        "500 GB",
-        "6 TB",
-        "61 - 80 GB",
-        "640 GB",
-        "750 GB",
-        "8 TB",
-        "81 - 120 GB"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -6478,34 +6640,86 @@
         "Zaytech",
         "Zyxel"
       ]
-    }
-  ],
-  "bilgisayar-tasinabilir-ssd": [
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "boyut",
+      "label": "Boyut",
+      "options": [
+        "1.8 İnç",
+        "2.5 İnç",
+        "3.5 İnç"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "arabirim",
+      "label": "Arabirim",
+      "options": [
+        "eSATA",
+        "FireWire",
+        "Jaz",
+        "USB 1.1",
+        "USB 2.0",
+        "USB 3.0",
+        "Zip"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "donus-hizi",
+      "label": "Dönüş Hızı",
+      "options": [
+        "5400 rpm",
+        "7200 rpm"
+      ]
+    },
     {
       "type": "select",
       "key": "kapasite",
       "label": "Kapasite",
       "options": [
         "1 TB",
-        "120 GB",
-        "128 GB",
-        "16 GB",
+        "1.5 TB",
+        "10 TB",
+        "12 TB",
+        "121 GB - 160 GB",
+        "14 TB",
         "16 TB",
-        "160 GB",
-        "180 GB",
+        "161 GB - 200 GB",
         "2 TB",
-        "240 GB",
-        "250 GB",
-        "256 GB",
+        "201 GB - 400 GB",
+        "28 TB",
         "3 TB",
         "4 TB",
-        "480 GB",
+        "40 - 60 GB",
+        "40 GB altı",
+        "5 TB",
         "500 GB",
-        "512 GB",
-        "60 GB",
-        "960 GB"
+        "6 TB",
+        "61 - 80 GB",
+        "640 GB",
+        "750 GB",
+        "8 TB",
+        "81 - 120 GB"
       ]
     },
+    {
+      "type": "select",
+      "key": "besleme",
+      "label": "Besleme",
+      "options": [
+        "Adaptörlü",
+        "Adaptörsüz"
+      ]
+    }
+  ],
+  "bilgisayar-tasinabilir-ssd": [
     {
       "type": "select",
       "key": "marka",
@@ -6561,43 +6775,39 @@
         "Verbatim",
         "Western Digital"
       ]
-    }
-  ],
-  "bilgisayar-usb-bellek": [
+    },
     {
-      "type": "select",
-      "key": "arabirim",
-      "label": "Arabirim",
-      "options": [
-        "USB 1.1",
-        "USB 2.0",
-        "USB 3.0"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
       "key": "kapasite",
       "label": "Kapasite",
       "options": [
-        "1 GB",
         "1 TB",
+        "120 GB",
         "128 GB",
-        "128 MB",
-        "128 MB Altı",
         "16 GB",
         "16 TB",
-        "2 GB",
+        "160 GB",
+        "180 GB",
         "2 TB",
+        "240 GB",
+        "250 GB",
         "256 GB",
-        "256 MB",
-        "32 GB",
-        "4 GB",
+        "3 TB",
+        "4 TB",
+        "480 GB",
+        "500 GB",
         "512 GB",
-        "512 MB",
-        "64 GB",
-        "8 GB"
+        "60 GB",
+        "960 GB"
       ]
-    },
+    }
+  ],
+  "bilgisayar-usb-bellek": [
     {
       "type": "select",
       "key": "marka",
@@ -6706,6 +6916,45 @@
         "Western Digital",
         "Xiaomi",
         "Z-Cyber"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "kapasite",
+      "label": "Kapasite",
+      "options": [
+        "1 GB",
+        "1 TB",
+        "128 GB",
+        "128 MB",
+        "128 MB Altı",
+        "16 GB",
+        "16 TB",
+        "2 GB",
+        "2 TB",
+        "256 GB",
+        "256 MB",
+        "32 GB",
+        "4 GB",
+        "512 GB",
+        "512 MB",
+        "64 GB",
+        "8 GB"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "arabirim",
+      "label": "Arabirim",
+      "options": [
+        "USB 1.1",
+        "USB 2.0",
+        "USB 3.0"
       ]
     }
   ],
@@ -6833,24 +7082,14 @@
         "Zalman",
         "Zyxel"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-webcam": [
-    {
-      "type": "select",
-      "key": "cozunurluk",
-      "label": "Çözünürlük",
-      "options": [
-        "1080p (HD)",
-        "1440p (2K)",
-        "144p (SD)",
-        "2160p (4K)",
-        "240p (SD)",
-        "360p (SD)",
-        "480p (SD)",
-        "720p (HD)"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -7011,6 +7250,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "megapiksel",
       "label": "Megapiksel",
@@ -7020,9 +7264,38 @@
         "3.1 - 5.0 arası",
         "5.0 üzeri"
       ]
+    },
+    {
+      "type": "select",
+      "key": "cozunurluk",
+      "label": "Çözünürlük",
+      "options": [
+        "1080p (HD)",
+        "1440p (2K)",
+        "144p (SD)",
+        "2160p (4K)",
+        "240p (SD)",
+        "360p (SD)",
+        "480p (SD)",
+        "720p (HD)"
+      ]
     }
   ],
   "bilgisayar-hoparlor-ses-sistemi": [
+    {
+      "type": "select",
+      "key": "tipi",
+      "label": "Tipi",
+      "options": [
+        "2+1",
+        "3+1",
+        "4+1",
+        "5+1",
+        "6+1",
+        "7+1",
+        "Stereo"
+      ]
+    },
     {
       "type": "select",
       "key": "marka",
@@ -7252,29 +7525,20 @@
       ]
     },
     {
-      "type": "select",
-      "key": "tipi",
-      "label": "Tipi",
-      "options": [
-        "2+1",
-        "3+1",
-        "4+1",
-        "5+1",
-        "6+1",
-        "7+1",
-        "Stereo"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "bilgisayar-kulaklik-mikrofon": [
     {
       "type": "select",
-      "key": "baglanti",
-      "label": "Bağlantı",
+      "key": "urun",
+      "label": "Ürün",
       "options": [
-        "Jak",
-        "USB",
-        "USB & Jak"
+        "Kulaklık",
+        "Mikrofon",
+        "Mikrofonlu Kulaklık"
       ]
     },
     {
@@ -7459,6 +7723,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
@@ -7469,72 +7738,16 @@
     },
     {
       "type": "select",
-      "key": "urun",
-      "label": "Ürün",
+      "key": "baglanti",
+      "label": "Bağlantı",
       "options": [
-        "Kulaklık",
-        "Mikrofon",
-        "Mikrofonlu Kulaklık"
+        "Jak",
+        "USB",
+        "USB & Jak"
       ]
     }
   ],
   "bilgisayar-monitor-led-lcd-monitor": [
-    {
-      "type": "select",
-      "key": "boyut-inc",
-      "label": "Boyut (inç)",
-      "options": [
-        "14",
-        "15",
-        "15,6",
-        "17",
-        "18.5",
-        "19",
-        "20",
-        "22",
-        "23",
-        "24",
-        "24,5",
-        "25",
-        "27",
-        "28",
-        "29",
-        "30",
-        "31,5",
-        "32",
-        "34",
-        "35",
-        "37,5",
-        "40",
-        "42,5",
-        "43",
-        "46",
-        "49",
-        "55",
-        "60"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "cozunurluk",
-      "label": "Çözünürlük",
-      "options": [
-        "1280 x 1024",
-        "1366 x 768",
-        "1440 x 900",
-        "1600 x 900",
-        "1680 x 1050",
-        "1920 x 1080",
-        "1920 x 1200",
-        "2560 x 1080",
-        "2560 x 1440",
-        "3440 x 1440",
-        "3840 x 1600",
-        "3840 x 2160",
-        "5120 x 2160",
-        "7680 × 4320"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -7720,6 +7933,67 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "boyut-inc",
+      "label": "Boyut (inç)",
+      "options": [
+        "14",
+        "15",
+        "15,6",
+        "17",
+        "18.5",
+        "19",
+        "20",
+        "22",
+        "23",
+        "24",
+        "24,5",
+        "25",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31,5",
+        "32",
+        "34",
+        "35",
+        "37,5",
+        "40",
+        "42,5",
+        "43",
+        "46",
+        "49",
+        "55",
+        "60"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "cozunurluk",
+      "label": "Çözünürlük",
+      "options": [
+        "1280 x 1024",
+        "1366 x 768",
+        "1440 x 900",
+        "1600 x 900",
+        "1680 x 1050",
+        "1920 x 1080",
+        "1920 x 1200",
+        "2560 x 1080",
+        "2560 x 1440",
+        "3440 x 1440",
+        "3840 x 1600",
+        "3840 x 2160",
+        "5120 x 2160",
+        "7680 × 4320"
+      ]
+    },
+    {
       "type": "select",
       "key": "yenileme-hizi",
       "label": "Yenileme Hızı",
@@ -7743,81 +8017,6 @@
     }
   ],
   "bilgisayar-sunucu-server-sunucular": [
-    {
-      "type": "select",
-      "key": "hdd-sabit-disk",
-      "label": "HDD (Sabit Disk)",
-      "options": [
-        "1 TB",
-        "1,5 TB",
-        "100 GB",
-        "12 TB",
-        "120 GB",
-        "136 GB",
-        "146 GB",
-        "16 TB",
-        "160 GB",
-        "2 TB",
-        "20 GB",
-        "20 GB altı",
-        "200 GB",
-        "250 GB",
-        "3 TB",
-        "300 GB",
-        "320 GB",
-        "360 GB",
-        "4 TB",
-        "40 GB",
-        "400 GB",
-        "500 GB",
-        "60 GB",
-        "640 GB",
-        "750 GB",
-        "8 TB",
-        "80 GB",
-        "Yok"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "islemci",
-      "label": "İşlemci",
-      "options": [
-        "AMD",
-        "AMD Athlon",
-        "AMD Duron",
-        "AMD K6",
-        "AMD Opteron",
-        "Itanium Dual Core",
-        "Itanium HT",
-        "Marvell",
-        "Pentium",
-        "Pentium II Xeon",
-        "Pentium III Xeon",
-        "Xeon",
-        "Xeon D",
-        "Xeon Dual Core",
-        "Xeon E3",
-        "Xeon E5",
-        "Xeon E7",
-        "Xeon Gold",
-        "Xeon HT",
-        "Xeon Phi",
-        "Xeon Platinum",
-        "Xeon Quad Core",
-        "Xeon Silver"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "kasa-tipi",
-      "label": "Kasa Tipi",
-      "options": [
-        "Blade",
-        "Rack",
-        "Tower"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -7903,6 +8102,41 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "islemci",
+      "label": "İşlemci",
+      "options": [
+        "AMD",
+        "AMD Athlon",
+        "AMD Duron",
+        "AMD K6",
+        "AMD Opteron",
+        "Itanium Dual Core",
+        "Itanium HT",
+        "Marvell",
+        "Pentium",
+        "Pentium II Xeon",
+        "Pentium III Xeon",
+        "Xeon",
+        "Xeon D",
+        "Xeon Dual Core",
+        "Xeon E3",
+        "Xeon E5",
+        "Xeon E7",
+        "Xeon Gold",
+        "Xeon HT",
+        "Xeon Phi",
+        "Xeon Platinum",
+        "Xeon Quad Core",
+        "Xeon Silver"
+      ]
+    },
+    {
       "type": "select",
       "key": "ram",
       "label": "Ram",
@@ -7938,6 +8172,51 @@
         "DDR4 ECC",
         "SD",
         "SD ECC"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "hdd-sabit-disk",
+      "label": "HDD (Sabit Disk)",
+      "options": [
+        "1 TB",
+        "1,5 TB",
+        "100 GB",
+        "12 TB",
+        "120 GB",
+        "136 GB",
+        "146 GB",
+        "16 TB",
+        "160 GB",
+        "2 TB",
+        "20 GB",
+        "20 GB altı",
+        "200 GB",
+        "250 GB",
+        "3 TB",
+        "300 GB",
+        "320 GB",
+        "360 GB",
+        "4 TB",
+        "40 GB",
+        "400 GB",
+        "500 GB",
+        "60 GB",
+        "640 GB",
+        "750 GB",
+        "8 TB",
+        "80 GB",
+        "Yok"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "kasa-tipi",
+      "label": "Kasa Tipi",
+      "options": [
+        "Blade",
+        "Rack",
+        "Tower"
       ]
     }
   ],
@@ -8005,9 +8284,138 @@
         "Vatpan",
         "Vcloudpoint"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "cep-telefonu-aksesuar-cep-telefonu": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Acer",
+        "AGM",
+        "Aiek",
+        "Alcatel",
+        "Apple",
+        "Aselsan",
+        "Asus",
+        "Avea Türk Telekom",
+        "BenQ Siemens",
+        "BlackBerry",
+        "Blackview",
+        "Bluboo",
+        "C5 Mobile",
+        "Casper",
+        "CAT",
+        "Cubot",
+        "Dell",
+        "Digiphone",
+        "Diğer",
+        "Doogee",
+        "Elephone",
+        "Excon",
+        "General Mobile",
+        "Google",
+        "Hiking",
+        "HomTom",
+        "Honor",
+        "Hotwav",
+        "HP",
+        "HTC",
+        "Huawei",
+        "IIIF150",
+        "Infinix",
+        "Kaan",
+        "Leagoo",
+        "Leica",
+        "Lenovo",
+        "LeTV LeEco",
+        "LG",
+        "M-Horse",
+        "Meizu",
+        "Microsoft",
+        "Mipo",
+        "Motorola",
+        "Nokia",
+        "Nothing",
+        "Omix",
+        "OnePlus",
+        "Oppo",
+        "Oscal",
+        "Oukitel",
+        "Ovion",
+        "Palm",
+        "Panasonic",
+        "Philips",
+        "Preo",
+        "Qin",
+        "Quatro",
+        "Razer",
+        "Realme",
+        "Reeder",
+        "RugOne",
+        "Samsung",
+        "Sharp",
+        "Sony",
+        "Sony Ericsson",
+        "Sunny",
+        "Tag Heuer",
+        "TCL",
+        "Tecno",
+        "Teslimat Tercihi",
+        "Toplu Satış",
+        "TP-Link",
+        "Trident",
+        "Turkcell",
+        "Ulefone",
+        "Unihertz",
+        "Vertu",
+        "Vestel",
+        "Vivo",
+        "Vodafone",
+        "Voyyo",
+        "Xiaomi",
+        "XOR",
+        "Yota",
+        "ZTE"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "renk",
+      "label": "Renk",
+      "options": [
+        "Altın",
+        "Bakır",
+        "Bej",
+        "Beyaz",
+        "Bordo",
+        "Bronz",
+        "Gri",
+        "Gümüş",
+        "Kahverengi",
+        "Kırmızı",
+        "Lacivert",
+        "Mavi",
+        "Mor",
+        "Pembe",
+        "Sarı",
+        "Siyah",
+        "Şeffaf",
+        "Turuncu",
+        "Yeşil"
+      ]
+    },
     {
       "type": "select",
       "key": "depolama-kapasitesi",
@@ -8128,146 +8536,9 @@
         "İthalatçı Garantili",
         "Yenileme Merkezi Garantili"
       ]
-    },
-    {
-      "type": "select",
-      "key": "marka",
-      "label": "Marka",
-      "options": [
-        "Acer",
-        "AGM",
-        "Aiek",
-        "Alcatel",
-        "Apple",
-        "Aselsan",
-        "Asus",
-        "Avea Türk Telekom",
-        "BenQ Siemens",
-        "BlackBerry",
-        "Blackview",
-        "Bluboo",
-        "C5 Mobile",
-        "Casper",
-        "CAT",
-        "Cubot",
-        "Dell",
-        "Digiphone",
-        "Diğer",
-        "Doogee",
-        "Elephone",
-        "Excon",
-        "General Mobile",
-        "Google",
-        "Hiking",
-        "HomTom",
-        "Honor",
-        "Hotwav",
-        "HP",
-        "HTC",
-        "Huawei",
-        "IIIF150",
-        "Infinix",
-        "Kaan",
-        "Leagoo",
-        "Leica",
-        "Lenovo",
-        "LeTV LeEco",
-        "LG",
-        "M-Horse",
-        "Meizu",
-        "Microsoft",
-        "Mipo",
-        "Motorola",
-        "Nokia",
-        "Nothing",
-        "Omix",
-        "OnePlus",
-        "Oppo",
-        "Oscal",
-        "Oukitel",
-        "Ovion",
-        "Palm",
-        "Panasonic",
-        "Philips",
-        "Preo",
-        "Qin",
-        "Quatro",
-        "Razer",
-        "Realme",
-        "Reeder",
-        "RugOne",
-        "Samsung",
-        "Sharp",
-        "Sony",
-        "Sony Ericsson",
-        "Sunny",
-        "Tag Heuer",
-        "TCL",
-        "Tecno",
-        "Teslimat Tercihi",
-        "Toplu Satış",
-        "TP-Link",
-        "Trident",
-        "Turkcell",
-        "Ulefone",
-        "Unihertz",
-        "Vertu",
-        "Vestel",
-        "Vivo",
-        "Vodafone",
-        "Voyyo",
-        "Xiaomi",
-        "XOR",
-        "Yota",
-        "ZTE"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "renk",
-      "label": "Renk",
-      "options": [
-        "Altın",
-        "Bakır",
-        "Bej",
-        "Beyaz",
-        "Bordo",
-        "Bronz",
-        "Gri",
-        "Gümüş",
-        "Kahverengi",
-        "Kırmızı",
-        "Lacivert",
-        "Mavi",
-        "Mor",
-        "Pembe",
-        "Sarı",
-        "Siyah",
-        "Şeffaf",
-        "Turuncu",
-        "Yeşil"
-      ]
     }
   ],
   "cep-telefonu-aksesuar-aksesuar-bluetooth-kulaklik": [
-    {
-      "type": "select",
-      "key": "gurultu-engelleme",
-      "label": "Gürültü Engelleme",
-      "options": [
-        "Var",
-        "Yok"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "kullanim-turu",
-      "label": "Kullanım Türü",
-      "options": [
-        "Kulak İçi",
-        "Kulak Üstü"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -8372,6 +8643,29 @@
         "Vivo",
         "Wiwu",
         "Xiaomi"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "kullanim-turu",
+      "label": "Kullanım Türü",
+      "options": [
+        "Kulak İçi",
+        "Kulak Üstü"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "gurultu-engelleme",
+      "label": "Gürültü Engelleme",
+      "options": [
+        "Var",
+        "Yok"
       ]
     }
   ],
@@ -8719,6 +9013,11 @@
         "Zipbuds",
         "Zore"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "cep-telefonu-aksesuar-giyilebilir-teknoloji": [
@@ -8839,9 +9138,89 @@
         "Xiaomi",
         "Zeblaze"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "fotograf-kamera-dijital-fotograf-makinesi-kompakt": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Agfa",
+        "Arçelik",
+        "BenQ",
+        "Canon",
+        "Casio",
+        "Concord",
+        "Diğer",
+        "Durum",
+        "Fujifilm",
+        "General Electric",
+        "GoldMaster",
+        "Grundig",
+        "HP",
+        "Kodak",
+        "Konica Minolta",
+        "Kyocera",
+        "Leica",
+        "Minton",
+        "Mustek",
+        "Nikon",
+        "Olympus",
+        "Orite",
+        "Panasonic",
+        "Pentax",
+        "Polaroid",
+        "Praktica",
+        "Premier",
+        "Pretec",
+        "Ricoh",
+        "Rollei",
+        "Samsung",
+        "Sanyo",
+        "Sigma",
+        "Sony",
+        "Sunny",
+        "Toshiba",
+        "Vivitar"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "ekran-boyutu",
+      "label": "Ekran Boyutu",
+      "options": [
+        "1,5 İnç",
+        "1,6 İnç",
+        "1,7 İnç",
+        "1,8 İnç",
+        "2 İnç",
+        "2,1 İnç",
+        "2,2 İnç",
+        "2,3 İnç",
+        "2,4 İnç",
+        "2,5 İnç",
+        "2,6 İnç",
+        "2,7 İnç",
+        "2,8 İnç",
+        "3,2 İnç",
+        "3,3 İnç",
+        "3,5 İnç",
+        "3,8 İnç",
+        "3.0 İnç",
+        "4,8 İnç"
+      ]
+    },
     {
       "type": "select",
       "key": "cozunurluk",
@@ -8990,76 +9369,6 @@
     },
     {
       "type": "select",
-      "key": "ekran-boyutu",
-      "label": "Ekran Boyutu",
-      "options": [
-        "1,5 İnç",
-        "1,6 İnç",
-        "1,7 İnç",
-        "1,8 İnç",
-        "2 İnç",
-        "2,1 İnç",
-        "2,2 İnç",
-        "2,3 İnç",
-        "2,4 İnç",
-        "2,5 İnç",
-        "2,6 İnç",
-        "2,7 İnç",
-        "2,8 İnç",
-        "3,2 İnç",
-        "3,3 İnç",
-        "3,5 İnç",
-        "3,8 İnç",
-        "3.0 İnç",
-        "4,8 İnç"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "marka",
-      "label": "Marka",
-      "options": [
-        "Agfa",
-        "Arçelik",
-        "BenQ",
-        "Canon",
-        "Casio",
-        "Concord",
-        "Diğer",
-        "Durum",
-        "Fujifilm",
-        "General Electric",
-        "GoldMaster",
-        "Grundig",
-        "HP",
-        "Kodak",
-        "Konica Minolta",
-        "Kyocera",
-        "Leica",
-        "Minton",
-        "Mustek",
-        "Nikon",
-        "Olympus",
-        "Orite",
-        "Panasonic",
-        "Pentax",
-        "Polaroid",
-        "Praktica",
-        "Premier",
-        "Pretec",
-        "Ricoh",
-        "Rollei",
-        "Samsung",
-        "Sanyo",
-        "Sigma",
-        "Sony",
-        "Sunny",
-        "Toshiba",
-        "Vivitar"
-      ]
-    },
-    {
-      "type": "select",
       "key": "optik-zoom",
       "label": "Optik Zoom",
       "options": [
@@ -9146,6 +9455,43 @@
   "fotograf-kamera-dijital-fotograf-makinesi-dslr": [
     {
       "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Canon",
+        "Fujifilm",
+        "Kodak",
+        "Leica",
+        "Nikon",
+        "Olympus",
+        "Panasonic",
+        "Pentax",
+        "Samsung",
+        "Sigma",
+        "Sony"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "ekran-boyutu",
+      "label": "Ekran Boyutu",
+      "options": [
+        "1.8 İnç",
+        "2 İnç",
+        "2.5 İnç",
+        "2.7 İnç",
+        "3 İnç",
+        "3.2 İnç",
+        "3.3 İnç"
+      ]
+    },
+    {
+      "type": "select",
       "key": "cozunurluk",
       "label": "Çözünürlük",
       "options": [
@@ -9167,6 +9513,30 @@
         "6.0 - 6.9 MP",
         "7.0 - 9.9 MP"
       ]
+    }
+  ],
+  "fotograf-kamera-dijital-fotograf-makinesi-aynasiz": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Durumu",
+        "Fujifilm",
+        "Leica",
+        "Nikon",
+        "Olympus",
+        "Panasonic",
+        "Samsung",
+        "Sigma",
+        "Sony",
+        "Xiaomi"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
@@ -9179,29 +9549,10 @@
         "2.7 İnç",
         "3 İnç",
         "3.2 İnç",
-        "3.3 İnç"
+        "3.3 İnç",
+        "4.8 İnç"
       ]
     },
-    {
-      "type": "select",
-      "key": "marka",
-      "label": "Marka",
-      "options": [
-        "Canon",
-        "Fujifilm",
-        "Kodak",
-        "Leica",
-        "Nikon",
-        "Olympus",
-        "Panasonic",
-        "Pentax",
-        "Samsung",
-        "Sigma",
-        "Sony"
-      ]
-    }
-  ],
-  "fotograf-kamera-dijital-fotograf-makinesi-aynasiz": [
     {
       "type": "select",
       "key": "cozunurluk",
@@ -9233,41 +9584,26 @@
         "60 MP ve Üstü",
         "7.0 - 9.9 MP"
       ]
-    },
-    {
-      "type": "select",
-      "key": "ekran-boyutu",
-      "label": "Ekran Boyutu",
-      "options": [
-        "1.8 İnç",
-        "2 İnç",
-        "2.5 İnç",
-        "2.7 İnç",
-        "3 İnç",
-        "3.2 İnç",
-        "3.3 İnç",
-        "4.8 İnç"
-      ]
-    },
+    }
+  ],
+  "fotograf-kamera-dijital-fotograf-makinesi-orta-format": [
     {
       "type": "select",
       "key": "marka",
       "label": "Marka",
       "options": [
-        "Durumu",
         "Fujifilm",
-        "Leica",
-        "Nikon",
-        "Olympus",
-        "Panasonic",
-        "Samsung",
-        "Sigma",
-        "Sony",
-        "Xiaomi"
+        "Hasselblad",
+        "Mamiya",
+        "Phase One",
+        "Sinar"
       ]
-    }
-  ],
-  "fotograf-kamera-dijital-fotograf-makinesi-orta-format": [
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
     {
       "type": "select",
       "key": "ekran-boyutu",
@@ -9280,18 +9616,6 @@
         "3 inç",
         "3.2 inç",
         "3.3 inç"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "marka",
-      "label": "Marka",
-      "options": [
-        "Fujifilm",
-        "Hasselblad",
-        "Mamiya",
-        "Phase One",
-        "Sinar"
       ]
     },
     {
@@ -9325,60 +9649,6 @@
     }
   ],
   "fotograf-kamera-lens-filtre-lensler": [
-    {
-      "type": "select",
-      "key": "diyafram-f",
-      "label": "Diyafram (F)",
-      "options": [
-        "0.95",
-        "1.0",
-        "1.2",
-        "1.4",
-        "1.5",
-        "1.7",
-        "1.8",
-        "1.9",
-        "11",
-        "14",
-        "2",
-        "2 - 2.8",
-        "2.4",
-        "2.5 - 6",
-        "2.6",
-        "2.8",
-        "2.8 - 3.5",
-        "2.8 - 4",
-        "2.8 - 4.5",
-        "2.8 - 5.6",
-        "3.1",
-        "3.5",
-        "3.5 - 4.5",
-        "3.5 - 4.8",
-        "3.5 - 5.6",
-        "3.5 - 6.3",
-        "3.8",
-        "3.8 - 5.6",
-        "4",
-        "4 - 5.6",
-        "4 - 6.3",
-        "4 - 7.1",
-        "4 - 8",
-        "4.5",
-        "4.5 - 5.6",
-        "4.5 - 6.3",
-        "4.5 - 6.5",
-        "4.5 - 6.7",
-        "4.5 - 7.1",
-        "5 - 6.3",
-        "5 - 7.1",
-        "5.6",
-        "5.6 - 6.3",
-        "5.6 - 8",
-        "6.3 - 9",
-        "8",
-        "9"
-      ]
-    },
     {
       "type": "select",
       "key": "lens-markasi",
@@ -9541,11 +9811,42 @@
     },
     {
       "type": "select",
-      "key": "netleme",
-      "label": "Netleme",
+      "key": "uyumluluk",
+      "label": "Uyumluluk",
       "options": [
-        "Manuel",
-        "Otomatik"
+        "Canon",
+        "Contax",
+        "DJI",
+        "Fujifilm",
+        "Hasselblad",
+        "Kodak",
+        "Konica & Minolta",
+        "Leica",
+        "Linhof",
+        "m42",
+        "Mamiya Sekor",
+        "Nikon",
+        "Ogatech",
+        "Olympus",
+        "Panasonic",
+        "Pentax",
+        "Praktica",
+        "Samsung",
+        "Sigma",
+        "Sony",
+        "Yashica",
+        "Zenith"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "Aynasız",
+        "DSLR",
+        "Endüstriyel",
+        "Orta Format"
       ]
     },
     {
@@ -9749,54 +10050,69 @@
     },
     {
       "type": "select",
-      "key": "turu",
-      "label": "Türü",
+      "key": "diyafram-f",
+      "label": "Diyafram (F)",
       "options": [
-        "Aynasız",
-        "DSLR",
-        "Endüstriyel",
-        "Orta Format"
+        "0.95",
+        "1.0",
+        "1.2",
+        "1.4",
+        "1.5",
+        "1.7",
+        "1.8",
+        "1.9",
+        "11",
+        "14",
+        "2",
+        "2 - 2.8",
+        "2.4",
+        "2.5 - 6",
+        "2.6",
+        "2.8",
+        "2.8 - 3.5",
+        "2.8 - 4",
+        "2.8 - 4.5",
+        "2.8 - 5.6",
+        "3.1",
+        "3.5",
+        "3.5 - 4.5",
+        "3.5 - 4.8",
+        "3.5 - 5.6",
+        "3.5 - 6.3",
+        "3.8",
+        "3.8 - 5.6",
+        "4",
+        "4 - 5.6",
+        "4 - 6.3",
+        "4 - 7.1",
+        "4 - 8",
+        "4.5",
+        "4.5 - 5.6",
+        "4.5 - 6.3",
+        "4.5 - 6.5",
+        "4.5 - 6.7",
+        "4.5 - 7.1",
+        "5 - 6.3",
+        "5 - 7.1",
+        "5.6",
+        "5.6 - 6.3",
+        "5.6 - 8",
+        "6.3 - 9",
+        "8",
+        "9"
       ]
     },
     {
       "type": "select",
-      "key": "uyumluluk",
-      "label": "Uyumluluk",
+      "key": "netleme",
+      "label": "Netleme",
       "options": [
-        "Canon",
-        "Contax",
-        "DJI",
-        "Fujifilm",
-        "Hasselblad",
-        "Kodak",
-        "Konica & Minolta",
-        "Leica",
-        "Linhof",
-        "m42",
-        "Mamiya Sekor",
-        "Nikon",
-        "Ogatech",
-        "Olympus",
-        "Panasonic",
-        "Pentax",
-        "Praktica",
-        "Samsung",
-        "Sigma",
-        "Sony",
-        "Yashica",
-        "Zenith"
+        "Manuel",
+        "Otomatik"
       ]
     }
   ],
   "fotograf-kamera-lens-filtre-filtreler": [
-    {
-      "type": "range-number",
-      "label": "Çap (mm)",
-      "minKey": "cap-mmMin",
-      "maxKey": "cap-mmMax",
-      "minLabel": "Çap (mm) Min",
-      "maxLabel": "Çap (mm) Max"
-    },
     {
       "type": "select",
       "key": "tipi",
@@ -9812,82 +10128,17 @@
         "Skylight (1A) Filtreler",
         "Yakın Çekim (Makro)"
       ]
+    },
+    {
+      "type": "range-number",
+      "label": "Çap (mm)",
+      "minKey": "cap-mmMin",
+      "maxKey": "cap-mmMax",
+      "minLabel": "Çap (mm) Min",
+      "maxLabel": "Çap (mm) Max"
     }
   ],
   "fotograf-kamera-video-kamera-dijital-kamera": [
-    {
-      "type": "select",
-      "key": "ekran-boyutu",
-      "label": "Ekran Boyutu",
-      "options": [
-        "1.6 İnç",
-        "1.7 İnç",
-        "1.8 İnç",
-        "2 İnç",
-        "2.2 İnç",
-        "2.4 İnç",
-        "2.5 İnç",
-        "2.7 İnç",
-        "2.8 İnç",
-        "3 İnç",
-        "3.2 İnç",
-        "3.5 İnç ve üzeri",
-        "Yok"
-      ]
-    },
-    {
-      "type": "range-number",
-      "label": "Ekran Boyutu inç",
-      "minKey": "ekran-boyutu-incMin",
-      "maxKey": "ekran-boyutu-incMax",
-      "minLabel": "Ekran Boyutu inç Min",
-      "maxLabel": "Ekran Boyutu inç Max"
-    },
-    {
-      "type": "select",
-      "key": "fotograf-cekimi",
-      "label": "Fotoğraf Çekimi",
-      "options": [
-        "1 MP",
-        "1.5 MP",
-        "10 MP",
-        "11 MP",
-        "12 MP ve Üzeri",
-        "2 MP",
-        "3 MP",
-        "4 MP",
-        "5 MP",
-        "6 MP",
-        "7 MP",
-        "8 MP",
-        "9 MP",
-        "Yok"
-      ]
-    },
-    {
-      "type": "range-number",
-      "label": "Fotoğraf Çözünürlüğü (MP)",
-      "minKey": "fotograf-cozunurlugu-mpMin",
-      "maxKey": "fotograf-cozunurlugu-mpMax",
-      "minLabel": "Fotoğraf Çözünürlüğü (MP) Min",
-      "maxLabel": "Fotoğraf Çözünürlüğü (MP) Max"
-    },
-    {
-      "type": "range-number",
-      "label": "Kapasite",
-      "minKey": "kapasiteMin",
-      "maxKey": "kapasiteMax",
-      "minLabel": "Kapasite min",
-      "maxLabel": "Kapasite Max"
-    },
-    {
-      "type": "range-number",
-      "label": "Kapasite (GB)",
-      "minKey": "kapasite-gbMin",
-      "maxKey": "kapasite-gbMax",
-      "minLabel": "Kapasite (GB) min",
-      "maxLabel": "Kapasite (GB) max"
-    },
     {
       "type": "select",
       "key": "marka",
@@ -9960,6 +10211,60 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "video-cozunurlugu",
+      "label": "Video Çözünürlüğü",
+      "options": [
+        "1024 x 768",
+        "2560 x 1920",
+        "320 x 240",
+        "3840 x 2160",
+        "640 x 480",
+        "720 x 480",
+        "720 x 576",
+        "HD 1080i",
+        "HD 1080p",
+        "HD 720p"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "Optik Zoom",
+      "minKey": "optik-zoomMin",
+      "maxKey": "optik-zoomMax",
+      "minLabel": "Optik Zoom min",
+      "maxLabel": "Optik Zoom max"
+    },
+    {
+      "type": "range-number",
+      "label": "Kapasite",
+      "minKey": "kapasiteMin",
+      "maxKey": "kapasiteMax",
+      "minLabel": "Kapasite min",
+      "maxLabel": "Kapasite Max"
+    },
+    {
+      "type": "range-number",
+      "label": "Ekran Boyutu inç",
+      "minKey": "ekran-boyutu-incMin",
+      "maxKey": "ekran-boyutu-incMax",
+      "minLabel": "Ekran Boyutu inç Min",
+      "maxLabel": "Ekran Boyutu inç Max"
+    },
+    {
+      "type": "range-number",
+      "label": "Fotoğraf Çözünürlüğü (MP)",
+      "minKey": "fotograf-cozunurlugu-mpMin",
+      "maxKey": "fotograf-cozunurlugu-mpMax",
+      "minLabel": "Fotoğraf Çözünürlüğü (MP) Min",
+      "maxLabel": "Fotoğraf Çözünürlüğü (MP) Max"
+    },
+    {
       "type": "select",
       "key": "optik-zoom",
       "label": "Optik Zoom",
@@ -9989,12 +10294,45 @@
       ]
     },
     {
-      "type": "range-number",
-      "label": "Optik Zoom",
-      "minKey": "optik-zoomMin",
-      "maxKey": "optik-zoomMax",
-      "minLabel": "Optik Zoom min",
-      "maxLabel": "Optik Zoom max"
+      "type": "select",
+      "key": "ekran-boyutu",
+      "label": "Ekran Boyutu",
+      "options": [
+        "1.6 İnç",
+        "1.7 İnç",
+        "1.8 İnç",
+        "2 İnç",
+        "2.2 İnç",
+        "2.4 İnç",
+        "2.5 İnç",
+        "2.7 İnç",
+        "2.8 İnç",
+        "3 İnç",
+        "3.2 İnç",
+        "3.5 İnç ve üzeri",
+        "Yok"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "fotograf-cekimi",
+      "label": "Fotoğraf Çekimi",
+      "options": [
+        "1 MP",
+        "1.5 MP",
+        "10 MP",
+        "11 MP",
+        "12 MP ve Üzeri",
+        "2 MP",
+        "3 MP",
+        "4 MP",
+        "5 MP",
+        "6 MP",
+        "7 MP",
+        "8 MP",
+        "9 MP",
+        "Yok"
+      ]
     },
     {
       "type": "select",
@@ -10012,35 +10350,15 @@
       ]
     },
     {
-      "type": "select",
-      "key": "video-cozunurlugu",
-      "label": "Video Çözünürlüğü",
-      "options": [
-        "1024 x 768",
-        "2560 x 1920",
-        "320 x 240",
-        "3840 x 2160",
-        "640 x 480",
-        "720 x 480",
-        "720 x 576",
-        "HD 1080i",
-        "HD 1080p",
-        "HD 720p"
-      ]
+      "type": "range-number",
+      "label": "Kapasite (GB)",
+      "minKey": "kapasite-gbMin",
+      "maxKey": "kapasite-gbMax",
+      "minLabel": "Kapasite (GB) min",
+      "maxLabel": "Kapasite (GB) max"
     }
   ],
   "fotograf-kamera-video-kamera-aksiyon-kamera": [
-    {
-      "type": "select",
-      "key": "kayit-turu",
-      "label": "Kayıt Türü",
-      "options": [
-        "Dahili Bellek",
-        "DV",
-        "HDD",
-        "SD"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -10188,6 +10506,22 @@
         "ZED",
         "Zhiyun",
         "ZXC"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "kayit-turu",
+      "label": "Kayıt Türü",
+      "options": [
+        "Dahili Bellek",
+        "DV",
+        "HDD",
+        "SD"
       ]
     }
   ],
@@ -10489,6 +10823,11 @@
         "Zem Home",
         "Zivella Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-oturma-odasi-salon-cekyat-kanepe": [
@@ -10763,6 +11102,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
@@ -10936,6 +11280,11 @@
         "Yörük Mobilya",
         "Zebrano"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
@@ -11162,6 +11511,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-oturma-odasi-salon-kose-koltuk-takimi": [
@@ -11338,6 +11692,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-oturma-odasi-salon-salon-takimi": [
@@ -11643,6 +12002,11 @@
         "Zebrano",
         "Zett Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-oturma-odasi-salon-tv-koltugu": [
@@ -11834,6 +12198,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-oturma-odasi-salon-tv-unitesi": [
@@ -12046,6 +12415,11 @@
         "Yörük Mobilya",
         "Zebrano"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-mutfak-mutfak-masasi": [
@@ -12219,6 +12593,11 @@
         "Yusgos",
         "Zara Home"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-mutfak-masa-takimi": [
@@ -12436,6 +12815,11 @@
         "Yörük Mobilya",
         "Zen Home"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-mutfak-sandalye": [
@@ -12630,6 +13014,11 @@
         "Zambak Mobilya",
         "Zeryonga"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
@@ -12880,6 +13269,11 @@
         "Yurkan",
         "Zara Home"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-mutfak-hazir-mutfak": [
@@ -12986,6 +13380,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-mutfak-erzak-dolabi": [
@@ -13115,6 +13514,11 @@
         "Yörük Mobilya",
         "Zara Home"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-mutfak-kiler-dolabi": [
@@ -13244,6 +13648,11 @@
         "Yörük Mobilya",
         "Zara Home"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yemek-odasi-bufe-vitrin": [
@@ -13404,6 +13813,11 @@
         "Yıldız Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yemek-odasi-gumusluk": [
@@ -13528,6 +13942,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yemek-odasi-konsol": [
@@ -13655,6 +14074,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yemek-odasi-masa": [
@@ -13912,6 +14336,11 @@
         "Zebrano",
         "Zett Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yemek-odasi-sandalye": [
@@ -14140,6 +14569,11 @@
         "Zirve",
         "Zivella"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yemek-odasi-saraplik": [
@@ -14245,6 +14679,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yemek-odasi-yemek-odasi-takimi": [
@@ -14474,6 +14913,11 @@
         "Zebrano",
         "Zett"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yatak-odasi-yatak": [
@@ -14686,6 +15130,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
@@ -14696,15 +15145,6 @@
     }
   ],
   "ev-dekorasyon-mobilya-yatak-odasi-baza": [
-    {
-      "type": "select",
-      "key": "baslik",
-      "label": "Başlık",
-      "options": [
-        "Var",
-        "Yok"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -14937,6 +15377,20 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "Çift Kişilik",
+        "Tek Kişilik"
+      ]
+    },
+    {
       "type": "select",
       "key": "renk",
       "label": "Renk",
@@ -14956,11 +15410,11 @@
     },
     {
       "type": "select",
-      "key": "turu",
-      "label": "Türü",
+      "key": "baslik",
+      "label": "Başlık",
       "options": [
-        "Çift Kişilik",
-        "Tek Kişilik"
+        "Var",
+        "Yok"
       ]
     }
   ],
@@ -15262,6 +15716,11 @@
         "Zen Mobilya",
         "Zett"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yatak-odasi-etajer": [
@@ -15380,6 +15839,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yatak-odasi-gardirop": [
@@ -15602,6 +16066,11 @@
         "Yörük Mobilya",
         "Zenio"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yatak-odasi-karyola": [
@@ -15774,6 +16243,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
@@ -15916,6 +16390,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yatak-odasi-komodin": [
@@ -16070,6 +16549,11 @@
         "Yörük Mobilya",
         "Zirve"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-yatak-odasi-makyaj-masasi": [
@@ -16209,6 +16693,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-arabali-yatak": [
@@ -16324,6 +16813,11 @@
         "Yıldız Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-bilgisayar-masasi": [
@@ -16448,6 +16942,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-calisma-masasi": [
@@ -16574,6 +17073,11 @@
         "Yıldız Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-dolap": [
@@ -16707,6 +17211,11 @@
         "Yıldız Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-karyola-yatak": [
@@ -16885,6 +17394,11 @@
         "Yumoş Yatak",
         "Zara Home"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-kitaplik": [
@@ -17013,6 +17527,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-koltuk": [
@@ -17130,6 +17649,11 @@
         "Yıldız Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-komodin": [
@@ -17245,6 +17769,11 @@
         "Yıldız Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-ranza": [
@@ -17391,6 +17920,11 @@
         "Yörük Mobilya",
         "Yükselen Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-sandalye": [
@@ -17504,6 +18038,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-sifonyer": [
@@ -17623,6 +18162,11 @@
         "Yıldırım Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-cocuk-odasi-takimi": [
@@ -17800,6 +18344,11 @@
         "Yıldız Mobilya",
         "Yörük Mobilya"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-cocuk-genc-odasi-cocuk-odasi-takimi-genc-odasi-takimi": [
@@ -17981,9 +18530,29 @@
         "Yörük Mobilya",
         "Zehra"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-dekorasyon-mobilya-tamamlayici-urunler-antre": [
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "Anahtarlık",
+        "Askılık",
+        "Ayakkabılık",
+        "Çok Amaçlı Dolap",
+        "Dresuar",
+        "Portmanto & Vestiyer",
+        "Şemsiyelik",
+        "Telefonluk"
+      ]
+    },
     {
       "type": "select",
       "key": "marka",
@@ -18181,22 +18750,36 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    }
+  ],
+  "ev-dekorasyon-mobilya-tamamlayici-urunler-oturma-odasi-salon": [
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
       "options": [
-        "Anahtarlık",
-        "Askılık",
-        "Ayakkabılık",
-        "Çok Amaçlı Dolap",
-        "Dresuar",
-        "Portmanto & Vestiyer",
-        "Şemsiyelik",
-        "Telefonluk"
+        "Akıllı Sehpa",
+        "Amerikan Bar",
+        "Armut Koltuk",
+        "C Sehpa",
+        "CD & DVD Rafı",
+        "Çalışma Masası",
+        "Çiçeklik",
+        "Duvar Rafı",
+        "Fiskos",
+        "Gazetelik / Dergilik",
+        "Kitaplık / Kütüphane",
+        "Minder",
+        "Puf",
+        "Sallanan Sandalye",
+        "Sehpa",
+        "Telefon Sehpası",
+        "Zigon"
       ]
-    }
-  ],
-  "ev-dekorasyon-mobilya-tamamlayici-urunler-oturma-odasi-salon": [
+    },
     {
       "type": "select",
       "key": "marka",
@@ -18494,31 +19077,32 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    }
+  ],
+  "ev-dekorasyon-mobilya-tamamlayici-urunler-yatak-odasi": [
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
       "options": [
-        "Akıllı Sehpa",
-        "Amerikan Bar",
-        "Armut Koltuk",
-        "C Sehpa",
-        "CD & DVD Rafı",
-        "Çalışma Masası",
-        "Çiçeklik",
-        "Duvar Rafı",
-        "Fiskos",
-        "Gazetelik / Dergilik",
-        "Kitaplık / Kütüphane",
-        "Minder",
+        "Bench",
+        "Boy Aynası",
+        "Dilsiz Uşak",
+        "Dresuar",
+        "Elbise Askısı",
+        "Organizer",
+        "Pantolon Askısı",
+        "Paravan",
         "Puf",
-        "Sallanan Sandalye",
-        "Sehpa",
-        "Telefon Sehpası",
-        "Zigon"
+        "Raf",
+        "Sandık",
+        "Somya",
+        "Yatak Başlığı"
       ]
-    }
-  ],
-  "ev-dekorasyon-mobilya-tamamlayici-urunler-yatak-odasi": [
+    },
     {
       "type": "select",
       "key": "marka",
@@ -18740,99 +19324,12 @@
       ]
     },
     {
-      "type": "select",
-      "key": "turu",
-      "label": "Türü",
-      "options": [
-        "Bench",
-        "Boy Aynası",
-        "Dilsiz Uşak",
-        "Dresuar",
-        "Elbise Askısı",
-        "Organizer",
-        "Pantolon Askısı",
-        "Paravan",
-        "Puf",
-        "Raf",
-        "Sandık",
-        "Somya",
-        "Yatak Başlığı"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-elektronigi-televizyon-led-lcd-tv": [
-    {
-      "type": "select",
-      "key": "cozunurluk",
-      "label": "Çözünürlük",
-      "options": [
-        "Full HD",
-        "HD Ready",
-        "Ultra HD (4K)",
-        "Ultra HD (8K)"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "dahili-uydu-alici",
-      "label": "Dahili Uydu Alıcı",
-      "options": [
-        "Var",
-        "Yok"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "ekran-boyutu",
-      "label": "Ekran Boyutu",
-      "options": [
-        "100 \" / 254 cm",
-        "105 \" / 267 cm",
-        "110 \" / 280 cm",
-        "16 \" / 41 cm",
-        "17 \" / 43 cm",
-        "19 '' / 48 cm",
-        "22 '' / 56 cm",
-        "23 '' / 58 cm",
-        "24 '' / 61 cm",
-        "27 '' / 69 cm",
-        "28 '' / 71 cm",
-        "32 '' / 82 cm",
-        "37 '' / 94 cm",
-        "39 '' / 99 cm",
-        "40 '' / 102 cm",
-        "42 '' / 106 cm",
-        "43'' / 109 cm",
-        "46 '' / 116 cm",
-        "47 '' / 120 cm",
-        "48 '' / 122 cm",
-        "49 '' / 123 cm",
-        "50 '' / 127 cm",
-        "52 '' / 132 cm",
-        "55 '' / 138 cm",
-        "57 '' / 147 cm",
-        "58 '' / 147 cm",
-        "60 '' / 152 cm",
-        "65 '' / 164 cm",
-        "70 '' / 178 cm",
-        "75 '' / 189 cm",
-        "78 '' / 198 cm",
-        "80 '' / 203 cm",
-        "84 '' / 213 cm",
-        "85 '' / 214 cm",
-        "90 '' / 229 cm",
-        "98 '' / 248 cm"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "ekran-tipi",
-      "label": "Ekran Tipi",
-      "options": [
-        "Düz (Flat)",
-        "Kavisli (Curved)"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -18887,6 +19384,74 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "ekran-boyutu",
+      "label": "Ekran Boyutu",
+      "options": [
+        "100 \" / 254 cm",
+        "105 \" / 267 cm",
+        "110 \" / 280 cm",
+        "16 \" / 41 cm",
+        "17 \" / 43 cm",
+        "19 '' / 48 cm",
+        "22 '' / 56 cm",
+        "23 '' / 58 cm",
+        "24 '' / 61 cm",
+        "27 '' / 69 cm",
+        "28 '' / 71 cm",
+        "32 '' / 82 cm",
+        "37 '' / 94 cm",
+        "39 '' / 99 cm",
+        "40 '' / 102 cm",
+        "42 '' / 106 cm",
+        "43'' / 109 cm",
+        "46 '' / 116 cm",
+        "47 '' / 120 cm",
+        "48 '' / 122 cm",
+        "49 '' / 123 cm",
+        "50 '' / 127 cm",
+        "52 '' / 132 cm",
+        "55 '' / 138 cm",
+        "57 '' / 147 cm",
+        "58 '' / 147 cm",
+        "60 '' / 152 cm",
+        "65 '' / 164 cm",
+        "70 '' / 178 cm",
+        "75 '' / 189 cm",
+        "78 '' / 198 cm",
+        "80 '' / 203 cm",
+        "84 '' / 213 cm",
+        "85 '' / 214 cm",
+        "90 '' / 229 cm",
+        "98 '' / 248 cm"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "cozunurluk",
+      "label": "Çözünürlük",
+      "options": [
+        "Full HD",
+        "HD Ready",
+        "Ultra HD (4K)",
+        "Ultra HD (8K)"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "ekran-tipi",
+      "label": "Ekran Tipi",
+      "options": [
+        "Düz (Flat)",
+        "Kavisli (Curved)"
+      ]
+    },
+    {
       "type": "select",
       "key": "smart-tv",
       "label": "Smart TV",
@@ -18894,9 +19459,42 @@
         "Evet",
         "Hayır"
       ]
+    },
+    {
+      "type": "select",
+      "key": "dahili-uydu-alici",
+      "label": "Dahili Uydu Alıcı",
+      "options": [
+        "Var",
+        "Yok"
+      ]
     }
   ],
   "ev-elektronigi-televizyon-oled-tv": [
+    {
+      "type": "select",
+      "key": "marka",
+      "label": "Marka",
+      "options": [
+        "Arçelik",
+        "Bang & Olufsen",
+        "Beko",
+        "Grundig",
+        "LG",
+        "Philips",
+        "Regal",
+        "Samsung",
+        "Sony",
+        "TCL",
+        "Toshiba",
+        "Vestel"
+      ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
     {
       "type": "select",
       "key": "ekran-boyutu",
@@ -18925,41 +19523,9 @@
         "85 '' / 214 cm",
         "90 '' / 229 cm"
       ]
-    },
-    {
-      "type": "select",
-      "key": "marka",
-      "label": "Marka",
-      "options": [
-        "Arçelik",
-        "Bang & Olufsen",
-        "Beko",
-        "Grundig",
-        "LG",
-        "Philips",
-        "Regal",
-        "Samsung",
-        "Sony",
-        "TCL",
-        "Toshiba",
-        "Vestel"
-      ]
     }
   ],
   "ev-elektronigi-televizyon-yedek-parca": [
-    {
-      "type": "select",
-      "key": "turu",
-      "label": "Türü",
-      "options": [
-        "LCD TV",
-        "LED TV",
-        "Plazma TV",
-        "Portatif & Cep TV",
-        "Projeksiyon TV",
-        "Tüplü TV"
-      ]
-    },
     {
       "type": "select",
       "key": "uyumlu-marka",
@@ -19039,6 +19605,19 @@
         "ViewsSonic",
         "Worldtech",
         "Zenga"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "LCD TV",
+        "LED TV",
+        "Plazma TV",
+        "Portatif & Cep TV",
+        "Projeksiyon TV",
+        "Tüplü TV"
       ]
     },
     {
@@ -19321,63 +19900,14 @@
         "Zgemma",
         "ZTE"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "ev-elektronigi-ev-sinema-sistemleri-projeksiyon-cihazi": [
-    {
-      "type": "select",
-      "key": "cozunurluk",
-      "label": "Çözünürlük",
-      "options": [
-        "4K HD (4096 x 2400)",
-        "HD 1080 (1920 x 1080)",
-        "HD 720 (1280 x 720)",
-        "QXGA (2048 x 1536)",
-        "SVGA (800 x 600)",
-        "SXGA (1280 x 1024)",
-        "SXGA+ (1400 x 1050)",
-        "UXGA (1600 x 1200)",
-        "VGA (640 x 480)",
-        "WSVGA (1024 x 576)",
-        "WVGA (854 x 480)",
-        "WXGA (1280 x 768)",
-        "XGA (1024 x 768)"
-      ]
-    },
-    {
-      "type": "range-number",
-      "label": "Işık Gücü Lümen",
-      "minKey": "isik-gucu-lumenMin",
-      "maxKey": "isik-gucu-lumenMax",
-      "minLabel": "Işık Gücü Lümen Min",
-      "maxLabel": "Işık Gücü Lümen Max"
-    },
-    {
-      "type": "select",
-      "key": "kontrast",
-      "label": "Kontrast",
-      "options": [
-        "1:1000",
-        "1:10000",
-        "1:100000",
-        "1:1000000",
-        "1:1200",
-        "1:1500",
-        "1:15000",
-        "1:150000",
-        "1:200",
-        "1:2000",
-        "1:200000",
-        "1:2500",
-        "1:400",
-        "1:500",
-        "1:5000",
-        "1:500000",
-        "1:600000",
-        "1:7500",
-        "1:800"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -19415,6 +19945,65 @@
         "Xiaomi",
         "Yaber"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "cozunurluk",
+      "label": "Çözünürlük",
+      "options": [
+        "4K HD (4096 x 2400)",
+        "HD 1080 (1920 x 1080)",
+        "HD 720 (1280 x 720)",
+        "QXGA (2048 x 1536)",
+        "SVGA (800 x 600)",
+        "SXGA (1280 x 1024)",
+        "SXGA+ (1400 x 1050)",
+        "UXGA (1600 x 1200)",
+        "VGA (640 x 480)",
+        "WSVGA (1024 x 576)",
+        "WVGA (854 x 480)",
+        "WXGA (1280 x 768)",
+        "XGA (1024 x 768)"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "kontrast",
+      "label": "Kontrast",
+      "options": [
+        "1:1000",
+        "1:10000",
+        "1:100000",
+        "1:1000000",
+        "1:1200",
+        "1:1500",
+        "1:15000",
+        "1:150000",
+        "1:200",
+        "1:2000",
+        "1:200000",
+        "1:2500",
+        "1:400",
+        "1:500",
+        "1:5000",
+        "1:500000",
+        "1:600000",
+        "1:7500",
+        "1:800"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "Işık Gücü Lümen",
+      "minKey": "isik-gucu-lumenMin",
+      "maxKey": "isik-gucu-lumenMax",
+      "minLabel": "Işık Gücü Lümen Min",
+      "maxLabel": "Işık Gücü Lümen Max"
     }
   ],
   "ev-elektronigi-ev-sinema-sistemleri-media-player": [
@@ -19454,6 +20043,11 @@
         "Zappiti",
         "Zidoo"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "elektrikli-ev-aletleri-beyaz-esya-yedek-parca-ekipman": [
@@ -19562,6 +20156,11 @@
         "Woox",
         "Zanussi"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "elektrikli-ev-aletleri-beyaz-esya-aspirator-davlumbaz": [
@@ -19669,6 +20268,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "urun",
       "label": "Ürün",
@@ -19681,19 +20285,13 @@
   "elektrikli-ev-aletleri-beyaz-esya-bulasik-makinesi": [
     {
       "type": "select",
-      "key": "enerji-sinifi",
-      "label": "Enerji Sınıfı",
+      "key": "turu",
+      "label": "Türü",
       "options": [
-        "A",
-        "A+",
-        "A++",
-        "A+++",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G"
+        "Ankastre",
+        "Mini & Tezgah Üstü",
+        "Solo",
+        "Yarı Ankastre"
       ]
     },
     {
@@ -19764,6 +20362,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "program",
       "label": "Program",
@@ -19773,19 +20376,6 @@
         "5 Üzeri Program"
       ]
     },
-    {
-      "type": "select",
-      "key": "turu",
-      "label": "Türü",
-      "options": [
-        "Ankastre",
-        "Mini & Tezgah Üstü",
-        "Solo",
-        "Yarı Ankastre"
-      ]
-    }
-  ],
-  "elektrikli-ev-aletleri-beyaz-esya-buzdolabi": [
     {
       "type": "select",
       "key": "enerji-sinifi",
@@ -19802,22 +20392,19 @@
         "F",
         "G"
       ]
-    },
+    }
+  ],
+  "elektrikli-ev-aletleri-beyaz-esya-buzdolabi": [
     {
-      "type": "range-number",
-      "label": "Genişlik (Cm)",
-      "minKey": "genislik-cmMin",
-      "maxKey": "genislik-cmMax",
-      "minLabel": "Genişlik (Cm) min",
-      "maxLabel": "Genişlik (Cm) max"
-    },
-    {
-      "type": "range-number",
-      "label": "Hacim (litre)",
-      "minKey": "hacim-litreMin",
-      "maxKey": "hacim-litreMax",
-      "minLabel": "Hacim (litre) min",
-      "maxLabel": "Hacim (litre) max"
+      "type": "select",
+      "key": "turur",
+      "label": "Türür",
+      "options": [
+        "Alttan Donduruculu",
+        "Gardırop",
+        "Mini Buzdolabı",
+        "Üstten Donduruculu"
+      ]
     },
     {
       "type": "select",
@@ -19937,26 +20524,10 @@
       ]
     },
     {
-      "type": "select",
-      "key": "turur",
-      "label": "Türür",
-      "options": [
-        "Alttan Donduruculu",
-        "Gardırop",
-        "Mini Buzdolabı",
-        "Üstten Donduruculu"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
-    {
-      "type": "range-number",
-      "label": "Yükseklik (cm)",
-      "minKey": "yukseklik-cmMin",
-      "maxKey": "yukseklik-cmMax",
-      "minLabel": "Yükseklik (cm) Min",
-      "maxLabel": "Yükseklik (cm) Max"
-    }
-  ],
-  "elektrikli-ev-aletleri-beyaz-esya-camasir-makinesi": [
     {
       "type": "select",
       "key": "enerji-sinifi",
@@ -19967,9 +20538,39 @@
         "A++",
         "A+++",
         "B",
-        "C"
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
       ]
     },
+    {
+      "type": "range-number",
+      "label": "Yükseklik (cm)",
+      "minKey": "yukseklik-cmMin",
+      "maxKey": "yukseklik-cmMax",
+      "minLabel": "Yükseklik (cm) Min",
+      "maxLabel": "Yükseklik (cm) Max"
+    },
+    {
+      "type": "range-number",
+      "label": "Genişlik (Cm)",
+      "minKey": "genislik-cmMin",
+      "maxKey": "genislik-cmMax",
+      "minLabel": "Genişlik (Cm) min",
+      "maxLabel": "Genişlik (Cm) max"
+    },
+    {
+      "type": "range-number",
+      "label": "Hacim (litre)",
+      "minKey": "hacim-litreMin",
+      "maxKey": "hacim-litreMax",
+      "minLabel": "Hacim (litre) min",
+      "maxLabel": "Hacim (litre) max"
+    }
+  ],
+  "elektrikli-ev-aletleri-beyaz-esya-camasir-makinesi": [
     {
       "type": "select",
       "key": "marka",
@@ -20045,6 +20646,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "yikamakapasitesi",
       "label": "YıkamaKapasitesi",
@@ -20061,9 +20667,7 @@
         "8 kg",
         "9 kg"
       ]
-    }
-  ],
-  "elektrikli-ev-aletleri-beyaz-esya-camasir-kurutma-makinesi": [
+    },
     {
       "type": "select",
       "key": "enerji-sinifi",
@@ -20074,13 +20678,11 @@
         "A++",
         "A+++",
         "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G"
+        "C"
       ]
-    },
+    }
+  ],
+  "elektrikli-ev-aletleri-beyaz-esya-camasir-kurutma-makinesi": [
     {
       "type": "select",
       "key": "marka",
@@ -20131,9 +20733,12 @@
         "Whirlpool",
         "White-Westinghouse"
       ]
-    }
-  ],
-  "elektrikli-ev-aletleri-beyaz-esya-derin-dondurucu": [
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
     {
       "type": "select",
       "key": "enerji-sinifi",
@@ -20150,24 +20755,9 @@
         "F",
         "G"
       ]
-    },
-    {
-      "type": "range-number",
-      "label": "Hacim Litre",
-      "minKey": "hacim-litreMin",
-      "maxKey": "hacim-litreMax",
-      "minLabel": "Hacim Litre Min",
-      "maxLabel": "Hacim Litre Max"
-    },
-    {
-      "type": "select",
-      "key": "kontrol-paneli",
-      "label": "Kontrol Paneli",
-      "options": [
-        "Dijital",
-        "Mekanik"
-      ]
-    },
+    }
+  ],
+  "elektrikli-ev-aletleri-beyaz-esya-derin-dondurucu": [
     {
       "type": "select",
       "key": "marka",
@@ -20242,6 +20832,20 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "Dikey",
+        "Yatay"
+      ]
+    },
+    {
       "type": "select",
       "key": "no-frost",
       "label": "No Frost",
@@ -20252,15 +20856,53 @@
     },
     {
       "type": "select",
-      "key": "turu",
-      "label": "Türü",
+      "key": "enerji-sinifi",
+      "label": "Enerji Sınıfı",
       "options": [
-        "Dikey",
-        "Yatay"
+        "A",
+        "A+",
+        "A++",
+        "A+++",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "Hacim Litre",
+      "minKey": "hacim-litreMin",
+      "maxKey": "hacim-litreMax",
+      "minLabel": "Hacim Litre Min",
+      "maxLabel": "Hacim Litre Max"
+    },
+    {
+      "type": "select",
+      "key": "kontrol-paneli",
+      "label": "Kontrol Paneli",
+      "options": [
+        "Dijital",
+        "Mekanik"
       ]
     }
   ],
   "elektrikli-ev-aletleri-beyaz-esya-firin": [
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "Ankastre Fırın",
+        "Davul Fırın",
+        "Kuzine Fırın",
+        "Midi Fırın",
+        "Mini Fırın",
+        "Ocaklı Fırın"
+      ]
+    },
     {
       "type": "select",
       "key": "marka",
@@ -20418,17 +21060,9 @@
       ]
     },
     {
-      "type": "select",
-      "key": "turu",
-      "label": "Türü",
-      "options": [
-        "Ankastre Fırın",
-        "Davul Fırın",
-        "Kuzine Fırın",
-        "Midi Fırın",
-        "Mini Fırın",
-        "Ocaklı Fırın"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "elektrikli-ev-aletleri-beyaz-esya-mikrodalga-firin": [
@@ -20546,33 +21180,14 @@
         "Yüzbaşıoğlu",
         "Zanussi"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "elektrikli-ev-aletleri-beyaz-esya-set-ustu-ocak": [
-    {
-      "type": "select",
-      "key": "calisma-sekli",
-      "label": "Çalışma şekli",
-      "options": [
-        "Elektrikli",
-        "Gazlı (Doğalgaz)",
-        "Gazlı (LPG)",
-        "Gazlı & Elektrikli"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "goz-sayisi",
-      "label": "Göz Sayısı",
-      "options": [
-        "3 Gözlü",
-        "4 Gözlü",
-        "5 Gözlü",
-        "6 Gözlü",
-        "Çift Gözlü",
-        "Tek Gözlü"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -20711,6 +21326,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
@@ -20718,9 +21338,46 @@
         "Ankastre",
         "Solo"
       ]
+    },
+    {
+      "type": "select",
+      "key": "goz-sayisi",
+      "label": "Göz Sayısı",
+      "options": [
+        "3 Gözlü",
+        "4 Gözlü",
+        "5 Gözlü",
+        "6 Gözlü",
+        "Çift Gözlü",
+        "Tek Gözlü"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "calisma-sekli",
+      "label": "Çalışma şekli",
+      "options": [
+        "Elektrikli",
+        "Gazlı (Doğalgaz)",
+        "Gazlı (LPG)",
+        "Gazlı & Elektrikli"
+      ]
     }
   ],
   "elektrikli-ev-aletleri-beyaz-esya-su-aritma-cihazi": [
+    {
+      "type": "select",
+      "key": "turu",
+      "label": "Türü",
+      "options": [
+        "Filtreli Sürahi",
+        "Musluk Filtresi",
+        "Su Saatine Monte",
+        "Tezgah Altı",
+        "Tezgah Üstü",
+        "Yedek Filtre"
+      ]
+    },
     {
       "type": "select",
       "key": "marka",
@@ -20929,17 +21586,9 @@
       ]
     },
     {
-      "type": "select",
-      "key": "turu",
-      "label": "Türü",
-      "options": [
-        "Filtreli Sürahi",
-        "Musluk Filtresi",
-        "Su Saatine Monte",
-        "Tezgah Altı",
-        "Tezgah Üstü",
-        "Yedek Filtre"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "elektrikli-ev-aletleri-beyaz-esya-su-sebili": [
@@ -21030,6 +21679,11 @@
         "VIP Water",
         "Water White"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "elektrikli-ev-aletleri-isitma-sogutma-havalandirma-yedek-parca-ekipman": [
@@ -21079,61 +21733,6 @@
     }
   ],
   "elektrikli-ev-aletleri-isitma-sogutma-havalandirma-klima": [
-    {
-      "type": "select",
-      "key": "btu",
-      "label": "BTU",
-      "options": [
-        "114000",
-        "12000",
-        "120000",
-        "15000",
-        "18000",
-        "21000",
-        "22000",
-        "24000",
-        "25000",
-        "32000",
-        "38000",
-        "42000",
-        "46500",
-        "48000",
-        "64000",
-        "69000",
-        "72000",
-        "82000",
-        "9000'e kadar",
-        "92000",
-        "96000"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "enerji-sinifi",
-      "label": "Enerji Sınıfı",
-      "options": [
-        "A",
-        "A+",
-        "A++",
-        "A+++",
-        "B",
-        "Bilinmiyor",
-        "C",
-        "D",
-        "E",
-        "G"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "kullanim",
-      "label": "Kullanım",
-      "options": [
-        "Dış Ünite",
-        "İç & Dış Ünite",
-        "İç Ünite"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -21354,13 +21953,9 @@
       ]
     },
     {
-      "type": "select",
-      "key": "teknoloji",
-      "label": "Teknoloji",
-      "options": [
-        "İnverter",
-        "On-Off"
-      ]
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
@@ -21375,6 +21970,70 @@
         "Salon Tipi",
         "VRF",
         "Yer & Tavan Tipi"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "kullanim",
+      "label": "Kullanım",
+      "options": [
+        "Dış Ünite",
+        "İç & Dış Ünite",
+        "İç Ünite"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "btu",
+      "label": "BTU",
+      "options": [
+        "114000",
+        "12000",
+        "120000",
+        "15000",
+        "18000",
+        "21000",
+        "22000",
+        "24000",
+        "25000",
+        "32000",
+        "38000",
+        "42000",
+        "46500",
+        "48000",
+        "64000",
+        "69000",
+        "72000",
+        "82000",
+        "9000'e kadar",
+        "92000",
+        "96000"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "teknoloji",
+      "label": "Teknoloji",
+      "options": [
+        "İnverter",
+        "On-Off"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "enerji-sinifi",
+      "label": "Enerji Sınıfı",
+      "options": [
+        "A",
+        "A+",
+        "A++",
+        "A+++",
+        "B",
+        "Bilinmiyor",
+        "C",
+        "D",
+        "E",
+        "G"
       ]
     }
   ],
@@ -21455,6 +22114,11 @@
         "Wolf",
         "Yetsan"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     },
     {
       "type": "select",
@@ -21659,76 +22323,14 @@
         "Zoba",
         "Zümrüt Isı"
       ]
+    },
+    {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
     }
   ],
   "saat-kol-saati": [
-    {
-      "type": "select",
-      "key": "kasa",
-      "label": "Kasa",
-      "options": [
-        "Ahşap",
-        "Altın",
-        "Alüminyum",
-        "Bronz",
-        "Çelik",
-        "Çelik & Altın",
-        "Gümüş",
-        "Karbon",
-        "Plastik",
-        "Platin",
-        "Seramik",
-        "Tantalum",
-        "Titanyum"
-      ]
-    },
-    {
-      "type": "range-number",
-      "label": "Kasa Çapı (mm)",
-      "minKey": "kasa-capi-mmMin",
-      "maxKey": "kasa-capi-mmMax",
-      "minLabel": "Kasa Çapı (mm)  Min",
-      "maxLabel": "Kasa Çapı( mm) Max"
-    },
-    {
-      "type": "select",
-      "key": "kordon",
-      "label": "Kordon",
-      "options": [
-        "Ahşap",
-        "Altın",
-        "Alüminyum",
-        "Bez & Dokuma",
-        "Çelik",
-        "Çelik & Altın",
-        "Deri",
-        "Gümüş",
-        "Hasır",
-        "Karbon",
-        "Kauçuk",
-        "Metal",
-        "Metalik",
-        "Plastik",
-        "Platin",
-        "Seramik",
-        "Silikon",
-        "Titanyum",
-        "Yok"
-      ]
-    },
-    {
-      "type": "select",
-      "key": "makine",
-      "label": "Makine",
-      "options": [
-        "Analog",
-        "Analog & Dijital",
-        "Dijital",
-        "Güneş Enerjili",
-        "Kinetik",
-        "Otomatik"
-      ]
-    },
     {
       "type": "select",
       "key": "marka",
@@ -22180,6 +22782,11 @@
       ]
     },
     {
+      "type": "text",
+      "key": "model",
+      "label": "Model"
+    },
+    {
       "type": "select",
       "key": "turu",
       "label": "Türü",
@@ -22189,6 +22796,73 @@
         "Kadın",
         "Üniseks"
       ]
+    },
+    {
+      "type": "select",
+      "key": "kasa",
+      "label": "Kasa",
+      "options": [
+        "Ahşap",
+        "Altın",
+        "Alüminyum",
+        "Bronz",
+        "Çelik",
+        "Çelik & Altın",
+        "Gümüş",
+        "Karbon",
+        "Plastik",
+        "Platin",
+        "Seramik",
+        "Tantalum",
+        "Titanyum"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "kordon",
+      "label": "Kordon",
+      "options": [
+        "Ahşap",
+        "Altın",
+        "Alüminyum",
+        "Bez & Dokuma",
+        "Çelik",
+        "Çelik & Altın",
+        "Deri",
+        "Gümüş",
+        "Hasır",
+        "Karbon",
+        "Kauçuk",
+        "Metal",
+        "Metalik",
+        "Plastik",
+        "Platin",
+        "Seramik",
+        "Silikon",
+        "Titanyum",
+        "Yok"
+      ]
+    },
+    {
+      "type": "select",
+      "key": "makine",
+      "label": "Makine",
+      "options": [
+        "Analog",
+        "Analog & Dijital",
+        "Dijital",
+        "Güneş Enerjili",
+        "Kinetik",
+        "Otomatik"
+      ]
+    },
+    {
+      "type": "range-number",
+      "label": "Kasa Çapı (mm)",
+      "minKey": "kasa-capi-mmMin",
+      "maxKey": "kasa-capi-mmMax",
+      "minLabel": "Kasa Çapı (mm)  Min",
+      "maxLabel": "Kasa Çapı( mm) Max"
     }
   ]
 }

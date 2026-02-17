@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import fs from "node:fs";
 import path from "node:path";
 
+process.env.BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA ||= "true";
+process.env.BROWSERSLIST_IGNORE_OLD_DATA ||= "true";
+
 class WriteWebpackStatsPlugin {
   private filename: string;
   constructor(filename: string) {
@@ -89,6 +92,12 @@ if (publicBaseUrl) {
   } catch {}
 }
 
+const isProd = process.env.NODE_ENV === "production";
+const contentSecurityPolicy = (isProd
+  ? "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https: wss:; base-uri 'self'; form-action 'self'; frame-ancestors 'none';"
+  : "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; img-src * data: blob:; connect-src * ws: wss:; font-src *; base-uri *; form-action *; frame-ancestors *;"
+).replace(/\s{2,}/g, " ").trim();
+
 const nextConfig: NextConfig = {
   // RSC ve streaming optimize edildi
   experimental: {
@@ -109,6 +118,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "logo.clearbit.com" },
       { protocol: "https", hostname: "cdn.simpleicons.org" },
       { protocol: "https", hostname: "upload.wikimedia.org" },
+      { protocol: "https", hostname: "placehold.co" },
       { protocol: "https", hostname: "varsagel.com" },
       { protocol: "https", hostname: "www.varsagel.com" },
       { protocol: "https", hostname: "*.cloudfront.net" },
@@ -136,6 +146,15 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/talep/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "private, no-store, max-age=0, must-revalidate",
+          },
+        ],
+      },
+      {
         source: "/:path*",
         headers: [
           {
@@ -152,15 +171,19 @@ const nextConfig: NextConfig = {
           },
           {
             key: "X-Frame-Options",
-            value: "SAMEORIGIN",
+            value: "DENY",
           },
           {
             key: "X-Content-Type-Options",
             value: "nosniff",
           },
           {
+            key: "Content-Security-Policy",
+            value: contentSecurityPolicy,
+          },
+          {
             key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
+            value: "strict-origin-when-cross-origin",
           },
           {
             key: "Permissions-Policy",

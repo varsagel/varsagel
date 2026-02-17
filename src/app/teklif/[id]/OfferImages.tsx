@@ -16,6 +16,14 @@ export default function OfferImages({ images }: OfferImagesProps) {
   const normalizeImageSrc = (src: string) => {
     const s = String(src || '').trim();
     if (!s) return '';
+    const decodeIfEncoded = (value: string) => {
+      if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+      try {
+        return decodeURIComponent(value);
+      } catch {
+        return value;
+      }
+    };
     const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || '').trim().replace(/\/+$/, '');
     if (s.startsWith('http://') || s.startsWith('https://')) {
       try {
@@ -29,12 +37,14 @@ export default function OfferImages({ images }: OfferImagesProps) {
     }
     if (s.startsWith('uploads/')) {
       const path = `/${s}`;
-      return baseUrl ? `${baseUrl}${path}` : path;
+      const decodedPath = decodeIfEncoded(path);
+      return baseUrl ? `${baseUrl}${decodedPath}` : decodedPath;
     }
     if (s.startsWith('/uploads/')) {
-      return baseUrl ? `${baseUrl}${s}` : s;
+      const decodedPath = decodeIfEncoded(s);
+      return baseUrl ? `${baseUrl}${decodedPath}` : decodedPath;
     }
-    return s;
+    return decodeIfEncoded(s);
   };
   const normalizedImages = images.map(normalizeImageSrc).filter(Boolean);
   if (normalizedImages.length === 0) return null;

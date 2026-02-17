@@ -3,19 +3,22 @@
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
+import { useSession } from "next-auth/react";
 
 interface FavoriteButtonProps {
   listingId: string;
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
   isFavorited: boolean;
 }
 
 export default function FavoriteButton({ listingId, isAuthenticated, isFavorited }: FavoriteButtonProps) {
   const [fav, setFav] = useState(isFavorited);
+  const { data: session } = useSession();
   const { toast } = useToast();
+  const canUse = (typeof isAuthenticated === 'boolean' ? isAuthenticated : false) || !!session?.user?.id;
 
   const toggleFavorite = async () => {
-    if (!isAuthenticated) {
+    if (!canUse) {
       toast({
         title: "Giriş Yapmalısınız",
         description: "Lütfen üye olun veya giriş yapın.",

@@ -6,10 +6,8 @@ import Image from "next/image";
 import { Category, SubCategory, CATEGORIES as STATIC_CATEGORIES } from "@/data/categories";
 import { TURKEY_PROVINCES, getProvinceByName, getDistrictsByProvince } from "@/data/turkey-locations";
 import { toast } from "@/components/ui/use-toast";
-import { AttrField } from '@/data/attribute-schemas';
-import BRAND_LOGOS from '@/data/brand-logos.json';
 import { titleCaseTR } from "@/lib/title-case-tr";
-import { getSubcategoryImage } from "@/data/subcategory-images";
+import { getCategoryImage, getSubcategoryImage } from "@/data/subcategory-images";
 import { 
   List, 
   FileText, 
@@ -21,228 +19,8 @@ import {
   Info, 
   TrendingUp, 
   Search,
-  Check,
-  X
+  Check
 } from "lucide-react";
-
-const stableAttrFieldId = (f: AttrField) => {
-  if (f.type === 'range-number' && f.minKey && f.maxKey) {
-    const minBase = f.minKey.endsWith('Min') ? f.minKey.slice(0, -3) : null;
-    const maxBase = f.maxKey.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
-    if (minBase && maxBase && minBase === maxBase) return `r:${minBase}`;
-    return `r:${f.minKey}:${f.maxKey}`;
-  }
-  if (f.key) return `k:${f.key}`;
-  return `l:${f.label}`;
-};
-
-const stripReservedAttrFields = (fields: AttrField[]) =>
-  fields.filter((f) => {
-    if (f.key === 'minPrice' || f.key === 'maxPrice') return false;
-    if (f.key === 'minBudget' || f.key === 'budget') return false;
-
-    if (f.type !== 'range-number') return true;
-
-    if (f.minKey === 'minPrice' && f.maxKey === 'maxPrice') return false;
-    if (f.minKey === 'minBudget' && f.maxKey === 'budget') return false;
-
-    const minBase = f.minKey?.endsWith('Min') ? f.minKey.slice(0, -3) : null;
-    const maxBase = f.maxKey?.endsWith('Max') ? f.maxKey.slice(0, -3) : null;
-    const base = minBase && maxBase && minBase === maxBase ? minBase : null;
-    if (base === 'minPrice' || base === 'minBudget') return false;
-
-    return true;
-  });
-
-const normalizeSubcategoryCompare = (s: any) =>
-  String(s || '')
-    .trim()
-    .replace(/^\/+|\/+$/g, '')
-    .replace(/\/+/g, '/');
-
-const subcategoryMatches = (attrSlugRaw: any, selectedRaw: any) => {
-  const attrSlug = normalizeSubcategoryCompare(attrSlugRaw);
-  const selected = normalizeSubcategoryCompare(selectedRaw);
-  if (!attrSlug || !selected) return false;
-  if (attrSlug === selected) return true;
-
-  const attrDash = attrSlug.split('/').filter(Boolean).join('-');
-  const selectedDash = selected.split('/').filter(Boolean).join('-');
-  if (attrDash && selectedDash && attrDash === selectedDash) return true;
-
-  if (attrSlug.endsWith(`-${selected}`) || selected.endsWith(`-${attrSlug}`)) return true;
-  if (attrDash.endsWith(`-${selectedDash}`) || selectedDash.endsWith(`-${attrDash}`)) return true;
-
-  return false;
-};
-
-const findSubcategoryBySlug = (items: SubCategory[], slug: string): SubCategory | undefined => {
-  for (const item of items) {
-    if (item.slug === slug || item.fullSlug === slug) return item;
-    if (item.subcategories) {
-      const found = findSubcategoryBySlug(item.subcategories, slug);
-      if (found) return found;
-    }
-  }
-  return undefined;
-};
-
-const attributesToFields = (category: string, subcategory: string, attrs: any[], subcategoryId?: string): AttrField[] => {
-  const list = Array.isArray(attrs) ? attrs : [];
-  if (!category || list.length === 0) return [];
-
-  const source = list
-    .filter((a) => {
-      if (!a) return false;
-      if (a.showInRequest === false) return false;
-      if (!a.subCategoryId) return true;
-      if (!subcategory) return false;
-      if (subcategoryId && String(a.subCategoryId) === String(subcategoryId)) return true;
-      const attrSlug = a?.subCategory?.slug;
-      if (!attrSlug) return false;
-      return subcategoryMatches(attrSlug, subcategory);
-    })
-    .sort((a, b) => {
-      const aSpecific = a?.subCategoryId ? 1 : 0;
-      const bSpecific = b?.subCategoryId ? 1 : 0;
-      return aSpecific - bSpecific;
-    });
-
-  const mapped = source
-    .map((a) => {
-      const slug = String(a.slug || '').trim();
-      const normalizedType = a.type === 'checkbox' ? 'boolean' : a.type;
-      const isVehicleHierarchy = slug && ['marka', 'model', 'seri', 'paket'].includes(slug);
-      const type = isVehicleHierarchy ? 'multiselect' : normalizedType;
-
-      let options: string[] | undefined = undefined;
-      try {
-        const parsed = a.optionsJson ? JSON.parse(a.optionsJson) : null;
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const cleaned = parsed.filter((x) => x != null).map(String);
-          if (cleaned.length > 0) options = cleaned;
-        }
-      } catch {}
-
-      const isM2 = slug === 'm2' || slug === 'metrekare' || a.name === 'Metrekare' || a.name === 'm2';
-      const required = isM2 ? false : !!a.required;
-
-      const minKey = a.minKey || (type === 'range-number' ? `${slug || a.id}Min` : undefined);
-      const maxKey = a.maxKey || (type === 'range-number' ? `${slug || a.id}Max` : undefined);
-
-      return {
-        key: type === 'range-number' ? undefined : slug,
-        label: a.name || slug || 'Alan',
-        type,
-        required,
-        options,
-        minKey,
-        maxKey,
-        min: a.min,
-        max: a.max,
-        minLabel: a.minLabel,
-        maxLabel: a.maxLabel,
-      } as AttrField;
-    })
-    .filter(Boolean) as AttrField[];
-
-  const uniq = new Map<string, AttrField>();
-  mapped.forEach((f) => uniq.set(stableAttrFieldId(f), f));
-  const filtered = stripReservedAttrFields(Array.from(uniq.values()));
-
-  if (category === 'vasita') {
-    const priorityKeys = ["marka", "model", "motor", "seri", "donanim", "paket"];
-    const rank = (f: AttrField) => {
-      if (f.key) {
-        const i = priorityKeys.indexOf(f.key);
-        if (i !== -1) return i;
-      }
-      if (f.type === "range-number" && f.minKey && f.minKey.endsWith("Min")) {
-        const base = f.minKey.slice(0, -3);
-        if (base === "yil") return 10;
-        if (base === "km") return 11;
-      }
-      return 100;
-    };
-    return filtered
-      .map((f, idx) => ({ f, idx }))
-      .sort((a, b) => {
-        const ra = rank(a.f);
-        const rb = rank(b.f);
-        if (ra !== rb) return ra - rb;
-        return a.idx - b.idx;
-      })
-      .map((x) => x.f);
-  }
-
-  return filtered;
-};
-
-const MultiSelect = memo(function MultiSelect({ options, value, onChange, error }: { options: string[], value: string[], onChange: (val: string[]) => void, error: boolean }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const selected = Array.isArray(value) ? value : [];
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const toggleOption = (opt: string) => {
-    const safeSelected = selected || [];
-    const newSelected = safeSelected.includes(opt)
-      ? safeSelected.filter(s => s !== opt)
-      : [...safeSelected, opt];
-    onChange(newSelected);
-  };
-
-  return (
-    <div className="relative" ref={containerRef}>
-      <div 
-        onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-4 py-2.5 border rounded-lg bg-white flex items-center justify-between cursor-pointer transition-all ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-cyan-500'} ${isOpen ? 'ring-2 ring-cyan-500 border-transparent' : ''}`}
-      >
-        <span className={`block truncate ${(selected || []).length ? 'text-gray-900' : 'text-gray-400'}`}>
-          {(selected || []).length > 0 ? `${(selected || []).length} seçim` : 'Seçiniz'}
-        </span>
-        <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? '-rotate-90' : 'rotate-90'}`} />
-      </div>
-      
-      {isOpen && (
-        <div className="absolute z-50 top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
-          {(options || []).map(opt => (
-            <div 
-              key={opt}
-              onClick={() => toggleOption(opt)}
-              className="flex items-center px-4 py-2.5 hover:bg-cyan-50 cursor-pointer transition-colors border-b border-gray-50 last:border-0"
-            >
-              <div className={`w-5 h-5 border rounded flex items-center justify-center transition-all ${(selected || []).includes(opt) ? 'bg-cyan-600 border-cyan-600' : 'border-gray-300 bg-white'}`}>
-                {(selected || []).includes(opt) && <Check className="w-3.5 h-3.5 text-white" />}
-              </div>
-              <span className={`ml-3 text-sm ${(selected || []).includes(opt) ? 'text-cyan-900 font-medium' : 'text-gray-700'}`}>{opt}</span>
-            </div>
-          ))}
-        </div>
-      )}
-      
-      {(selected || []).length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2.5">
-          {(selected || []).map(s => (
-            <span key={s} className="inline-flex items-center px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-medium border border-cyan-100">
-              {s}
-              <button type="button" onClick={(e) => { e.stopPropagation(); toggleOption(s); }} className="ml-1.5 hover:text-cyan-900 p-0.5 hover:bg-cyan-100 rounded-full transition-colors"><X className="w-3 h-3" /></button>
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-});
 
 // Adım tanımları
 type Step = {
@@ -273,335 +51,134 @@ type FormData = {
   budget: string;
   images: string[];
   attributes: Record<string, any>;
-  manualAttributeKeys: string[];
 };
 
-// CategoryAttributes definitions
-type AttrFieldLocal = AttrField;
+type AttributeField = {
+  id?: string;
+  name: string;
+  slug: string;
+  type: string;
+  options?: string[];
+  required?: boolean;
+  order?: number;
+  minKey?: string;
+  maxKey?: string;
+  min?: number;
+  max?: number;
+  minLabel?: string;
+  maxLabel?: string;
+};
 
-const CategoryAttributes = memo(function CategoryAttributes({ 
-  category, 
-  subcategory, 
-  fields,
-  attributes, 
-  errors, 
-  onChange, 
-  onManualChange,
-  manualModes
-}: { 
-  category: string; 
-  subcategory: string; 
-  fields: AttrFieldLocal[];
-  attributes: Record<string, any>; 
-  errors: Record<string, string>; 
-  onChange: (key: string, val: any) => void; 
-  onManualChange: (key: string, isManual: boolean) => void;
-  manualModes: Record<string, boolean>;
-}) {
-  const [brandOptions, setBrandOptions] = useState<string[]>([]);
-  const [models, setModels] = useState<string[]>([]);
-  const [series, setSeries] = useState<string[]>([]);
-  const [trims, setTrims] = useState<string[]>([]);
+const MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
+const VALID_IMAGE_EXTS = new Set([
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "gif",
+  "bmp",
+  "tif",
+  "tiff",
+  "apng",
+  "ico",
+  "avif",
+  "heic",
+  "heif",
+  "jfif",
+  "jif",
+]);
 
-  // Helper to ensure array
-  const getArray = (val: any): string[] => {
-    if (Array.isArray(val)) return val;
-    if (typeof val === 'string' && val.trim() !== '') return [val];
-    return [];
-  };
-
-  const markaAttribute = attributes['marka'];
-  const modelAttribute = attributes['model'];
-  const seriAttribute = attributes['seri'];
-
-  const brands = useMemo(() => getArray(markaAttribute), [markaAttribute]);
-  const modelVals = useMemo(() => getArray(modelAttribute), [modelAttribute]);
-  const seriesVals = useMemo(() => getArray(seriAttribute), [seriAttribute]);
-  
-  const overrideKeyLocal = `${category}/${subcategory || ''}`;
-
-  useEffect(() => {
-    if (!['vasita', 'alisveris'].includes(category)) {
-      setBrandOptions([]);
-      return;
-    }
-    fetch(`/api/vehicle-data?type=brands&category=${overrideKeyLocal}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setBrandOptions(data);
-        else setBrandOptions([]);
-      })
-      .catch(() => setBrandOptions([]));
-  }, [category, overrideKeyLocal]);
-
-  useEffect(() => {
-    if (brands.length === 0 || !['vasita', 'alisveris'].includes(category)) {
-      setModels([]);
-      return;
-    }
-    
-    const params = new URLSearchParams();
-    params.append('type', 'models');
-    params.append('category', overrideKeyLocal);
-    brands.forEach(b => params.append('brand', b));
-
-    fetch(`/api/vehicle-data?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
-         const arr = Array.isArray(data) ? data : [];
-         setModels(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
-      })
-      .catch(() => setModels([]));
-  }, [brands, category, overrideKeyLocal]);
-
-  useEffect(() => {
-    if (brands.length === 0 || modelVals.length === 0) {
-      setSeries([]);
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.append('type', 'series');
-    params.append('category', overrideKeyLocal);
-    brands.forEach(b => params.append('brand', b));
-    modelVals.forEach(m => params.append('model', m));
-
-    fetch(`/api/vehicle-data?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
-        const arr = Array.isArray(data) ? data : [];
-        const sorted = Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr'));
-        setSeries(sorted);
-      })
-      .catch(() => setSeries([]));
-  }, [brands, modelVals, overrideKeyLocal]);
-
-  useEffect(() => {
-    if (brands.length === 0 || modelVals.length === 0 || seriesVals.length === 0) {
-      setTrims([]);
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.append('type', 'trims');
-    params.append('category', overrideKeyLocal);
-    brands.forEach(b => params.append('brand', b));
-    modelVals.forEach(m => params.append('model', m));
-    seriesVals.forEach(s => params.append('series', s));
-
-    fetch(`/api/vehicle-data?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
-         const arr = Array.isArray(data) ? data : [];
-         setTrims(Array.from(new Set(arr)).sort((a,b)=> a.localeCompare(b,'tr')));
-      })
-      .catch(() => setTrims([]));
-  }, [brands, modelVals, seriesVals, overrideKeyLocal]);
-  
-  if (!fields?.length) {
-    return null;
+const validateImageFile = (file: File) => {
+  if (!file) return "Dosya seçilmedi";
+  if (file.size <= 0) return "Seçilen dosya boş";
+  if (file.size > MAX_UPLOAD_SIZE) {
+    return `Dosya çok büyük (${(file.size / 1024 / 1024).toFixed(2)}MB). Maksimum 20MB.`;
   }
+  const type = String(file.type || "").toLowerCase();
+  if (type.startsWith("image/")) return null;
+  const ext = file.name.split(".").pop()?.toLowerCase() || "";
+  if (ext && VALID_IMAGE_EXTS.has(ext)) return null;
+  const allowed = Array.from(VALID_IMAGE_EXTS).join(", ");
+  return `Geçersiz dosya tipi (${type || ext || "bilinmiyor"}). Kabul edilenler: ${allowed}.`;
+};
+
+const normalizeImageSrc = (src: string) => {
+  const value = String(src || "").trim();
+  if (!value) return value;
+  if (value.startsWith("http://") || value.startsWith("https://")) return value;
+  if (value.startsWith("data:")) return value;
+  if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
+
+const isVehicleCategorySlug = (slug?: string) => {
+  const normalized = String(slug || "").toLocaleLowerCase("tr");
+  if (!normalized) return false;
+  if (normalized === "vasita" || normalized.startsWith("vasita/") || normalized.startsWith("vasita-")) return true;
   return (
-    <div className="space-y-6 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center justify-between pb-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <List className="w-5 h-5 text-cyan-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Aradığınız Ürünün Özellikleri</h3>
-        </div>
-        <span className="text-xs text-gray-500 font-medium">
-          <span className="text-red-500">*</span> Zorunlu alanlar
-        </span>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-        {fields?.map((f)=> {
-          if (!f) return null;
-          const id = f.key ? `k:${f.key}` : (f.minKey && f.maxKey) ? `r:${f.minKey}:${f.maxKey}` : `l:${f.label}`;
-          const isManual = f.key ? manualModes[f.key] : false;
-          const hasError = !!(
-            (f.key && errors[f.key]) ||
-            (f.type === 'range-number' && ((f.minKey && errors[f.minKey]) || (f.maxKey && errors[f.maxKey])))
-          );
-
-          return (
-          <div key={id} className={f.type === 'range-number' ? 'md:col-span-2' : ''}>
-            <div className={`rounded-xl border-2 p-4 transition-colors ${hasError ? 'border-red-200 bg-red-50/40' : 'border-gray-200 bg-gray-50/40 hover:border-cyan-200'}`}>
-              <label className="block text-sm font-semibold text-gray-800 mb-2">
-                {titleCaseTR(f.label)} {f.required && <span className="text-red-500">*</span>}
-              </label>
-            {f.type === 'select' ? (
-              <>
-              {isManual ? (
-                <input
-                  type="text"
-                  value={attributes[f.key!] ?? ''}
-                  onChange={(e)=>onChange(f.key!, e.target.value)}
-                  placeholder={`${titleCaseTR(f.label)} Giriniz`}
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.key!] ? 'border-red-500 focus:ring-red-200' : 'border-gray-300'}`}
-                />
-              ) : (
-                <div className="relative">
-                  <select
-                    value={attributes[f.key!] ?? ''}
-                    onChange={(e)=>onChange(f.key!, e.target.value)}
-                    disabled={
-                      (f.key === 'model' && getArray(attributes['marka']).length === 0)
-                      || (f.key === 'seri' && (getArray(attributes['marka']).length === 0 || getArray(attributes['model']).length === 0))
-                      || (f.key === 'paket' && getArray(attributes['seri']).length === 0)
-                    }
-                    className={`w-full px-4 py-2.5 border rounded-lg appearance-none bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.key!] ? 'border-red-500 focus:ring-red-200' : 'border-gray-300'} disabled:bg-gray-50 disabled:text-gray-400`}
-                  >
-                    <option value="">Seçiniz</option>
-                    {(() => {
-                      let opts = f.options ? [...f.options] : [];
-                      
-                      if (f.key === 'marka') {
-                         if (brandOptions.length > 0) opts = brandOptions;
-                         opts.sort((a, b) => {
-                             if (a === 'Farketmez') return 1;
-                             if (b === 'Farketmez') return -1;
-                             return a.localeCompare(b, 'tr');
-                         });
-                      }
-
-                      if (f.key === 'model' && brands.length > 0) {
-                        opts = models;
-                      } else if (f.key === 'seri') {
-                        opts = series;
-                      } else if (f.key === 'paket') {
-                        if (trims.length > 0) {
-                          opts = trims;
-                        }
-                      }
-                      return opts.map((o) => (
-                        <option key={o} value={o}>{titleCaseTR(o)}</option>
-                      ));
-                    })()}
-                  </select>
-                  <ChevronRight className="absolute right-3 top-3 w-4 h-4 text-gray-400 rotate-90 pointer-events-none" />
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => {
-                  if (f.key) {
-                     onManualChange(f.key, !isManual);
-                     if (!isManual) {
-                        onChange(f.key, '');
-                     }
-                  }
-                }}
-                className="text-xs text-cyan-600 mt-1.5 hover:text-cyan-700 hover:underline focus:outline-none flex items-center gap-1"
-              >
-                {isManual ? <List className="w-3 h-3"/> : <Search className="w-3 h-3"/>}
-                {isManual ? 'Listeden seç' : 'Listede yok mu? Elle gir'}
-              </button>
-              </>
-            ) : f.type === 'multiselect' ? (
-                <>
-                  <MultiSelect
-                    options={(() => {
-                        let opts = f.options ? [...f.options] : [];
-                        if (f.key === 'marka') {
-                            if (brandOptions.length > 0) opts = brandOptions;
-                            opts.sort((a, b) => a.localeCompare(b, 'tr'));
-                        }
-                        if (f.key === 'model' && brands.length > 0) opts = models;
-                        else if (f.key === 'seri') opts = series;
-                        else if (f.key === 'paket' && trims.length > 0) opts = trims;
-                        return opts;
-                    })()}
-                    value={attributes[f.key!] || []}
-                    onChange={(val: any) => onChange(f.key!, val)}
-                    error={!!errors[f.key!]}
-                  />
-                </>
-            ) : f.type === 'range-number' ? (
-              <div className="grid grid-cols-2 gap-3">
-                <input
-                  type="number"
-                  min={f.min !== undefined ? f.min : "0"}
-                  max={f.max}
-                  placeholder={
-                    String(f.minLabel || '').trim().toLowerCase() === 'min'
-                      ? 'En düşük'
-                      : (f.minLabel || 'En düşük')
-                  }
-                  value={attributes[f.minKey!] ?? ''}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '' || Number(val) >= 0) {
-                      onChange(f.minKey!, val);
-                    }
-                  }}
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.minKey!] ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                <input
-                  type="number"
-                  min={f.min !== undefined ? f.min : "0"}
-                  max={f.max}
-                  placeholder={
-                    String(f.maxLabel || '').trim().toLowerCase() === 'max'
-                      ? 'En yüksek'
-                      : (f.maxLabel || 'En yüksek')
-                  }
-                  value={attributes[f.maxKey!] ?? ''}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '' || Number(val) >= 0) {
-                      onChange(f.maxKey!, val);
-                    }
-                  }}
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.maxKey!] ? 'border-red-500' : 'border-gray-300'}`}
-                />
-              </div>
-            ) : f.type === 'number' ? (
-              <input
-                type="number"
-                min={f.min !== undefined ? f.min : "0"}
-                max={f.max}
-                value={attributes[f.key!] ?? ''}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (val === '' || Number(val) >= 0) {
-                    onChange(f.key!, val);
-                  }
-                }}
-                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.key!] ? 'border-red-500' : 'border-gray-300'}`}
-              />
-            ) : f.type === 'boolean' ? (
-              <label className="flex items-center h-full cursor-pointer p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className="relative flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={!!attributes[f.key!]}
-                    onChange={(e)=>onChange(f.key!, e.target.checked)}
-                    className="w-5 h-5 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
-                  />
-                </div>
-                <span className="ml-3 text-gray-700 font-medium select-none">{titleCaseTR(f.label)}</span>
-              </label>
-            ) : (
-              <input
-                type="text"
-                value={attributes[f.key!] ?? ''}
-                onChange={(e)=>onChange(f.key!, e.target.value)}
-                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all ${errors[f.key!] ? 'border-red-500' : 'border-gray-300'}`}
-              />
-            )}
-            {(errors[f.key!] || errors[f.minKey!] || errors[f.maxKey!]) && (
-               <div className="flex items-center gap-1 mt-1.5 text-red-600 text-xs font-bold">
-                 <AlertCircle className="w-3 h-3" />
-                 <span>{errors[f.key!] || errors[f.minKey!] || errors[f.maxKey!]}</span>
-               </div>
-            )}
-            </div>
-          </div>
-          );
-        })}
-      </div>
-    </div>
+    normalized.includes("otomobil") ||
+    normalized.includes("arazi") ||
+    normalized.includes("suv") ||
+    normalized.includes("pickup") ||
+    normalized.includes("minivan") ||
+    normalized.includes("panelvan") ||
+    normalized.includes("motosiklet") ||
+    normalized.includes("kamyon") ||
+    normalized.includes("cekici") ||
+    normalized.includes("ticari") ||
+    normalized.includes("otobus") ||
+    normalized.includes("minibus")
   );
-});
+};
+
+const findSubcategoryName = (items: SubCategory[], slug: string): string | undefined => {
+  for (const item of items) {
+    if (item.slug === slug || item.fullSlug === slug) return item.name;
+    if (item.subcategories) {
+      const found = findSubcategoryName(item.subcategories, slug);
+      if (found) return found;
+    }
+  }
+  return undefined;
+};
+
+const findSubcategoryPath = (items: SubCategory[], slug: string): SubCategory[] => {
+  for (const item of items) {
+    if (item.slug === slug || item.fullSlug === slug) return [item];
+    if (item.subcategories) {
+      const found = findSubcategoryPath(item.subcategories, slug);
+      if (found.length > 0) return [item, ...found];
+    }
+  }
+  return [];
+};
+
+const collectSubcategoryKeys = (items: SubCategory[], bag: Set<string>) => {
+  items.forEach((item) => {
+    const key = item.fullSlug || item.slug;
+    if (key) bag.add(key);
+    if (item.subcategories && item.subcategories.length > 0) {
+      collectSubcategoryKeys(item.subcategories, bag);
+    }
+  });
+};
+
+const mergeSubcategoryTrees = (base: SubCategory[], extra: SubCategory[]) => {
+  if (!base.length) return extra;
+  if (!extra.length) return base;
+  const keys = new Set<string>();
+  collectSubcategoryKeys(base, keys);
+  const additions = extra.filter((item) => {
+    const key = item.fullSlug || item.slug;
+    return key ? !keys.has(key) : false;
+  });
+  if (!additions.length) return base;
+  return [...base, ...additions];
+};
 
 // Memoized component'ler
 const StepIndicator = memo(function StepIndicator({ currentStep }: { currentStep: number }) {
@@ -659,7 +236,7 @@ const StepIndicator = memo(function StepIndicator({ currentStep }: { currentStep
   );
 });
 
-const CategorySelection = memo(function CategorySelection({ formData, errors, updateFormData, subcats, categories, nextStep }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void; subcats: SubCategory[]; categories: Category[]; nextStep: (override?: Partial<FormData>) => void }) {
+const CategorySelection = memo(function CategorySelection({ formData, errors, updateFormData, subcats, categories }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void; subcats: SubCategory[]; categories: Category[] }) {
   const subcategorySectionRef = useRef<HTMLDivElement | null>(null);
   const lastCategoryRef = useRef(formData.category);
   const [history, setHistory] = useState<SubCategory[]>([]);
@@ -687,6 +264,18 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
     return subcats;
   }, [history, subcats]);
 
+  useEffect(() => {
+    if (!formData.subcategory) return;
+    const path = findSubcategoryPath(subcats, formData.subcategory);
+    if (path.length <= 1) return;
+    const parents = path.slice(0, -1);
+    const currentKey = history.map((h) => h.fullSlug || h.slug).join("/");
+    const nextKey = parents.map((h) => h.fullSlug || h.slug).join("/");
+    if (currentKey !== nextKey) {
+      setHistory(parents);
+    }
+  }, [formData.subcategory, history, subcats]);
+
   const handleSubcategoryClick = (sub: SubCategory) => {
     if (sub.subcategories && sub.subcategories.length > 0) {
       setHistory(prev => [...prev, sub]);
@@ -694,7 +283,6 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
       const selected = sub.fullSlug || sub.slug;
       updateFormData('subcategory', selected);
       if (sub.fullSlug) updateFormData('subcategoryFullSlug', sub.fullSlug);
-      nextStep({ subcategory: selected, subcategoryFullSlug: sub.fullSlug });
     }
   };
 
@@ -702,23 +290,68 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
     const selected = sub.fullSlug || sub.slug;
     updateFormData('subcategory', selected);
     if (sub.fullSlug) updateFormData('subcategoryFullSlug', sub.fullSlug);
-    nextStep({ subcategory: selected, subcategoryFullSlug: sub.fullSlug });
   };
 
   const handleBack = () => {
-    if (history.length > 0) {
-      setHistory(prev => prev.slice(0, -1));
-    } else {
-       updateFormData('category', '');
-       updateFormData('subcategory', '');
-       setHistory([]);
+    const activePath = history.length > 0 ? history : (selectedLeafHasChildren ? selectedPath : selectedPath.slice(0, -1));
+    if (activePath.length > 0) {
+      setHistory(activePath.slice(0, -1));
+      if (formData.subcategory) {
+        updateFormData('subcategory', '');
+        updateFormData('subcategoryFullSlug', '');
+      }
+      return;
     }
+    updateFormData('category', '');
+    updateFormData('subcategory', '');
+    updateFormData('subcategoryFullSlug', '');
+    setHistory([]);
   };
 
   const currentCategoryName = useMemo(() => {
-    const raw = categories?.find((c: any) => c.slug === formData.category)?.name || 'Kategori';
+    const apiName = categories?.find((c: any) => c.slug === formData.category)?.name;
+    const staticName = STATIC_CATEGORIES.find((c: any) => c.slug === formData.category)?.name;
+    const raw = apiName || staticName || formData.category || 'Kategori';
     return titleCaseTR(raw);
   }, [categories, formData.category]);
+
+  const selectedPath = useMemo(() => {
+    if (!formData.subcategory) return [];
+    return findSubcategoryPath(subcats, formData.subcategory);
+  }, [formData.subcategory, subcats]);
+
+  const breadcrumbPath = selectedPath.length > 0 ? selectedPath : history;
+  const selectedLeaf = selectedPath.length > 0 ? selectedPath[selectedPath.length - 1] : undefined;
+  const selectedLeafHasChildren = !!selectedLeaf?.subcategories?.length;
+
+  useEffect(() => {
+    if (history.length > 0) return;
+    if (!formData.subcategory) return;
+    if (selectedPath.length === 0) return;
+    const nextHistory = selectedLeafHasChildren ? selectedPath : selectedPath.slice(0, -1);
+    setHistory(nextHistory);
+  }, [formData.subcategory, history.length, selectedLeafHasChildren, selectedPath]);
+
+  const handleCategoryBreadcrumbClick = () => {
+    updateFormData('subcategory', '');
+    updateFormData('subcategoryFullSlug', '');
+    setHistory([]);
+  };
+
+  const handleBreadcrumbClick = (index: number) => {
+    const target = breadcrumbPath[index];
+    const hasChildren = !!target?.subcategories?.length;
+    const nextHistory = hasChildren ? breadcrumbPath.slice(0, index + 1) : breadcrumbPath.slice(0, index);
+    setHistory(nextHistory);
+    const isSelectedLeaf =
+      selectedPath.length > 0 &&
+      index === selectedPath.length - 1 &&
+      (target?.slug === formData.subcategory || target?.fullSlug === formData.subcategory);
+    if (!isSelectedLeaf) {
+      updateFormData('subcategory', '');
+      updateFormData('subcategoryFullSlug', '');
+    }
+  };
 
   return (
   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -726,7 +359,7 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           {(formData.category || history.length > 0) && (
-            <button onClick={handleBack} className="p-1.5 hover:bg-gray-100 rounded-full transition-colors group" title="Geri Dön">
+            <button type="button" onClick={handleBack} className="p-1.5 hover:bg-gray-100 rounded-full transition-colors group" title="Geri Dön">
               <ChevronLeft className="w-5 h-5 text-gray-500 group-hover:text-cyan-600" />
             </button>
           )}
@@ -741,23 +374,28 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
       </div>
 
       {/* Breadcrumb Navigation */}
-         <div className="flex flex-wrap items-center gap-2 mb-5 text-sm bg-gray-50 p-2.5 rounded-lg border border-gray-100">
-         <div className="flex items-center gap-1">
-            <span className={`font-medium ${history.length === 0 ? 'text-cyan-700' : 'text-gray-600'}`}>
-              {currentCategoryName}
-            </span>
-         </div>
-         {history.map((item, index) => (
-           <div key={`${item.fullSlug || item.slug}:${index}`} className="flex items-center gap-1 animate-in fade-in slide-in-from-left-2">
-             <ChevronRight className="w-4 h-4 text-gray-400" />
-             <button 
-               onClick={() => setHistory(prev => prev.slice(0, index + 1))}
-               className={`hover:text-cyan-600 transition-colors ${index === history.length - 1 ? 'text-cyan-700 font-bold' : 'text-gray-600 font-medium'}`}
-             >
-               {titleCaseTR(item.name)}
-             </button>
-           </div>
-         ))}
+      <div className="flex flex-wrap items-center gap-2 mb-5 text-sm bg-gray-50 p-2.5 rounded-lg border border-gray-100">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handleCategoryBreadcrumbClick}
+            className={`font-medium hover:text-cyan-600 transition-colors ${breadcrumbPath.length === 0 ? 'text-cyan-700' : 'text-gray-600'}`}
+          >
+            {currentCategoryName}
+          </button>
+        </div>
+        {breadcrumbPath.map((item, index) => (
+          <div key={`${item.fullSlug || item.slug}:${index}`} className="flex items-center gap-1 animate-in fade-in slide-in-from-left-2">
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <button
+              type="button"
+              onClick={() => handleBreadcrumbClick(index)}
+              className={`hover:text-cyan-600 transition-colors ${index === breadcrumbPath.length - 1 ? 'text-cyan-700 font-bold' : 'text-gray-600 font-medium'}`}
+            >
+              {titleCaseTR(item.name)}
+            </button>
+          </div>
+        ))}
       </div>
       
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -808,7 +446,7 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
               <ChevronRight className="w-5 h-5" />
             </div>
             <div className="flex items-center gap-2">
-                <button onClick={handleBack} className="hover:bg-gray-100 p-1 rounded-full transition-colors group" title="Geri Dön">
+                <button type="button" onClick={handleBack} className="hover:bg-gray-100 p-1 rounded-full transition-colors group" title="Geri Dön">
                     <ChevronLeft className="w-5 h-5 text-gray-500 group-hover:text-cyan-600" />
                 </button>
                 <span>{history.length > 0 ? titleCaseTR(history[history.length - 1].name) : 'Alt Kategori Seçimi'}</span>
@@ -860,30 +498,704 @@ const CategorySelection = memo(function CategorySelection({ formData, errors, up
         </div>
       </div>
     )}
+
   </div>
   );
 });
 
-const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData, categories }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void; categories: Category[] }) {
+const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData, categories, attributeFields, attributeLoading, attributeLoadError, updateAttribute, modelOptions, seriesOptions, trimOptions, modelLoading, seriesLoading, trimLoading }: { formData: FormData; errors: Record<string, string>; updateFormData: (field: keyof FormData, value: any) => void; categories: Category[]; attributeFields: AttributeField[]; attributeLoading: boolean; attributeLoadError: string | null; updateAttribute: (key: string, value: any) => void; modelOptions: string[]; seriesOptions: string[]; trimOptions: string[]; modelLoading: boolean; seriesLoading: boolean; trimLoading: boolean }) {
+  const [manualAttrModes, setManualAttrModes] = useState<Record<string, boolean>>({});
+  const [dropdownSearch, setDropdownSearch] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  
-  // Helper to find subcategory name recursively
-  const findSubcategoryName = (items: SubCategory[], slug: string): string | undefined => {
-    for (const item of items) {
-      if (item.slug === slug || item.fullSlug === slug) return item.name;
-      if (item.subcategories) {
-        const found = findSubcategoryName(item.subcategories, slug);
-        if (found) return found;
-      }
-    }
-    return undefined;
-  };
 
-  const selectedCategory = categories.find(c => c.slug === formData.category);
-  const subcategoryName = selectedCategory && formData.subcategory 
-    ? findSubcategoryName(selectedCategory.subcategories || [], formData.subcategory)
+  const apiCategory = categories.find(c => c.slug === formData.category);
+  const staticCategory = STATIC_CATEGORIES.find(c => c.slug === formData.category);
+  const selectedCategory = apiCategory || staticCategory;
+  const subcategoryBase = apiCategory?.subcategories?.length ? apiCategory : staticCategory;
+
+  const handleImageUpload = useCallback(async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    if (formData.images.length >= 10) {
+      toast({ title: 'Limit', description: 'En fazla 10 görsel ekleyebilirsiniz.', variant: 'warning' });
+      return;
+    }
+    setUploading(true);
+    try {
+      const next = [...formData.images];
+      let added = 0;
+      for (let i = 0; i < files.length; i++) {
+        if (next.length >= 10) break;
+        const file = files[i];
+        if (!file) continue;
+        const validationError = validateImageFile(file);
+        if (validationError) {
+          toast({ title: 'Hata', description: validationError, variant: 'destructive' });
+          continue;
+        }
+        const ext = file.name.split('.').pop() || 'jpg';
+        const safeName = `image-${Date.now()}-${i}.${ext}`;
+        const formDataUpload = new FormData();
+        formDataUpload.append('file', file, safeName);
+        const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload, cache: 'no-store' });
+        const raw = await res.text();
+        const data = (() => {
+          try { return JSON.parse(raw); } catch { return null; }
+        })();
+        if (!data) {
+          toast({ title: 'Hata', description: raw || 'Yükleme başarısız', variant: 'destructive' });
+          continue;
+        }
+        if (data.success && data.url) {
+          next.push(String(data.url));
+          added += 1;
+          const scanStatus = String(data?.scan?.status || '').toUpperCase();
+          if (scanStatus && scanStatus !== 'CLEAN') {
+            toast({ title: 'Tarama Bekleniyor', description: 'Görsel yüklendi, güvenlik taraması bekleniyor.', variant: 'warning' });
+          }
+        } else {
+          toast({ title: 'Hata', description: data.error || 'Yükleme başarısız', variant: 'destructive' });
+        }
+      }
+      if (next.length !== formData.images.length) {
+        updateFormData('images', next);
+      }
+      if (added > 0) {
+        toast({ title: 'Yüklendi', description: `${added} görsel eklendi.`, variant: 'success' });
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Yükleme sırasında hata oluştu';
+      toast({ title: 'Hata', description: msg, variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  }, [formData.images, updateFormData]);
+  const subcategoryName = subcategoryBase && formData.subcategory
+    ? findSubcategoryName(subcategoryBase.subcategories || [], formData.subcategory)
     : undefined;
+
+  const attrs = formData.attributes || {};
+  const categorySlug = formData.subcategoryFullSlug || formData.subcategory || formData.category;
+  
+  const isVasita = useMemo(() => {
+    const result =
+      isVehicleCategorySlug(formData.category) ||
+      isVehicleCategorySlug(formData.subcategoryFullSlug) ||
+      isVehicleCategorySlug(formData.subcategory) ||
+      isVehicleCategorySlug(categorySlug);
+    return result;
+  }, [formData.category, formData.subcategory, formData.subcategoryFullSlug, categorySlug]);
+
+  const closeDetailsIfNeeded = useCallback((target: EventTarget | null) => {
+    const el = target instanceof HTMLElement ? target : null;
+    const details = el?.closest?.("details");
+    if (details) details.removeAttribute("open");
+  }, []);
+  
+  const markaValue = attrs["marka"] ? String(attrs["marka"]) : "";
+  const modelValue = attrs["model"] ? String(attrs["model"]) : "";
+  const seriValue = attrs["seri"] ? String(attrs["seri"]) : "";
+
+  const isAttributeFilled = useCallback((field: AttributeField, values: Record<string, any>) => {
+    if (field.type === "range-number") {
+      const minKey = field.minKey || `${field.slug}Min`;
+      const maxKey = field.maxKey || `${field.slug}Max`;
+      const minVal = values[minKey];
+      const maxVal = values[maxKey];
+      return String(minVal ?? "").trim() !== "" || String(maxVal ?? "").trim() !== "";
+    }
+    if (field.type === "multiselect") {
+      const val = values[field.slug];
+      return Array.isArray(val) && val.length > 0;
+    }
+    if (field.type === "boolean") {
+      return !!values[field.slug];
+    }
+    const val = values[field.slug];
+    if (Array.isArray(val)) return val.length > 0;
+    return String(val ?? "").trim() !== "";
+  }, []);
+
+  const filledAttributeCount = useMemo(() => {
+    const values = formData.attributes || {};
+    return attributeFields.reduce((acc, field) => acc + (isAttributeFilled(field, values) ? 1 : 0), 0);
+  }, [attributeFields, formData.attributes, isAttributeFilled]);
+
+  const renderAttributeField = (field: AttributeField) => {
+    const label = field.name || field.slug;
+    const required = false;
+    const errorFor = (key: string) => errors[`attr:${key}`];
+
+    if (isVasita && (field.slug === "marka" || field.slug === "model" || field.slug === "seri" || field.slug === "paket")) {
+      const fieldError = errorFor(field.slug);
+      const optionsRaw =
+        field.slug === "model"
+          ? modelOptions
+          : field.slug === "seri"
+            ? seriesOptions
+            : field.slug === "paket"
+              ? trimOptions
+              : (field.options || []);
+      const options = (optionsRaw || []).map((o) => String(o));
+      const withAny = field.slug !== "marka" && field.slug !== "model" && !options.includes("Farketmez");
+      const optionList = withAny ? ["Farketmez", ...options] : options;
+      const loading =
+        field.slug === "model"
+          ? modelLoading
+          : field.slug === "seri"
+            ? seriesLoading
+            : field.slug === "paket"
+              ? trimLoading
+              : false;
+      const disabled =
+        (field.slug === "model" && !markaValue) ||
+        (field.slug === "seri" && !modelValue) ||
+        (field.slug === "paket" && !seriValue);
+      const isSingleSelect = field.slug === "marka" || field.slug === "model";
+      const selectedValue = Array.isArray(attrs[field.slug])
+        ? attrs[field.slug].map((v: any) => String(v))
+        : attrs[field.slug]
+          ? [String(attrs[field.slug])]
+          : [];
+      const showEmptyHint =
+        field.slug === "model" &&
+        !loading &&
+        !disabled &&
+        options.length === 0 &&
+        String(markaValue || "").trim();
+      
+      // Debug log for model dropdown
+      if (manualAttrModes[field.slug]) {
+        const manualValue = Array.isArray(attrs[field.slug]) ? "" : (attrs[field.slug] ?? "");
+        return (
+          <div key={field.slug} className="space-y-2">
+            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+              {label} {required && <span className="text-red-500">*</span>}
+            </label>
+            <input
+              type="text"
+              value={manualValue as any}
+              onChange={(e) => updateAttribute(field.slug, e.target.value)}
+              placeholder={field.slug === "model" ? "Model giriniz" : "Değer giriniz"}
+              className={`w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 ${fieldError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300'}`}
+            />
+            <button
+              type="button"
+              onClick={() => setManualAttrModes((prev) => ({ ...prev, [field.slug]: false }))}
+              className="text-xs font-semibold text-cyan-600 mt-2 hover:text-cyan-700 focus:outline-none flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-cyan-50 w-fit transition-colors"
+            >
+              Listeden seç
+            </button>
+            {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+          </div>
+        );
+      }
+      const selectedCount = selectedValue.length;
+      const selectedPreview = selectedCount
+        ? selectedValue.slice(0, 2).join(", ") + (selectedCount > 2 ? ` +${selectedCount - 2}` : "")
+        : loading
+          ? "Yükleniyor..."
+          : disabled
+            ? field.slug === "model"
+              ? "Önce marka seçiniz"
+              : field.slug === "seri"
+                ? "Önce model seçiniz"
+                : "Önce motor/seri seçiniz"
+            : "Seçim yok";
+      const searchKey = field.slug;
+      const searchVal = dropdownSearch[searchKey] || "";
+      const showSearch = optionList.length >= 8;
+      const filteredOptions = showSearch
+        ? optionList.filter((o) => String(o || "").toLocaleLowerCase("tr").includes(searchVal.toLocaleLowerCase("tr")))
+        : optionList;
+      if (isSingleSelect) {
+        const selected = selectedValue[0] || "";
+        const selectedPreviewSingle = selected
+          ? selected
+          : loading
+            ? "Yükleniyor..."
+            : disabled
+              ? "Önce marka seçiniz"
+              : "Seçim yok";
+        return (
+          <div key={field.slug} className="space-y-2">
+            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+              {label} {required && <span className="text-red-500">*</span>}
+            </label>
+            <details className={`rounded-xl border ${fieldError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-white'}`}>
+              <summary className={`cursor-pointer select-none px-3 py-2 text-sm font-semibold text-gray-700 flex items-center justify-between ${disabled || loading ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                <span>{selected ? "Seçim yapıldı" : "Seçenekleri aç"}</span>
+                <span className="text-xs text-gray-500">{selectedPreviewSingle}</span>
+              </summary>
+              <div className="space-y-1 p-2 pt-0">
+                {(showSearch || selected) && (
+                  <div className="flex items-center gap-2 pb-2">
+                    {showSearch && (
+                      <input
+                        type="text"
+                        value={searchVal}
+                        onChange={(e) => setDropdownSearch((prev) => ({ ...prev, [searchKey]: e.target.value }))}
+                        placeholder="Seçeneklerde ara..."
+                        className="flex-1 px-3 py-2 text-xs border rounded-lg focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+                        disabled={disabled || loading}
+                      />
+                    )}
+                    {selected && (
+                      <button
+                        type="button"
+                        onClick={() => updateAttribute(field.slug, "")}
+                        className="px-3 py-2 text-xs font-bold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                        disabled={disabled || loading}
+                      >
+                        Temizle
+                      </button>
+                    )}
+                  </div>
+                )}
+                {filteredOptions.length === 0 && (
+                  <div className="text-xs text-gray-500 px-2 py-2">Seçenek bulunamadı.</div>
+                )}
+                {filteredOptions.map((opt) => {
+                  const checked = selected === opt;
+                  return (
+                    <label key={opt} className={`flex items-center gap-2 text-sm px-2 py-2 rounded w-full ${disabled || loading ? 'cursor-not-allowed text-gray-400' : 'hover:bg-gray-50 cursor-pointer'}`}>
+                      <input
+                        type="radio"
+                        name={`${field.slug}-single`}
+                        checked={checked}
+                        disabled={disabled || loading}
+                        onChange={() => {
+                          updateAttribute(field.slug, opt);
+                          closeDetailsIfNeeded(document.activeElement);
+                        }}
+                        className="rounded-full border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                      />
+                      <span className="text-gray-700">{opt}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </details>
+            {showEmptyHint && (
+              <div className="text-xs text-gray-500">
+                Bu markaya ait model bulunamadı.
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => setManualAttrModes((prev) => ({ ...prev, [field.slug]: true }))}
+              className="text-xs font-semibold text-cyan-600 mt-1 hover:text-cyan-700 focus:outline-none flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-cyan-50 w-fit transition-colors"
+            >
+              Listede yok mu? Elle gir
+            </button>
+            {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+          </div>
+        );
+      }
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+            {label} {required && <span className="text-red-500">*</span>}
+          </label>
+          <details className={`rounded-xl border ${fieldError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-white'}`}>
+            <summary className={`cursor-pointer select-none px-3 py-2 text-sm font-semibold text-gray-700 flex items-center justify-between ${disabled || loading ? 'opacity-60 cursor-not-allowed' : ''}`}>
+              <span>{selectedCount ? `${selectedCount} seçenek seçildi` : "Seçenekleri aç"}</span>
+              <span className="text-xs text-gray-500">{selectedPreview}</span>
+            </summary>
+            <div className="space-y-1 p-2 pt-0">
+              {(showSearch || selectedCount > 0) && (
+                <div className="flex items-center gap-2 pb-2">
+                  {showSearch && (
+                    <input
+                      type="text"
+                      value={searchVal}
+                      onChange={(e) => setDropdownSearch((prev) => ({ ...prev, [searchKey]: e.target.value }))}
+                      placeholder="Seçeneklerde ara..."
+                      className="flex-1 px-3 py-2 text-xs border rounded-lg focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+                      disabled={disabled || loading}
+                    />
+                  )}
+                  {selectedCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => updateAttribute(field.slug, [])}
+                      className="px-3 py-2 text-xs font-bold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                      disabled={disabled || loading}
+                    >
+                      Temizle
+                    </button>
+                  )}
+                </div>
+              )}
+              {filteredOptions.length === 0 && (
+                <div className="text-xs text-gray-500 px-2 py-2">Seçenek bulunamadı.</div>
+              )}
+                {filteredOptions.map((opt) => {
+                  const checked = selectedValue.includes(opt);
+                return (
+                  <label key={opt} className={`flex items-center gap-2 text-sm px-2 py-2 rounded w-full ${disabled || loading ? 'cursor-not-allowed text-gray-400' : 'hover:bg-gray-50 cursor-pointer'}`}>
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      disabled={disabled || loading}
+                      onChange={(e) => {
+                        const next = new Set(selectedValue.map(String));
+                        if (e.target.checked) next.add(opt);
+                        else next.delete(opt);
+                          if (opt === "Farketmez") {
+                            if (e.target.checked) {
+                              next.clear();
+                              next.add("Farketmez");
+                            }
+                          } else if (next.has("Farketmez")) {
+                            next.delete("Farketmez");
+                          }
+                        updateAttribute(field.slug, Array.from(next));
+                        closeDetailsIfNeeded(e.currentTarget);
+                      }}
+                      className="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                    />
+                    <span className="text-gray-700">{opt}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </details>
+          {showEmptyHint && (
+            <div className="text-xs text-gray-500">
+              Bu markaya ait model bulunamadı.
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => setManualAttrModes((prev) => ({ ...prev, [field.slug]: true }))}
+            className="text-xs font-semibold text-cyan-600 mt-1 hover:text-cyan-700 focus:outline-none flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-cyan-50 w-fit transition-colors"
+          >
+            Listede yok mu? Elle gir
+          </button>
+          {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+        </div>
+      );
+    }
+
+    if (field.type === "range-number") {
+      const minKey = field.minKey || `${field.slug}Min`;
+      const maxKey = field.maxKey || `${field.slug}Max`;
+      const minValue = attrs[minKey] ?? "";
+      const maxValue = attrs[maxKey] ?? "";
+      const minError = errorFor(minKey);
+      const maxError = errorFor(maxKey);
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+            {label} {required && <span className="text-red-500">*</span>}
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <input
+                type="number"
+                value={minValue}
+                onChange={(e) => updateAttribute(minKey, e.target.value)}
+                placeholder={field.minLabel || "Min"}
+                min={field.min}
+                max={field.max}
+                className={`w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 ${minError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300'}`}
+              />
+              {minError && <div className="text-xs text-red-500 mt-1">{minError}</div>}
+            </div>
+            <div>
+              <input
+                type="number"
+                value={maxValue}
+                onChange={(e) => updateAttribute(maxKey, e.target.value)}
+                placeholder={field.maxLabel || "Max"}
+                min={field.min}
+                max={field.max}
+                className={`w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 ${maxError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300'}`}
+              />
+              {maxError && <div className="text-xs text-red-500 mt-1">{maxError}</div>}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (field.type === "boolean") {
+      const value = !!attrs[field.slug];
+      const fieldError = errorFor(field.slug);
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="flex items-center gap-3 text-sm font-bold text-gray-700">
+            <input
+              type="checkbox"
+              checked={value}
+              onChange={(e) => updateAttribute(field.slug, e.target.checked)}
+              className="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+            />
+            <span>{label} {required && <span className="text-red-500">*</span>}</span>
+          </label>
+          {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+        </div>
+      );
+    }
+
+    if (field.type === "multiselect") {
+      const value = Array.isArray(attrs[field.slug]) ? attrs[field.slug] : [];
+      const fieldError = errorFor(field.slug);
+      const options = (field.options || []).map((o) => String(o));
+      const withAny = !options.includes("Farketmez");
+      const optionList = withAny ? ["Farketmez", ...options] : options;
+      const searchKey = `${field.slug}:multi`;
+      const searchVal = dropdownSearch[searchKey] || "";
+      const showSearch = optionList.length >= 8;
+      const filteredOptions = showSearch
+        ? optionList.filter((o) => String(o || "").toLocaleLowerCase("tr").includes(searchVal.toLocaleLowerCase("tr")))
+        : optionList;
+      const selectedCount = value.length;
+      const selectedPreview = selectedCount
+        ? value.slice(0, 2).join(", ") + (selectedCount > 2 ? ` +${selectedCount - 2}` : "")
+        : "Seçim yok";
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+            {label} {required && <span className="text-red-500">*</span>}
+          </label>
+          <details className={`rounded-xl border ${fieldError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-white'}`}>
+            <summary className="cursor-pointer select-none px-3 py-2 text-sm font-semibold text-gray-700 flex items-center justify-between">
+              <span>{selectedCount ? `${selectedCount} seçenek seçildi` : "Seçenekleri aç"}</span>
+              <span className="text-xs text-gray-500">{selectedPreview}</span>
+            </summary>
+            <div className="space-y-1 p-2 pt-0">
+              {(showSearch || selectedCount > 0) && (
+                <div className="flex items-center gap-2 pb-2">
+                  {showSearch && (
+                    <input
+                      type="text"
+                      value={searchVal}
+                      onChange={(e) => setDropdownSearch((prev) => ({ ...prev, [searchKey]: e.target.value }))}
+                      placeholder="Seçeneklerde ara..."
+                      className="flex-1 px-3 py-2 text-xs border rounded-lg focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+                    />
+                  )}
+                  {selectedCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => updateAttribute(field.slug, [])}
+                      className="px-3 py-2 text-xs font-bold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                    >
+                      Temizle
+                    </button>
+                  )}
+                </div>
+              )}
+              {filteredOptions.length === 0 && (
+                <div className="text-xs text-gray-500 px-2 py-2">Seçenek bulunamadı.</div>
+              )}
+              {filteredOptions.map((opt) => {
+                const checked = value.includes(opt);
+                return (
+                  <label key={opt} className="flex items-center gap-2 text-sm px-2 py-2 rounded hover:bg-gray-50 cursor-pointer w-full">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => {
+                        const next = new Set(value.map(String));
+                        if (e.target.checked) next.add(opt);
+                        else next.delete(opt);
+                        if (opt === "Farketmez") {
+                          if (e.target.checked) {
+                            next.clear();
+                            next.add("Farketmez");
+                          }
+                        } else if (next.has("Farketmez")) {
+                          next.delete("Farketmez");
+                        }
+                        updateAttribute(field.slug, Array.from(next));
+                        closeDetailsIfNeeded(e.currentTarget);
+                      }}
+                      className="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                    />
+                    <span className="text-gray-700">{opt}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </details>
+          {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+        </div>
+      );
+    }
+
+    if (field.type === "select" || (isVasita && field.slug === "model")) {
+      const value = Array.isArray(attrs[field.slug])
+        ? attrs[field.slug]
+        : attrs[field.slug]
+          ? [String(attrs[field.slug])]
+          : [];
+      const fieldError = errorFor(field.slug);
+      const options = (field.options || []).map((o) => String(o));
+      const withAny = field.slug !== "marka" && field.slug !== "model" && !options.includes("Farketmez");
+      const optionList = withAny ? ["Farketmez", ...options] : options;
+      const searchKey = `${field.slug}:select`;
+      const searchVal = dropdownSearch[searchKey] || "";
+      const showSearch = optionList.length >= 8;
+      const filteredOptions = showSearch
+        ? optionList.filter((o) => String(o || "").toLocaleLowerCase("tr").includes(searchVal.toLocaleLowerCase("tr")))
+        : optionList;
+      const selectedCount = value.length;
+      const selectedPreview = selectedCount
+        ? value.slice(0, 2).join(", ") + (selectedCount > 2 ? ` +${selectedCount - 2}` : "")
+        : "Seçim yok";
+      if (field.slug === "marka" || field.slug === "model") {
+        const selected = value[0] || "";
+        const selectedPreviewSingle = selected || "Seçim yok";
+        return (
+          <div key={field.slug} className="space-y-2">
+            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+              {label} {required && <span className="text-red-500">*</span>}
+            </label>
+            <details className={`rounded-xl border ${fieldError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-white'}`}>
+              <summary className="cursor-pointer select-none px-3 py-2 text-sm font-semibold text-gray-700 flex items-center justify-between">
+                <span>{selected ? "Seçim yapıldı" : "Seçenekleri aç"}</span>
+                <span className="text-xs text-gray-500">{selectedPreviewSingle}</span>
+              </summary>
+              <div className="space-y-1 p-2 pt-0">
+                {(showSearch || selected) && (
+                  <div className="flex items-center gap-2 pb-2">
+                    {showSearch && (
+                      <input
+                        type="text"
+                        value={searchVal}
+                        onChange={(e) => setDropdownSearch((prev) => ({ ...prev, [searchKey]: e.target.value }))}
+                        placeholder="Seçeneklerde ara..."
+                        className="flex-1 px-3 py-2 text-xs border rounded-lg focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+                      />
+                    )}
+                    {selected && (
+                      <button
+                        type="button"
+                        onClick={() => updateAttribute(field.slug, "")}
+                        className="px-3 py-2 text-xs font-bold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                      >
+                        Temizle
+                      </button>
+                    )}
+                  </div>
+                )}
+                {filteredOptions.length === 0 && (
+                  <div className="text-xs text-gray-500 px-2 py-2">Seçenek bulunamadı.</div>
+                )}
+                {filteredOptions.map((opt) => {
+                  const checked = selected === opt;
+                  return (
+                    <label key={opt} className="flex items-center gap-2 text-sm px-2 py-2 rounded hover:bg-gray-50 cursor-pointer w-full">
+                      <input
+                        type="radio"
+                        name={`${field.slug}-single`}
+                        checked={checked}
+                        onChange={() => {
+                          updateAttribute(field.slug, opt);
+                          closeDetailsIfNeeded(document.activeElement);
+                        }}
+                        className="rounded-full border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                      />
+                      <span className="text-gray-700">{opt}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </details>
+            {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+          </div>
+        );
+      }
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+            {label} {required && <span className="text-red-500">*</span>}
+          </label>
+          <details className={`rounded-xl border ${fieldError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-white'}`}>
+            <summary className="cursor-pointer select-none px-3 py-2 text-sm font-semibold text-gray-700 flex items-center justify-between">
+              <span>{selectedCount ? `${selectedCount} seçenek seçildi` : "Seçenekleri aç"}</span>
+              <span className="text-xs text-gray-500">{selectedPreview}</span>
+            </summary>
+            <div className="space-y-1 p-2 pt-0">
+              {(showSearch || selectedCount > 0) && (
+                <div className="flex items-center gap-2 pb-2">
+                  {showSearch && (
+                    <input
+                      type="text"
+                      value={searchVal}
+                      onChange={(e) => setDropdownSearch((prev) => ({ ...prev, [searchKey]: e.target.value }))}
+                      placeholder="Seçeneklerde ara..."
+                      className="flex-1 px-3 py-2 text-xs border rounded-lg focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+                    />
+                  )}
+                  {selectedCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => updateAttribute(field.slug, [])}
+                      className="px-3 py-2 text-xs font-bold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                    >
+                      Temizle
+                    </button>
+                  )}
+                </div>
+              )}
+              {filteredOptions.length === 0 && (
+                <div className="text-xs text-gray-500 px-2 py-2">Seçenek bulunamadı.</div>
+              )}
+              {filteredOptions.map((opt) => {
+                const checked = value.includes(opt);
+                return (
+                  <label key={opt} className="flex items-center gap-2 text-sm px-2 py-2 rounded hover:bg-gray-50 cursor-pointer w-full">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => {
+                        const next = new Set(value.map(String));
+                        if (e.target.checked) next.add(opt);
+                        else next.delete(opt);
+                        if (opt === "Farketmez") {
+                          if (e.target.checked) {
+                            next.clear();
+                            next.add("Farketmez");
+                          }
+                        } else if (next.has("Farketmez")) {
+                          next.delete("Farketmez");
+                        }
+                        updateAttribute(field.slug, Array.from(next));
+                        closeDetailsIfNeeded(e.currentTarget);
+                      }}
+                      className="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                    />
+                    <span className="text-gray-700">{opt}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </details>
+          {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+        </div>
+      );
+    }
+
+    const value = attrs[field.slug] ?? "";
+    const fieldError = errorFor(field.slug);
+    return (
+      <div key={field.slug} className="space-y-2">
+        <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+        <input
+          type={field.type === "number" ? "number" : "text"}
+          value={value}
+          onChange={(e) => updateAttribute(field.slug, e.target.value)}
+          className={`w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 ${fieldError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300'}`}
+        />
+        {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -985,67 +1297,41 @@ const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
-            Resim Ekle <span className="text-gray-400 font-semibold">(İsteğe Bağlı)</span>
+            Resim Ekle
           </label>
           <div className="bg-gray-50/30 border border-gray-200 rounded-2xl p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="text-sm text-gray-600 font-medium">
-                En fazla 10 resim ekleyebilirsiniz.
+                Maks. 20MB • {formData.images.length}/10
               </div>
-              <label className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${uploading ? 'bg-gray-200 text-gray-500 border-gray-200 cursor-not-allowed' : 'bg-white text-cyan-700 border-cyan-200 hover:bg-cyan-50 cursor-pointer'}`}>
-                Resim Yükle
+              <label
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold border ${
+                  uploading || formData.images.length >= 10
+                    ? 'bg-gray-200 text-gray-500 border-gray-200 cursor-not-allowed'
+                    : 'bg-white text-cyan-700 border-cyan-200 hover:bg-cyan-50 cursor-pointer'
+                }`}
+              >
+                {uploading ? 'Yükleniyor...' : 'Resim Yükle'}
                 <input
                   type="file"
                   className="hidden"
                   accept="image/*"
                   multiple
-                  disabled={uploading || (formData.images?.length || 0) >= 10}
-                  onChange={async (e) => {
-                    const files = e.target.files;
-                    e.target.value = '';
-                    if (!files || files.length === 0) return;
-                    setUploadError(null);
-                    setUploading(true);
-                    try {
-                      let current = Array.isArray(formData.images) ? [...formData.images] : [];
-                      if (current[0]?.startsWith('/images/defaults/')) current = [];
-                      for (let i = 0; i < files.length; i++) {
-                        if (current.length >= 10) break;
-                        const file = files[i];
-                        if (!file) continue;
-                        const fd = new FormData();
-                        fd.append('file', file);
-                        const res = await fetch('/api/upload', { method: 'POST', body: fd });
-                        const data = await res.json().catch(() => null);
-                        if (!res.ok || !data?.url) {
-                          throw new Error(data?.error || 'Resim yüklenemedi');
-                        }
-                        current.push(String(data.url));
-                      }
-                      updateFormData('images', current);
-                    } catch (err: any) {
-                      setUploadError(err?.message || 'Resim yüklenemedi');
-                    } finally {
-                      setUploading(false);
-                    }
+                  disabled={uploading || formData.images.length >= 10}
+                  onChange={(e) => {
+                    handleImageUpload(e.target.files);
+                    e.target.value = "";
                   }}
                 />
               </label>
             </div>
-
-            {uploadError && (
-              <div className="mt-3 text-xs font-bold text-red-600 flex items-center gap-1.5">
-                <AlertCircle className="w-3.5 h-3.5" />
-                {uploadError}
-              </div>
-            )}
 
             {Array.isArray(formData.images) && formData.images.length > 0 && (
               <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {formData.images.slice(0, 10).map((img, idx) => (
                   <div key={`${img}-${idx}`} className="relative border border-gray-200 rounded-xl overflow-hidden bg-white">
                     <div className="relative aspect-square">
-                      <Image src={img} alt={`Resim ${idx + 1}`} fill unoptimized className="object-cover" />
+                      <Image src={normalizeImageSrc(img)} alt={`Resim ${idx + 1}`} fill unoptimized className="object-cover" />
                     </div>
                     <button
                       type="button"
@@ -1065,6 +1351,68 @@ const DetailsStep = memo(function DetailsStep({ formData, errors, updateFormData
         </div>
       </div>
     </div>
+
+    {(formData.subcategory && (attributeLoading || attributeFields.length > 0 || attributeLoadError)) && (
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-lg shadow-gray-200/40">
+        <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-cyan-50 rounded-xl">
+              <Search className="w-5 h-5 text-cyan-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">Aradığınız Ürünün Özellikleri</h3>
+              <p className="text-xs text-gray-500 font-medium">Kategoriye özel filtreleri seçin</p>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-2">
+            <span className="text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-100 px-2 py-1 rounded-full">
+              {filledAttributeCount}/{attributeFields.length} seçili
+            </span>
+          </div>
+        </div>
+
+        {attributeLoading && (
+          <div className="text-sm text-gray-500 font-medium">Özellikler yükleniyor...</div>
+        )}
+
+        {!attributeLoading && attributeLoadError && (
+          <div className="text-sm text-red-500 font-medium">{attributeLoadError}</div>
+        )}
+
+        {!attributeLoading && !attributeLoadError && attributeFields.length === 0 && (
+          <div className="text-sm text-gray-500 font-medium">Bu kategori için ek özellik bulunmuyor.</div>
+        )}
+
+        {!attributeLoading && !attributeLoadError && attributeFields.length > 0 && (
+          <div className="space-y-4">
+            <div className="sm:hidden text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-100 px-2 py-1 rounded-full w-fit">
+              {filledAttributeCount}/{attributeFields.length} seçili
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {(() => {
+                const attrs = formData.attributes || {};
+                const ordered = attributeFields
+                  .slice()
+                  .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+                if (!isVasita) return ordered.map(renderAttributeField);
+                const hasMarka = String(attrs["marka"] || "").trim().length > 0;
+                const hasModel = String(attrs["model"] || "").trim().length > 0;
+                const hasSeri = String(attrs["seri"] || "").trim().length > 0;
+                const hasSeriField = ordered.some((f) => f.slug === "seri");
+                return ordered
+                  .filter((f) => {
+                    if (f.slug === "model") return hasMarka;
+                    if (f.slug === "seri") return hasModel;
+                    if (f.slug === "paket") return hasSeriField ? hasSeri : hasModel;
+                    return true;
+                  })
+                  .map(renderAttributeField);
+              })()}
+            </div>
+          </div>
+        )}
+      </div>
+    )}
  </div>
   );
 });
@@ -1310,7 +1658,7 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('minBudget', val);
                   }
                 }}
-                className={`w-full pl-32 pr-4 py-3 text-sm border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.minBudget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                className={`w-full pl-32 pr-4 py-3 text-sm border rounded-xl bg-gray-50/50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.minBudget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 placeholder="0"
               />
             </div>
@@ -1327,7 +1675,7 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
                     updateFormData('budget', val);
                   }
                 }}
-                className={`w-full pl-32 pr-4 py-3 text-sm border rounded-xl bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.budget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
+                className={`w-full pl-32 pr-4 py-3 text-sm border rounded-xl bg-gray-50/50 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 outline-none font-medium ${errors.budget ? 'border-red-500/50 bg-red-50/50' : 'border-gray-200 hover:border-cyan-300'}`}
                 placeholder="0"
               />
             </div>
@@ -1359,7 +1707,7 @@ const LocationBudgetStep = memo(function LocationBudgetStep({ formData, errors, 
   );
 });
 
-const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData: FormData, categories: Category[] }) {
+const ReviewStep = memo(function ReviewStep({ formData, categories, attributeFields }: { formData: FormData, categories: Category[], attributeFields: AttributeField[] }) {
   const selectedCategory = categories.find((c: any) => c.slug === formData.category);
   const findSubcategory = (items: SubCategory[], slug: string): SubCategory | undefined => {
     for (const item of items) {
@@ -1374,62 +1722,52 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
   const selectedSubcategory = selectedCategory && formData.subcategory
     ? findSubcategory(selectedCategory.subcategories || [], formData.subcategory)
     : undefined;
-  const attrs = formData.attributes || {};
-  const pairs: Record<string, { min?: any; max?: any }> = {};
-  
-  // Build attribute label map from dynamic attributes
-  const attrLabelMap = useMemo(() => {
-    const map = new Map<string, string>();
-    if ((selectedCategory as any)?.attributes) {
-      (selectedCategory as any)?.attributes?.forEach((attr: any) => {
-        map.set(attr.slug, attr.name);
-      });
-    }
-    return map;
-  }, [selectedCategory]);
+  const categoryImage = useMemo(() => getCategoryImage(formData.category), [formData.category]);
+  const mainPreviewSrc = useMemo(
+    () => normalizeImageSrc(formData.images[0] || categoryImage),
+    [formData.images, categoryImage]
+  );
 
-  Object.keys(attrs).forEach((k) => {
-    if (k.endsWith('Min')) {
-      const base = k.slice(0, -3);
-      pairs[base] = pairs[base] || {}; pairs[base].min = attrs[k];
-    } else if (k.endsWith('Max')) {
-      const base = k.slice(0, -3);
-      pairs[base] = pairs[base] || {}; pairs[base].max = attrs[k];
-    }
-  });
-  const entries = Object.entries(attrs).filter(([k]) => !k.endsWith('Min') && !k.endsWith('Max'));
-  
-  const label = (key: string) => {
-    // Check dynamic map first
-    if (attrLabelMap.has(key)) return attrLabelMap.get(key)!;
-    
-    // Check dynamic map for range base keys (if they exist as slugs)
-    // Sometimes range base key matches a slug (e.g. 'price' -> 'priceMin', 'priceMax')
-    // But usually in our schema 'yilMin' comes from 'yil' (year).
-    if (attrLabelMap.has(key)) return attrLabelMap.get(key)!;
-
-    const map: Record<string, string> = { 
-      marka: 'Marka', 
-      model: 'Model', 
-      yakit: 'Yakıt', 
-      vites: 'Vites', 
-      yil: 'Yıl', 
-      km: 'Kilometre', 
-      hizmetKapsami: 'Hizmet Kapsamı',
-      kasaTipi: 'Kasa Tipi',
-      renk: 'Renk',
-      hasarDurumu: 'Hasar Durumu',
-      takas: 'Takas',
-      kimden: 'Kimden',
-      durumu: 'Durumu',
-      motorGucu: 'Motor Gücü',
-      motorHacmi: 'Motor Hacmi',
-      cekis: 'Çekiş',
-      garanti: 'Garanti',
-      plakaUyruk: 'Plaka / Uyruk'
-    };
-    return map[key] || key.charAt(0).toUpperCase() + key.slice(1);
-  };
+  const attributeItems = (() => {
+    const attrs = formData.attributes || {};
+    const fieldsBySlug = new Map(attributeFields.map((f) => [f.slug, f]));
+    const rangeKeys = new Set<string>();
+    const rangeItems = attributeFields
+      .filter((f) => f.type === "range-number")
+      .map((f) => {
+        const minKey = f.minKey || `${f.slug}Min`;
+        const maxKey = f.maxKey || `${f.slug}Max`;
+        rangeKeys.add(minKey);
+        rangeKeys.add(maxKey);
+        const minVal = attrs[minKey];
+        const maxVal = attrs[maxKey];
+        const hasMin = minVal !== undefined && String(minVal).trim() !== "";
+        const hasMax = maxVal !== undefined && String(maxVal).trim() !== "";
+        if (!hasMin && !hasMax) return null;
+        const label = f.name || f.slug;
+        const parts = [
+          hasMin ? `${f.minLabel || "Min"}: ${minVal}` : null,
+          hasMax ? `${f.maxLabel || "Max"}: ${maxVal}` : null,
+        ].filter(Boolean).join(" • ");
+        return { label, value: parts };
+      })
+      .filter(Boolean) as { label: string; value: string }[];
+    const normalItems = Object.entries(attrs)
+      .filter(([k, v]) => !rangeKeys.has(k) && v !== undefined && String(v).trim() !== "")
+      .map(([k, v]) => {
+        const field = fieldsBySlug.get(k);
+        const label = field?.name || k;
+        const value = Array.isArray(v)
+          ? v.map((item) => String(item)).filter((item) => item.trim()).join(", ")
+          : typeof v === "boolean"
+            ? (v ? "Evet" : "Hayır")
+            : String(v);
+        if (!value.trim()) return null;
+        return { label, value };
+      })
+      .filter(Boolean) as { label: string; value: string }[];
+    return [...rangeItems, ...normalItems];
+  })();
 
   return (
     <div className="space-y-5 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -1449,18 +1787,30 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
             <div className="mb-5 bg-gray-50/50 p-4 rounded-2xl border border-gray-100 group-hover:border-cyan-100 transition-colors">
               <div className="relative h-40 w-full rounded-xl overflow-hidden bg-white group-hover:scale-105 transition-transform duration-500">
                 <Image
-                  src={formData.images[0]}
+                  src={mainPreviewSrc}
                   alt="Referans Görsel"
                   fill
                   unoptimized
-                  className="object-contain mix-blend-multiply drop-shadow-lg"
+                  className="object-contain drop-shadow-lg"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = categoryImage;
+                  }}
                 />
               </div>
               {formData.images.length > 1 && (
-                <div className="mt-4 grid grid-cols-4 sm:grid-cols-6 gap-2">
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
                   {formData.images.slice(0, 10).map((img, idx) => (
                     <div key={`${img}-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border border-gray-200 bg-white">
-                      <Image src={img} alt={`Referans Görsel ${idx + 1}`} fill unoptimized className="object-cover" />
+                      <Image
+                        src={normalizeImageSrc(img || categoryImage)}
+                        alt={`Referans Görsel ${idx + 1}`}
+                        fill
+                        unoptimized
+                        className="object-cover"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = categoryImage;
+                        }}
+                      />
                     </div>
                   ))}
                 </div>
@@ -1509,41 +1859,26 @@ const ReviewStep = memo(function ReviewStep({ formData, categories }: { formData
               {formData.description || 'Açıklama girilmemiş'}
             </div>
           </div>
+
+          <div className="pt-5 border-t border-gray-100">
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block">Özellikler</span>
+            {attributeItems.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {attributeItems.map((item, index) => (
+                  <div key={`${item.label}-${index}`} className="bg-gray-50/80 p-4 rounded-2xl border border-gray-100 text-sm">
+                    <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">{item.label}</div>
+                    <div className="text-gray-800 font-semibold">{item.value}</div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-gray-50/80 p-4 rounded-2xl border border-gray-100 text-gray-600 text-sm">
+                Özellik belirtilmemiş
+              </div>
+            )}
+          </div>
         </div>
       </div>
-
-      {(entries.length > 0 || Object.keys(pairs).length > 0) && (
-        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-100 p-5 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <List className="w-4 h-4 text-orange-600" />
-            </div>
-            <div>
-              <h4 className="text-base font-bold text-gray-900">Özellikler</h4>
-              <div className="text-xs text-gray-500 font-medium mt-0.5">Talep özellikleri</div>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(pairs).map(([base, v]) => (
-              (v.min || v.max) ? (
-                <div key={base} className="grid grid-cols-[1fr_auto] gap-4 items-center p-3 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-cyan-200 transition-colors">
-                  <span className="text-gray-700 text-sm font-semibold">{label(base)}</span>
-                  <span className="font-bold text-gray-900 text-sm bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 text-right">{v.min ?? '—'}{(v.min || v.max) ? ' – ' : ''}{v.max ?? '—'}</span>
-                </div>
-              ) : null
-            ))}
-            {entries.map(([k, v]) => (
-              v !== undefined && v !== '' ? (
-                <div key={k} className="grid grid-cols-[1fr_auto] gap-4 items-center p-3 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-cyan-200 transition-colors">
-                  <span className="text-gray-700 text-sm font-semibold">{label(k)}</span>
-                  <span className="font-bold text-gray-900 text-sm text-right bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200">{String(v)}</span>
-                </div>
-              ) : null
-            ))}
-          </div>
-        </div>
-      )}
 
       <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-4 shadow-lg shadow-emerald-100/50">
         <div className="flex items-center gap-4">
@@ -1581,31 +1916,128 @@ function TalepOlusturPage() {
     budget: "",
     images: [],
     attributes: {},
-    manualAttributeKeys: [],
   });
 
-  const handleManualChange = useCallback((key: string, isManual: boolean) => {
-    setFormData(prev => {
-       const keys = prev.manualAttributeKeys || [];
-       if (isManual) {
-         // Avoid duplicates
-         if (keys.includes(key)) return prev;
-         return { ...prev, manualAttributeKeys: [...keys, key] };
-       } else {
-         return { ...prev, manualAttributeKeys: keys.filter(k => k !== key) };
-       }
-    });
-  }, []);
-
   const subcats = useMemo(() => {
-    // 1. Try to find hierarchical structure in static data first (for Emlak etc.)
-    const staticCat = STATIC_CATEGORIES.find(c => c.slug === formData.category);
-    if (staticCat?.subcategories && staticCat.subcategories.length > 0) {
-      return staticCat.subcategories;
+    const staticCat = STATIC_CATEGORIES.find((c) => c.slug === formData.category);
+    const apiCat = categories.find((c) => c.slug === formData.category);
+    const staticList = staticCat?.subcategories ?? [];
+    const apiList = apiCat?.subcategories ?? [];
+    if (staticList.length && apiList.length) {
+      return mergeSubcategoryTrees(staticList, apiList);
     }
-    // 2. Fallback to API data (usually flat)
-    return categories.find((c) => c.slug === formData.category)?.subcategories ?? [];
+    return staticList.length ? staticList : apiList;
   }, [formData.category, categories]);
+
+  const selectedCategoryName = useMemo(() => {
+    const apiName = categories.find((c) => c.slug === formData.category)?.name;
+    const staticName = STATIC_CATEGORIES.find((c) => c.slug === formData.category)?.name;
+    const name = apiName || staticName || formData.category;
+    return name ? titleCaseTR(name) : "";
+  }, [categories, formData.category]);
+
+  const selectedSubcategoryName = useMemo(() => {
+    if (!formData.subcategory) return "";
+    const apiBase = categories.find((c) => c.slug === formData.category);
+    const staticBase = STATIC_CATEGORIES.find((c) => c.slug === formData.category);
+    const base = apiBase?.subcategories?.length ? apiBase : staticBase;
+    if (!base?.subcategories?.length) return "";
+    const name = findSubcategoryName(base.subcategories, formData.subcategory);
+    return name ? titleCaseTR(name) : "";
+  }, [categories, formData.category, formData.subcategory]);
+  const selectedSubcategoryPath = useMemo(() => {
+    if (!formData.subcategory) return [];
+    const apiBase = categories.find((c) => c.slug === formData.category);
+    const staticBase = STATIC_CATEGORIES.find((c) => c.slug === formData.category);
+    const base = apiBase?.subcategories?.length ? apiBase : staticBase;
+    if (!base?.subcategories?.length) return [];
+    return findSubcategoryPath(base.subcategories, formData.subcategory);
+  }, [categories, formData.category, formData.subcategory]);
+  const categorySlug = formData.subcategoryFullSlug || formData.subcategory || formData.category;
+  const isVasita = useMemo(() => {
+    const slug = (categorySlug || "").toLowerCase();
+    return slug.includes("vasita") ||
+      slug.includes("otomobil") ||
+      slug.includes("araba") ||
+      slug.includes("arazi") ||
+      slug.includes("suv") ||
+      slug.includes("pickup") ||
+      slug.includes("minivan") ||
+      slug.includes("panelvan") ||
+      slug.includes("motosiklet") ||
+      slug.includes("kamyon") ||
+      slug.includes("cekici") ||
+      slug.includes("otobus") ||
+      slug.includes("minibus") ||
+      slug.includes("ticari") ||
+      slug.includes("kiralik");
+  }, [categorySlug]);
+  const normalizeVehicleToken = useCallback((value: string) => {
+    return value
+      .toLocaleLowerCase("tr")
+      .replace(/[ç]/g, "c")
+      .replace(/[ğ]/g, "g")
+      .replace(/[ı]/g, "i")
+      .replace(/[ö]/g, "o")
+      .replace(/[ş]/g, "s")
+      .replace(/[ü]/g, "u")
+      .replace(/[^a-z0-9]/g, "");
+  }, []);
+  const normalizeVasitaSlug = useCallback((rawSlug?: string, rawName?: string) => {
+    const slug = normalizeVehicleToken(String(rawSlug || ""));
+    const name = normalizeVehicleToken(String(rawName || ""));
+    const has = (v: string) => slug.includes(v) || name.includes(v);
+    if (has("marka")) return "marka";
+    if (has("model") && !has("modelyili")) return "model";
+    if (slug === "seri" || name === "seri" || has("motorseri")) return "seri";
+    if (has("paket") || has("donanim") || has("trim")) return "paket";
+    return rawSlug || "";
+  }, [normalizeVehicleToken]);
+  const attrs = formData.attributes || {};
+  const brandSource = attrs["marka"];
+  const modelSource = attrs["model"];
+  const seriesSource = attrs["seri"];
+  const brandList = useMemo(() => {
+    const arr = Array.isArray(brandSource)
+      ? brandSource.map((b: any) => String(b))
+      : brandSource
+        ? [String(brandSource)]
+        : [];
+    const filtered = arr.filter((v: string) => v.trim());
+    return filtered;
+  }, [brandSource]);
+  const modelList = useMemo(() => {
+    const arr = Array.isArray(modelSource)
+      ? modelSource.map((m: any) => String(m))
+      : modelSource
+        ? [String(modelSource)]
+        : [];
+    return arr.filter((v: string) => v.trim());
+  }, [modelSource]);
+  const seriesList = useMemo(() => {
+    const arr = Array.isArray(seriesSource)
+      ? seriesSource.map((s: any) => String(s))
+      : seriesSource
+        ? [String(seriesSource)]
+        : [];
+    return arr.filter((v: string) => v.trim());
+  }, [seriesSource]);
+  const brandKey = brandList.join("|");
+  const modelKey = modelList.join("|");
+  const seriesKey = seriesList.join("|");
+
+  const [attributeFields, setAttributeFields] = useState<AttributeField[]>([]);
+  const [attributeLoading, setAttributeLoading] = useState(false);
+  const [attributeLoadError, setAttributeLoadError] = useState<string | null>(null);
+  const [modelOptions, setModelOptions] = useState<string[]>([]);
+  const [seriesOptions, setSeriesOptions] = useState<string[]>([]);
+  const [trimOptions, setTrimOptions] = useState<string[]>([]);
+  const [modelLoading, setModelLoading] = useState(false);
+  const [seriesLoading, setSeriesLoading] = useState(false);
+  const [trimLoading, setTrimLoading] = useState(false);
+  const prevBrandRef = useRef<string | null>(null);
+  const prevModelRef = useRef<string | null>(null);
+  const prevSeriesRef = useRef<string | null>(null);
 
   const router = useRouter();
   const editId = sp.get("editId") || sp.get("edit");
@@ -1630,8 +2062,7 @@ function TalepOlusturPage() {
             minBudget: attrs.minPrice ? String(attrs.minPrice) : '',
             budget: attrs.maxPrice ? String(attrs.maxPrice) : (data.price ? String(data.price) : ''),
             images: data.images || [],
-            attributes: attrs,
-            manualAttributeKeys: data.manualAttributeKeys || []
+            attributes: attrs || {},
           });
         } else {
           toast({ title: 'Hata', description: 'Talep bilgileri yüklenemedi', variant: 'destructive' });
@@ -1669,6 +2100,253 @@ function TalepOlusturPage() {
   }, [categories, defaultCategory, formData.category]);
 
   useEffect(() => {
+    let active = true;
+    const load = async () => {
+      if (!formData.category) {
+        if (active) {
+          setAttributeFields([]);
+          setAttributeLoading(false);
+          setAttributeLoadError(null);
+        }
+        return;
+      }
+      setAttributeLoading(true);
+      setAttributeLoadError(null);
+      try {
+        const qs = formData.subcategory ? `?subcategory=${encodeURIComponent(formData.subcategory)}` : "";
+        const res = await fetch(`/api/categories/${formData.category}/attributes${qs}`);
+        if (!res.ok) throw new Error("load-failed");
+        const data = await res.json();
+        const slugMap = new Map<string, string>();
+        const mapped = Array.isArray(data)
+          ? data
+              .filter((a) => a?.showInRequest !== false)
+              .map((a) => {
+                let options: string[] | undefined;
+                if (Array.isArray(a.optionsJson)) {
+                  options = a.optionsJson.map((o: any) => String(o));
+                } else if (typeof a.optionsJson === "string") {
+                  try {
+                    const parsed = JSON.parse(a.optionsJson);
+                    if (Array.isArray(parsed)) options = parsed.map((o: any) => String(o));
+                  } catch {
+                    options = a.optionsJson.split(",").map((s: string) => s.trim()).filter(Boolean);
+                  }
+                }
+                const normalizedSlug = isVasita ? normalizeVasitaSlug(a.slug, a.name) : a.slug;
+                if (isVasita && a.slug && normalizedSlug && normalizedSlug !== a.slug) {
+                  slugMap.set(a.slug, normalizedSlug);
+                }
+                return {
+                  id: a.id,
+                  name: a.name,
+                  slug: normalizedSlug || a.slug,
+                  type: a.type,
+                  options,
+                  required: a.required,
+                  minKey: a.minKey,
+                  maxKey: a.maxKey,
+                  min: a.min,
+                  max: a.max,
+                  minLabel: a.minLabel,
+                  maxLabel: a.maxLabel,
+                } as AttributeField;
+              })
+          : [];
+        if (active) {
+          setAttributeFields(mapped);
+          if (mapped.length === 0) {
+            setFormData((prev) => {
+              if (!prev.attributes || Object.keys(prev.attributes).length === 0) return prev;
+              return { ...prev, attributes: {} };
+            });
+          } else {
+            const allowed = new Set<string>();
+            mapped.forEach((f) => {
+              if (f.type === "range-number") {
+                const minKey = f.minKey || `${f.slug}Min`;
+                const maxKey = f.maxKey || `${f.slug}Max`;
+                allowed.add(minKey);
+                allowed.add(maxKey);
+              } else {
+                allowed.add(f.slug);
+              }
+            });
+            setFormData((prev) => {
+              const current = prev.attributes || {};
+              const next: Record<string, any> = {};
+              let changed = false;
+              for (const [k, v] of Object.entries(current)) {
+                const mappedKey = slugMap.get(k) || k;
+                if (mappedKey !== k) changed = true;
+                if (allowed.has(mappedKey)) {
+                  next[mappedKey] = v;
+                } else {
+                  changed = true;
+                }
+              }
+              if (!changed && Object.keys(next).length === Object.keys(current).length) return prev;
+              return { ...prev, attributes: next };
+            });
+          }
+        }
+      } catch {
+        if (active) {
+          setAttributeFields([]);
+          setAttributeLoadError("Özellikler yüklenemedi");
+        }
+      } finally {
+        if (active) setAttributeLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [formData.category, formData.subcategory, isVasita, normalizeVasitaSlug]);
+
+  useEffect(() => {
+    if (!isVasita) {
+      prevBrandRef.current = null;
+      prevModelRef.current = null;
+      prevSeriesRef.current = null;
+      setModelOptions([]);
+      setSeriesOptions([]);
+      setTrimOptions([]);
+      return;
+    }
+    if (prevBrandRef.current !== null && prevBrandRef.current !== brandKey) {
+      setFormData((prev) => {
+        const current = prev.attributes || {};
+        const next = { ...current };
+        let changed = false;
+        if (next.model !== undefined) { delete next.model; changed = true; }
+        if (next.seri !== undefined) { delete next.seri; changed = true; }
+        if (next.paket !== undefined) { delete next.paket; changed = true; }
+        return changed ? { ...prev, attributes: next } : prev;
+      });
+    }
+    if (prevModelRef.current !== null && prevModelRef.current !== modelKey) {
+      setFormData((prev) => {
+        const current = prev.attributes || {};
+        const next = { ...current };
+        let changed = false;
+        if (next.seri !== undefined) { delete next.seri; changed = true; }
+        if (next.paket !== undefined) { delete next.paket; changed = true; }
+        return changed ? { ...prev, attributes: next } : prev;
+      });
+    }
+    if (prevSeriesRef.current !== null && prevSeriesRef.current !== seriesKey) {
+      setFormData((prev) => {
+        const current = prev.attributes || {};
+        const next = { ...current };
+        let changed = false;
+        if (next.paket !== undefined) { delete next.paket; changed = true; }
+        return changed ? { ...prev, attributes: next } : prev;
+      });
+    }
+    prevBrandRef.current = brandKey;
+    prevModelRef.current = modelKey;
+    prevSeriesRef.current = seriesKey;
+  }, [isVasita, brandKey, modelKey, seriesKey]);
+
+  useEffect(() => {
+    let active = true;
+    
+    // Doğrudan categorySlug kontrolü yapalım
+    const isVehicleCategory = isVasita;
+    
+    if (!isVehicleCategory || brandList.length === 0) {
+      setModelOptions([]);
+      setModelLoading(false);
+      return;
+    }
+    setModelLoading(true);
+    const params = new URLSearchParams();
+    params.set("type", "models");
+    params.set("category", categorySlug || "");
+    brandList.forEach((b) => params.append("brand", b));
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!active) return;
+        setModelOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (active) setModelOptions([]);
+      })
+      .finally(() => {
+        if (active) setModelLoading(false);
+      });
+    return () => { active = false; };
+  }, [categorySlug, brandKey, brandList, isVasita]);
+
+  useEffect(() => {
+    let active = true;
+    
+    // Doğrudan categorySlug kontrolü yapalım - isVasita closure sorunu var
+    const isVehicleCategory = isVasita;
+    
+    if (!isVehicleCategory || brandList.length === 0 || modelList.length === 0) {
+      setSeriesOptions([]);
+      setSeriesLoading(false);
+      return;
+    }
+    setSeriesLoading(true);
+    const params = new URLSearchParams();
+    params.set("type", "series");
+    params.set("category", categorySlug || "");
+    brandList.forEach((b) => params.append("brand", b));
+    modelList.forEach((m) => params.append("model", m));
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!active) return;
+        setSeriesOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (active) setSeriesOptions([]);
+      })
+      .finally(() => {
+        if (active) setSeriesLoading(false);
+      });
+    return () => { active = false; };
+  }, [categorySlug, brandKey, modelKey, brandList, modelList, isVasita]);
+
+  useEffect(() => {
+    let active = true;
+    
+    // Doğrudan categorySlug kontrolü yapalım - isVasita closure sorunu var
+    const isVehicleCategory = isVasita;
+    
+    if (!isVehicleCategory || brandList.length === 0 || modelList.length === 0 || seriesList.length === 0) {
+      setTrimOptions([]);
+      setTrimLoading(false);
+      return;
+    }
+    setTrimLoading(true);
+    const params = new URLSearchParams();
+    params.set("type", "trims");
+    params.set("category", categorySlug || "");
+    brandList.forEach((b) => params.append("brand", b));
+    modelList.forEach((m) => params.append("model", m));
+    seriesList.forEach((s) => params.append("series", s));
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!active) return;
+        setTrimOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (active) setTrimOptions([]);
+      })
+      .finally(() => {
+        if (active) setTrimLoading(false);
+      });
+    return () => { active = false; };
+  }, [categorySlug, brandKey, modelKey, seriesKey, brandList, modelList, seriesList, isVasita]);
+
+  useEffect(() => {
     // Recursive validation helper
     const isValidSubcategory = (items: SubCategory[], slug: string): boolean => {
       if (!slug) return false;
@@ -1690,23 +2368,15 @@ function TalepOlusturPage() {
        // But crucial fix is: don't reset if it IS valid deeply.
        
        // If valid is false, it means slug is not found anywhere in the tree.
-       const newValue = subcats[0]?.fullSlug ?? subcats[0]?.slug ?? "";
-       if (formData.subcategory !== newValue) {
-          // Careful: This auto-selects the top-level parent (e.g. 'konut').
-          // If the user had an invalid selection, this is a fallback.
-          setFormData(prev => ({ ...prev, subcategory: newValue }));
+       if (formData.subcategory !== "") {
+          setFormData(prev => ({ ...prev, subcategory: "" }));
        }
-    } else if (!formData.subcategory && subcats.length > 0) {
-       // Optional: Auto-select first item if nothing selected?
-       // This was the behavior of the previous code (valid was false for empty string).
-       const newValue = subcats[0]?.fullSlug ?? subcats[0]?.slug ?? "";
-       setFormData(prev => ({ ...prev, subcategory: newValue }));
     }
 
     // Generic default image logic
-    if (formData.subcategory) {
+    if (formData.subcategory || formData.category) {
       setFormData(prev => {
-        const defaultPath = getSubcategoryImage(formData.subcategory);
+        const defaultPath = getSubcategoryImage(formData.subcategory, formData.category);
         
         // Case 1: No images -> Set default
         if (prev.images.length === 0) {
@@ -1716,7 +2386,7 @@ function TalepOlusturPage() {
         // Case 2: Has images, check if it's a default image (starts with /images/defaults/)
         // If so, update it to the new subcategory's default
         const firstImage = prev.images[0];
-        if ((firstImage.startsWith('/images/defaults/') || firstImage.startsWith('/images/placeholder-')) && firstImage !== defaultPath) {
+        if ((firstImage.startsWith('/images/defaults/') || firstImage.startsWith('/images/subcategories/') || firstImage.startsWith('/images/placeholder-')) && firstImage !== defaultPath) {
            return { ...prev, images: [defaultPath, ...prev.images.slice(1)] };
         }
         
@@ -1727,92 +2397,21 @@ function TalepOlusturPage() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [errorSummary, setErrorSummary] = useState<string[]>([]);
-  const [dynamicAttributes, setDynamicAttributes] = useState<any[]>([]);
-
-  const mergeAttributeSources = useCallback((overrideAttrs: any[], dbAttrs: any[]) => {
-    const norm = (s: any) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-    const override = Array.isArray(overrideAttrs) ? overrideAttrs : [];
-    const base = Array.isArray(dbAttrs) ? dbAttrs : [];
-    if (override.length === 0) return base;
-
-    const overrideKeys = new Set<string>();
-    override.forEach((a) => overrideKeys.add(norm(a?.slug)));
-
-    const missingRequired = base.filter((a) => !!a?.required && !overrideKeys.has(norm(a?.slug)));
-    const missingOptional = base.filter((a) => !a?.required && !overrideKeys.has(norm(a?.slug)));
-
-    const sortByOrder = (a: any, b: any) => (Number(a?.order || 0) - Number(b?.order || 0));
-    missingRequired.sort(sortByOrder);
-    missingOptional.sort(sortByOrder);
-
-    return [...missingRequired, ...override, ...missingOptional];
-  }, []);
-
-  // Calculate manualModes from formData.manualAttributeKeys
-  const manualModes = useMemo(() => {
-    const modes: Record<string, boolean> = {};
-    (formData.manualAttributeKeys || []).forEach(k => {
-      modes[k] = true;
-    });
-    return modes;
-  }, [formData.manualAttributeKeys]);
-
-  useEffect(() => {
-    if (!formData.category) return;
-    
-    // Fetch dynamic attributes for the selected category
-    const fetchAttributes = async () => {
-      try {
-        const query = new URLSearchParams();
-        if (formData.subcategory) {
-          query.append('subcategory', formData.subcategory);
-        }
-
-        const url = `/api/categories/${formData.category}/attributes?${query.toString()}`;
-
-        const res = await fetch(url);
-        if (res.ok) {
-          const data = await res.json();
-          setDynamicAttributes(data);
-        } else {
-          console.error('Fetch failed:', res.status);
-        }
-      } catch (error) {
-        console.error('Error fetching attributes:', error);
+  const attributeLabelMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    attributeFields.forEach((f) => {
+      const base = f.name || f.slug;
+      if (f.type === "range-number") {
+        const minKey = f.minKey || `${f.slug}Min`;
+        const maxKey = f.maxKey || `${f.slug}Max`;
+        map[`attr:${minKey}`] = `${base} ${f.minLabel || "Min"}`;
+        map[`attr:${maxKey}`] = `${base} ${f.maxLabel || "Max"}`;
+      } else {
+        map[`attr:${f.slug}`] = base;
       }
-    };
-
-    fetchAttributes();
-  }, [formData.category, formData.subcategory]);
-
-  const mergedDynamicAttributes = useMemo(() => {
-    const currentCategory = categories.find((c: any) => c?.slug === formData.category);
-    const base = currentCategory?.attributes || [];
-    if (Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0) {
-      return mergeAttributeSources(dynamicAttributes, base);
-    }
-    return base;
-  }, [categories, dynamicAttributes, formData.category, mergeAttributeSources]);
-
-  const selectedCategory = useMemo(
-    () => categories.find((c: any) => c?.slug === formData.category),
-    [categories, formData.category]
-  );
-
-  const selectedSubcategory = useMemo(() => {
-    if (!selectedCategory || !formData.subcategory) return undefined;
-    return findSubcategoryBySlug(selectedCategory.subcategories || [], formData.subcategory);
-  }, [selectedCategory, formData.subcategory]);
-
-  const selectedSubcategoryId = useMemo(() => {
-    const raw = (selectedSubcategory as any)?.id;
-    return raw ? String(raw) : undefined;
-  }, [selectedSubcategory]);
-
-  const attributeFields = useMemo(
-    () => attributesToFields(formData.category, formData.subcategory, mergedDynamicAttributes, selectedSubcategoryId),
-    [formData.category, formData.subcategory, mergedDynamicAttributes, selectedSubcategoryId]
-  );
+    });
+    return map;
+  }, [attributeFields]);
 
   const validateStep = useCallback((step: number, data: FormData = formData): boolean => {
     try {
@@ -1837,61 +2436,25 @@ function TalepOlusturPage() {
       else if ((data.description?.trim().length || 0) < 20) {
         newErrors.description = 'Açıklama en az 20 karakter olmalıdır';
       }
-
-      const combined = attributeFields;
-      if (combined && combined.length > 0) {
-        const fieldMap = new Map<string, AttrField>();
-        combined.forEach((f) => {
-          if (!f) return;
-          fieldMap.set(stableAttrFieldId(f), f);
-        });
+      if (attributeFields.length > 0) {
         const attrs = data.attributes || {};
-        fieldMap.forEach((f) => {
-          if (!f) return;
-          if (f.type === 'range-number' && f.minKey && f.maxKey) {
-            const a = attrs[f.minKey];
-            const b = attrs[f.maxKey];
-            if (f.required) {
-               const hasA = a !== undefined && String(a) !== '';
-               const hasB = b !== undefined && String(b) !== '';
-               if (!hasA && !hasB) {
-                 newErrors[f.minKey] = `Lütfen minimum ${f.label.toLowerCase()} giriniz`;
-                 newErrors[f.maxKey] = `Lütfen maksimum ${f.label.toLowerCase()} giriniz`;
-               }
-            }
-            if (f.min !== undefined || f.max !== undefined) {
-               if (a !== undefined && String(a) !== '') {
-                   const val = Number(a);
-                   if (f.min !== undefined && val < f.min) newErrors[f.minKey] = `En az ${f.min}`;
-                   if (f.max !== undefined && val > f.max) newErrors[f.minKey] = `En çok ${f.max}`;
-               }
-               if (b !== undefined && String(b) !== '') {
-                   const val = Number(b);
-                   if (f.min !== undefined && val < f.min) newErrors[f.maxKey] = `En az ${f.min}`;
-                   if (f.max !== undefined && val > f.max) newErrors[f.maxKey] = `En çok ${f.max}`;
-               }
-               if (a !== undefined && String(a) !== '' && b !== undefined && String(b) !== '') {
-                   const minVal = Number(a);
-                   const maxVal = Number(b);
-                   if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
-                       newErrors[f.minKey] = 'Minimum maksimumdan büyük olamaz';
-                       newErrors[f.maxKey] = 'Maksimum minimumdan küçük olamaz';
-                   }
-               }
-            }
-          } else if (f.key) {
-            const v = attrs[f.key];
-            if (f.required) {
-              const present = f.type === 'boolean' ? (f.key in attrs) : (v !== undefined && String(v).trim() !== '' && (!Array.isArray(v) || v.length > 0));
-              if (!present) newErrors[f.key] = `Lütfen ${f.label.toLowerCase()} seçiniz`;
-            }
-            if (f.type === 'number' && (f.min !== undefined || f.max !== undefined) && v !== undefined && String(v).trim() !== '') {
-               const val = Number(v);
-               if (f.min !== undefined && val < f.min) newErrors[f.key] = `En az ${f.min}`;
-               if (f.max !== undefined && val > f.max) newErrors[f.key] = `En çok ${f.max}`;
+        for (const field of attributeFields) {
+          if (field.type !== "range-number") continue;
+          const minKey = field.minKey || `${field.slug}Min`;
+          const maxKey = field.maxKey || `${field.slug}Max`;
+          const minVal = attrs[minKey];
+          const maxVal = attrs[maxKey];
+          const hasMin = minVal !== undefined && String(minVal).trim() !== "";
+          const hasMax = maxVal !== undefined && String(maxVal).trim() !== "";
+          if (hasMin && hasMax) {
+            const a = Number(minVal);
+            const b = Number(maxVal);
+            if (!Number.isNaN(a) && !Number.isNaN(b) && a > b) {
+              newErrors[`attr:${minKey}`] = 'Minimum değer maksimumdan büyük olamaz';
+              newErrors[`attr:${maxKey}`] = 'Maksimum değer minimumdan küçük olamaz';
             }
           }
-        });
+        }
       }
     }
 
@@ -1926,26 +2489,11 @@ function TalepOlusturPage() {
       district:'İlçe', 
       neighborhood:'Mahalle',
       minBudget:'Minimum bütçe', 
-      budget:'Maksimum bütçe',
-      model:'Model',
-      seri:'Seri',
-      paket:'Paket'
+      budget:'Maksimum bütçe'
     };
 
-    const labelMap = new Map<string, string>();
-    if (step === 2) {
-      if (attributeFields && attributeFields.length > 0) {
-        attributeFields.forEach((f) => {
-          if (!f) return;
-          if (f.key) labelMap.set(f.key, f.label);
-          if (f.minKey) labelMap.set(f.minKey, f.label);
-          if (f.maxKey) labelMap.set(f.maxKey, f.label);
-        });
-      }
-    }
-
     const detailedErrors = items.map(k => {
-      const fieldLabel = labels[k] || labelMap.get(k) || k;
+      const fieldLabel = labels[k] || attributeLabelMap[k] || k;
       const errorMsg = newErrors[k];
       
       if (errorMsg.includes('En az') || errorMsg.includes('En çok') || errorMsg.includes('Minimum') || errorMsg.includes('Maksimum')) {
@@ -1962,7 +2510,7 @@ function TalepOlusturPage() {
       console.error('Error in validateStep:', error);
       return false;
     }
-  }, [formData, attributeFields]);
+  }, [formData, attributeFields, attributeLabelMap]);
 
   const validateAll = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
@@ -1986,60 +2534,25 @@ function TalepOlusturPage() {
         newErrors.budget = 'En yüksek, En düşük’ten küçük olamaz';
       }
     }
-    const combined = attributeFields;
-    const fieldMap = new Map<string, AttrField>();
-    combined.forEach((f) => {
-      fieldMap.set(stableAttrFieldId(f), f);
-    });
-    const attrs = formData.attributes || {};
-    fieldMap.forEach((f) => {
-      if (f.type === 'range-number' && f.minKey && f.maxKey) {
-          const a = attrs[f.minKey];
-          const b = attrs[f.maxKey];
-          const hasA = a !== undefined && String(a) !== '';
-          const hasB = b !== undefined && String(b) !== '';
-          if (f.required) {
-            // Range-number alanlar için en az bir değer (min veya max) girilmiş olmalı
-            if (!hasA && !hasB) {
-              newErrors[f.minKey] = 'En az bir değer girilmelidir';
-              newErrors[f.maxKey] = 'En az bir değer girilmelidir';
-            }
+    if (attributeFields.length > 0) {
+      const attrs = formData.attributes || {};
+      for (const field of attributeFields) {
+        if (field.type !== "range-number") continue;
+        const minKey = field.minKey || `${field.slug}Min`;
+        const maxKey = field.maxKey || `${field.slug}Max`;
+        const minVal = attrs[minKey];
+        const maxVal = attrs[maxKey];
+        const hasMin = minVal !== undefined && String(minVal).trim() !== "";
+        const hasMax = maxVal !== undefined && String(maxVal).trim() !== "";
+        if (hasMin && hasMax) {
+          const a = Number(minVal);
+          const b = Number(maxVal);
+          if (!Number.isNaN(a) && !Number.isNaN(b) && a > b) {
+            newErrors[`attr:${minKey}`] = 'Minimum değer maksimumdan büyük olamaz';
+            newErrors[`attr:${maxKey}`] = 'Maksimum değer minimumdan küçük olamaz';
           }
-          if (f.min !== undefined || f.max !== undefined) {
-               if (hasA) {
-                   const val = Number(a);
-                   if (f.min !== undefined && val < f.min) newErrors[f.minKey] = `En az ${f.min}`;
-                   if (f.max !== undefined && val > f.max) newErrors[f.minKey] = `En çok ${f.max}`;
-               }
-               if (hasB) {
-                   const val = Number(b);
-                   if (f.min !== undefined && val < f.min) newErrors[f.maxKey] = `En az ${f.min}`;
-                   if (f.max !== undefined && val > f.max) newErrors[f.maxKey] = `En çok ${f.max}`;
-               }
-               // Eğer hem min hem max değerleri girilmişse, min <= max olmalı
-               if (hasA && hasB) {
-                   const minVal = Number(a);
-                   const maxVal = Number(b);
-                   if (!Number.isNaN(minVal) && !Number.isNaN(maxVal) && minVal > maxVal) {
-                       newErrors[f.minKey] = 'Minimum maksimumdan büyük olamaz';
-                       newErrors[f.maxKey] = 'Maksimum minimumdan küçük olamaz';
-                   }
-               }
-          }
-      } else if (f.key) {
-        const v = attrs[f.key];
-        const present = f.type === 'boolean' ? (f.key in attrs) : (v !== undefined && String(v).trim() !== '');
-        if (f.required && !present) newErrors[f.key] = 'Zorunlu';
-        
-        if (f.type === 'number' && (f.min !== undefined || f.max !== undefined) && present) {
-             const val = Number(v);
-             if (f.min !== undefined && val < f.min) newErrors[f.key] = `En az ${f.min}`;
-             if (f.max !== undefined && val > f.max) newErrors[f.key] = `En çok ${f.max}`;
         }
       }
-    });
-    if (String(attrs['marka'] || '').trim() && !String(attrs['model'] || '').trim()) {
-      newErrors['model'] = 'Zorunlu';
     }
     setErrors(newErrors);
     const items = Object.keys(newErrors);
@@ -2051,23 +2564,11 @@ function TalepOlusturPage() {
       city:'İl', 
       district:'İlçe', 
       minBudget:'Minimum bütçe', 
-      budget:'Maksimum bütçe',
-      model:'Model',
-      seri:'Seri',
-      paket:'Paket'
+      budget:'Maksimum bütçe'
     };
-    const labelMap = new Map<string, string>();
-    if (combined && combined.length > 0) {
-      combined.forEach((f: AttrField) => {
-        if (f.key) labelMap.set(f.key, f.label);
-        if (f.minKey) labelMap.set(f.minKey, f.label);
-        if (f.maxKey) labelMap.set(f.maxKey, f.label);
-      });
-    }
-    
-    // Daha detaylı hata mesajları
+ 
     const detailedErrors = items.map(k => {
-      const fieldLabel = labels[k] || labelMap.get(k) || k;
+      const fieldLabel = labels[k] || attributeLabelMap[k] || k;
       const errorMsg = newErrors[k];
       
       if (errorMsg.includes('En az') || errorMsg.includes('En çok') || errorMsg.includes('Minimum') || errorMsg.includes('Maksimum')) {
@@ -2079,17 +2580,17 @@ function TalepOlusturPage() {
     
     setErrorSummary(detailedErrors);
     return items.length === 0;
-  }, [formData, attributeFields]);
+  }, [formData, attributeFields, attributeLabelMap]);
 
   const updateFormData = useCallback((field: keyof FormData, value: any) => {
     setFormData((prev) => {
       if (field === 'category') {
         if (prev.category === value) return prev;
-        return { ...prev, category: value, subcategory: '', subcategoryFullSlug: undefined, attributes: {}, manualAttributeKeys: [], images: [] };
+        return { ...prev, category: value, subcategory: '', subcategoryFullSlug: undefined, images: [], attributes: {} };
       }
       if (field === 'subcategory') {
         if (prev.subcategory === value) return prev;
-        return { ...prev, subcategory: value, subcategoryFullSlug: undefined, attributes: {}, manualAttributeKeys: [] };
+        return { ...prev, subcategory: value, subcategoryFullSlug: undefined, attributes: {} };
       }
       return { ...prev, [field]: value };
     });
@@ -2109,38 +2610,21 @@ function TalepOlusturPage() {
     }
   }, [errors, errorSummary]);
 
-const getBrandLogo = (brand: string) => {
-    if (!brand) return '';
-    // Use local logos from generated index
-    return (BRAND_LOGOS as Record<string, string>)[brand] || '';
-  };
-
-  const handleAttributeChange = useCallback((key: string, val: any) => {
-    setFormData(prev => {
-      const next = { ...prev, attributes: { ...prev.attributes, [key]: val } };
-      if (key === 'marka') { 
-        next.attributes['model'] = ''; next.attributes['seri'] = ''; next.attributes['paket'] = '';
-        // Otomatik logo ekle
-        if (val && typeof val === 'string') {
-          const logoUrl = getBrandLogo(val);
-          next.images = logoUrl ? [logoUrl] : [];
-        } else {
-          next.images = [];
-        }
-      }
-      if (key === 'model') { next.attributes['seri'] = ''; next.attributes['paket'] = ''; }
-      if (key === 'seri') { next.attributes['paket'] = ''; }
-      return next;
-    });
-    setErrors(prev => {
-      const n = { ...prev };
-      delete n[key];
-      if (key === 'marka') { delete n.model; delete n.seri; delete n.paket; }
-      if (key === 'model') { delete n.seri; delete n.paket; }
-      if (key === 'seri') { delete n.paket; }
-      return n;
-    });
-  }, []);
+  const updateAttribute = useCallback((key: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      attributes: { ...(prev.attributes || {}), [key]: value },
+    }));
+    const errKey = `attr:${key}`;
+    if (errors[errKey]) {
+      setErrors((prev) => {
+        const n = { ...prev };
+        delete n[errKey];
+        return n;
+      });
+    }
+    if (errorSummary.length) setErrorSummary([]);
+  }, [errors, errorSummary]);
 
   const nextStep = useCallback((overrideData?: Partial<FormData>) => {
     try {
@@ -2200,21 +2684,33 @@ const getBrandLogo = (brand: string) => {
           budget: formData.budget ? String(parseInt(formData.budget)) : '',
           images: formData.images,
           attributes: {
-            ...formData.attributes,
+            ...Object.fromEntries(
+              Object.entries(formData.attributes || {}).filter(([, v]) => {
+                if (Array.isArray(v)) return v.length > 0;
+                if (typeof v === "boolean") return true;
+                if (typeof v === "number") return !Number.isNaN(v);
+                if (v === null || v === undefined) return false;
+                if (typeof v === "string") return v.trim() !== "";
+                return true;
+              })
+            ),
             ...(formData.minBudget ? { minPrice: parseInt(formData.minBudget) } : {}),
             ...(formData.budget ? { maxPrice: parseInt(formData.budget) } : {}),
             ...(formData.category === 'emlak' && formData.neighborhood?.trim() ? { mahalle: formData.neighborhood.trim() } : {}),
-          },
-          manualAttributeKeys: formData.manualAttributeKeys || []
+          }
         }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
+        const listingCode = result?.data?.code;
+        const listingId = result?.data?.id;
+        const successText = result.message || (editId ? 'Talep başarıyla güncellendi!' : 'Talebiniz başarıyla oluşturuldu!');
+        const codeText = !editId && (listingCode || listingId) ? ` Talep No: ${listingCode || listingId}` : '';
         toast({
           title: "Başarılı!",
-          description: result.message || (editId ? 'Talep başarıyla güncellendi!' : 'Talebiniz başarıyla oluşturuldu!'),
+          description: `${successText}${codeText}`,
           variant: "success",
         });
         
@@ -2222,7 +2718,8 @@ const getBrandLogo = (brand: string) => {
         if (editId) {
           router.push(callbackUrl || '/profil');
         } else {
-          router.push('/');
+          const nextPath = listingCode || listingId ? `/talep/${listingCode || listingId}` : '/';
+          router.push(nextPath);
         }
       } else {
         toast({
@@ -2254,42 +2751,26 @@ const getBrandLogo = (brand: string) => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <CategorySelection formData={formData} errors={errors} updateFormData={updateFormData} subcats={subcats} categories={categories} nextStep={nextStep} />;
+        return <CategorySelection formData={formData} errors={errors} updateFormData={updateFormData} subcats={subcats} categories={categories} />;
       case 2:
-        return (
-          <>
-            <DetailsStep formData={formData} errors={errors} updateFormData={updateFormData} categories={categories} />
-            <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-              <CategoryAttributes
-                category={formData.category}
-                subcategory={formData.subcategory}
-                fields={attributeFields}
-                attributes={formData.attributes}
-                errors={errors}
-                onChange={handleAttributeChange}
-                onManualChange={handleManualChange}
-                manualModes={manualModes}
-              />
-            </div>
-          </>
-        );
+        return <DetailsStep formData={formData} errors={errors} updateFormData={updateFormData} categories={categories} attributeFields={attributeFields} attributeLoading={attributeLoading} attributeLoadError={attributeLoadError} updateAttribute={updateAttribute} modelOptions={modelOptions} seriesOptions={seriesOptions} trimOptions={trimOptions} modelLoading={modelLoading} seriesLoading={seriesLoading} trimLoading={trimLoading} />;
       case 3:
         return <LocationBudgetStep formData={formData} errors={errors} updateFormData={updateFormData} />;
       case 4:
-        return <ReviewStep formData={formData} categories={categories} />;
+        return <ReviewStep formData={formData} categories={categories} attributeFields={attributeFields} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-blue-50/30 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-blue-50/30 py-6 sm:py-8">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-cyan-900 to-blue-900 mb-3 drop-shadow-sm">
+        <div className="text-center mb-8 sm:mb-10">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-cyan-900 to-blue-900 mb-3 drop-shadow-sm">
             {editId ? 'Talebi Düzenle' : 'Yeni Talep Oluştur'}
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto font-medium">
             {editId ? 'Talep detaylarınızı güncelleyerek daha iyi teklifler alın' : 'İhtiyacınızı detaylandırın, satıcılar size en uygun teklifleri sunsun'}
           </p>
         </div>
@@ -2320,18 +2801,50 @@ const getBrandLogo = (brand: string) => {
               </div>
             )}
             
+            <div className="mt-3 sm:mt-6 flex flex-wrap items-center gap-2 rounded-2xl border border-cyan-100 bg-cyan-50/50 px-4 py-3 sm:py-3.5 text-sm font-semibold text-cyan-900">
+              <span className="text-cyan-700">Kategori:</span>
+              {selectedCategoryName ? (
+                <>
+                  <span className="rounded-full bg-white px-3 py-1 text-xs text-cyan-900 shadow-sm">
+                    {selectedCategoryName}
+                  </span>
+                  {selectedSubcategoryPath.length > 0 ? (
+                    selectedSubcategoryPath.map((item, index) => (
+                      <div key={`${item.fullSlug || item.slug}:${index}`} className="flex items-center gap-2">
+                        <ChevronRight className="h-4 w-4 text-cyan-400" />
+                        <span className="rounded-full bg-white px-3 py-1 text-xs text-cyan-900 shadow-sm">
+                          {titleCaseTR(item.name)}
+                        </span>
+                      </div>
+                    ))
+                  ) : selectedSubcategoryName ? (
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="h-4 w-4 text-cyan-400" />
+                      <span className="rounded-full bg-white px-3 py-1 text-xs text-cyan-900 shadow-sm">
+                        {selectedSubcategoryName}
+                      </span>
+                    </div>
+                  ) : null}
+                </>
+              ) : (
+                <span className="rounded-full bg-white px-3 py-1 text-xs text-cyan-900 shadow-sm">
+                  Seçilmedi
+                </span>
+              )}
+            </div>
+
             <StepIndicator currentStep={currentStep} />
 
             <form onSubmit={handleSubmit} className="mt-10">
               {renderStep()}
               
-              <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-100">
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={prevStep}
                   disabled={currentStep === 1}
                   className={`
-                    flex items-center gap-2 px-6 py-3.5 rounded-2xl font-semibold transition-all duration-300
+                    flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-semibold transition-all duration-300 w-full sm:w-auto
                     ${currentStep === 1 
                       ? 'text-gray-300 cursor-not-allowed bg-gray-50'
                       : 'text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow-lg hover:shadow-gray-200/50 border border-transparent hover:border-gray-100'
@@ -2346,7 +2859,7 @@ const getBrandLogo = (brand: string) => {
                   <button
                     type="button"
                     onClick={() => nextStep()}
-                    className="group relative flex items-center gap-2 px-10 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-2xl font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 shadow-xl shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-1 overflow-hidden"
+                    className="group relative flex items-center justify-center gap-2 px-10 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-2xl font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 shadow-xl shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-1 overflow-hidden w-full sm:w-auto"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Devam Et
@@ -2358,7 +2871,7 @@ const getBrandLogo = (brand: string) => {
                   <button
                     type="button"
                     onClick={handleAdCreate}
-                    className="group relative flex items-center gap-2 px-10 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-2xl font-semibold hover:from-emerald-500 hover:to-green-500 transition-all duration-300 shadow-xl shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-1 overflow-hidden"
+                    className="group relative flex items-center justify-center gap-2 px-10 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-2xl font-semibold hover:from-emerald-500 hover:to-green-500 transition-all duration-300 shadow-xl shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-1 overflow-hidden w-full sm:w-auto"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       <CheckCircle className="w-5 h-5" />

@@ -30,8 +30,24 @@ export async function POST(request: Request) {
       const existing = await prisma.user.findUnique({ where: { email } });
       
       if (existing) {
-        // User already exists, but still send email to prevent enumeration
-        // This makes it impossible to distinguish between new and existing users
+        // User already exists: ensure a fresh verification token exists
+        await prisma.verificationToken.deleteMany({ where: { identifier: email } });
+        // If the existing user does not have a password set, initialize it
+        if (!existing.passwordHash) {
+          const newHash = await bcrypt.hash(password, 10);
+          await prisma.user.update({
+            where: { id: existing.id },
+            data: { passwordHash: newHash },
+          });
+        }
+        await prisma.verificationToken.create({
+          data: {
+            identifier: email,
+            token,
+            expires,
+          },
+        });
+        // Still send email to prevent enumeration (UX: user gets a valid link)
         await sendVerificationEmail(email, token);
         return NextResponse.json({ 
           message: "Kayıt işlemi başlatıldı. Lütfen e-postanızı kontrol edin.",

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, List, Users, FolderTree, Settings, LogOut, FileText, SlidersHorizontal, Rocket, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, List, Users, FolderTree, Settings, LogOut, FileText, SlidersHorizontal, Rocket, ShieldCheck, X, MessageSquare, Flag } from "lucide-react";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -10,6 +10,8 @@ export default function AdminSidebar() {
   const menuItems = [
     { href: "/admin", label: "Genel Bakış", icon: LayoutDashboard },
     { href: "/admin/talepler", label: "Talepler", icon: List },
+    { href: "/admin/sorular", label: "Sorular", icon: MessageSquare },
+    { href: "/admin/reports", label: "Şikayet Edilen Talepler", icon: Flag },
     { href: "/admin/scans", label: "Virüs Tarama", icon: ShieldCheck },
     { href: "/admin/kategoriler", label: "Kategoriler", icon: FolderTree },
     { href: "/admin/attributes", label: "Özellik Yönetimi", icon: SlidersHorizontal },
@@ -20,9 +22,12 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 min-h-screen hidden md:flex flex-col">
-      <div className="p-6 border-b border-gray-200">
+    <aside className="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 flex flex-col transform -translate-x-full transition-transform duration-300 peer-checked:translate-x-0 md:translate-x-0 md:static md:min-h-screen">
+      <div className="p-6 border-b border-gray-200 flex items-center justify-between">
         <h1 className="text-xl font-bold text-cyan-700">Varsagel Admin</h1>
+        <label htmlFor="admin-sidebar-toggle" className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-50 cursor-pointer">
+          <X className="w-5 h-5" />
+        </label>
       </div>
       
       <nav className="flex-1 p-4 space-y-1">

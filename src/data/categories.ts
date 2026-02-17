@@ -5,6 +5,7 @@ import OZEL_DERS_STRUCTURE from './xlsx-structures/ozel-ders-arayanlar.json';
 import YARDIMCI_STRUCTURE from './xlsx-structures/yardimci-arayanlar.json';
 import HAYVANLAR_STRUCTURE from './xlsx-structures/hayvanlar-alemi.json';
 import IS_ARAYANLAR_STRUCTURE from './xlsx-structures/is-arayanlar.json';
+import EMLAK_STRUCTURE from '../../scripts/emlak-structure.json';
 
 export type SubCategory = {
   name: string;
@@ -1365,3 +1366,12 @@ export const CATEGORIES: Category[] = [
     icon: "🐾",
   } as Category,
 ];
+
+const emlakIndex = CATEGORIES.findIndex((c) => c.slug === "emlak");
+if (emlakIndex >= 0) {
+  CATEGORIES[emlakIndex] = {
+    ...EMLAK_STRUCTURE,
+    name: "EMLAK",
+    icon: "🏠",
+  } as Category;
+}

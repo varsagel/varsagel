@@ -58,7 +58,7 @@ export default function TermsPage() {
         İşbu Sözleşme, Üye'nin elektronik ortamda kabulü ile yürürlüğe girer.
       </p>
 
-      <p className="text-sm text-gray-500 mt-8">
+      <p className="text-sm text-gray-600 mt-8">
         Son Güncelleme: {new Date().toLocaleDateString('tr-TR')}
       </p>
     </SozlesmeLayout>

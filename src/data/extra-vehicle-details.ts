@@ -9,7 +9,7 @@ export const EXTRA_MODEL_SERIES: any = {
     // --- HIGH QUALITY DATA ---
     "Togg": { "T10X": ["V1 RWD", "V2 RWD"] },
     "Chery": { "Omoda 5": ["1.6 TGDI"], "Tiggo 7 Pro": ["1.6 TGDI"], "Tiggo 8 Pro": ["1.6 TGDI"] },
-    "Citroen": { "C3 Aircross": ["1.2 PureTech", "1.5 BlueHDi"], "C4 Cactus": ["1.2 PureTech", "1.6 BlueHDi"], "C5 Aircross": ["1.5 BlueHDi", "1.6 PureTech"] },
+    "Citroen": { "C3 Aircross": ["1.2 PureTech", "1.5 BlueHDi"], "C4 Cactus": ["1.2 PureTech", "1.6 BlueHDi"], "C5 Aircross": ["1.5 BlueHDi", "1.6 PureTech"], "C-Crosser": ["2.2 HDi"], "e-C3 Aircross": ["Electric"] },
     "Dacia": { "Duster": ["1.0 Eco-G", "1.3 Tce", "1.5 BlueDCi", "1.6 Sce", "1.5 dCi"], "Sandero Stepway": ["1.0 Tce", "0.9 Tce"], "Spring": ["Electric 45", "Electric 65"] },
     "Fiat": { "Egea Cross": ["1.0 FireFly", "1.3 MultiJet", "1.4 Fire", "1.5 T4 Hybrid", "1.6 MultiJet"], "500X": ["1.0 FireFly", "1.3 MultiJet", "1.4 MultiAir", "1.6 MultiJet"], "Freemont": ["2.0 MultiJet"], "Fullback": ["2.4 D"] },
     "Peugeot": { "2008": ["1.2 PureTech", "1.5 BlueHDi", "e-2008"], "3008": ["1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "Hybrid"], "5008": ["1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech"], "408": ["1.2 PureTech"] },
@@ -306,6 +306,14 @@ export const EXTRA_MODEL_SERIES: any = {
 };
 
 export const EXTRA_SERIES_TRIMS: any = {
+  "vasita/arazi-suv-pickup": {
+    "Citroen": {
+      "C3 Aircross": {
+        "1.2 PureTech": ["Feel", "Shine", "Shine Bold"],
+        "1.5 BlueHDi": ["Feel", "Shine", "Shine Bold"]
+      }
+    }
+  },
   "vasita/motosiklet": {
     "Honda": {
       "PCX 125": { "2021-2024": ["ABS", "Standart"], "2018-2020": ["Standart"], "2014-2017": ["Standart"] },

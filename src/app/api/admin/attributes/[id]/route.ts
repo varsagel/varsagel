@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/auth";
+import { getAdminUserId } from "@/auth";
 import { createModuleLogger } from "@/lib/logger";
 
 const logger = createModuleLogger('admin-attributes');
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  let session: any = null;
+  let userId: string | null = null;
   const { id } = await params;
 
   if (!id || id === 'undefined') {
@@ -14,10 +14,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
 
   try {
-    session = await auth();
-    // @ts-ignore
-    if (session?.user?.role !== "ADMIN") {
-      logger.warn('Unauthorized admin access attempt', { userId: session?.user?.id });
+    userId = await getAdminUserId();
+    if (!userId) {
+      logger.warn('Unauthorized admin access attempt', { userId });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -46,7 +45,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     logger.error('Failed to update attribute', { 
       error: error instanceof Error ? error.message : 'Unknown error',
       attributeId: id,
-      userId: session?.user?.id 
+      userId 
     });
     return NextResponse.json({ error: "Failed to update attribute" }, { status: 500 });
   }
@@ -55,13 +54,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   try {
-    const session = await auth();
-    if (session?.user?.role !== "ADMIN") {
-      logger.warn('Unauthorized admin delete attempt', { userId: session?.user?.id });
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (session?.user?.id === undefined) {
-      logger.warn('Admin user ID undefined', { userId: session?.user?.id });
+    const userId = await getAdminUserId();
+    if (!userId) {
+      logger.warn('Unauthorized admin delete attempt', { userId });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -74,7 +69,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       logger.error('Failed to delete attribute', { 
         error: error instanceof Error ? error.message : 'Unknown error',
         attributeId: id,
-        userId: session?.user?.id 
+        userId 
       });
       return NextResponse.json({ error: "Failed to delete attribute" }, { status: 500 });
     }

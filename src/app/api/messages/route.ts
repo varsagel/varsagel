@@ -1,6 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { validateContent } from "@/lib/content-filter";
+
+async function ensureListingBlockTable() {
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS "ListingBlock" (
+      "id" TEXT PRIMARY KEY,
+      "listingId" TEXT NOT NULL,
+      "ownerId" TEXT NOT NULL,
+      "blockedUserId" TEXT NOT NULL,
+      "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE ("listingId", "blockedUserId")
+    );
+  `);
+  await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "ListingBlock_listingId_idx" ON "ListingBlock" ("listingId");`);
+  await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "ListingBlock_ownerId_idx" ON "ListingBlock" ("ownerId");`);
+  await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "ListingBlock_blockedUserId_idx" ON "ListingBlock" ("blockedUserId");`);
+}
+
+async function isBlocked(listingId: string, blockedUserId: string): Promise<boolean> {
+  await ensureListingBlockTable();
+  const rows = await prisma.$queryRawUnsafe<Array<{ id: string }>>(
+    `SELECT "id" FROM "ListingBlock" WHERE "listingId" = $1 AND "blockedUserId" = $2 LIMIT 1`,
+    listingId,
+    blockedUserId
+  );
+  return rows.length > 0;
+}
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -12,6 +39,10 @@ export async function POST(request: NextRequest) {
     const toUserId = String(body.toUserId || "");
     const content = String(body.content || "");
     if (!listingId || !toUserId || !content) return NextResponse.json({ error: "Geçersiz alanlar" }, { status: 400 });
+    const validation = validateContent(content, { blockComplaint: true });
+    if (!validation.isValid) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
+    }
 
     const listing = await prisma.listing.findUnique({ where: { id: listingId }, select: { ownerId: true } });
     if (!listing) return NextResponse.json({ error: "Talep bulunamadı" }, { status: 404 });
@@ -22,6 +53,12 @@ export async function POST(request: NextRequest) {
     const isAuthorized = (senderId === ownerId) || (toUserId === ownerId);
     
     if (!isAuthorized) return NextResponse.json({ error: "Yetkisiz: Sadece talep sahibi ile mesajlaşabilirsiniz" }, { status: 403 });
+
+    const blockedSender = await isBlocked(listingId, senderId);
+    const blockedReceiver = await isBlocked(listingId, toUserId);
+    if (blockedSender || blockedReceiver) {
+      return NextResponse.json({ error: "Bu talep için mesajlaşma engellendi" }, { status: 403 });
+    }
 
     const msg = await prisma.message.create({ data: { listingId, senderId, toUserId, content, read: false } });
     await prisma.notification.create({ data: { userId: toUserId, type: "message", title: "Yeni mesaj", body: content.slice(0, 120), dataJson: JSON.stringify({ listingId, messageId: msg.id }), read: false } });
@@ -39,6 +76,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const listingId = searchParams.get('listingId') || undefined;
     const contactId = searchParams.get('contactId') || undefined;
+    const countOnly = searchParams.get('count') === '1';
+    const unreadOnly = searchParams.get('unread') === '1';
 
     const where: any = {};
 
@@ -58,7 +97,16 @@ export async function GET(request: NextRequest) {
       where.OR = [{ senderId: userId }, { toUserId: userId }];
       if (listingId) where.listingId = listingId;
     }
+
+    if (unreadOnly) {
+      where.toUserId = userId;
+      where.read = false;
+    }
     
+    if (countOnly) {
+      const count = await prisma.message.count({ where });
+      return NextResponse.json({ count });
+    }
     const messages = await prisma.message.findMany({
       where,
       orderBy: { createdAt: 'desc' },

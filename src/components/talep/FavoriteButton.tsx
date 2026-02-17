@@ -41,13 +41,13 @@ export default function FavoriteButton({ listingId, initial, disabled = false }:
     <button
       onClick={toggle}
       disabled={disabled}
-      className={`w-full bg-white border-2 py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 ${
+      className={`w-full bg-white border-2 py-3 rounded-xl font-bold text-xs transition-colors flex items-center justify-center gap-2 ${
         disabled
           ? "border-gray-200 text-gray-400 cursor-not-allowed"
           : "border-gray-200 text-gray-700 hover:border-cyan-200 hover:text-cyan-600"
       }`}
     >
-      <Heart className={`w-5 h-5 ${fav ? 'fill-red-500 text-red-500' : disabled ? 'text-gray-400' : ''}`} />
+      <Heart className={`w-4 h-4 ${fav ? 'fill-red-500 text-red-500' : disabled ? 'text-gray-400' : ''}`} />
       {disabled ? 'Kendi Talebinize Favori Ekleyemezsiniz' : (fav ? 'Favorilerden Çıkar' : 'Favorilere Ekle')}
     </button>
   );

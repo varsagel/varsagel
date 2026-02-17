@@ -238,12 +238,6 @@
               "subcategories": []
             },
             {
-              "name": "OC Panel",
-              "slug": "oc-panel",
-              "fullSlug": "bilgisayar-donanim-oc-panel",
-              "subcategories": []
-            },
-            {
               "name": "Harddisk (Dahili)",
               "slug": "harddisk-dahili",
               "fullSlug": "bilgisayar-donanim-harddisk-dahili",
@@ -540,12 +534,6 @@
               "subcategories": []
             },
             {
-              "name": "Reçine",
-              "slug": "recine",
-              "fullSlug": "bilgisayar-yazici-tarayici-plotter-recine",
-              "subcategories": []
-            },
-            {
               "name": "Şerit",
               "slug": "serit",
               "fullSlug": "bilgisayar-yazici-tarayici-plotter-serit",
@@ -666,12 +654,6 @@
           "name": "Harddisk Kutusu",
           "slug": "harddisk-kutusu",
           "fullSlug": "bilgisayar-harddisk-kutusu",
-          "subcategories": []
-        },
-        {
-          "name": "Boş Medya",
-          "slug": "bos-medya",
-          "fullSlug": "bilgisayar-bos-medya",
           "subcategories": []
         },
         {
@@ -1433,12 +1415,6 @@
       "fullSlug": "ev-dekorasyon",
       "subcategories": [
         {
-          "name": "Video Kamera",
-          "slug": "video-kamera",
-          "fullSlug": "ev-dekorasyon-video-kamera",
-          "subcategories": []
-        },
-        {
           "name": "Mobilya",
           "slug": "mobilya",
           "fullSlug": "ev-dekorasyon-mobilya",
@@ -1644,12 +1620,6 @@
               "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi",
               "subcategories": [
                 {
-                  "name": "Yemek Odası Takımı",
-                  "slug": "yemek-odasi-takimi",
-                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-yemek-odasi-takimi",
-                  "subcategories": []
-                },
-                {
                   "name": "Yatak",
                   "slug": "yatak",
                   "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-yatak",
@@ -1701,12 +1671,6 @@
                   "name": "Makyaj Masası",
                   "slug": "makyaj-masasi",
                   "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-makyaj-masasi",
-                  "subcategories": []
-                },
-                {
-                  "name": "Şifonyer",
-                  "slug": "sifonyer",
-                  "fullSlug": "ev-dekorasyon-mobilya-yatak-odasi-sifonyer",
                   "subcategories": []
                 }
               ]
@@ -2351,12 +2315,6 @@
               "subcategories": []
             }
           ]
-        },
-        {
-          "name": "Toplu Satış",
-          "slug": "toplu-satis",
-          "fullSlug": "ev-dekorasyon-toplu-satis",
-          "subcategories": []
         }
       ]
     },
@@ -2395,12 +2353,6 @@
           "slug": "uydu-ekipmanlari",
           "fullSlug": "ev-elektronigi-uydu-ekipmanlari",
           "subcategories": [
-            {
-              "name": "Yedek Parça",
-              "slug": "yedek-parca",
-              "fullSlug": "ev-elektronigi-uydu-ekipmanlari-yedek-parca",
-              "subcategories": []
-            },
             {
               "name": "Uydu Alıcısı (Receiver)",
               "slug": "uydu-alicisi-receiver",

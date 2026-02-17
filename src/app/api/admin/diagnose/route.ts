@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { getAdminUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { logErrorToDb } from "@/lib/logger-service";
 
 // Force rebuild comment - version 5
 export async function POST() {
   try {
-    const session = await auth();
-    // @ts-ignore
-    if (session?.user?.role !== "ADMIN") {
+    const userId = await getAdminUserId();
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -33,8 +32,10 @@ export async function POST() {
     }
 
     // 2. Environment Variables Check
-    const requiredEnv = ['DATABASE_URL', 'NEXTAUTH_SECRET', 'NEXTAUTH_URL'];
+    const requiredEnv = ['DATABASE_URL', 'NEXTAUTH_URL'];
     const missingEnv = requiredEnv.filter(key => !process.env[key]);
+    const hasAuthSecret = !!(process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET);
+    if (!hasAuthSecret) missingEnv.push('AUTH_SECRET/NEXTAUTH_SECRET');
     
     if (missingEnv.length === 0) {
       results.env = { status: 'ok', message: 'Kritik ortam değişkenleri mevcut.' };

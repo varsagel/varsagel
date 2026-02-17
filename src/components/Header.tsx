@@ -1,25 +1,53 @@
-import { auth } from "@/auth";
+"use client";
+import { useEffect, useMemo, useState } from "react";
 import { Bell, MessageSquare, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
 import { Logo } from "@/components/Logo";
 import HeaderMobileMenu from "./HeaderMobileMenu";
 import HeaderSearch from "./HeaderSearch";
-import { prisma } from "@/lib/prisma";
 import HeaderUserMenuClient from "./HeaderUserMenuClient";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
-export default async function Header() {
-  const session = await auth();
-  const isAuth = !!session?.user?.email;
-  const firstName = session?.user?.name?.split(" ")?.[0] || "Hesabım";
-  const initial = session?.user?.name?.trim()?.[0]?.toUpperCase() || "U";
-  const userId = (session?.user as any)?.id as string | undefined;
-  const unreadNotifications = isAuth && userId
-    ? await prisma.notification.count({ where: { userId, read: false, NOT: { type: "message" } } })
-    : 0;
-  const unreadMessages = isAuth && userId
-    ? await prisma.message.count({ where: { toUserId: userId, read: false } })
-    : 0;
+export default function Header() {
+  const { data: session, status } = useSession();
+  const pathname = usePathname();
+  const isAuth = status === "authenticated";
+  const firstName = useMemo(() => session?.user?.name?.split(" ")?.[0] || "Hesabım", [session?.user?.name]);
+  const initial = useMemo(() => session?.user?.name?.trim()?.[0]?.toUpperCase() || "U", [session?.user?.name]);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  useEffect(() => {
+    if (!isAuth) {
+      setUnreadNotifications(0);
+      setUnreadMessages(0);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadCounts = async () => {
+      try {
+        const [notifRes, msgRes] = await Promise.all([
+          fetch("/api/notifications?unread=1&count=1&excludeType=message"),
+          fetch("/api/messages?unread=1&count=1"),
+        ]);
+        if (!notifRes.ok || !msgRes.ok) return;
+        const notifData = await notifRes.json();
+        const msgData = await msgRes.json();
+        if (cancelled) return;
+        setUnreadNotifications(Number(notifData?.count || 0));
+        setUnreadMessages(Number(msgData?.count || 0));
+      } catch {}
+    };
+
+    loadCounts();
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuth, pathname]);
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">

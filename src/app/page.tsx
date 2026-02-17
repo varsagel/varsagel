@@ -1,12 +1,11 @@
 import { getListings } from '@/lib/services/listingService';
-import TechCategoryHero from '@/components/home/TechCategoryHero';
 import HomeListingCard, { ListingItem } from '@/components/home/ListingCard';
+import TechCategoryHero from '@/components/home/TechCategoryHero';
 import { CATEGORIES } from '@/data/categories';
 import { ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Fragment } from "react";
 import Link from "next/link";
-import { auth } from '@/auth';
 import { metadataBase, siteUrl } from '@/lib/metadata-base';
 
 export const metadata: Metadata = {
@@ -57,10 +56,6 @@ export default async function Home({ searchParams }: PageProps) {
   const district = typeof params.district === 'string' ? params.district : undefined;
   const sort = typeof params.sort === 'string' ? params.sort : 'newest';
 
-  // Get user session
-  const session = await auth();
-  const isAuthenticated = !!session?.user;
-
   // Fetch listings
   const { data: listings, pagination } = await getListings({
     page,
@@ -73,7 +68,8 @@ export default async function Home({ searchParams }: PageProps) {
     city,
     district,
     sort,
-    status: 'OPEN'
+    status: 'OPEN',
+    includeFavorites: false,
   });
 
   // Construct pagination URL helper
@@ -123,13 +119,12 @@ export default async function Home({ searchParams }: PageProps) {
 
         {/* Listings Grid */}
         {listings.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 md:gap-4">
             {listings.map((listing, index) => (
               <HomeListingCard
                 key={listing.id}
                 listing={listing as ListingItem}
                 priority={index < 4}
-                isAuthenticated={isAuthenticated}
               />
             ))}
           </div>
@@ -157,6 +152,7 @@ export default async function Home({ searchParams }: PageProps) {
             {page > 1 && (
               <Link
                 href={createPageUrl(page - 1)}
+                scroll={false}
                 className="flex items-center gap-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 text-gray-700 font-medium transition-all"
               >
                 <span className="rotate-180"><ArrowRight className="w-4 h-4" /></span>
@@ -172,6 +168,7 @@ export default async function Home({ searchParams }: PageProps) {
                     {i > 0 && arr[i-1] !== p - 1 && <span className="text-gray-400">...</span>}
                     <Link
                       href={createPageUrl(p)}
+                      scroll={false}
                       className={`
                         w-10 h-10 flex items-center justify-center rounded-xl font-medium transition-all
                         ${p === page 
@@ -192,6 +189,7 @@ export default async function Home({ searchParams }: PageProps) {
             {page < pagination.totalPages && (
               <Link
                 href={createPageUrl(page + 1)}
+                scroll={false}
                 className="flex items-center gap-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 text-gray-700 font-medium transition-all"
               >
                 Sonraki

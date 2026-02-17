@@ -16,14 +16,23 @@ export async function POST(req: NextRequest) {
   const cutoff = new Date(Date.now() - COOLDOWN_MINUTES * 60 * 1000)
 
   let duplicateFound = false
+  let safeUserId: string | null = null
 
   if (userId) {
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true }
+    })
+    safeUserId = userExists?.id || null
+  }
+
+  if (safeUserId) {
     // Giriş yapmış kullanıcı kontrolü
     const existing = await prisma.visit.findFirst({
       where: {
         path: pathname,
         createdAt: { gte: cutoff },
-        userId: userId
+        userId: safeUserId
       }
     })
     if (existing) duplicateFound = true
@@ -48,7 +57,7 @@ export async function POST(req: NextRequest) {
     await prisma.visit.create({ 
       data: { 
         path: pathname, 
-        userId: userId || null, 
+        userId: safeUserId, 
         ip: ip || undefined, 
         userAgent: ua || undefined 
       } 

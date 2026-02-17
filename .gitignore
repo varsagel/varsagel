@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+/.next-static-prev/
 
 # production
 /build
@@ -34,6 +35,10 @@ auth-debug.log
 cookie.txt
 cookies.txt
 public/uploads/
+data/satariz_taxonomy_full/
+data/satariz_taxonomy_v2/
+kategoriler/
+y/
 
 # debug
 npm-debug.log*

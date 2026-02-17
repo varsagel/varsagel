@@ -43,13 +43,21 @@ export async function POST(request: Request) {
     }
 
     const scriptPath = path.join(process.cwd(), "scripts", "deploy.ps1");
-    
-    // Spawn PowerShell script
-    const child = spawn("powershell.exe", ["-ExecutionPolicy", "Bypass", "-File", scriptPath], {
+
+    const body = await request.json().catch(() => ({}));
+    const target = body?.target === "staging" ? "staging" : "production";
+    const allowed = ["deploy", "pull", "install", "build", "restart"];
+    const action = allowed.includes(body?.action) ? body.action : "deploy";
+
+    const child = spawn(
+      "powershell.exe",
+      ["-ExecutionPolicy", "Bypass", "-File", scriptPath, "-Target", target, "-Action", action],
+      {
       detached: true,
-      stdio: "ignore", // We write to file in the script
+      stdio: "ignore",
       cwd: process.cwd(),
-    });
+      },
+    );
 
     child.unref();
 

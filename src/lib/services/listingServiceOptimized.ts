@@ -57,8 +57,8 @@ function buildAttributeWhereClause(filters: ListingFilters): Prisma.ListingWhere
   // Search functionality
   if (filters.search) {
     where.OR = [
-      { title: { contains: filters.search, mode: 'insensitive' } },
-      { description: { contains: filters.search, mode: 'insensitive' } },
+      { title: { contains: filters.search } },
+      { description: { contains: filters.search } },
     ];
   }
   

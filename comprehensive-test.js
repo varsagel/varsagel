@@ -1,255 +1,318 @@
-// Comprehensive test with authentication for car listing creation
-const https = require('https');
-const crypto = require('crypto');
+const https = require("https");
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
 
-// Store cookies for session management
-let cookieJar = [];
+const prisma = new PrismaClient();
+const host = "www.varsagel.com";
+const port = Number(process.env.PORT || 3004);
 
-function makeRequest(options, postData = null) {
+function request(path, method, body, headers = {}) {
   return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
-      let data = '';
-      
-      // Store cookies
-      if (res.headers['set-cookie']) {
-        cookieJar = cookieJar.concat(res.headers['set-cookie']);
-      }
-      
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      
-      res.on('end', () => {
-        resolve({
-          statusCode: res.statusCode,
-          headers: res.headers,
-          body: data
-        });
-      });
-    });
-    
-    req.on('error', (error) => {
-      reject(error);
-    });
-    
-    if (postData) {
-      req.write(postData);
+    const data = body ? (typeof body === "string" ? body : JSON.stringify(body)) : null;
+    const opts = {
+      hostname: host,
+      port,
+      path,
+      method,
+      rejectUnauthorized: false,
+      headers,
+    };
+    if (data && !opts.headers["Content-Type"]) {
+      opts.headers["Content-Type"] = "application/json";
     }
-    
+    if (data) {
+      opts.headers["Content-Length"] = Buffer.byteLength(data);
+    }
+    const req = https.request(opts, (res) => {
+      let raw = "";
+      res.on("data", (chunk) => {
+        raw += chunk;
+      });
+      res.on("end", () => {
+        resolve({ status: res.statusCode, headers: res.headers, body: raw });
+      });
+    });
+    req.on("error", reject);
+    if (data) req.write(data);
     req.end();
   });
 }
 
-async function testFullFlow() {
-  console.log('🚀 Starting comprehensive test with authentication...\n');
-  
-  // Step 1: Create test user account
-  console.log('📋 Step 1: Creating test user account...');
-  const timestamp = Date.now();
-  const testUser = {
-    name: `TestUser${timestamp}`,
-    email: `testuser${timestamp}@test.com`,
-    password: 'TestPassword123!'
-  };
-  
-  const registerOptions = {
-    hostname: 'www.varsagel.com',
-    port: 443,
-    path: '/api/register',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'User-Agent': 'TestScript/1.0'
-    }
-  };
-  
-  const registerResult = await makeRequest(registerOptions, JSON.stringify(testUser));
-  console.log(`📊 Registration Status: ${registerResult.statusCode}`);
-  console.log(`📊 Registration Response: ${registerResult.body}`);
-  
-  if (registerResult.statusCode === 201) {
-    console.log('✅ User registration successful!');
-    
-    // Note: In a real scenario, you'd need to verify email first
-    // For testing purposes, let's try to login directly
-    console.log('\n🔐 Step 2: Attempting login...');
-    
-    // Step 2: Login with the new account
-    const loginOptions = {
-      hostname: 'www.varsagel.com',
-      port: 443,
-      path: '/api/auth/callback/credentials',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'TestScript/1.0',
-        'Cookie': cookieJar.join('; ')
-      }
-    };
-    
-    const loginData = {
-      email: testUser.email,
-      password: testUser.password
-    };
-    
-    // For now, let's create a test listing with a mock session
-    console.log('\n🚗 Step 3: Creating test car listing (with authentication simulation)...');
-    
-    // Create comprehensive test data
-    const carListingData = {
-      title: 'Test BMW 320i - Tüm Alanlar Test Ediliyor',
-      description: 'Bu talep tüm form alanlarının düzgün çalıştığını test etmek için oluşturulmuştur. Yıl, KM ve fiyat aralıkları farklı değerler içermektedir.',
-      category: 'vasita',
-      subcategory: 'otomobil',
-      city: 'İstanbul',
-      district: 'Kadıköy',
-      budget: '750000',
-      attributes: {
-        // Year range - different values to test duplication fix
-        yilMin: '2020',
-        yilMax: '2024',
-        
-        // KM range - different values to test duplication fix  
-        kmMin: '25000',
-        kmMax: '75000',
-        
-        // Price range - different values
-        fiyatMin: '500000',
-        fiyatMax: '800000',
-        
-        // Other required fields
-        marka: 'BMW',
-        model: '320i',
-        yakitTipi: 'Benzin',
-        vitesTipi: 'Otomatik',
-        kasaTipi: 'Sedan',
-        motorHacmi: '2000',
-        motorGucu: '184',
-        
-        // Optional fields
-        renk: 'Beyaz',
-        hasarDurumu: 'Hasarsız',
-        takas: 'Evet',
-        durumu: 'İkinci El'
-      }
-    };
-    
-    console.log('📋 Test data prepared:');
-    console.log('   Title:', carListingData.title);
-    console.log('   Category:', carListingData.category, '/', carListingData.subcategory);
-    console.log('   Year Range:', carListingData.attributes.yilMin, '-', carListingData.attributes.yilMax);
-    console.log('   KM Range:', carListingData.attributes.kmMin, '-', carListingData.attributes.kmMax);
-    console.log('   Price Range:', carListingData.attributes.fiyatMin, '-', carListingData.attributes.fiyatMax);
-    
-    // Verify all range values are different
-    const rangeChecks = [
-      { name: 'Yıl', min: carListingData.attributes.yilMin, max: carListingData.attributes.yilMax },
-      { name: 'KM', min: carListingData.attributes.kmMin, max: carListingData.attributes.kmMax },
-      { name: 'Fiyat', min: carListingData.attributes.fiyatMin, max: carListingData.attributes.fiyatMax }
-    ];
-    
-    console.log('\n🔍 Verifying range values are different:');
-    rangeChecks.forEach(check => {
-      if (check.min !== check.max) {
-        console.log(`   ✅ ${check.name}: ${check.min} ≠ ${check.max} (different values)`);
-      } else {
-        console.log(`   ❌ ${check.name}: ${check.min} = ${check.max} (same values - duplication issue!)`);
-      }
-    });
-    
-    // Test the API endpoint
-    const listingOptions = {
-      hostname: 'www.varsagel.com',
-      port: 443,
-      path: '/api/talep-olustur',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'TestScript/1.0',
-        'Cookie': cookieJar.join('; ')
-      }
-    };
-    
-    const listingResult = await makeRequest(listingOptions, JSON.stringify(carListingData));
-    console.log(`\n📊 Listing Creation Status: ${listingResult.statusCode}`);
-    console.log(`📊 Listing Response: ${listingResult.body}`);
-    
-    if (listingResult.statusCode === 401) {
-      console.log('\n❌ Authentication required - this is expected for security');
-      console.log('ℹ️  The system correctly requires authentication for listing creation');
-      
-      // Test the validation logic separately
-      console.log('\n🔍 Testing form validation logic...');
-      testFormValidation();
-      
-    } else if (listingResult.statusCode === 200 || listingResult.statusCode === 201) {
-      console.log('\n✅ Car listing created successfully!');
-      
-      try {
-        const responseData = JSON.parse(listingResult.body);
-        if (responseData.id) {
-          console.log(`🆔 Created listing ID: ${responseData.id}`);
-          console.log(`🔗 Direct link: https://www.varsagel.com/talep/${responseData.id}`);
+async function requestJson(path, method, body, headers = {}) {
+  const res = await request(path, method, body, headers);
+  let json = null;
+  try {
+    json = JSON.parse(res.body || "null");
+  } catch {}
+  return { ...res, json };
+}
+
+function flattenCategories(categories) {
+  const items = [];
+  for (const cat of categories || []) {
+    const catSlug = String(cat.slug || "");
+    const catName = String(cat.name || "");
+    const walk = (nodes) => {
+      for (const n of nodes || []) {
+        const subSlug = String(n.slug || "");
+        const subName = String(n.name || "");
+        const children = Array.isArray(n.subcategories) ? n.subcategories : [];
+        if (children.length === 0) {
+          items.push({ categorySlug: catSlug, categoryName: catName, subSlug, subName });
+        } else {
+          walk(children);
         }
-      } catch (e) {
-        console.log('📄 Raw response:', listingResult.body);
       }
-    } else {
-      console.log('\n❌ Car listing creation failed');
-      console.log('📄 Error response:', listingResult.body);
-    }
-    
-  } else {
-    console.log('❌ User registration failed');
-    console.log('📄 Error:', registerResult.body);
+    };
+    walk(Array.isArray(cat.subcategories) ? cat.subcategories : []);
   }
-  
-  console.log('\n🏁 TEST COMPLETED');
-  
-  // Summary of fixes applied
-  console.log('\n📋 SUMMARY OF FIXES APPLIED:');
-  console.log('✅ 1. Rate limiting increased from 5 to 20 requests per 15 minutes');
-  console.log('✅ 2. Range-number field duplication issue fixed in TalepForm.tsx');
-  console.log('✅ 3. Email verification link fixed (/dogrula instead of /auth/verify)');
-  console.log('✅ 4. Form validation logic updated to handle partial range values');
-  console.log('✅ 5. Authentication properly required for listing creation (security)');
-  
-  console.log('\n🎯 CURRENT STATUS:');
-  console.log('✅ Registration: Working (rate limit fixed)');
-  console.log('✅ Email Verification: Working (link fixed)');
-  console.log('✅ Form Fields: Working (no duplication)');
-  console.log('✅ Authentication: Working (security enforced)');
-  console.log('✅ All major issues resolved!');
+  return items;
 }
 
-function testFormValidation() {
-  console.log('\n🔧 Testing form validation logic...');
-  
-  // Simulate the form validation that happens client-side
-  const testData = {
-    yilMin: '2020',
-    yilMax: '2024',
-    kmMin: '25000', 
-    kmMax: '75000',
-    fiyatMin: '500000',
-    fiyatMax: '800000'
-  };
-  
-  console.log('Test data validation:');
-  Object.keys(testData).forEach(key => {
-    console.log(`   ${key}: ${testData[key]}`);
+async function registerAndVerify(email, name, password) {
+  await requestJson("/api/register", "POST", { name, email, password }, { "Content-Type": "application/json" });
+  const token = await prisma.verificationToken.findFirst({
+    where: { identifier: email.toLowerCase().trim() },
+    orderBy: { expires: "desc" },
+    select: { token: true },
   });
-  
-  // Check if values are being duplicated
-  const values = Object.values(testData);
-  const uniqueValues = [...new Set(values)];
-  
-  if (values.length === uniqueValues.length) {
-    console.log('✅ All values are unique - no duplication detected');
-  } else {
-    console.log('❌ Some values are duplicated');
+  if (token?.token) {
+    await requestJson("/api/auth/verify-email", "POST", { token: token.token }, { "Content-Type": "application/json" });
   }
 }
 
-// Run the comprehensive test
-testFullFlow();
+async function ensureUserProfile(email, name, password, image, phone, preferencesJson) {
+  const hash = await bcrypt.hash(password, 10);
+  const now = new Date();
+  const user = await prisma.user.upsert({
+    where: { email },
+    update: {
+      name,
+      passwordHash: hash,
+      emailVerified: now,
+      role: "USER",
+      image,
+      phone,
+      preferencesJson,
+    },
+    create: {
+      email,
+      name,
+      passwordHash: hash,
+      emailVerified: now,
+      role: "USER",
+      image,
+      phone,
+      preferencesJson,
+    },
+  });
+  return user;
+}
+
+async function ensureCategory(slug, name, icon) {
+  const existing = await prisma.category.findUnique({ where: { slug } });
+  if (existing) return existing;
+  return prisma.category.create({ data: { slug, name, icon: icon || null } });
+}
+
+async function ensureSubCategory(categoryId, slug, name) {
+  const existing = await prisma.subCategory.findUnique({ where: { slug } });
+  if (existing) return existing;
+  return prisma.subCategory.create({ data: { slug, name, categoryId } });
+}
+
+async function main() {
+  const password = "Test123!";
+  const ownerEmail = "talep@varsagel.local";
+  const sellerEmail = "teklif@varsagel.local";
+
+  await registerAndVerify(ownerEmail, "Talep Sahibi", password);
+  await registerAndVerify(sellerEmail, "Teklif Sahibi", password);
+
+  const owner = await ensureUserProfile(
+    ownerEmail,
+    "Talep Sahibi",
+    password,
+    "https://placehold.co/128x128?text=Owner",
+    "5551112233",
+    JSON.stringify({ newOffers: true, messages: true, marketingEmails: false })
+  );
+  const seller = await ensureUserProfile(
+    sellerEmail,
+    "Teklif Sahibi",
+    password,
+    "https://placehold.co/128x128?text=Seller",
+    "5554445566",
+    JSON.stringify({ newOffers: true, messages: true, marketingEmails: false })
+  );
+
+  const categoriesRes = await requestJson("/api/categories", "GET");
+  if (categoriesRes.status !== 200 || !Array.isArray(categoriesRes.json)) {
+    throw new Error(`categories fetch failed: ${categoriesRes.status}`);
+  }
+  const leafSubcategories = flattenCategories(categoriesRes.json);
+  const categoryOrder = categoriesRes.json.map((c) => String(c.slug || "")).filter(Boolean);
+
+  const createdListings = [];
+  const createdOffers = [];
+  const errors = [];
+
+  for (const item of leafSubcategories) {
+    try {
+      const category = await ensureCategory(item.categorySlug, item.categoryName, null);
+      const subCategory = await ensureSubCategory(category.id, item.subSlug, item.subName);
+      const title = `[E2E] ${item.categorySlug} / ${item.subSlug}`;
+      const listing = await prisma.listing.create({
+        data: {
+          title,
+          description: "Kapsamlı test senaryosu için oluşturuldu.",
+          imagesJson: JSON.stringify([`https://placehold.co/800x600?text=${encodeURIComponent(item.subSlug)}`]),
+          budget: BigInt(10000 + Math.floor(Math.random() * 90000)),
+          city: "İstanbul",
+          district: "Kadıköy",
+          status: "OPEN",
+          ownerId: owner.id,
+          categoryId: category.id,
+          subCategoryId: subCategory.id,
+        },
+      });
+      createdListings.push({ listing, categorySlug: item.categorySlug, subSlug: item.subSlug });
+
+      const offerPrice = Math.max(1, Math.floor(Number(listing.budget || 0) * 0.9));
+      const offer = await prisma.offer.create({
+        data: {
+          listingId: listing.id,
+          sellerId: seller.id,
+          price: BigInt(offerPrice),
+          body: "Teklifim hazır. Detayları konuşabiliriz.",
+          status: "PENDING",
+          imagesJson: JSON.stringify([`https://placehold.co/800x600?text=Offer+${encodeURIComponent(listing.id.slice(0, 6))}`]),
+        },
+      });
+      createdOffers.push(offer);
+
+      await prisma.message.create({
+        data: {
+          listingId: listing.id,
+          senderId: seller.id,
+          toUserId: owner.id,
+          content: "Merhaba, talebiniz için teklifimi gönderdim.",
+          read: false,
+        },
+      });
+
+      await prisma.notification.create({
+        data: {
+          userId: owner.id,
+          type: "offer_received",
+          title: "Yeni teklif aldınız",
+          body: listing.title,
+          dataJson: JSON.stringify({ listingId: listing.id, offerId: offer.id }),
+        },
+      });
+    } catch (e) {
+      errors.push({ category: item.categorySlug, subcategory: item.subSlug, error: String(e?.message || e) });
+    }
+  }
+
+  const acceptCategory = categoryOrder[0] || "";
+  const rejectCategory = categoryOrder[1] || "";
+
+  const acceptListing = createdListings.find((l) => l.categorySlug === acceptCategory)?.listing || null;
+  const rejectListing = createdListings.find((l) => l.categorySlug === rejectCategory)?.listing || null;
+
+  const acceptOffer = acceptListing ? createdOffers.find((o) => o.listingId === acceptListing.id) : null;
+  const rejectOffer = rejectListing ? createdOffers.find((o) => o.listingId === rejectListing.id) : null;
+
+  if (acceptOffer && acceptListing) {
+    await prisma.offer.update({ where: { id: acceptOffer.id }, data: { status: "ACCEPTED" } });
+    await prisma.listing.update({ where: { id: acceptListing.id }, data: { status: "CLOSED" } });
+    await prisma.message.create({
+      data: {
+        listingId: acceptListing.id,
+        senderId: owner.id,
+        toUserId: seller.id,
+        content: "Teklifi kabul ettim, konuşabiliriz.",
+        read: false,
+      },
+    });
+    await prisma.notification.create({
+      data: {
+        userId: seller.id,
+        type: "offer_accepted",
+        title: "Teklif kabul edildi",
+        body: acceptListing.title,
+        dataJson: JSON.stringify({ listingId: acceptListing.id, offerId: acceptOffer.id }),
+      },
+    });
+    await prisma.listing.update({ where: { id: acceptListing.id }, data: { status: "OPEN" } });
+  }
+
+  if (rejectOffer && rejectListing) {
+    await prisma.offer.update({
+      where: { id: rejectOffer.id },
+      data: { status: "REJECTED", rejectionReason: "Fiyat uygun değil" },
+    });
+    await prisma.listing.update({ where: { id: rejectListing.id }, data: { status: "OPEN" } });
+    await prisma.message.create({
+      data: {
+        listingId: rejectListing.id,
+        senderId: owner.id,
+        toUserId: seller.id,
+        content: "Teklifi reddettim, farklı bir teklif verebilirsiniz.",
+        read: false,
+      },
+    });
+    await prisma.notification.create({
+      data: {
+        userId: seller.id,
+        type: "offer_rejected",
+        title: "Teklif reddedildi",
+        body: rejectListing.title,
+        dataJson: JSON.stringify({ listingId: rejectListing.id, offerId: rejectOffer.id }),
+      },
+    });
+  }
+
+  const favoriteTargets = createdListings.slice(0, 10);
+  for (const item of favoriteTargets) {
+    try {
+      await prisma.favorite.create({
+        data: {
+          userId: seller.id,
+          listingId: item.listing.id,
+        },
+      });
+    } catch {}
+  }
+
+  const listingPublic = createdListings[0]?.listing
+    ? await requestJson(`/api/talepler/${createdListings[0].listing.id}`, "GET")
+    : { status: 0 };
+
+  const summary = {
+    totals: {
+      categories: categoriesRes.json.length,
+      subcategories: leafSubcategories.length,
+      listings: createdListings.length,
+      offers: createdOffers.length,
+      errors: errors.length,
+      favorites: favoriteTargets.length,
+    },
+    acceptCategory,
+    rejectCategory,
+    sampleListingId: createdListings[0]?.listing?.id || null,
+    sampleOfferId: createdOffers[0]?.id || null,
+    listingPublicStatus: listingPublic.status,
+    errors,
+  };
+  console.log(JSON.stringify(summary, null, 2));
+
+  await prisma.$disconnect();
+}
+
+main().catch(async (e) => {
+  console.error(e);
+  await prisma.$disconnect();
+  process.exit(1);
+});

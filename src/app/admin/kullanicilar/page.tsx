@@ -18,6 +18,9 @@ type UserData = {
   };
 };
 
+const shouldUnoptimizeAvatar = (src: string) =>
+  /\.svg($|\?)/i.test(src) || src.startsWith("data:") || src.includes("placehold.co");
+
 export default function UsersPage() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,12 +70,12 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Kullanıcı Yönetimi</h1>
           <p className="text-gray-500">Kayıtlı kullanıcıları ve yetkilerini yönetin.</p>
         </div>
-        <div className="relative w-64">
+        <div className="relative w-full md:w-64">
           <input
             type="text"
             placeholder="İsim veya E-posta ara..."
@@ -85,84 +88,93 @@ export default function UsersPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs uppercase font-semibold">
-            <tr>
-              <th className="px-6 py-4">Kullanıcı</th>
-              <th className="px-6 py-4">Rol</th>
-              <th className="px-6 py-4">İlan/Teklif</th>
-              <th className="px-6 py-4">Kayıt Tarihi</th>
-              <th className="px-6 py-4 text-right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {loading ? (
-              <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Yükleniyor...</td></tr>
-            ) : users.length === 0 ? (
-              <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Kullanıcı bulunamadı.</td></tr>
-            ) : (
-              users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {user.image ? (
-                        <Image src={user.image} alt={user.name || ""} width={40} height={40} className="rounded-full object-cover" />
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-700 font-bold">
-                          {user.name?.charAt(0).toUpperCase() || "U"}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs uppercase font-semibold">
+              <tr>
+                <th className="px-6 py-4">Kullanıcı</th>
+                <th className="px-6 py-4">Rol</th>
+                <th className="px-6 py-4">İlan/Teklif</th>
+                <th className="px-6 py-4">Kayıt Tarihi</th>
+                <th className="px-6 py-4 text-right">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {loading ? (
+                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Yükleniyor...</td></tr>
+              ) : users.length === 0 ? (
+                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Kullanıcı bulunamadı.</td></tr>
+              ) : (
+                users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {user.image ? (
+                          <Image
+                            src={user.image}
+                            alt={user.name || ""}
+                            width={40}
+                            height={40}
+                            className="rounded-full object-cover"
+                            unoptimized={shouldUnoptimizeAvatar(user.image)}
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-700 font-bold">
+                            {user.name?.charAt(0).toUpperCase() || "U"}
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-medium text-gray-900">{user.name || "İsimsiz"}</p>
+                          <p className="text-sm text-gray-500">{user.email}</p>
                         </div>
-                      )}
-                      <div>
-                        <p className="font-medium text-gray-900">{user.name || "İsimsiz"}</p>
-                        <p className="text-sm text-gray-500">{user.email}</p>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {user.role === "ADMIN" ? (
-                      <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-semibold">
-                        <ShieldAlert className="w-3 h-3" /> ADMIN
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">
-                        <User className="w-3 h-3" /> USER
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
-                    <div className="flex gap-3">
-                      <span title="İlan Sayısı">📝 {user._count.listings}</span>
-                      <span title="Teklif Sayısı">💬 {user._count.offers}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    {new Date(user.createdAt).toLocaleDateString('tr-TR')}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      {user.role === "USER" && (
-                        <button
-                          onClick={() => handleRoleChange(user.id, "ADMIN")}
-                          className="text-purple-600 hover:bg-purple-50 px-3 py-1 rounded-lg text-xs font-medium transition-colors"
-                        >
-                          Admin Yap
-                        </button>
+                    </td>
+                    <td className="px-6 py-4">
+                      {user.role === "ADMIN" ? (
+                        <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-semibold">
+                          <ShieldAlert className="w-3 h-3" /> ADMIN
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">
+                          <User className="w-3 h-3" /> USER
+                        </span>
                       )}
-                      {user.role === "ADMIN" && (
-                        <button
-                          onClick={() => handleRoleChange(user.id, "USER")}
-                          className="text-gray-600 hover:bg-gray-100 px-3 py-1 rounded-lg text-xs font-medium transition-colors"
-                        >
-                          Yetkiyi Al
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      <div className="flex gap-3">
+                        <span title="İlan Sayısı">📝 {user._count.listings}</span>
+                        <span title="Teklif Sayısı">💬 {user._count.offers}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {new Date(user.createdAt).toLocaleDateString('tr-TR')}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        {user.role === "USER" && (
+                          <button
+                            onClick={() => handleRoleChange(user.id, "ADMIN")}
+                            className="text-purple-600 hover:bg-purple-50 px-3 py-1 rounded-lg text-xs font-medium transition-colors"
+                          >
+                            Admin Yap
+                          </button>
+                        )}
+                        {user.role === "ADMIN" && (
+                          <button
+                            onClick={() => handleRoleChange(user.id, "USER")}
+                            className="text-gray-600 hover:bg-gray-100 px-3 py-1 rounded-lg text-xs font-medium transition-colors"
+                          >
+                            Yetkiyi Al
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

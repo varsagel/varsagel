@@ -92,12 +92,6 @@
               "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan",
               "subcategories": [
                 {
-                  "name": "Yürüyen & Direksiyon",
-                  "slug": "yuruyen-direksiyon",
-                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-yuruyen-direksiyon",
-                  "subcategories": []
-                },
-                {
                   "name": "Ateşleme & Yakıt",
                   "slug": "atesleme-yakit",
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-minivan-panelvan-atesleme-yakit",
@@ -231,12 +225,6 @@
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici",
                   "subcategories": [
                     {
-                      "name": "Yürüyen & Direksiyon",
-                      "slug": "yuruyen-direksiyon",
-                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-yuruyen-direksiyon",
-                      "subcategories": []
-                    },
-                    {
                       "name": "Ateşleme & Yakıt",
                       "slug": "atesleme-yakit",
                       "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-atesleme-yakit",
@@ -295,6 +283,12 @@
                       "slug": "sanziman-vites",
                       "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-sanziman-vites",
                       "subcategories": []
+                    },
+                    {
+                      "name": "Yürüyen & Direksiyon",
+                      "slug": "yuruyen-direksiyon",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyon-cekici-yuruyen-direksiyon",
+                      "subcategories": []
                     }
                   ]
                 },
@@ -303,12 +297,6 @@
                   "slug": "kamyonet-pickup",
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup",
                   "subcategories": [
-                    {
-                      "name": "Yürüyen & Direksiyon",
-                      "slug": "yuruyen-direksiyon",
-                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-yuruyen-direksiyon",
-                      "subcategories": []
-                    },
                     {
                       "name": "Ateşleme & Yakıt",
                       "slug": "atesleme-yakit",
@@ -368,6 +356,12 @@
                       "slug": "sanziman-vites",
                       "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-sanziman-vites",
                       "subcategories": []
+                    },
+                    {
+                      "name": "Yürüyen & Direksiyon",
+                      "slug": "yuruyen-direksiyon",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-kamyonet-pickup-yuruyen-direksiyon",
+                      "subcategories": []
                     }
                   ]
                 },
@@ -376,12 +370,6 @@
                   "slug": "oto-kurtarici-tasiyici",
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici",
                   "subcategories": [
-                    {
-                      "name": "Yürüyen & Direksiyon",
-                      "slug": "yuruyen-direksiyon",
-                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-yuruyen-direksiyon",
-                      "subcategories": []
-                    },
                     {
                       "name": "Ateşleme & Yakıt",
                       "slug": "atesleme-yakit",
@@ -441,6 +429,12 @@
                       "slug": "sanziman-vites",
                       "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-sanziman-vites",
                       "subcategories": []
+                    },
+                    {
+                      "name": "Yürüyen & Direksiyon",
+                      "slug": "yuruyen-direksiyon",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-yedek-parca-ticari-araclar-oto-kurtarici-tasiyici-yuruyen-direksiyon",
+                      "subcategories": []
                     }
                   ]
                 },
@@ -476,12 +470,6 @@
               "slug": "otomobil-arazi-araci",
               "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci",
               "subcategories": [
-                {
-                  "name": "Go Kart",
-                  "slug": "go-kart",
-                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-otomobil-arazi-araci-go-kart",
-                  "subcategories": []
-                },
                 {
                   "name": "İç Aksesuar",
                   "slug": "i-c-aksesuar",
@@ -520,12 +508,6 @@
               "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan",
               "subcategories": [
                 {
-                  "name": "Bakım & Onarım Ürünleri",
-                  "slug": "bakim-onarim-urunleri",
-                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan-bakim-onarim-urunleri",
-                  "subcategories": []
-                },
-                {
                   "name": "İç Aksesuar",
                   "slug": "i-c-aksesuar",
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan-i-c-aksesuar",
@@ -535,6 +517,12 @@
                   "name": "Dış Aksesuar",
                   "slug": "dis-aksesuar",
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan-dis-aksesuar",
+                  "subcategories": []
+                },
+                {
+                  "name": "Bakım & Onarım Ürünleri",
+                  "slug": "bakim-onarim-urunleri",
+                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-minivan-panelvan-bakim-onarim-urunleri",
                   "subcategories": []
                 }
               ]
@@ -575,12 +563,6 @@
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici",
                   "subcategories": [
                     {
-                      "name": "Bakım & Onarım Ürünleri",
-                      "slug": "bakim-onarim-urunleri",
-                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici-bakim-onarim-urunleri",
-                      "subcategories": []
-                    },
-                    {
                       "name": "İç Aksesuar",
                       "slug": "i-c-aksesuar",
                       "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici-i-c-aksesuar",
@@ -591,6 +573,12 @@
                       "slug": "dis-aksesuar",
                       "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici-dis-aksesuar",
                       "subcategories": []
+                    },
+                    {
+                      "name": "Bakım & Onarım Ürünleri",
+                      "slug": "bakim-onarim-urunleri",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyon-cekici-bakim-onarim-urunleri",
+                      "subcategories": []
                     }
                   ]
                 },
@@ -599,12 +587,6 @@
                   "slug": "kamyonet-pickup",
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup",
                   "subcategories": [
-                    {
-                      "name": "Bakım & Onarım Ürünleri",
-                      "slug": "bakim-onarim-urunleri",
-                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup-bakim-onarim-urunleri",
-                      "subcategories": []
-                    },
                     {
                       "name": "İç Aksesuar",
                       "slug": "i-c-aksesuar",
@@ -615,6 +597,12 @@
                       "name": "Dış Aksesuar",
                       "slug": "dis-aksesuar",
                       "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup-dis-aksesuar",
+                      "subcategories": []
+                    },
+                    {
+                      "name": "Bakım & Onarım Ürünleri",
+                      "slug": "bakim-onarim-urunleri",
+                      "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-aksesuar-tuning-ticari-araclar-kamyonet-pickup-bakim-onarim-urunleri",
                       "subcategories": []
                     }
                   ]
@@ -693,12 +681,6 @@
                   "name": "Crossover",
                   "slug": "crossover",
                   "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-crossover",
-                  "subcategories": []
-                },
-                {
-                  "name": "Deck Çevirici",
-                  "slug": "deck-cevirici",
-                  "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-aksesuar-deck-cevirici",
                   "subcategories": []
                 },
                 {
@@ -864,12 +846,6 @@
               "slug": "geri-gorus-kamerasi",
               "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-geri-gorus-kamerasi",
               "subcategories": []
-            },
-            {
-              "name": "Paket Ses Sistemi",
-              "slug": "paket-ses-sistemi",
-              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-otomotiv-ekipmanlari-ses-goruntu-sistemleri-paket-ses-sistemi",
-              "subcategories": []
             }
           ]
         }
@@ -953,12 +929,6 @@
           "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca",
           "subcategories": [
             {
-              "name": "Aksesuarlar",
-              "slug": "aksesuarlar",
-              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-aksesuarlar",
-              "subcategories": []
-            },
-            {
               "name": "Debriyaj",
               "slug": "debriyaj",
               "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-yedek-parca-debriyaj",
@@ -1037,12 +1007,6 @@
           "slug": "aksesuar-tuning",
           "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-aksesuar-tuning",
           "subcategories": [
-            {
-              "name": "Yönlendirme",
-              "slug": "yonlendirme",
-              "fullSlug": "yedek-parca-aksesuar-donanim-tuning-motosiklet-ekipmanlari-aksesuar-tuning-yonlendirme",
-              "subcategories": []
-            },
             {
               "name": "Görünüm",
               "slug": "gorunum",

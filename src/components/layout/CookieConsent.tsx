@@ -9,12 +9,9 @@ export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if user has already made a choice
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) {
-      // Show after a small delay for better UX
-      const timer = setTimeout(() => setIsVisible(true), 1000);
-      return () => clearTimeout(timer);
+      setIsVisible(true);
     }
   }, []);
 

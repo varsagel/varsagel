@@ -1,6 +1,7 @@
 "use client";
 
 import type { Dispatch, ReactNode, SetStateAction } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -20,6 +21,7 @@ import {
   MessageSquare,
   Phone,
   Plus,
+  RefreshCw,
   Tag,
   Trash2,
   TrendingUp,
@@ -27,6 +29,7 @@ import {
   X,
 } from "lucide-react";
 import { SavedSearchesTab } from "@/components/profile/SavedSearchesTab";
+import { titleCaseTR } from "@/lib/title-case-tr";
 
 type TabType =
   | "ozet"
@@ -75,6 +78,8 @@ type Teklif = {
   telefon: string;
   email: string;
   rejectionReason?: string | null;
+  images?: string[];
+  attributes?: Attributes;
 };
 
 type Favori = {
@@ -114,6 +119,22 @@ type OfferInfo = {
   nextAllowedAt: number | null;
 };
 
+const humanizeAttrKey = (raw: string) => {
+  const withSpaces = String(raw || "")
+    .replace(/[-_]+/g, " ")
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/\s+/g, " ")
+    .trim();
+  return withSpaces ? titleCaseTR(withSpaces) : "";
+};
+
+const formatAttrValue = (value: any) => {
+  if (value === null || value === undefined) return "—";
+  if (Array.isArray(value)) return value.map((v) => String(v)).filter(Boolean).join(", ") || "—";
+  if (typeof value === "boolean") return value ? "Evet" : "Hayır";
+  return String(value);
+};
+
 type ProfileData = {
   name: string;
   phone: string;
@@ -146,6 +167,7 @@ type Props = {
   onDeleteTalep: (id: string) => void;
   onOfferUpdate: (id: string) => void;
   onOfferAction: (id: string, action: "accept" | "reject") => void;
+  onOfferReopen: (offerId: string) => void;
   onBlockUser: (listingId: string, sellerId: string) => void;
   onRemoveFavorite: (id: string) => void;
   setBildirimler: Dispatch<SetStateAction<Bildirim[]>>;
@@ -238,6 +260,7 @@ export default function ProfileTabContent({
   onDeleteTalep,
   onOfferUpdate,
   onOfferAction,
+  onOfferReopen,
   onBlockUser,
   onRemoveFavorite,
   setBildirimler,
@@ -414,7 +437,11 @@ export default function ProfileTabContent({
             </div>
           ) : (
             <div className="grid gap-4">
-              {taleplerim.map((talep) => (
+              {taleplerim.map((talep) => {
+                const acceptedOffer = aldigimTeklifler.find((offer) => offer.listingId === talep.id && offer.durum === "kabul");
+                const canReopen = (talep.durum === "beklemede" || talep.durum === "tamamlandi") && acceptedOffer;
+
+                return (
                 <div key={talep.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all group">
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -462,13 +489,17 @@ export default function ProfileTabContent({
                           }
                         })()}
                       </span>
-                      <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {talep.tarih}</span>
                       <span className="flex items-center gap-1"><MessageSquare className="w-4 h-4" /> {talep.teklifSayisi} teklif</span>
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto">
                       <button onClick={() => router.push(`/talep-olustur?editId=${talep.id}`)} className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700">
                         <Edit className="w-3.5 h-3.5" /> Düzenle
                       </button>
+                      {canReopen && (
+                        <button onClick={() => acceptedOffer && onOfferReopen(acceptedOffer.id)} className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600">
+                          <RefreshCw className="w-3.5 h-3.5" /> Tekrar Yayına Al
+                        </button>
+                      )}
                       <button onClick={() => onDeleteTalep(talep.id)} className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 text-sm border border-red-200 text-red-600 rounded-lg hover:bg-red-50">
                         <Trash2 className="w-3.5 h-3.5" /> Sil
                       </button>
@@ -478,7 +509,8 @@ export default function ProfileTabContent({
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           )}
         </div>
@@ -550,11 +582,41 @@ export default function ProfileTabContent({
                       </div>
                     )}
 
+                    {Array.isArray(teklif.images) && teklif.images.length > 0 && (
+                      <div className="mb-4 flex flex-wrap gap-2">
+                        {teklif.images.slice(0, 4).map((src, idx) => (
+                          <Image
+                            key={`${teklif.id}-img-${idx}`}
+                            src={src}
+                            alt={`Teklif Görsel ${idx + 1}`}
+                            width={80}
+                            height={80}
+                            className="w-20 h-20 rounded-lg object-cover border border-gray-100 bg-gray-50"
+                            unoptimized
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {teklif.attributes && Object.keys(teklif.attributes).length > 0 && (
+                      <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {Object.entries(teklif.attributes).slice(0, 6).map(([key, value]) => (
+                          <div key={`${teklif.id}-attr-${key}`} className="bg-gray-50 rounded-lg p-2 border border-gray-100">
+                            <div className="text-[11px] text-gray-400">{humanizeAttrKey(key)}</div>
+                            <div className="text-sm font-medium text-gray-900">{formatAttrValue(value)}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
                       <div className="w-full sm:w-auto text-center sm:text-left text-lg font-bold text-cyan-600 bg-cyan-50 px-3 py-1 rounded-lg border border-cyan-100">
                         {teklif.teklifTutari.toLocaleString()}
                       </div>
                       <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
+                        <button onClick={() => router.push(`/teklif/${teklif.id}`)} className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors">
+                          Teklif Detayı
+                        </button>
                         <button onClick={() => router.push(`/talep/${teklif.listingId || ""}`)} className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors">
                           Talep Detayı
                         </button>

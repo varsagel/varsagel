@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/auth"
+import { auth, getAdminUserId } from "@/auth"
 import { validateContent } from "@/lib/content-filter"
 
 export async function GET(
@@ -40,7 +40,7 @@ export async function POST(
   if (!body) return NextResponse.json({ error: "body gerekli" }, { status: 400 })
 
   // Content Validation
-  const validation = validateContent(body);
+  const validation = validateContent(body, { blockPrice: true });
   if (!validation.isValid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
@@ -98,7 +98,7 @@ export async function PATCH(
   if (!questionId || !answer) return NextResponse.json({ error: "Eksik bilgi" }, { status: 400 });
 
   // Content Validation for Answer
-  const validation = validateContent(answer);
+  const validation = validateContent(answer, { blockPrice: true });
   if (!validation.isValid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
@@ -131,5 +131,28 @@ export async function PATCH(
     });
   }
 
+  return NextResponse.json({ success: true });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
+  const params = await props.params;
+  const listingId = (params.id || "").trim();
+  if (!listingId) return NextResponse.json({ error: "listingId gerekli" }, { status: 400 });
+
+  const adminId = await getAdminUserId();
+  if (!adminId) return NextResponse.json({ error: "Yetkisiz işlem" }, { status: 401 });
+
+  const { searchParams } = new URL(req.url);
+  const questionId = (searchParams.get("questionId") || searchParams.get("id") || "").trim();
+  if (!questionId) return NextResponse.json({ error: "questionId gerekli" }, { status: 400 });
+
+  const question = await prisma.question.findUnique({ where: { id: questionId }, select: { listingId: true } });
+  if (!question) return NextResponse.json({ error: "Soru bulunamadı" }, { status: 404 });
+  if (question.listingId !== listingId) return NextResponse.json({ error: "Yetkisiz işlem" }, { status: 403 });
+
+  await prisma.question.delete({ where: { id: questionId } });
   return NextResponse.json({ success: true });
 }

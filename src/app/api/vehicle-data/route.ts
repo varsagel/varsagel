@@ -4,6 +4,24 @@ import { EXTRA_MODEL_SERIES, EXTRA_SERIES_TRIMS } from '@/data/extra-vehicle-det
 
 export const revalidate = 86400;
 
+function cleanList(list: any): string[] {
+  const bad = [/^$/, /\b(test|demo|deneme|örnek|sample|placeholder|fake|sahte|geçici)\b/i];
+  const seen = new Set<string>();
+  const res: string[] = [];
+  const arr = Array.isArray(list) ? list : [];
+  for (const v of arr) {
+    const s = String(v || '').trim();
+    if (!s) continue;
+    let reject = false;
+    for (const r of bad) {
+      if (r.test(s)) { reject = true; break; }
+    }
+    if (reject) continue;
+    if (!seen.has(s)) { seen.add(s); res.push(s); }
+  }
+  return res.sort((a, b) => a.localeCompare(b, 'tr'));
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type');
@@ -46,10 +64,8 @@ export async function GET(request: NextRequest) {
         if (!modelsForBrand) continue;
         Object.keys(modelsForBrand).forEach((m) => extraModels.add(m));
       }
-      const merged = Array.from(new Set([...(Array.isArray(base) ? base : []), ...Array.from(extraModels)])).sort((a, b) =>
-        a.localeCompare(b, 'tr')
-      );
-      return NextResponse.json(merged);
+      const merged = Array.from(new Set([...(Array.isArray(base) ? base : []), ...Array.from(extraModels)]));
+      return NextResponse.json(cleanList(merged));
     }
 
     if (type === 'series') {
@@ -66,10 +82,8 @@ export async function GET(request: NextRequest) {
           seriesArr.forEach((s) => extraSeries.add(s));
         }
       }
-      const merged = Array.from(new Set([...(Array.isArray(base) ? base : []), ...Array.from(extraSeries)])).sort((a, b) =>
-        a.localeCompare(b, 'tr')
-      );
-      return NextResponse.json(merged);
+      const merged = Array.from(new Set([...(Array.isArray(base) ? base : []), ...Array.from(extraSeries)]));
+      return NextResponse.json(cleanList(merged));
     }
 
     if (type === 'trims') {
@@ -89,10 +103,8 @@ export async function GET(request: NextRequest) {
           }
         }
       }
-      const merged = Array.from(new Set([...(Array.isArray(base) ? base : []), ...Array.from(extraTrims)])).sort((a, b) =>
-        a.localeCompare(b, 'tr')
-      );
-      return NextResponse.json(merged);
+      const merged = Array.from(new Set([...(Array.isArray(base) ? base : []), ...Array.from(extraTrims)]));
+      return NextResponse.json(cleanList(merged));
     }
 
     if (type === 'equipments') {

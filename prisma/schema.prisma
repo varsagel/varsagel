@@ -130,7 +130,7 @@ model Listing {
   description    String
   imagesJson     String?
   attributesJson String?
-  manualAttributeKeys String[] @default([])
+  manualAttributeKeys String?
   budget         BigInt?
   city           String?
   district       String?
@@ -166,7 +166,7 @@ model Offer {
   price           BigInt
   body            String
   attributesJson  String?
-  manualAttributeKeys String[] @default([])
+  manualAttributeKeys String?
   status          String   @default("PENDING")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -233,12 +233,12 @@ model SavedSearch {
   categorySlug      String?
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
-  filtersJson       Json?
-  matchMode         SavedSearchMatchMode  @default(FILTERS)
+  filtersJson       String?
+  matchMode         String                @default("FILTERS")
   city              String?
   district          String?
   emailNotification Boolean               @default(false)
-  frequency         NotificationFrequency @default(INSTANT)
+  frequency         String                @default("INSTANT")
   isAlarm           Boolean               @default(false)
   lastCheckAt       DateTime              @default(now())
   maxPrice          Float?
@@ -290,7 +290,7 @@ model Visit {
   ip        String?
   userAgent String?
   createdAt DateTime @default(now())
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([createdAt])
   @@index([path])
@@ -321,11 +321,11 @@ model ErrorLog {
   id        String   @id @default(cuid())
   message   String
   stack     String?
-  source    String   @default("unknown") // frontend, backend, boundary
+  source    String   @default("unknown")
   url       String?
-  method    String?  // GET, POST, vb.
+  method    String?
   userId    String?
-  context   Json?    // Ekstra bilgiler (body, params, browser info)
+  context   String?
   createdAt DateTime @default(now())
   
   @@index([createdAt])
@@ -352,16 +352,4 @@ model UploadScan {
   @@index([ownerId])
   @@index([status])
   @@index([createdAt])
-}
-
-enum SavedSearchMatchMode {
-  TITLE
-  CATEGORY
-  FILTERS
-}
-
-enum NotificationFrequency {
-  INSTANT
-  DAILY
-  WEEKLY
 }

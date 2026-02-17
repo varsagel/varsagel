@@ -8,11 +8,11 @@ const OUT_FILE = path.join(ROOT, "src", "data", "xlsx-attr-schemas.json");
 const STRUCT_DIR = path.join(ROOT, "src", "data", "xlsx-structures");
 
 const CATEGORY_FILES = [
-  { file: "EMLAK kategori çalışması en son.xlsx", categorySlug: "emlak" },
+  { file: "EMLAK kategori çalışması en son.xlsx", categorySlug: "emlak", structureJson: "../../../scripts/emlak-structure.json" },
   { file: "VASITA KATEGORİ ÇALIŞMASI.xlsx", categorySlug: "vasita" },
-  { file: "Yedek Parça, Aksesuar, Donanım & Tuning.xlsx", categorySlug: "yedek-parca-aksesuar-donanim-tuning" },
-  { file: "İkinci El ve Sıfır Alışveriş.xlsx", categorySlug: "alisveris" },
-  { file: "İş Makineleri & Sanayi.xlsx", categorySlug: "is-makineleri-sanayi" },
+  { file: "Yedek Parça, Aksesuar, Donanım & Tuning.xlsx", categorySlug: "yedek-parca-aksesuar-donanim-tuning", structureJson: "../yedek-parca-structure.json" },
+  { file: "İkinci El ve Sıfır Alışveriş.xlsx", categorySlug: "alisveris", structureJson: "../alisveris-structure.json" },
+  { file: "İş Makineleri & Sanayi.xlsx", categorySlug: "is-makineleri-sanayi", structureJson: "../sanayi-structure.json" },
   { file: "İş Arayanlar.xlsx", categorySlug: "is-ilanlari", structureJson: "is-arayanlar.json" },
   { file: "Özel Ders Arayanlar.xlsx", categorySlug: "ozel-ders-arayanlar", structureJson: "ozel-ders-arayanlar.json" },
   { file: "Yardımcı Arayanlar.xlsx", categorySlug: "yardimci-arayanlar", structureJson: "yardimci-arayanlar.json" },
@@ -72,7 +72,8 @@ function readRows(fileName) {
 
 function findAttrStart(headerRow) {
   const normalized = headerRow.map((c) => norm(c));
-  return normalized.findIndex((c) => c === norm("Aradığınız Ürünün Özellikleri"));
+  const needle = norm("Aradığınız Ürünün Özellikleri");
+  return normalized.findIndex((c) => c && c.includes(needle));
 }
 
 function loadStructure(structureJson) {
@@ -102,45 +103,103 @@ function resolveFullSlugFromStructure(struct, pathParts) {
     if (!node) return null;
     current = node.subcategories || [];
   }
-  return node?.fullSlug || null;
+  return node?.fullSlug || node?.slug || null;
+}
+
+function resolveSubKeyForVasita(pathParts) {
+  if (!Array.isArray(pathParts) || pathParts.length === 0) return null;
+
+  const ticariChildren = [
+    { name: "Minibüs & Midibüs", slug: "ticari-araclar-minibus-midibus" },
+    { name: "Otobüs", slug: "ticari-araclar-otobus" },
+    { name: "Kamyon & Kamyonet", slug: "ticari-araclar-kamyon-kamyonet" },
+    { name: "Çekici", slug: "ticari-araclar-cekici" },
+    { name: "Dorse", slug: "ticari-araclar-dorse" },
+    { name: "Römork", slug: "ticari-araclar-romork" },
+    { name: "Karoser & Üst Yapı", slug: "ticari-araclar-karoser-ust-yapi" },
+    { name: "Oto Kurtarıcı & Taşıyıcı", slug: "ticari-araclar-oto-kurtarici-tasiyici" },
+    { name: "Ticari Hat & Ticari Plaka", slug: "ticari-araclar-ticari-hat-ticari-plaka" },
+  ];
+
+  const topLevel = [
+    { name: "Otomobil", slug: "otomobil" },
+    { name: "Arazi, SUV & Pickup", slug: "arazi-suv-pickup" },
+    { name: "Motosiklet", slug: "motosiklet" },
+    { name: "Minivan & Panelvan", slug: "minivan-panelvan" },
+    { name: "Ticari Araçlar", slug: "ticari-araclar" },
+    { name: "Kiralık Araçlar", slug: "kiralik-araclar" },
+    { name: "Deniz Araçları", slug: "deniz-araclari" },
+    { name: "Hasarlı Araçlar", slug: "hasarli-araclar" },
+    { name: "Karavan", slug: "karavan" },
+    { name: "Klasik Araçlar", slug: "klasik-araclar" },
+    { name: "Hava Araçları", slug: "hava-araclari" },
+    { name: "ATV", slug: "atv" },
+    { name: "UTV", slug: "utv" },
+    { name: "Engelli Plakalı Araçlar", slug: "engelli-plakali-araclar" },
+  ];
+
+  const isMatch = (part, entry) => {
+    const p = norm(part);
+    if (!p) return false;
+    if (p === norm(entry.name)) return true;
+    if (p === norm(entry.slug)) return true;
+    if (p.includes(norm(entry.name)) || norm(entry.name).includes(p)) return true;
+    return false;
+  };
+
+  for (const part of pathParts) {
+    for (const entry of ticariChildren) {
+      if (isMatch(part, entry)) return entry.slug;
+    }
+  }
+
+  for (const part of pathParts) {
+    for (const entry of topLevel) {
+      if (isMatch(part, entry)) return entry.slug;
+    }
+  }
+
+  return null;
 }
 
 function ensureSchemaStore(store, key) {
-  if (!store[key]) store[key] = new Map();
+  if (!store[key]) store[key] = { fields: new Map(), order: 0 };
   return store[key];
 }
 
-function addField(fieldsMap, label, option) {
+function addField(entry, label, option) {
   const cleanLabel = String(label || "").trim();
   if (!cleanLabel) return;
   const id = norm(cleanLabel);
-  if (!fieldsMap.has(id)) {
-    fieldsMap.set(id, {
+  if (!entry.fields.has(id)) {
+    entry.fields.set(id, {
       label: cleanLabel,
       key: slugify(cleanLabel),
       options: new Set(),
       range: false,
+      order: entry.order++,
     });
   }
-  const field = fieldsMap.get(id);
+  const field = entry.fields.get(id);
   const cleanOpt = String(option || "").trim();
   if (cleanOpt) field.options.add(cleanOpt);
 }
 
-function addRangeField(fieldsMap, baseLabel) {
+function addRangeField(entry, baseLabel) {
   const cleanBase = String(baseLabel || "").trim();
   if (!cleanBase) return;
   const id = norm(cleanBase);
-  if (!fieldsMap.has(id)) {
-    fieldsMap.set(id, {
+  if (!entry.fields.has(id)) {
+    entry.fields.set(id, {
       label: cleanBase,
       key: baseKeyFromLabel(cleanBase),
       options: new Set(),
       range: true,
+      order: entry.order++,
     });
     return;
   }
-  const field = fieldsMap.get(id);
+  const field = entry.fields.get(id);
   field.label = cleanBase;
   field.key = baseKeyFromLabel(cleanBase);
   field.range = true;
@@ -182,9 +241,10 @@ function toAttrFieldArray(fieldsMap) {
     }
     const gKey = norm(split.baseLabel);
     if (!rangeGroups.has(gKey)) {
-      rangeGroups.set(gKey, { baseLabel: split.baseLabel, min: null, max: null });
+      rangeGroups.set(gKey, { baseLabel: split.baseLabel, min: null, max: null, order: f.order ?? 0 });
     }
     const g = rangeGroups.get(gKey);
+    if (typeof f.order === "number" && f.order < g.order) g.order = f.order;
     if (split.side === "min") g.min = f;
     else if (split.side === "max") g.max = f;
     else normal.push(f);
@@ -196,13 +256,16 @@ function toAttrFieldArray(fieldsMap) {
     if (!f.range) continue;
     const baseKey = baseKeyFromLabel(f.label);
     arr.push({
-      label: f.label,
-      key: baseKey,
-      type: "range-number",
-      minKey: `${baseKey}Min`,
-      maxKey: `${baseKey}Max`,
-      minLabel: "Min",
-      maxLabel: "Max",
+      order: f.order ?? 0,
+      field: {
+        label: f.label,
+        key: baseKey,
+        type: "range-number",
+        minKey: `${baseKey}Min`,
+        maxKey: `${baseKey}Max`,
+        minLabel: "Min",
+        maxLabel: "Max",
+      },
     });
   }
 
@@ -210,13 +273,16 @@ function toAttrFieldArray(fieldsMap) {
     if (g.min && g.max) {
       const baseKey = baseKeyFromLabel(g.baseLabel);
       arr.push({
-        label: g.baseLabel,
-        key: baseKey,
-        type: "range-number",
-        minKey: `${baseKey}Min`,
-        maxKey: `${baseKey}Max`,
-        minLabel: "Min",
-        maxLabel: "Max",
+        order: g.order ?? 0,
+        field: {
+          label: g.baseLabel,
+          key: baseKey,
+          type: "range-number",
+          minKey: `${baseKey}Min`,
+          maxKey: `${baseKey}Max`,
+          minLabel: "Min",
+          maxLabel: "Max",
+        },
       });
     } else {
       if (g.min) normal.push(g.min);
@@ -228,14 +294,14 @@ function toAttrFieldArray(fieldsMap) {
     const options = Array.from(f.options);
     options.sort((a, b) => a.localeCompare(b, "tr"));
     if (options.length > 0) {
-      arr.push({ label: f.label, key: f.key, type: "select", options });
+      arr.push({ order: f.order ?? 0, field: { label: f.label, key: f.key, type: "select", options } });
     } else {
-      arr.push({ label: f.label, key: f.key, type: "text" });
+      arr.push({ order: f.order ?? 0, field: { label: f.label, key: f.key, type: "text" } });
     }
   }
 
-  arr.sort((a, b) => String(a.label).localeCompare(String(b.label), "tr"));
-  return arr;
+  arr.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  return arr.map((item) => item.field);
 }
 
 function buildSchemas() {
@@ -271,7 +337,9 @@ function buildSchemas() {
       if (!label) continue;
 
       let subKey = null;
-      if (struct) {
+      if (cfg.categorySlug === "vasita") {
+        subKey = resolveSubKeyForVasita(pathParts);
+      } else if (struct) {
         subKey = resolveFullSlugFromStructure(struct, pathParts);
       } else if (pathParts.length > 0) {
         subKey = pathParts.map(slugify).join("/");
@@ -286,23 +354,37 @@ function buildSchemas() {
       }
 
       for (const key of keys) {
-        const fieldsMap = ensureSchemaStore(store, key);
+        const entry = ensureSchemaStore(store, key);
         const maybeMin = String(attrCells?.[attrCells.length - 2] || "").trim();
         const maybeMax = String(attrCells?.[attrCells.length - 1] || "").trim();
         const sMin = splitMinMaxSuffix(maybeMin);
         const sMax = splitMinMaxSuffix(maybeMax);
-        if (attrCells.length === 2 && sMin && sMax && sMin.side === "min" && sMax.side === "max" && norm(sMin.baseLabel) === norm(sMax.baseLabel)) {
-          addRangeField(fieldsMap, sMin.baseLabel);
+        if (attrCells.length >= 2 && sMin && sMax && sMin.side === "min" && sMax.side === "max") {
+          const minBase = norm(sMin.baseLabel);
+          const maxBase = norm(sMax.baseLabel);
+          let baseLabel = null;
+          if (minBase === maxBase) {
+            baseLabel = sMin.baseLabel;
+          } else if (minBase.includes(maxBase)) {
+            baseLabel = sMin.baseLabel;
+          } else if (maxBase.includes(minBase)) {
+            baseLabel = sMax.baseLabel;
+          }
+          if (baseLabel) {
+            addRangeField(entry, baseLabel);
+          } else {
+            addField(entry, label, option);
+          }
         } else {
-          addField(fieldsMap, label, option);
+          addField(entry, label, option);
         }
       }
     }
   }
 
   const out = {};
-  for (const [key, fieldsMap] of Object.entries(store)) {
-    out[key] = toAttrFieldArray(fieldsMap);
+  for (const [key, entry] of Object.entries(store)) {
+    out[key] = toAttrFieldArray(entry.fields);
   }
 
   return out;

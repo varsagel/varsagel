@@ -61,13 +61,13 @@ export default function Footer() {
             <h3 className="font-semibold text-white mb-6">Destek & Yardım</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="text-slate-400 hover:text-cyan-400 hover:pl-1 transition-all duration-200">Nasıl Çalışır?</a>
+                <Link href="/sss" className="text-slate-400 hover:text-cyan-400 hover:pl-1 transition-all duration-200">Nasıl Çalışır?</Link>
               </li>
               <li>
                 <Link href="/sss" className="text-slate-400 hover:text-cyan-400 hover:pl-1 transition-all duration-200">Sıkça Sorulan Sorular</Link>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-cyan-400 hover:pl-1 transition-all duration-200">Güvenlik İpuçları</a>
+                <Link href="/sss" className="text-slate-400 hover:text-cyan-400 hover:pl-1 transition-all duration-200">Güvenlik İpuçları</Link>
               </li>
               <li>
                 <Link href="/iletisim" className="text-slate-400 hover:text-cyan-400 hover:pl-1 transition-all duration-200">İletişim</Link>

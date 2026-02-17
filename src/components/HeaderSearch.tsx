@@ -21,6 +21,8 @@ type TalepMatch = {
   code: string;
 };
 
+const SEARCH_PLACEHOLDER = "Kelime veya Talep No (6/9 hane) ile ara…";
+
 function useDebouncedValue<T>(value: T, delayMs: number) {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -39,8 +41,8 @@ function parseTalepNoCandidate(input: string) {
   if (!s) return { digits: null as string | null, exact: false };
   if (s.startsWith("#")) s = s.slice(1);
   if (/^t\d+$/i.test(s)) s = s.slice(1);
-  if (!/^\d{1,6}$/.test(s)) return { digits: null as string | null, exact: false };
-  return { digits: s, exact: s.length === 6 };
+  if (!/^\d{1,9}$/.test(s)) return { digits: null as string | null, exact: false };
+  return { digits: s, exact: s.length === 6 || s.length === 9 };
 }
 
 function renderHighlighted(text: string, needle: string) {
@@ -93,7 +95,6 @@ export default function HeaderSearch({ mode = "full" }: { mode?: SearchMode }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const initialQ = useMemo(() => normalizeQuery(searchParams.get("q") || ""), [searchParams]);
-  const defaultCategorySlug = useMemo(() => CATEGORIES[0]?.slug || "", []);
 
   const [query, setQuery] = useState(initialQ);
   const [open, setOpen] = useState(false);
@@ -104,6 +105,7 @@ export default function HeaderSearch({ mode = "full" }: { mode?: SearchMode }) {
   const [talepNotFound, setTalepNotFound] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [recent, setRecent] = useState<string[]>([]);
+  const defaultCategorySlug = CATEGORIES[0]?.slug || "";
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -119,6 +121,7 @@ export default function HeaderSearch({ mode = "full" }: { mode?: SearchMode }) {
   useEffect(() => {
     setRecent(readRecent());
   }, []);
+
 
   useEffect(() => {
     if (!open) return;
@@ -262,7 +265,7 @@ export default function HeaderSearch({ mode = "full" }: { mode?: SearchMode }) {
       if (!talepMatch && !talepNotFound) out.push({ kind: "talepNo", code: talepCandidate.digits });
     } else if (showTalepNo && talepCandidate.digits) {
       out.push({ kind: "section", label: "Talep No" });
-      out.push({ kind: "hint", label: "Talep No için 6 hane girin (örn. 123456)." });
+      out.push({ kind: "hint", label: "Talep No için 6 veya 9 hane girin (örn. 123456789)." });
     }
 
     if (!exactTalepNo && listings.length > 0) {
@@ -278,7 +281,7 @@ export default function HeaderSearch({ mode = "full" }: { mode?: SearchMode }) {
         out.push({ kind: "section", label: "Son aramalar", action: "clearRecent" });
         recent.slice(0, 6).forEach((q) => out.push({ kind: "recent", q }));
       } else {
-        out.push({ kind: "hint", label: "Kelime veya 6 haneli Talep No yazın." });
+        out.push({ kind: "hint", label: "Kelime veya 6/9 haneli Talep No yazın." });
       }
     }
 
@@ -335,10 +338,11 @@ export default function HeaderSearch({ mode = "full" }: { mode?: SearchMode }) {
       }
     }
 
+    const fallbackCategoryPath = defaultCategorySlug ? `/kategori/${defaultCategorySlug}` : "/";
     const basePath = pathname.startsWith("/kategori/") && pathname.length > 9
       ? pathname
-      : defaultCategorySlug
-        ? `/kategori/${defaultCategorySlug}`
+      : pathname === "/"
+        ? fallbackCategoryPath
         : "/";
     const params = new URLSearchParams();
     params.set("q", q);
@@ -411,7 +415,8 @@ export default function HeaderSearch({ mode = "full" }: { mode?: SearchMode }) {
             setSelectedIndex(-1);
           }}
           onKeyDown={onKeyDown}
-          placeholder="Kelime veya Talep No (6 hane) ile ara…"
+          placeholder={SEARCH_PLACEHOLDER}
+          suppressHydrationWarning
           className="w-full h-10 bg-transparent outline-none text-sm text-gray-800 placeholder:text-gray-400 pr-2"
           inputMode={showTalepNo ? "numeric" : "text"}
         />

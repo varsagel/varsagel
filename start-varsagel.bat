@@ -64,6 +64,13 @@ echo Syncing Database...
 echo [%date% %time%] Prisma db push >> "%LOGFILE%"
 call npx prisma db push
 
+if exist ".next\static" (
+  echo Backing up existing Next.js static assets...
+  echo [%date% %time%] Backup .next\static >> "%LOGFILE%"
+  if exist ".next-static-prev" rmdir /S /Q ".next-static-prev"
+  xcopy ".next\static" ".next-static-prev" /E /I /Y >nul
+)
+
 echo Building Next.js app...
 set NODE_ENV=production
 set NEXTAUTH_URL=https://www.varsagel.com

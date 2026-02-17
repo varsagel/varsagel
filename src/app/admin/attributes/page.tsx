@@ -350,7 +350,7 @@ export default function AdminAttributesPage() {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="flex flex-col md:flex-row gap-3 md:items-end">
-          <div>
+          <div className="w-full md:w-auto">
             <label className="block text-xs font-medium text-gray-600 mb-1">Kategori</label>
             <div className="relative">
               <select
@@ -359,7 +359,7 @@ export default function AdminAttributesPage() {
                   setFilterCategoryId(e.target.value);
                   setFilterSubCategoryId("");
                 }}
-                className="block w-56 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="block w-full md:w-56 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               >
                 <option value="">Tüm kategoriler</option>
                 {categories.map((c) => (
@@ -371,14 +371,14 @@ export default function AdminAttributesPage() {
               <Filter className="w-4 h-4 text-gray-400 absolute right-3 top-2.5" />
             </div>
           </div>
-          <div>
+          <div className="w-full md:w-auto">
             <label className="block text-xs font-medium text-gray-600 mb-1">Alt kategori</label>
             <div className="relative">
               <select
                 value={filterSubCategoryId}
                 onChange={(e) => setFilterSubCategoryId(e.target.value)}
                 disabled={!filterCategoryId}
-                className="block w-56 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:bg-gray-100 disabled:text-gray-400"
+                className="block w-full md:w-56 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:bg-gray-100 disabled:text-gray-400"
               >
                 <option value="">Tüm alt kategoriler</option>
                 {subcategoriesForFilter.map((s) => (
@@ -407,90 +407,92 @@ export default function AdminAttributesPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs uppercase font-semibold">
-            <tr>
-              <th className="px-6 py-3">Özellik Adı</th>
-              <th className="px-6 py-3">Slug</th>
-              <th className="px-6 py-3">Tip</th>
-              <th className="px-6 py-3">Kategori</th>
-              <th className="px-6 py-3">Alt Kategori</th>
-              <th className="px-6 py-3">Zorunlu</th>
-              <th className="px-6 py-3 text-right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {loading ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs uppercase font-semibold">
               <tr>
-                <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                  Yükleniyor...
-                </td>
+                <th className="px-6 py-3">Özellik Adı</th>
+                <th className="px-6 py-3">Slug</th>
+                <th className="px-6 py-3">Tip</th>
+                <th className="px-6 py-3">Kategori</th>
+                <th className="px-6 py-3">Alt Kategori</th>
+                <th className="px-6 py-3">Zorunlu</th>
+                <th className="px-6 py-3 text-right">İşlemler</th>
               </tr>
-            ) : filteredAttributes.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                  Seçili filtrelere uygun özellik bulunamadı.
-                </td>
-              </tr>
-            ) : (
-              filteredAttributes.map((attr) => {
-                const catName = attr.category?.name || categories.find((c) => c.id === attr.categoryId)?.name || "-";
-                const subName =
-                  attr.subCategory?.name ||
-                  categories
-                    .find((c) => c.id === attr.categoryId)
-                    ?.subcategories.find((s) => s.id === attr.subCategoryId)?.name ||
-                  "-";
-                const typeLabel = ATTRIBUTE_TYPES.find((t) => t.value === attr.type)?.label || attr.type;
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                    Yükleniyor...
+                  </td>
+                </tr>
+              ) : filteredAttributes.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                    Seçili filtrelere uygun özellik bulunamadı.
+                  </td>
+                </tr>
+              ) : (
+                filteredAttributes.map((attr) => {
+                  const catName = attr.category?.name || categories.find((c) => c.id === attr.categoryId)?.name || "-";
+                  const subName =
+                    attr.subCategory?.name ||
+                    categories
+                      .find((c) => c.id === attr.categoryId)
+                      ?.subcategories.find((s) => s.id === attr.subCategoryId)?.name ||
+                    "-";
+                  const typeLabel = ATTRIBUTE_TYPES.find((t) => t.value === attr.type)?.label || attr.type;
 
-                return (
-                  <tr key={attr.id} className="hover:bg-gray-50 transition-colors group">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{attr.name}</td>
-                    <td className="px-6 py-3 text-xs font-mono text-gray-500">{attr.slug}</td>
-                    <td className="px-6 py-3 text-xs text-gray-700">
-                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-semibold text-gray-700">
-                        {typeLabel}
-                      </span>
-                    </td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{catName}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{subName}</td>
-                    <td className="px-6 py-3 text-center">
-                      {attr.required ? (
-                        <span className="inline-flex items-center justify-center rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700">
-                          Evet
+                  return (
+                    <tr key={attr.id} className="hover:bg-gray-50 transition-colors group">
+                      <td className="px-6 py-3 text-sm font-medium text-gray-900">{attr.name}</td>
+                      <td className="px-6 py-3 text-xs font-mono text-gray-500">{attr.slug}</td>
+                      <td className="px-6 py-3 text-xs text-gray-700">
+                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-semibold text-gray-700">
+                          {typeLabel}
                         </span>
-                      ) : (
-                        <span className="inline-flex items-center justify-center rounded-full bg-gray-50 px-2 py-0.5 text-[11px] font-semibold text-gray-500">
-                          Hayır
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          type="button"
-                          onClick={() => openEdit(attr)}
-                          className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
-                          title="Düzenle"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(attr)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                          title="Sil"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+                      </td>
+                      <td className="px-6 py-3 text-sm text-gray-700">{catName}</td>
+                      <td className="px-6 py-3 text-sm text-gray-700">{subName}</td>
+                      <td className="px-6 py-3 text-center">
+                        {attr.required ? (
+                          <span className="inline-flex items-center justify-center rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700">
+                            Evet
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center justify-center rounded-full bg-gray-50 px-2 py-0.5 text-[11px] font-semibold text-gray-500">
+                            Hayır
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            type="button"
+                            onClick={() => openEdit(attr)}
+                            className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
+                            title="Düzenle"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(attr)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                            title="Sil"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {showCreate && (
@@ -845,4 +847,3 @@ export default function AdminAttributesPage() {
     </div>
   );
 }
-

@@ -6,6 +6,12 @@ const manualData = require('./data/manual-vehicle-data.js');
 const DATA_FULL_PATH = path.join(__dirname, '../sahibinden_data_full.xlsx');
 const DATA_OTHERS_PATH = path.join(__dirname, '../sahibinden_data_others.xlsx');
 const OUTPUT_PATH = path.join(__dirname, '../src/data/vehicle-hierarchy.json');
+const SATARIZ_CSV = process.argv.includes('--satarizCsv')
+    ? path.resolve(process.cwd(), process.argv[process.argv.indexOf('--satarizCsv') + 1] || '')
+    : '';
+const SATARIZ_DIR = process.argv.includes('--satarizDir')
+    ? path.resolve(process.cwd(), process.argv[process.argv.indexOf('--satarizDir') + 1] || '')
+    : '';
 
 // Hierarchy Structure:
 // {
@@ -38,6 +44,107 @@ function clean(str) {
     return str ? str.toString().trim() : '';
 }
 
+function parseCsvLine(line) {
+    const res = [];
+    let cur = '';
+    let inQuote = false;
+    for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') {
+            if (inQuote && line[i + 1] === '"') {
+                cur += '"';
+                i++;
+            } else {
+                inQuote = !inQuote;
+            }
+        } else if (c === ',' && !inQuote) {
+            res.push(cur);
+            cur = '';
+        } else {
+            cur += c;
+        }
+    }
+    res.push(cur);
+    return res;
+}
+
+const TICARI_SUBCATEGORIES = new Set([
+    'Minibüs & Midibüs',
+    'Otobüs',
+    'Kamyon & Kamyonet',
+    'Çekici',
+    'Dorse',
+    'Römork',
+    'Karoser & Üst Yapı',
+    'Oto Kurtarıcı & Taşıyıcı',
+    'Ticari Hat & Ticari Plaka'
+]);
+
+function normalizeSatarizRow(subcategory, brand, model, series, paket) {
+    const cat = clean(subcategory).toLowerCase();
+    const isTicari = cat === 'ticari araçlar' || cat === 'ticari araclar';
+    const subcat = clean(brand);
+    if (isTicari && TICARI_SUBCATEGORIES.has(subcat)) {
+        return {
+            subcategory,
+            brand: model,
+            model: series,
+            series: paket,
+            paket: ''
+        };
+    }
+    return { subcategory, brand, model, series, paket };
+}
+
+function addRow(target, brand, model, series, paket) {
+    const finalBrand = clean(brand) || 'Genel';
+    const finalModel = clean(model) || 'Genel';
+    const seriKey = clean(series) || 'Genel';
+    const finalPaket = clean(paket);
+    if (!target[finalBrand]) target[finalBrand] = {};
+    if (!target[finalBrand][finalModel]) target[finalBrand][finalModel] = {};
+    if (!target[finalBrand][finalModel][seriKey]) target[finalBrand][finalModel][seriKey] = [];
+    if (finalPaket && !target[finalBrand][finalModel][seriKey].includes(finalPaket)) {
+        target[finalBrand][finalModel][seriKey].push(finalPaket);
+    }
+}
+
+function mapSatarizCategory(label) {
+    const v = clean(label).toLowerCase();
+    if (v === 'araç' || v === 'arac') return hierarchy.otomobil;
+    if (v === 'motosiklet') return hierarchy.motosiklet;
+    if (v === 'ticari araçlar' || v === 'ticari araclar') return hierarchy.ticari;
+    if (v === 'kiralık araçlar' || v === 'kiralik araclar') return hierarchy.kiralik;
+    if (v === 'karavan') return hierarchy.karavan;
+    if (v === 'deniz araçları' || v === 'deniz araclari') return hierarchy.deniz;
+    if (v === 'hava araçları' || v === 'hava araclari') return hierarchy.hava;
+    if (v === 'klasik araçlar' || v === 'klasik araclar') return hierarchy.otomobil;
+    if (v === 'hasarlı araçlar' || v === 'hasarli araclar') return hierarchy.others;
+    return hierarchy.others;
+}
+
+if (SATARIZ_DIR && fs.existsSync(SATARIZ_DIR)) {
+    const files = fs.readdirSync(SATARIZ_DIR).filter(f => f.endsWith('.csv') && !f.endsWith('all.csv'));
+    files.forEach(file => {
+        const raw = fs.readFileSync(path.join(SATARIZ_DIR, file), 'utf-8');
+        const lines = raw.split(/\r?\n/).filter(Boolean);
+        lines.slice(1).forEach(line => {
+            const [subcategory, brand, model, series, paket] = parseCsvLine(line).map(clean);
+            const normalized = normalizeSatarizRow(subcategory, brand, model, series, paket);
+            const target = mapSatarizCategory(normalized.subcategory);
+            addRow(target, normalized.brand, normalized.model, normalized.series, normalized.paket);
+        });
+    });
+} else if (SATARIZ_CSV && fs.existsSync(SATARIZ_CSV)) {
+    const raw = fs.readFileSync(SATARIZ_CSV, 'utf-8');
+    const lines = raw.split(/\r?\n/).filter(Boolean);
+    lines.slice(1).forEach(line => {
+        const [subcategory, brand, model, series, paket] = parseCsvLine(line).map(clean);
+        const normalized = normalizeSatarizRow(subcategory, brand, model, series, paket);
+        const target = mapSatarizCategory(normalized.subcategory);
+        addRow(target, normalized.brand, normalized.model, normalized.series, normalized.paket);
+    });
+} else {
 // 1. Process Cars (Full Data)
 if (fs.existsSync(DATA_FULL_PATH)) {
     console.log('Processing Cars Data...');
@@ -196,6 +303,7 @@ kiralikSources.forEach(source => {
         }
     }
 });
+}
 
 const dir = path.dirname(OUTPUT_PATH);
 if (!fs.existsSync(dir)) {

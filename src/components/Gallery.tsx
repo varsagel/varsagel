@@ -1,26 +1,63 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react";
 
 export default function Gallery({ images, alt }: { images: string[]; alt: string }) {
   const [current, setCurrent] = useState(0);
   const [open, setOpen] = useState(false);
+  const [forcedSrc, setForcedSrc] = useState<string | null>(null);
+
+  const normalizeImageSrc = (src: string) => {
+    const value = String(src || "").trim();
+    if (!value) return value;
+    if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  };
+
+  const safeImages = useMemo(() => {
+    const list = Array.isArray(images) ? images : [];
+    const normalized = list
+      .map((src) => normalizeImageSrc(src))
+      .filter((src) => {
+        const value = String(src || "").trim();
+        if (!value) return false;
+        const lower = value.toLowerCase();
+        if (lower.includes("placeholder-image.jpg")) return false;
+        if (lower.includes("/images/placeholder-1.svg")) return false;
+        if (lower.startsWith("data:image/svg")) return false;
+        if (/\.svg($|\?)/i.test(value)) return false;
+        return true;
+      });
+    return normalized.length > 0 ? normalized : ["/images/subcategories/Emlak.webp"];
+  }, [images]);
 
   // Keyboard navigation
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!open) return;
       if (e.key === "Escape") setOpen(false);
-      if (e.key === "ArrowRight") setCurrent((c) => Math.min(c + 1, images.length - 1));
+      if (e.key === "ArrowRight") setCurrent((c) => Math.min(c + 1, safeImages.length - 1));
       if (e.key === "ArrowLeft") setCurrent((c) => Math.max(c - 1, 0));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, images.length]);
+  }, [open, safeImages.length]);
 
-  const mainSrc = images[current] || "/images/placeholder-1.svg";
+  useEffect(() => {
+    if (current >= safeImages.length) setCurrent(0);
+  }, [current, safeImages.length]);
+
+  useEffect(() => {
+    setForcedSrc(null);
+  }, [current, safeImages.length]);
+
+  const mainSrc = forcedSrc || safeImages[current] || "/images/subcategories/Emlak.webp";
   const isS3Image = (src: string) => {
     if (!/^https?:\/\//i.test(src)) return false;
     try {
@@ -40,17 +77,18 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
   const mainUnoptimized =
     /\.jfif($|\?)/i.test(mainSrc) ||
     /\.jif($|\?)/i.test(mainSrc) ||
+    mainSrc.startsWith("data:") ||
     isS3Image(mainSrc) ||
     isCloudFrontImage(mainSrc);
 
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrent((c) => (c + 1) % images.length);
+    setCurrent((c) => (c + 1) % safeImages.length);
   };
 
   const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrent((c) => (c - 1 + images.length) % images.length);
+    setCurrent((c) => (c - 1 + safeImages.length) % safeImages.length);
   };
 
   return (
@@ -67,6 +105,9 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
           className="object-contain p-2"
           priority
           unoptimized={mainUnoptimized}
+          onError={() => {
+            if (mainSrc !== "/images/subcategories/Emlak.webp") setForcedSrc("/images/subcategories/Emlak.webp");
+          }}
         />
         
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -75,7 +116,7 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
           </div>
         </div>
 
-        {images.length > 1 && (
+        {safeImages.length > 1 && (
           <>
             <button 
               onClick={handlePrev}
@@ -93,14 +134,16 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
         )}
 
         <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/50 text-white text-sm rounded-full backdrop-blur-md">
-          {current + 1} / {images.length}
+          {current + 1} / {safeImages.length}
         </div>
       </div>
 
       {/* Thumbnails */}
-      {images.length > 1 && (
+      {safeImages.length > 1 && (
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {images.map((src, i) => (
+          {safeImages.map((src, i) => {
+            const displaySrc = normalizeImageSrc(src);
+            return (
             <button
               key={`${src}-${i}`}
               className={`relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
@@ -109,14 +152,15 @@ export default function Gallery({ images, alt }: { images: string[]; alt: string
               onClick={() => setCurrent(i)}
             >
               <Image
-                src={src}
+                src={displaySrc}
                 alt={`${alt} thumbnail ${i + 1}`}
                 fill
                 className="object-cover"
-                unoptimized={/\.jfif($|\?)/i.test(src) || /\.jif($|\?)/i.test(src) || isS3Image(src) || isCloudFrontImage(src)}
+                unoptimized={/\.jfif($|\?)/i.test(displaySrc) || /\.jif($|\?)/i.test(displaySrc) || isS3Image(displaySrc) || isCloudFrontImage(displaySrc)}
               />
             </button>
-          ))}
+            );
+          })}
         </div>
       )}
 

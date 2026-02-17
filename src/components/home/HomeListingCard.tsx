@@ -10,42 +10,10 @@ const FavoriteButton = dynamic(() => import('@/components/ui/FavoriteButton'), {
   ssr: false,
   loading: () => null,
 });
-import { getSubcategoryImage } from '@/data/subcategory-images';
+import { getCategoryImage, getSubcategoryImage } from '@/data/subcategory-images';
 import BRAND_LOGOS from "@/data/brand-logos.json";
 import { listingHref } from '@/lib/listing-url';
 import { titleCaseTR } from '@/lib/title-case-tr';
-
-function formatTimeAgoLocal(createdAt: string) {
-  const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
-  const date = new Date(createdAt);
-  const diffMs = date.getTime() - Date.now();
-  const diffSeconds = Math.round(diffMs / 1000);
-  const absSeconds = Math.abs(diffSeconds);
-  if (absSeconds < 60) return rtf.format(diffSeconds, "second");
-
-  const diffMinutes = Math.round(diffSeconds / 60);
-  const absMinutes = Math.abs(diffMinutes);
-  if (absMinutes < 60) return rtf.format(diffMinutes, "minute");
-
-  const diffHours = Math.round(diffMinutes / 60);
-  const absHours = Math.abs(diffHours);
-  if (absHours < 24) return rtf.format(diffHours, "hour");
-
-  const diffDays = Math.round(diffHours / 24);
-  const absDays = Math.abs(diffDays);
-  if (absDays < 7) return rtf.format(diffDays, "day");
-
-  const diffWeeks = Math.round(diffDays / 7);
-  const absWeeks = Math.abs(diffWeeks);
-  if (absWeeks < 5) return rtf.format(diffWeeks, "week");
-
-  const diffMonths = Math.round(diffDays / 30);
-  const absMonths = Math.abs(diffMonths);
-  if (absMonths < 12) return rtf.format(diffMonths, "month");
-
-  const diffYears = Math.round(diffDays / 365);
-  return rtf.format(diffYears, "year");
-}
 
 function formatTryLocal(price: number) {
   return new Intl.NumberFormat("tr-TR", {
@@ -55,6 +23,17 @@ function formatTryLocal(price: number) {
     maximumFractionDigits: 0,
   }).format(price);
 }
+
+const normalizeImageSrc = (src: string) => {
+  const value = String(src || "").trim();
+  if (!value) return value;
+  if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
 
 export interface ListingItem {
   id: string;
@@ -108,7 +87,7 @@ function BrandBadge({ category, subcategory, attributes }: { category: string; s
   );
 }
 
-export default function HomeListingCard({ listing, priority, isAuthenticated }: { listing: ListingItem; priority?: boolean; isAuthenticated: boolean }) {
+export default function HomeListingCard({ listing, priority }: { listing: ListingItem; priority?: boolean }) {
   const href = useMemo(() => {
     return listingHref({
       id: listing.id,
@@ -120,52 +99,58 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
   }, [listing.category, listing.code, listing.id, listing.subcategory, listing.title]);
 
   const subcategoryImage = useMemo(() => {
-    return listing.subcategory ? getSubcategoryImage(listing.subcategory) : '/images/placeholder-1.svg';
-  }, [listing.subcategory]);
+    return getSubcategoryImage(listing.subcategory || "", listing.category);
+  }, [listing.category, listing.subcategory]);
+  const categoryImage = useMemo(() => getCategoryImage(listing.category), [listing.category]);
 
   const [currentSrc, setCurrentSrc] = useState(listing.images?.[0] || subcategoryImage);
+  const displaySrc = useMemo(() => normalizeImageSrc(currentSrc), [currentSrc]);
   const isRemoteImage = useMemo(() => {
-    return currentSrc.startsWith('http://') || currentSrc.startsWith('https://');
-  }, [currentSrc]);
+    return displaySrc.startsWith('http://') || displaySrc.startsWith('https://');
+  }, [displaySrc]);
   const isS3Host = useMemo(() => {
     if (!isRemoteImage) return false;
     try {
-      const host = new URL(currentSrc).hostname.toLowerCase();
+      const host = new URL(displaySrc).hostname.toLowerCase();
       return host.includes(".s3.");
     } catch {
       return false;
     }
-  }, [currentSrc, isRemoteImage]);
-  const isAllowedRemote = useMemo(() => {
+  }, [displaySrc, isRemoteImage]);
+  const isCloudFrontHost = useMemo(() => {
     if (!isRemoteImage) return false;
     try {
-      const host = new URL(currentSrc).hostname.toLowerCase();
-      return host === 'varsagel.com' || host === 'www.varsagel.com' || host === 'localhost' || host === '127.0.0.1' || isS3Host;
+      const host = new URL(displaySrc).hostname.toLowerCase();
+      return host.endsWith(".cloudfront.net");
     } catch {
       return false;
     }
-  }, [currentSrc, isRemoteImage, isS3Host]);
+  }, [displaySrc, isRemoteImage]);
+  const isAllowedRemote = useMemo(() => {
+    if (!isRemoteImage) return false;
+    try {
+      const host = new URL(displaySrc).hostname.toLowerCase();
+      return host === 'varsagel.com' || host === 'www.varsagel.com' || host === 'localhost' || host === '127.0.0.1' || isS3Host || isCloudFrontHost;
+    } catch {
+      return false;
+    }
+  }, [displaySrc, isRemoteImage, isS3Host, isCloudFrontHost]);
   const isJfifImage = useMemo(() => {
-    return /\.jfif($|\?)/i.test(currentSrc) || /\.jif($|\?)/i.test(currentSrc);
-  }, [currentSrc]);
+    return /\.jfif($|\?)/i.test(displaySrc) || /\.jif($|\?)/i.test(displaySrc);
+  }, [displaySrc]);
   useEffect(() => {
     setCurrentSrc(listing.images?.[0] || subcategoryImage);
   }, [listing.images, subcategoryImage]);
 
   const handleError = () => {
     if (currentSrc === listing.images?.[0] && currentSrc !== subcategoryImage) {
-        setCurrentSrc(subcategoryImage);
-    } else if (currentSrc === subcategoryImage) {
-        // If the default image fails (e.g. user hasn't uploaded it yet), show placeholder
-        setCurrentSrc('/images/placeholder-1.svg');
+      setCurrentSrc(subcategoryImage);
+      return;
+    }
+    if (currentSrc === subcategoryImage && currentSrc !== categoryImage) {
+      setCurrentSrc(categoryImage);
     }
   };
-  
-  const [timeAgo, setTimeAgo] = useState("");
-
-  useEffect(() => {
-    setTimeAgo(formatTimeAgoLocal(listing.createdAt));
-  }, [listing.createdAt]);
   
   const priceText = useMemo(() => {
     const minPrice = listing.attributes?.minPrice;
@@ -191,14 +176,14 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
       <Link href={href} className="block">
         <div className="relative w-full aspect-[4/3] bg-gray-100">
           <Image
-            src={currentSrc}
+            src={displaySrc}
             alt={listing.title}
             onError={handleError}
             loading={priority ? "eager" : "lazy"}
             priority={!!priority}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            unoptimized={isJfifImage || isS3Host || (isRemoteImage && !isAllowedRemote)}
+            unoptimized={isJfifImage || (isRemoteImage && !isAllowedRemote)}
             className="object-cover"
           />
           <div suppressHydrationWarning className="absolute bottom-1 left-1 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded text-[11px] font-semibold">
@@ -206,7 +191,7 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
           </div>
         </div>
       </Link>
-      <FavoriteButton listingId={listing.id} isAuthenticated={isAuthenticated} isFavorited={listing.isFavorited} />
+      <FavoriteButton listingId={listing.id} isFavorited={listing.isFavorited} />
 
       <div className="p-2.5">
         <Link href={href}>
@@ -221,10 +206,7 @@ export default function HomeListingCard({ listing, priority, isAuthenticated }: 
           </span>
         </div>
 
-        <div className="flex items-center justify-between text-[11px] text-gray-500">
-          <div className="flex items-center gap-1">
-            <span suppressHydrationWarning>{timeAgo}</span>
-          </div>
+        <div className="flex items-center justify-end text-[11px] text-gray-500">
           <div className="bg-gray-100 px-1 py-0.5 rounded text-[10px] font-medium capitalize">
             {titleCaseTR(listing.category)}
           </div>

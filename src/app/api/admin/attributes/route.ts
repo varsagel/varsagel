@@ -24,8 +24,8 @@ export async function GET(req: Request) {
     if (subCategoryId) where.subCategoryId = subCategoryId;
     if (q) {
       where.OR = [
-        { name: { contains: q, mode: "insensitive" } },
-        { slug: { contains: q, mode: "insensitive" } },
+        { name: { contains: q } },
+        { slug: { contains: q } },
       ];
     }
 

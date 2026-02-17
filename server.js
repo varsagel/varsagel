@@ -42,6 +42,7 @@ normalizeOriginEnv('NEXTAUTH_URL');
 normalizeOriginEnv('AUTH_URL');
 
 const http = require('http');
+const zlib = require('node:zlib');
 const { parse } = require('url');
 const next = require('next');
 
@@ -389,27 +390,85 @@ function serveNextStaticAsset(req, res, parsedUrl) {
   if (!pathname.startsWith('/_next/static/')) return false;
 
   const rawRelPath = pathname.slice('/_next/static/'.length);
-  let decodedRelPath = rawRelPath;
-  try {
-    decodedRelPath = decodeURIComponent(rawRelPath);
-  } catch {}
+  const decodeOnce = (value) => {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  };
+  const sanitizeRelPath = (value) => {
+    if (!value) return value;
+    return value.replace(/\)+$/g, '');
+  };
+  const normalizeRelPath = (value) => {
+    if (!value) return value;
+    let next = sanitizeRelPath(value);
+    next = next.replace(/%5B/gi, '[').replace(/%5D/gi, ']');
+    next = next.replace(/%29/gi, ')');
+    return next;
+  };
 
+  const rawBase = sanitizeRelPath(rawRelPath);
+  const decodedOnce = decodeOnce(rawBase);
+  const decodedTwice = decodeOnce(decodedOnce);
   const relPathCandidates = [];
-  if (decodedRelPath) relPathCandidates.push(decodedRelPath);
-  if (rawRelPath && rawRelPath !== decodedRelPath) relPathCandidates.push(rawRelPath);
+  const addRelPath = (value) => {
+    if (!value) return;
+    const next = value.trim();
+    if (!next) return;
+    if (!relPathCandidates.includes(next)) relPathCandidates.push(next);
+  };
 
-  const serveFile = (fp) => {
+  addRelPath(rawBase);
+  addRelPath(decodedOnce);
+  addRelPath(decodedTwice);
+  addRelPath(normalizeRelPath(rawBase));
+  addRelPath(normalizeRelPath(decodedOnce));
+  addRelPath(normalizeRelPath(decodedTwice));
+
+  const primaryRelPath =
+    normalizeRelPath(decodedTwice) ||
+    normalizeRelPath(decodedOnce) ||
+    decodedTwice ||
+    decodedOnce ||
+    rawBase;
+
+  if (primaryRelPath && !primaryRelPath.includes('/')) {
+    if (primaryRelPath.endsWith('.css')) {
+      relPathCandidates.push(`css/${primaryRelPath}`);
+    } else if (primaryRelPath.endsWith('.js')) {
+      relPathCandidates.push(`chunks/${primaryRelPath}`);
+    }
+  }
+
+  const serveFile = (fp, req) => {
     const ext = path.extname(fp).toLowerCase();
     const contentType = MIME_BY_EXT[ext] || 'application/octet-stream';
     const stat = fs.statSync(fp);
     const stream = fs.createReadStream(fp);
+    const acceptsEncoding = String(req.headers['accept-encoding'] || '');
+    const isCompressible = /^(text\/|application\/(javascript|json|xml|xhtml\+xml)|image\/svg\+xml)/i.test(contentType);
+    const shouldCompress = isCompressible && stat.size > 1024;
+    let compression = null;
+    if (shouldCompress && /\bbr\b/i.test(acceptsEncoding)) {
+      compression = { encoding: 'br', stream: zlib.createBrotliCompress() };
+    } else if (shouldCompress && /\bgzip\b/i.test(acceptsEncoding)) {
+      compression = { encoding: 'gzip', stream: zlib.createGzip() };
+    }
 
-    res.writeHead(200, {
+    const headers = {
       'Content-Type': contentType,
       'Cache-Control': 'public, max-age=31536000, immutable',
-      'Content-Length': stat.size,
-      'Accept-Ranges': 'bytes',
-    });
+    };
+    if (compression) {
+      headers['Content-Encoding'] = compression.encoding;
+      headers['Vary'] = 'Accept-Encoding';
+    } else {
+      headers['Content-Length'] = stat.size;
+      headers['Accept-Ranges'] = 'bytes';
+    }
+    res.writeHead(200, headers);
 
     stream.on('error', () => {
       try {
@@ -423,7 +482,22 @@ function serveNextStaticAsset(req, res, parsedUrl) {
       } catch {}
     });
 
-    stream.pipe(res);
+    if (compression) {
+      compression.stream.on('error', () => {
+        try {
+          if (!res.headersSent) {
+            res.writeHead(500, {
+              'Content-Type': 'text/plain; charset=utf-8',
+              'Cache-Control': 'no-store',
+            });
+          }
+          res.end('Internal Server Error');
+        } catch {}
+      });
+      stream.pipe(compression.stream).pipe(res);
+    } else {
+      stream.pipe(res);
+    }
   };
 
   const findFallbackChunk = (baseDir, kind) => {
@@ -438,24 +512,94 @@ function serveNextStaticAsset(req, res, parsedUrl) {
     }
   };
 
+  const rootCandidates = Array.from(new Set([
+    process.cwd(),
+    path.resolve(__dirname),
+  ]));
+
   const tryServeFromRelPath = (relPath) => {
     if (relPath.includes('..')) return false;
-    const fp = path.join(process.cwd(), '.next', 'static', relPath);
-    if (!fs.existsSync(fp) || fs.statSync(fp).isDirectory()) return null;
-    serveFile(fp);
-    return true;
+    for (const root of rootCandidates) {
+      const fp = path.join(root, '.next', 'static', relPath);
+      if (!fs.existsSync(fp) || fs.statSync(fp).isDirectory()) continue;
+      serveFile(fp, req);
+      return true;
+    }
+    return null;
   };
 
-  const tryServeFallback = (relPath) => {
+  const tryServeFromBackup = (relPath) => {
     if (relPath.includes('..')) return false;
-    const kindMatch = relPath.match(/\/chunks\/app\/.+\/(page|layout)-[a-f0-9]+\.js$/i);
-    if (!kindMatch) return false;
-    const kind = kindMatch[1];
-    const baseDir = path.dirname(path.join(process.cwd(), '.next', 'static', relPath));
-    const fallback = findFallbackChunk(baseDir, kind);
-    if (!fallback) return false;
-    serveFile(fallback);
-    return true;
+    for (const root of rootCandidates) {
+      const fp = path.join(root, '.next-static-prev', relPath);
+      if (!fs.existsSync(fp) || fs.statSync(fp).isDirectory()) continue;
+      serveFile(fp, req);
+      return true;
+    }
+    return null;
+  };
+
+  const tryServeAppChunkFallback = (relPath, rootDir) => {
+    const match = relPath.match(/^(chunks\/app\/.+\/)(page|layout|template|loading|error|not-found)-[^/]+\.js$/i);
+    if (!match) return false;
+    const relDir = match[1];
+    const kind = match[2];
+    const dir = path.join(rootDir, relDir);
+    try {
+      const stat = fs.statSync(dir);
+      if (!stat.isDirectory()) return false;
+    } catch {
+      return false;
+    }
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true })
+        .filter((d) => d.isFile() && d.name.startsWith(`${kind}-`) && d.name.endsWith('.js'))
+        .map((d) => d.name);
+      if (!entries.length) return false;
+      const fp = path.join(dir, entries[0]);
+      if (!fs.existsSync(fp) || fs.statSync(fp).isDirectory()) return false;
+      serveFile(fp, req);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const tryServeFallback = (relPath, rootDir) => {
+    if (tryServeAppChunkFallback(relPath, rootDir)) return true;
+    return false;
+  };
+
+  const tryServeKategoriFallback = (rootDir, kind) => {
+    return false;
+  };
+
+  const shouldReturnReloadScript = (relPath) => {
+    return /\/chunks\/.+\.js$/i.test(relPath);
+  };
+
+  const sendReloadScript = () => {
+    const body = `(function(){try{if(typeof window!=="undefined"){var u=window.location.href;var sep=u.indexOf("?")===-1?"?":"&";if(u.indexOf("chunk-retry=")===-1){window.location.replace(u+sep+"chunk-retry="+Date.now());}else{window.location.reload();}}}catch(e){}})();`;
+    try {
+      if (!res.headersSent) {
+        res.writeHead(200, {
+          'Content-Type': 'application/javascript; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'Content-Length': Buffer.byteLength(body, 'utf8'),
+        });
+      }
+      res.end(body);
+    } catch {
+      try {
+        if (!res.headersSent) {
+          res.writeHead(500, {
+            'Content-Type': 'text/plain; charset=utf-8',
+            'Cache-Control': 'no-store',
+          });
+        }
+        res.end('Internal Server Error');
+      } catch {}
+    }
   };
 
   try {
@@ -464,7 +608,35 @@ function serveNextStaticAsset(req, res, parsedUrl) {
       if (served) return true;
     }
     for (const relPath of relPathCandidates) {
-      if (tryServeFallback(relPath)) return true;
+      const served = tryServeFromBackup(relPath);
+      if (served) return true;
+    }
+    for (const relPath of relPathCandidates) {
+      for (const root of rootCandidates) {
+        if (tryServeFallback(relPath, path.join(root, '.next', 'static'))) return true;
+      }
+    }
+    for (const relPath of relPathCandidates) {
+      for (const root of rootCandidates) {
+        if (tryServeFallback(relPath, path.join(root, '.next-static-prev'))) return true;
+      }
+    }
+
+    const maybeKategori = relPathCandidates.some((relPath) => /\/chunks\/app\/kategori\//i.test(relPath));
+    if (maybeKategori) {
+      for (const root of rootCandidates) {
+        if (tryServeKategoriFallback(path.join(root, '.next', 'static'), 'page')) return true;
+      }
+      for (const root of rootCandidates) {
+        if (tryServeKategoriFallback(path.join(root, '.next-static-prev'), 'page')) return true;
+      }
+    }
+
+    for (const relPath of relPathCandidates) {
+      if (shouldReturnReloadScript(relPath)) {
+        sendReloadScript();
+        return true;
+      }
     }
 
     try {
@@ -494,9 +666,11 @@ function serveNextStaticAsset(req, res, parsedUrl) {
 let httpsOptions = null;
 if (!dev || useHttpsInDev) {
   try {
+    const keyPath = path.join(__dirname, 'server.key');
+    const certPath = path.join(__dirname, 'server.crt');
     httpsOptions = {
-      key: fs.readFileSync('./server.key'),
-      cert: fs.readFileSync('./server.crt'),
+      key: fs.readFileSync(keyPath),
+      cert: fs.readFileSync(certPath),
     };
   } catch (e) {
     httpsOptions = null;
@@ -551,7 +725,14 @@ app.prepare().then(() => {
 
       const canonical = getCanonicalFromEnv();
       const host = getReqHostname(req);
-      if (canonical?.host && host && host !== canonical.host) {
+      const pathname = parsedUrl?.pathname || '';
+      const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '::1';
+      const shouldBypassHostRedirect =
+        isLocalHost
+        || pathname.startsWith('/uploads/')
+        || pathname.startsWith('/_next/image');
+
+      if (!shouldBypassHostRedirect && canonical?.host && host && host !== canonical.host) {
         const redirectUrl = `${canonical.protocol || 'https:'}//${canonical.host}` + (req.url || '/');
         res.writeHead(301, { Location: redirectUrl });
         res.end();
@@ -600,6 +781,11 @@ app.prepare().then(() => {
       }
       const canonical = getCanonicalFromEnv();
       const host = canonical?.host || getReqHost(req);
+      if (!host) {
+        res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Bad Request');
+        return;
+      }
       const proto = canonical?.protocol || 'https:';
       const redirectUrl = `${proto}//${host}${req.url || '/'}`;
       res.writeHead(301, { Location: redirectUrl });

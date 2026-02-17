@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 
 export const Logo = ({ className = "w-8 h-8", textClassName = "text-xl" }: { className?: string, textClassName?: string }) => {

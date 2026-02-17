@@ -37,6 +37,7 @@ const ATTRIBUTES = {
   ODA_BOLUM_SAYISI: { name: 'Oda/Bölüm Sayısı', slug: 'oda-bolum-sayisi', type: 'select', options: ['Tek Bölüm', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'] },
   AIDAT: { name: 'Aidat (TL)', slug: 'aidat', type: 'number' },
   DEPOZITO: { name: 'Depozito (TL)', slug: 'depozito', type: 'number' },
+  MAHALLE: { name: 'Mahalle', slug: 'mahalle', type: 'text' },
   
   // New Attributes
   ASANSOR: { name: 'Asansör', slug: 'asansor', type: 'boolean' },
@@ -46,7 +47,7 @@ const ATTRIBUTES = {
   REZIDANS: { name: 'Rezidans', slug: 'rezidans', type: 'boolean' },
 
   // Added based on analysis
-  ARAZI_M2: { name: 'Arazi M2', slug: 'arazi-m2', type: 'number' },
+  ARAZI_M2: { name: 'Arazi M2', slug: 'arazi-m2', type: 'range-number', minKey: 'araziM2Min', maxKey: 'araziM2Max' },
   GIRIS_YUKSEKLIGI: { name: 'Giriş Yüksekliği (m)', slug: 'giris-yuksekligi', type: 'number' },
   KISI_KAPASITESI: { name: 'Kişi Kapasitesi', slug: 'kisi-kapasitesi', type: 'number' },
   MASA_SAYISI: { name: 'Masa Sayısı', slug: 'masa-sayisi', type: 'number' },
@@ -117,6 +118,7 @@ function mapAttribute(excelName) {
   if (upper.includes('OTOPARK')) return ATTRIBUTES.OTOPARK;
   if (upper.includes('KULLANIM') || upper.includes('KİRACILI')) return ATTRIBUTES.KULLANIM_DURUMU;
   if (upper.includes('TAKAS')) return ATTRIBUTES.TAKASLI;
+  if (upper.includes('MAHALLE')) return ATTRIBUTES.MAHALLE;
   if (upper.includes('AİDAT')) return ATTRIBUTES.AIDAT;
   if (upper.includes('DEPOZİTO')) return ATTRIBUTES.DEPOZITO;
   if (upper.includes('DEVREN')) return { name: 'Devren', slug: 'devren', type: 'boolean' };
@@ -192,6 +194,15 @@ function trSlug(text) {
     .replace(/\s+/g, '-');
 }
 
+function normalizeCell(value) {
+  return value ? value.toString().trim() : '';
+}
+
+function isRangeToken(value) {
+  if (!value) return false;
+  return /\bmin\b|\bmax\b/i.test(value);
+}
+
 async function main() {
   console.log('Starting Emlak Excel Processing...');
   
@@ -225,14 +236,21 @@ async function main() {
   let currentSubCategory = null;
   let subCategoriesMap = new Map(); // slug -> { name, attributes: [] }
 
-  for (let i = 2; i < rows.length; i++) {
+  for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
     if (!row || row.length === 0) continue;
 
-    const col1 = row[1] ? row[1].toString().trim() : undefined; // Level 1 (KONUT)
-    const col2 = row[2] ? row[2].toString().trim() : undefined; // Level 2 (SATILIK)
-    const col3 = row[3] ? row[3].toString().trim() : undefined; // Level 3 (DAİRE)
-    const col4 = row[4]; // Attribute Name
+    const raw0 = normalizeCell(row[0]);
+    const shifted = raw0 && raw0.toLocaleUpperCase('tr-TR') !== 'EMLAK';
+    const baseIndex = shifted ? 0 : 1;
+
+    const col1 = normalizeCell(row[baseIndex]); // Level 1 (KONUT)
+    const col2 = normalizeCell(row[baseIndex + 1]); // Level 2 (SATILIK)
+    const col3 = normalizeCell(row[baseIndex + 2]); // Level 3 (DAİRE)
+    const col4 = normalizeCell(row[baseIndex + 3]); // Attribute Name
+    const col5 = normalizeCell(row[baseIndex + 4]);
+    const col6 = normalizeCell(row[baseIndex + 5]);
+    const col7 = normalizeCell(row[baseIndex + 6]);
     
     // Update Hierarchy
     if (col1 && col1 !== lastL1) { 
@@ -246,8 +264,33 @@ async function main() {
     // Determine Group based on Root Category (L1)
     
     let attributeName = col4;
-    let attributeOption = row[5]; // Col F
-    let attributeOptionAlt = row[6]; // Col G (for shifted range headers)
+    let optionCells = [];
+
+    if (attributeName) {
+      optionCells = [col5, col6, col7].filter(Boolean);
+    } else {
+      const attributeCandidates = [col5, col6, col7].filter(Boolean);
+      let attributeIndex = -1;
+      for (let i = 0; i < attributeCandidates.length; i++) {
+        const candidate = attributeCandidates[i];
+        if (isRangeToken(candidate)) {
+          attributeIndex = i;
+          break;
+        }
+        const mapped = mapAttribute(candidate);
+        if (mapped && !mapped.isFallback) {
+          attributeIndex = i;
+          break;
+        }
+      }
+      if (attributeIndex >= 0) {
+        attributeName = attributeCandidates[attributeIndex];
+        optionCells = attributeCandidates.slice(attributeIndex + 1);
+      } else {
+        attributeName = '';
+        optionCells = attributeCandidates;
+      }
+    }
 
     // Depth 3: L1 -> L2 -> L3
     if (col2 && col2 !== lastL2) {
@@ -293,13 +336,16 @@ async function main() {
             const attrConfig = mapAttribute(attributeName);
             if (attrConfig) {
                 // If options found in next column, add it
-                if (attributeOption) {
+                if (optionCells.length > 0) {
                     // Check if we should append options
                     // If type is range-number, usually no options, but we might check
                     if (attrConfig.type !== 'range-number' && attrConfig.type !== 'boolean') {
                         if (!attrConfig.options) attrConfig.options = [];
-                        if (!attrConfig.options.includes(attributeOption.toString())) {
-                             attrConfig.options.push(attributeOption.toString());
+                        const filteredOptions = optionCells.filter((opt) => opt && !isRangeToken(opt));
+                        for (const opt of filteredOptions) {
+                          if (!attrConfig.options.includes(opt.toString())) {
+                            attrConfig.options.push(opt.toString());
+                          }
                         }
                     }
                 }
@@ -317,39 +363,34 @@ async function main() {
                              }
                          }
                      }
-                     currentSubCategory.lastAttribute = existingAttr;
+                     if (existingAttr.type !== 'range-number' && existingAttr.type !== 'boolean') {
+                       currentSubCategory.lastAttribute = existingAttr;
+                     }
                 } else {
                     currentSubCategory.attributes.push(attrConfig);
-                    currentSubCategory.lastAttribute = attrConfig;
-                }
-            }
-        } else if (attributeOption || attributeOptionAlt) {
-            // col4 is empty, check col5 (attributeOption) or col6 (attributeOptionAlt)
-            
-            // 1. Try to detect Range Attribute (e.g. "m2 min", "Ada No Min") in either Col 5 or Col 6
-            let rangeAttr = detectRangeAttribute(attributeOption);
-            if (!rangeAttr) rangeAttr = detectRangeAttribute(attributeOptionAlt);
-
-            if (rangeAttr) {
-                // It is a range attribute!
-                // Check if already exists
-                let existingAttr = currentSubCategory.attributes.find(a => a.slug === rangeAttr.slug);
-                if (!existingAttr) {
-                    currentSubCategory.attributes.push(rangeAttr);
-                    currentSubCategory.lastAttribute = rangeAttr;
-                }
-            } 
-            // 2. Else, assume it's an option continuation for the LAST attribute (only check Col 5 for options)
-            else if (currentSubCategory.lastAttribute && attributeOption) {
-                const lastAttr = currentSubCategory.lastAttribute;
-                if (lastAttr.type !== 'range-number' && lastAttr.type !== 'boolean') {
-                    if (!lastAttr.options) lastAttr.options = [];
-                    if (!lastAttr.options.includes(attributeOption.toString())) {
-                        lastAttr.options.push(attributeOption.toString());
+                    if (attrConfig.type !== 'range-number' && attrConfig.type !== 'boolean') {
+                      currentSubCategory.lastAttribute = attrConfig;
                     }
                 }
             }
+        } else if (optionCells.length > 0 && currentSubCategory.lastAttribute) {
+            const lastAttr = currentSubCategory.lastAttribute;
+            if (lastAttr.type !== 'range-number' && lastAttr.type !== 'boolean') {
+                if (!lastAttr.options) lastAttr.options = [];
+                const filteredOptions = optionCells.filter((opt) => opt && !isRangeToken(opt));
+                for (const opt of filteredOptions) {
+                  if (!lastAttr.options.includes(opt.toString())) {
+                      lastAttr.options.push(opt.toString());
+                  }
+                }
+            }
         }
+    }
+  }
+
+  for (const subCatData of subCategoriesMap.values()) {
+    if (!subCatData.attributes.some((attr) => attr.slug === ATTRIBUTES.MAHALLE.slug)) {
+      subCatData.attributes.push(ATTRIBUTES.MAHALLE);
     }
   }
 

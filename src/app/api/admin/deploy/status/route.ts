@@ -5,7 +5,7 @@ import { getAdminUserId } from "@/auth";
 
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const adminId = await getAdminUserId();
     if (!adminId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -14,7 +14,9 @@ export async function GET() {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const logPath = path.join(process.cwd(), "logs", "deploy.log");
+    const { searchParams } = new URL(request.url);
+    const target = searchParams.get("target") === "staging" ? "staging" : "production";
+    const logPath = path.join(process.cwd(), "logs", `deploy-${target}.log`);
 
     if (!fs.existsSync(logPath)) {
       return NextResponse.json({ logs: "No deployment logs found." });

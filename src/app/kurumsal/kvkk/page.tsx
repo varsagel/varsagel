@@ -50,7 +50,7 @@ export default function KVKKPage() {
         KVKK'nın 11. maddesi uyarınca, veri sahibi olarak; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse buna ilişkin bilgi talep etme, işlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme, yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme, eksik veya yanlış işlenmişse düzeltilmesini isteme haklarına sahipsiniz.
       </p>
 
-      <p className="text-sm text-gray-500 mt-8">
+      <p className="text-sm text-gray-600 mt-8">
         Son Güncelleme: {new Date().toLocaleDateString('tr-TR')}
       </p>
     </SozlesmeLayout>

@@ -72,7 +72,7 @@ export default function ReportModal({ isOpen, onClose, listingId, listingTitle }
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px] bg-white">
+      <DialogContent className="sm:max-w-[500px] bg-white text-gray-900 border-gray-200 shadow-2xl [color-scheme:light]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-red-600">
             <AlertTriangle className="w-5 h-5" />
@@ -81,30 +81,33 @@ export default function ReportModal({ isOpen, onClose, listingId, listingTitle }
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 py-2">
-          <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-600">
+          <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-700 border border-gray-200/70">
             <strong>Talep:</strong> {listingTitle}
           </div>
 
           <div className="space-y-3">
-            <Label>Şikayet Nedeni</Label>
+            <Label className="text-gray-700">Şikayet Nedeni</Label>
             <RadioGroup value={reason} onValueChange={setReason} className="grid grid-cols-1 gap-2">
               {REASONS.map((r) => (
-                <div key={r.id} className="flex items-center space-x-2 border p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors [&:has(:checked)]:bg-red-50 [&:has(:checked)]:border-red-200">
-                  <RadioGroupItem value={r.id} id={r.id} />
-                  <Label htmlFor={r.id} className="cursor-pointer flex-1 font-normal">{r.label}</Label>
+                <div
+                  key={r.id}
+                  className="flex items-center space-x-2 border border-gray-200 bg-white p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors text-gray-800 [&:has(:checked)]:bg-red-50 [&:has(:checked)]:border-red-300 [&:has(:checked)]:text-red-800"
+                >
+                  <RadioGroupItem value={r.id} id={r.id} className="border-gray-400 text-red-600" />
+                  <Label htmlFor={r.id} className="cursor-pointer flex-1 font-normal text-inherit">{r.label}</Label>
                 </div>
               ))}
             </RadioGroup>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="details">Ek Açıklama (İsteğe bağlı)</Label>
+            <Label htmlFor="details" className="text-gray-700">Ek Açıklama (İsteğe bağlı)</Label>
             <Textarea 
               id="details" 
               placeholder="Lütfen durumu detaylandırın..." 
               value={details}
               onChange={(e) => setDetails(e.target.value)}
-              className="min-h-[100px]"
+              className="min-h-[100px] bg-white text-gray-900 placeholder:text-gray-400 border-gray-200 focus:border-cyan-500 focus-visible:ring-cyan-500/20"
             />
           </div>
 

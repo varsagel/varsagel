@@ -8,7 +8,7 @@ type Message = { id: string; listingId: string; senderId: string; toUserId: stri
 
 export default function MessagesIndexPage() {
   const sessionData = useSession();
-  const { data: session } = sessionData || { data: null, status: "loading" };
+  const { data: session, status } = sessionData || { data: null, status: "loading" };
   const router = useRouter();
   const didMarkRef = useRef(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -16,9 +16,19 @@ export default function MessagesIndexPage() {
   const [listingInfo, setListingInfo] = useState<Record<string, any>>({});
 
   useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace(`/giris?callbackUrl=${encodeURIComponent("/mesajlar")}`);
+    }
+  }, [status, router]);
+
+  useEffect(() => {
     let active = true;
     (async () => {
       setLoading(true);
+      if (status !== "authenticated") {
+        setLoading(false);
+        return;
+      }
       try {
         const res = await fetch('/api/messages');
         if (res.ok) {
@@ -30,16 +40,16 @@ export default function MessagesIndexPage() {
       setLoading(false);
     })();
     return () => { active = false; };
-  }, []);
+  }, [status]);
 
   useEffect(() => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id || status !== "authenticated") return;
     if (didMarkRef.current) return;
     didMarkRef.current = true;
     fetch('/api/messages', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
       .then(() => router.refresh())
       .catch(() => {});
-  }, [session?.user?.id, router]);
+  }, [session?.user?.id, status, router]);
 
   // Grup by listingId AND conversation partner
   const groups = useMemo(() => {
@@ -74,6 +84,23 @@ export default function MessagesIndexPage() {
     run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groups]);
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-gray-500 flex items-center justify-center py-12">
+            <div className="w-6 h-6 border-2 border-cyan-600 border-t-transparent rounded-full animate-spin mr-2"></div>
+            Yükleniyor...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">

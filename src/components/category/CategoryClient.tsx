@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import TalepCard from '@/components/home/TalepCardOptimized';
 import { CATEGORIES, SubCategory } from '@/data/categories';
 import { TURKEY_PROVINCES } from '@/data/turkey-locations';
-import { AttrField } from '@/data/attribute-schemas';
-import { BellRing, Check, Loader2, ChevronDown, ChevronUp, ChevronLeft } from 'lucide-react';
+import { BellRing, Check, Loader2, ChevronDown, ChevronUp, ChevronLeft, Search } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { toast } from '@/components/ui/use-toast';
 import { SavedSearchModal } from '@/components/talep/SavedSearchModal';
@@ -37,6 +36,51 @@ const findSubcategoryByPath = (categories: SubCategory[], path: string[]): SubCa
   return found;
 };
 
+const DEFAULT_PRICE_RANGE: [number, number] = [0, 10000000];
+
+const isVehicleCategorySlug = (slug?: string) => {
+  const normalized = String(slug || "").toLocaleLowerCase("tr");
+  if (!normalized) return false;
+  if (normalized === "vasita" || normalized.startsWith("vasita/") || normalized.startsWith("vasita-")) return true;
+  return (
+    normalized.includes("otomobil") ||
+    normalized.includes("arazi") ||
+    normalized.includes("suv") ||
+    normalized.includes("pickup") ||
+    normalized.includes("minivan") ||
+    normalized.includes("panelvan") ||
+    normalized.includes("motosiklet") ||
+    normalized.includes("kamyon") ||
+    normalized.includes("cekici") ||
+    normalized.includes("ticari") ||
+    normalized.includes("otobus") ||
+    normalized.includes("minibus")
+  );
+};
+
+const normalizeVehicleToken = (value: string) => {
+  return value
+    .toLocaleLowerCase("tr")
+    .replace(/[ç]/g, "c")
+    .replace(/[ğ]/g, "g")
+    .replace(/[ı]/g, "i")
+    .replace(/[ö]/g, "o")
+    .replace(/[ş]/g, "s")
+    .replace(/[ü]/g, "u")
+    .replace(/[^a-z0-9]/g, "");
+};
+
+const normalizeVasitaSlug = (rawSlug?: string, rawName?: string) => {
+  const slug = normalizeVehicleToken(String(rawSlug || ""));
+  const name = normalizeVehicleToken(String(rawName || ""));
+  const has = (v: string) => slug.includes(v) || name.includes(v);
+  if (has("marka")) return "marka";
+  if (has("model") && !has("modelyili")) return "model";
+  if (slug === "seri" || name === "seri" || has("motorseri")) return "seri";
+  if (has("paket") || has("donanim") || has("trim")) return "paket";
+  return rawSlug || "";
+};
+
 interface Talep {
   id: string;
   title: string;
@@ -60,7 +104,21 @@ interface Talep {
   attributes?: Record<string, string | number | boolean | string[]>;
 }
 
-type FilterAttrs = Record<string, string | number | (string | number)[]>;
+type AttributeField = {
+  id?: string;
+  name: string;
+  slug: string;
+  type: string;
+  options?: string[];
+  required?: boolean;
+  order?: number;
+  minKey?: string;
+  maxKey?: string;
+  min?: number;
+  max?: number;
+  minLabel?: string;
+  maxLabel?: string;
+};
 
 const FilterSelect = ({ 
   label, 
@@ -94,33 +152,6 @@ const FilterSelect = ({
         return <option key={val} value={val} className="text-gray-900">{titleCaseTR(String(lbl))}</option>;
       })}
     </select>
-  </div>
-);
-
-const FilterInput = ({ 
-  label, 
-  value, 
-  onChange, 
-  type = 'text', 
-  placeholder, 
-  className 
-}: {
-  label: string;
-  value: string | number;
-  onChange: (val: string) => void;
-  type?: string;
-  placeholder?: string;
-  className?: string;
-}) => (
-  <div>
-    <label className="block text-sm font-bold text-gray-800 mb-2">{titleCaseTR(label)}</label>
-    <input 
-      type={type} 
-      value={value} 
-      onChange={(e) => onChange(e.target.value)} 
-      placeholder={placeholder}
-      className={`w-full rounded-xl px-4 py-3 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white border-2 border-gray-300 text-gray-900 hover:border-cyan-400 shadow-sm ${className || ''}`}
-    />
   </div>
 );
 
@@ -277,20 +308,6 @@ const MultiSelect = ({
   );
 };
 
-const getSingleValue = (val: string | number | (string | number)[] | undefined): string | number => {
-  if (Array.isArray(val)) {
-    return val.length > 0 ? val[0] : '';
-  }
-  return val === undefined || val === null ? '' : val;
-};
-
-const getArrayValue = (val: string | number | (string | number)[] | undefined): string[] => {
-  if (Array.isArray(val)) {
-    return val.map(v => v.toString());
-  }
-  return val !== undefined && val !== null && val !== '' ? [val.toString()] : [];
-};
-
 export default function CategoryClient() {
   const params = useParams();
   const router = useRouter();
@@ -307,17 +324,6 @@ export default function CategoryClient() {
 
   const category = CATEGORIES.find(cat => cat.slug === categorySlug);
   
-  useEffect(() => {
-    if (!categorySlug) return;
-    if (slugParts.length > 0) return;
-    const first = category?.subcategories?.[0];
-    if (!first) return;
-    const target = first.fullSlug || first.slug;
-    if (!target) return;
-    const qs = sp.toString();
-    router.replace(qs ? `/kategori/${categorySlug}/${target}?${qs}` : `/kategori/${categorySlug}/${target}`);
-  }, [categorySlug, slugParts.length, category, router, sp]);
-  
   // Resolve using full path to ensure correct hierarchy traversal
   const subcategory = slugParts.length > 0 
     ? findSubcategoryByPath(category?.subcategories || [], slugParts)
@@ -325,6 +331,13 @@ export default function CategoryClient() {
 
   const subcategorySlug = subcategory?.slug || (slugParts.length > 0 ? slugParts[slugParts.length - 1] : undefined);
   const subcategoryFilter = subcategory?.fullSlug || subcategorySlug;
+  const isVasita = useMemo(() => {
+    return (
+      isVehicleCategorySlug(categorySlug) ||
+      isVehicleCategorySlug(subcategoryFilter) ||
+      isVehicleCategorySlug(subcategorySlug)
+    );
+  }, [categorySlug, subcategoryFilter, subcategorySlug]);
 
   // Parent subcategory is the one corresponding to path minus last segment
   const parentSubcategory = slugParts.length > 1
@@ -346,29 +359,6 @@ export default function CategoryClient() {
      return `/kategori/${categorySlug}`;
   }, [categorySlug, slugParts, subcategory]);
 
-  const overrideKey = subcategory?.fullSlug 
-    ? `${categorySlug}/${subcategory.fullSlug}` 
-    : (subcategorySlug ? `${categorySlug}/${subcategorySlug}` : categorySlug);
-
-  const prevOverrideKeyRef = React.useRef<string | null>(null);
-  useEffect(() => {
-    const prev = prevOverrideKeyRef.current;
-    prevOverrideKeyRef.current = overrideKey;
-    if (!prev || prev === overrideKey) return;
-    setFilterAttrs((curr) => {
-      const next = { ...(curr || {}) } as FilterAttrs;
-      delete (next as any)['marka'];
-      delete (next as any)['model'];
-      delete (next as any)['seri'];
-      delete (next as any)['paket'];
-      return next;
-    });
-    setModelOptions([]);
-    setSeriesOptions([]);
-    setTrimOptions([]);
-    setEquipmentOptions([]);
-  }, [overrideKey]);
-
   const [listings, setListings] = useState<Talep[]>([]);
   const [filteredListings, setFilteredListings] = useState<Talep[]>([]);
   const [loading, setLoading] = useState(true);
@@ -376,36 +366,36 @@ export default function CategoryClient() {
   
   // Common Filters
   const [searchTerm, setSearchTerm] = useState('');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>(DEFAULT_PRICE_RANGE);
   const [selectedCity, setSelectedCity] = useState<string[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  
-  // Dynamic Filters
-  const [filterAttrs, setFilterAttrs] = useState<FilterAttrs>({});
   const [isSubcategoriesOpen, setIsSubcategoriesOpen] = useState(false);
-  const [dynamicCategory, setDynamicCategory] = useState<any>(null);
-  const [dynamicAttributes, setDynamicAttributes] = useState<any[]>([]);
-  const filterBrand = filterAttrs['marka'];
-  const filterModel = filterAttrs['model'];
-  const filterSeries = filterAttrs['seri'];
-  const filterTrim = filterAttrs['paket'];
-
-  // Dynamic Options State
+  const [attributeFields, setAttributeFields] = useState<AttributeField[]>([]);
+  const [showAllAttributes, setShowAllAttributes] = useState(false);
+  const [attributeLoading, setAttributeLoading] = useState(false);
+  const [attributeLoadError, setAttributeLoadError] = useState<string | null>(null);
+  const [attrValues, setAttrValues] = useState<Record<string, any>>({});
+  const [dropdownSearch, setDropdownSearch] = useState<Record<string, string>>({});
+  const [attributeSlugAliases, setAttributeSlugAliases] = useState<Record<string, string[]>>({});
   const [brandOptions, setBrandOptions] = useState<string[]>([]);
   const [modelOptions, setModelOptions] = useState<string[]>([]);
   const [seriesOptions, setSeriesOptions] = useState<string[]>([]);
   const [trimOptions, setTrimOptions] = useState<string[]>([]);
-  const [equipmentOptions, setEquipmentOptions] = useState<string[]>([]);
+  const [brandLoading, setBrandLoading] = useState(false);
+  const [modelLoading, setModelLoading] = useState(false);
+  const [seriesLoading, setSeriesLoading] = useState(false);
+  const [trimLoading, setTrimLoading] = useState(false);
+  const prevBrandRef = React.useRef<string | null>(null);
+  const prevModelRef = React.useRef<string | null>(null);
+  const prevSeriesRef = React.useRef<string | null>(null);
 
   const subcategoriesToRender = React.useMemo(() => {
      if (subcategory?.subcategories && subcategory.subcategories.length > 0) return subcategory.subcategories;
      if (parentSubcategory?.subcategories) return parentSubcategory.subcategories;
-     // Prefer static structure from JSON (category) over dynamic (DB) to ensure correct hierarchy with short slugs
-     const toRender = category?.subcategories || dynamicCategory?.subcategories || [];
-     return toRender;
-  }, [subcategory, parentSubcategory, dynamicCategory, category]);
+     return category?.subcategories || [];
+  }, [subcategory, parentSubcategory, category]);
 
   const listParent = React.useMemo(() => {
      if (subcategory?.subcategories && subcategory.subcategories.length > 0) return subcategory;
@@ -427,272 +417,8 @@ export default function CategoryClient() {
   }, [categorySlug, listParentPathParts]);
 
   useEffect(() => {
-    const brand = filterBrand;
-    if (!brand || (Array.isArray(brand) && brand.length === 0)) {
-      setModelOptions([]);
-      return;
-    }
-    
-    const params = new URLSearchParams();
-    params.set('type', 'models');
-    params.set('category', overrideKey);
-    const brands = Array.isArray(brand) ? brand : [brand];
-    brands.forEach(b => params.append('brand', String(b)));
-    
-    fetch(`/api/vehicle-data?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
-         if (Array.isArray(data)) setModelOptions(data);
-         else setModelOptions([]);
-      })
-      .catch(() => setModelOptions([]));
-  }, [filterBrand, overrideKey]);
-
-  useEffect(() => {
-    const brand = filterBrand;
-    const model = filterModel;
-    if (!brand || !model || (Array.isArray(brand) && brand.length === 0) || (Array.isArray(model) && model.length === 0)) {
-      setSeriesOptions([]);
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.set('type', 'series');
-    params.set('category', overrideKey);
-    const brands = Array.isArray(brand) ? brand : [brand];
-    brands.forEach(b => params.append('brand', String(b)));
-    const models = Array.isArray(model) ? model : [model];
-    models.forEach(m => params.append('model', String(m)));
-
-    fetch(`/api/vehicle-data?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
-         if (Array.isArray(data)) setSeriesOptions(data);
-         else setSeriesOptions([]);
-      })
-      .catch(() => setSeriesOptions([]));
-  }, [filterBrand, filterModel, overrideKey]);
-
-  useEffect(() => {
-    const brand = filterBrand;
-    const model = filterModel;
-    const series = filterSeries;
-    if (!brand || !model || !series || (Array.isArray(series) && series.length === 0)) {
-      setTrimOptions([]);
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.set('type', 'trims');
-    params.set('category', overrideKey);
-    const brands = Array.isArray(brand) ? brand : [brand];
-    brands.forEach(b => params.append('brand', String(b)));
-    const models = Array.isArray(model) ? model : [model];
-    models.forEach(m => params.append('model', String(m)));
-    const seriess = Array.isArray(series) ? series : [series];
-    seriess.forEach(s => params.append('series', String(s)));
-
-    fetch(`/api/vehicle-data?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
-         if (Array.isArray(data)) setTrimOptions(data);
-         else setTrimOptions([]);
-      })
-      .catch(() => setTrimOptions([]));
-  }, [filterBrand, filterModel, filterSeries, overrideKey]);
-
-  useEffect(() => {
-    const brand = filterBrand;
-    const model = filterModel;
-    const series = filterSeries;
-    const trim = filterTrim;
-    if (!brand || !model || !series || !trim || (Array.isArray(trim) && trim.length === 0)) {
-      setEquipmentOptions([]);
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.set('type', 'equipments');
-    params.set('category', overrideKey);
-    const brands = Array.isArray(brand) ? brand : [brand];
-    brands.forEach(b => params.append('brand', String(b)));
-    const models = Array.isArray(model) ? model : [model];
-    models.forEach(m => params.append('model', String(m)));
-    const seriess = Array.isArray(series) ? series : [series];
-    seriess.forEach(s => params.append('series', String(s)));
-    const trims = Array.isArray(trim) ? trim : [trim];
-    trims.forEach(t => params.append('trim', String(t)));
-
-    fetch(`/api/vehicle-data?${params.toString()}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setEquipmentOptions(data);
-        else setEquipmentOptions([]);
-      })
-      .catch(() => setEquipmentOptions([]));
-  }, [filterBrand, filterModel, filterSeries, filterTrim, overrideKey]);
-
-
-  useEffect(() => {
-    if (categorySlug) {
-      fetch(`/api/categories/${categorySlug}`)
-        .then(res => res.json())
-        .then(data => {
-          if (!data.error) {
-            setDynamicCategory(data);
-          }
-        })
-        .catch(err => console.error('Error fetching category attributes:', err));
-    }
-  }, [categorySlug]);
-
-  useEffect(() => {
-    if (!categorySlug) {
-      setDynamicAttributes([]);
-      return;
-    }
-    const query = new URLSearchParams();
-    const sub = subcategory?.fullSlug || subcategorySlug || '';
-    if (sub) query.set('subcategory', sub);
-    const url = query.toString()
-      ? `/api/categories/${categorySlug}/attributes?${query.toString()}`
-      : `/api/categories/${categorySlug}/attributes`;
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setDynamicAttributes(data);
-        else setDynamicAttributes([]);
-      })
-      .catch(() => setDynamicAttributes([]));
-  }, [categorySlug, subcategory?.fullSlug, subcategorySlug]);
-  
-  useEffect(() => {
     setFavorites(new Set(listings.filter(l => l.isFavorited).map(l => l.id)));
   }, [listings]);
-
-  const combinedSchema = React.useMemo<AttrField[]>(() => {
-    const isReservedField = (field: AttrField) => {
-      if (field.key === 'minPrice' || field.key === 'maxPrice') return true;
-      if (field.key === 'minBudget' || field.key === 'budget') return true;
-      if (field.type !== 'range-number') return false;
-      if (field.minKey === 'minPrice' && field.maxKey === 'maxPrice') return true;
-      if (field.minKey === 'minBudget' && field.maxKey === 'budget') return true;
-      const minBase = field.minKey?.endsWith('Min') ? field.minKey.slice(0, -3) : null;
-      const maxBase = field.maxKey?.endsWith('Max') ? field.maxKey.slice(0, -3) : null;
-      const base = minBase && maxBase && minBase === maxBase ? minBase : null;
-      if (base === 'minPrice' || base === 'minBudget') return true;
-      return false;
-    };
-
-    const stableFieldId = (field: AttrField) => {
-      if (field.key) return `k:${field.key}`;
-      if (field.type === 'range-number' && field.minKey && field.maxKey) {
-        const min = field.minKey;
-        const max = field.maxKey;
-        const minBase = min.endsWith('Min') ? min.slice(0, -3) : null;
-        const maxBase = max.endsWith('Max') ? max.slice(0, -3) : null;
-        if (minBase && maxBase && minBase === maxBase) return `r:${minBase}`;
-        return `r:${min}:${max}`;
-      }
-      return `l:${field.label}`;
-    };
-
-    // If we have dynamic category data, use it
-    const map = new Map<string, AttrField>();
-
-    const fromApi = Array.isArray(dynamicAttributes) && dynamicAttributes.length > 0;
-    const directAttrs = fromApi ? dynamicAttributes : (dynamicCategory?.attributes || []);
-
-    if (directAttrs && directAttrs.length > 0) {
-        const subCat = subcategorySlug
-          ? (dynamicCategory?.subcategories || []).find((s: any) => s.slug === subcategorySlug)
-          : null;
-
-        const relevantAttrs = fromApi
-          ? directAttrs.filter((attr: any) => attr?.showInRequest !== false)
-          : directAttrs.filter((attr: any) => {
-              if (attr?.showInRequest === false) return false;
-              if (!attr.subCategoryId) return true;
-              if (subCat && attr.subCategoryId === subCat.id) return true;
-              return false;
-            });
-
-        if (relevantAttrs.length > 0) {
-            const orderedAttrs = [...relevantAttrs].sort((a: any, b: any) => {
-              const aSpecific = a?.subCategoryId ? 1 : 0;
-              const bSpecific = b?.subCategoryId ? 1 : 0;
-              return aSpecific - bSpecific;
-            });
-            
-            orderedAttrs.forEach((attr: any) => {
-                let normalizedType = attr.type === 'checkbox' ? 'boolean' : attr.type;
-                
-                // Force multiselect for EMLAK/VASITA attributes that are select or specific keys
-                if ((overrideKey.startsWith('vasita') || overrideKey.startsWith('emlak')) && 
-                    (normalizedType === 'select' || ['marka', 'model', 'seri', 'paket'].includes(attr.slug))) {
-                    normalizedType = 'multiselect';
-                }
-
-                const isRange = normalizedType === 'number' || normalizedType === 'range-number';
-                let options: string[] = [];
-                if (attr.optionsJson) {
-                    try {
-                        const parsed = JSON.parse(attr.optionsJson);
-                        options = Array.isArray(parsed) ? parsed : [];
-                    } catch {
-                        options = [];
-                    }
-                }
-
-                const field: AttrField = {
-                    label: attr.name,
-                    key: isRange ? undefined : attr.slug,
-                    type: isRange ? 'range-number' : normalizedType,
-                    options: options.length > 0 ? options : undefined,
-                    minKey: isRange ? (attr.minKey || (attr.slug ? `${attr.slug}Min` : undefined)) : undefined,
-                    maxKey: isRange ? (attr.maxKey || (attr.slug ? `${attr.slug}Max` : undefined)) : undefined,
-                    required: attr.required
-                };
-
-                const id = attr.slug ? `s:${attr.slug}` : stableFieldId(field);
-                map.set(id, field);
-            });
-        }
-    }
-
-    if (map.size > 0) {
-        return Array.from(map.values()).filter((f) => !isReservedField(f)).sort((a: any, b: any) => {
-            // Preserve order: static schema usually defines order.
-            // But we mixed them.
-            // Simple sort by label or key might be weird.
-            // We can rely on insertion order of Map for iteration, but Array.from preserves it.
-            // However, the sort at the end of original code sorted by 'order'.
-            // Static fields don't have 'order' property explicitly in AttrField type (it's optional in some types).
-            // Let's remove the sort by 'order' if it's not robust, or keep it safe.
-            const orderA = a.order || 0;
-            const orderB = b.order || 0;
-            return orderA - orderB;
-        });
-    }
-
-    return [];
-  }, [subcategorySlug, overrideKey, dynamicCategory, dynamicAttributes]);
-
-  useEffect(() => {
-    const hasBrandField = combinedSchema.some((f) => f.key === 'marka' && (f.type === 'select' || f.type === 'multiselect'));
-    if (!hasBrandField) {
-      setBrandOptions([]);
-      return;
-    }
-
-    fetch(`/api/vehicle-data?type=brands&category=${overrideKey}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setBrandOptions(data);
-        else setBrandOptions([]);
-      })
-      .catch(() => setBrandOptions([]));
-  }, [combinedSchema, overrideKey]);
 
   // URL -> State Sync
   useEffect(() => {
@@ -710,46 +436,568 @@ export default function CategoryClient() {
     const cityQ = sp.getAll('city'); if (cityQ.length > 0) setSelectedCity(cityQ);
     const distQ = sp.getAll('district'); if (distQ.length > 0) setSelectedDistrict(distQ);
     const minP = num('minPrice'); const maxP = num('maxPrice'); 
-    if (minP !== '' || maxP !== '') setPriceRange([minP || 0, maxP || 10000000]);
+    if (minP !== '' || maxP !== '') setPriceRange([minP || 0, maxP || DEFAULT_PRICE_RANGE[1]]);
 
-    const nextAttrs: FilterAttrs = {};
-    combinedSchema.forEach(f => {
-      if (f.type === 'range-number') {
-        const minVal = sp.get(f.minKey!);
-        const maxVal = sp.get(f.maxKey!);
-        if (minVal) nextAttrs[f.minKey!] = minVal;
-        if (maxVal) nextAttrs[f.maxKey!] = maxVal;
-      } else if (f.key) {
-        const val = sp.get(f.key);
-        if (val) nextAttrs[f.key] = val;
+  }, [sp, categorySlug, subcategorySlug]);
+
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      if (!categorySlug) {
+        if (active) {
+          setAttributeFields([]);
+          setAttributeLoading(false);
+          setAttributeLoadError(null);
+          setAttrValues({});
+        }
+        return;
+      }
+      setAttributeLoading(true);
+      setAttributeLoadError(null);
+      try {
+        const qs = subcategoryFilter ? `?subcategory=${encodeURIComponent(subcategoryFilter)}` : "";
+        const res = await fetch(`/api/categories/${categorySlug}/attributes${qs}`);
+        if (!res.ok) throw new Error("load-failed");
+        const data = await res.json();
+        const slugMap = new Map<string, string>();
+        const aliasMap: Record<string, string[]> = {};
+        const mapped = Array.isArray(data)
+          ? data
+              .filter((a) => a?.showInRequest !== false)
+              .map((a) => {
+                let options: string[] | undefined;
+                if (Array.isArray(a.optionsJson)) {
+                  options = a.optionsJson.map((o: any) => String(o));
+                } else if (typeof a.optionsJson === "string") {
+                  try {
+                    const parsed = JSON.parse(a.optionsJson);
+                    if (Array.isArray(parsed)) options = parsed.map((o: any) => String(o));
+                  } catch {
+                    options = a.optionsJson.split(",").map((s: string) => s.trim()).filter(Boolean);
+                  }
+                }
+                const normalizedSlug = isVasita ? normalizeVasitaSlug(a.slug, a.name) : a.slug;
+                if (isVasita && a.slug && normalizedSlug && normalizedSlug !== a.slug) {
+                  slugMap.set(a.slug, normalizedSlug);
+                }
+                const finalSlug = normalizedSlug || a.slug;
+                const aliasSet = new Set<string>();
+                if (finalSlug) aliasSet.add(finalSlug);
+                if (a.slug) aliasSet.add(a.slug);
+                aliasMap[finalSlug] = Array.from(aliasSet);
+                return {
+                  id: a.id,
+                  name: a.name,
+                  slug: finalSlug,
+                  type: a.type,
+                  options,
+                  required: a.required,
+                  order: a.order,
+                  minKey: a.minKey,
+                  maxKey: a.maxKey,
+                  min: a.min,
+                  max: a.max,
+                  minLabel: a.minLabel,
+                  maxLabel: a.maxLabel,
+                } as AttributeField;
+              })
+          : [];
+        if (active) {
+          setAttributeFields(mapped);
+          setAttributeSlugAliases(aliasMap);
+          if (mapped.length === 0) {
+            setAttrValues({});
+          } else {
+            const allowed = new Set<string>();
+            mapped.forEach((f) => {
+              if (f.type === "range-number") {
+                const minKey = f.minKey || `${f.slug}Min`;
+                const maxKey = f.maxKey || `${f.slug}Max`;
+                allowed.add(minKey);
+                allowed.add(maxKey);
+              } else {
+                allowed.add(f.slug);
+              }
+            });
+            setAttrValues((prev) => {
+              const next: Record<string, any> = {};
+              let changed = false;
+              Object.entries(prev).forEach(([k, v]) => {
+                const mappedKey = slugMap.get(k) || k;
+                if (mappedKey !== k) changed = true;
+                if (allowed.has(mappedKey)) {
+                  next[mappedKey] = v;
+                } else {
+                  changed = true;
+                }
+              });
+              if (!changed && Object.keys(next).length === Object.keys(prev).length) return prev;
+              return next;
+            });
+          }
+        }
+      } catch {
+        if (active) {
+          setAttributeFields([]);
+          setAttributeLoadError("Özellikler yüklenemedi");
+          setAttrValues({});
+        }
+      } finally {
+        if (active) setAttributeLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [categorySlug, subcategoryFilter, isVasita]);
+
+  useEffect(() => {
+    if (attributeFields.length === 0) return;
+    const next: Record<string, any> = {};
+    attributeFields.forEach((field) => {
+      if (field.type === "range-number") {
+        const minKey = field.minKey || `${field.slug}Min`;
+        const maxKey = field.maxKey || `${field.slug}Max`;
+        const minVal = sp.get(minKey);
+        const maxVal = sp.get(maxKey);
+        if (minVal !== null && minVal !== "") next[minKey] = minVal;
+        if (maxVal !== null && maxVal !== "") next[maxKey] = maxVal;
+      } else {
+        const aliases = attributeSlugAliases[field.slug] || [field.slug];
+        const all = Array.from(new Set(aliases.flatMap((alias) => sp.getAll(alias).filter((v) => v !== null && v !== ""))));
+        if (all.length > 1) {
+          next[field.slug] = all;
+        } else {
+          const single = all.length === 1 ? all[0] : sp.get(field.slug);
+          if (single !== null && single !== "") next[field.slug] = single;
+        }
       }
     });
-    setFilterAttrs(nextAttrs);
-  }, [sp, categorySlug, subcategorySlug, combinedSchema]);
+    setAttrValues(next);
+  }, [sp, attributeFields, attributeSlugAliases]);
 
-  const handleFilterChange = (key: string, value: string | number | (string | number)[]) => {
-    setFilterAttrs(prev => {
-      const next = { ...prev, [key]: value };
-      
-      // Clear dependent fields
-      if (key === 'marka') {
-        delete next['model'];
-        delete next['seri'];
-        delete next['paket'];
-        delete next['donanim'];
-      } else if (key === 'model') {
-        delete next['seri'];
-        delete next['paket'];
-        delete next['donanim'];
-      } else if (key === 'seri') {
-        delete next['paket'];
-        delete next['donanim'];
-      } else if (key === 'paket') {
-        delete next['donanim'];
+  const updateAttribute = useCallback((key: string, value: any) => {
+    setAttrValues((prev) => {
+      const next = { ...prev };
+      const remove = value === undefined || value === null || value === "" || value === false || (Array.isArray(value) && value.length === 0);
+      if (remove) {
+        delete next[key];
+      } else {
+        next[key] = value;
       }
-      
       return next;
     });
+  }, []);
+
+  const brandSource = attrValues["marka"];
+  const modelSource = attrValues["model"];
+  const seriesSource = attrValues["seri"];
+  const brandList = useMemo(() => {
+    const arr = Array.isArray(brandSource) ? brandSource.map((b) => String(b)) : brandSource ? [String(brandSource)] : [];
+    return arr.filter((v) => v.trim());
+  }, [brandSource]);
+  const modelList = useMemo(() => {
+    const arr = Array.isArray(modelSource) ? modelSource.map((m) => String(m)) : modelSource ? [String(modelSource)] : [];
+    return arr.filter((v) => v.trim());
+  }, [modelSource]);
+  const seriesList = useMemo(() => {
+    const arr = Array.isArray(seriesSource) ? seriesSource.map((s) => String(s)) : seriesSource ? [String(seriesSource)] : [];
+    return arr.filter((v) => v.trim());
+  }, [seriesSource]);
+  const brandKey = brandList.join("|");
+  const modelKey = modelList.join("|");
+  const seriesKey = seriesList.join("|");
+  const vehicleCategoryKey = subcategoryFilter || categorySlug || "";
+
+  useEffect(() => {
+    if (!isVasita) {
+      prevBrandRef.current = null;
+      prevModelRef.current = null;
+      prevSeriesRef.current = null;
+      setBrandOptions([]);
+      setModelOptions([]);
+      setSeriesOptions([]);
+      setTrimOptions([]);
+      return;
+    }
+    if (prevBrandRef.current !== null && prevBrandRef.current !== brandKey) {
+      setAttrValues((prev) => {
+        const next = { ...prev };
+        let changed = false;
+        if (next.model !== undefined) { delete next.model; changed = true; }
+        if (next.seri !== undefined) { delete next.seri; changed = true; }
+        if (next.paket !== undefined) { delete next.paket; changed = true; }
+        return changed ? next : prev;
+      });
+    }
+    if (prevModelRef.current !== null && prevModelRef.current !== modelKey) {
+      setAttrValues((prev) => {
+        const next = { ...prev };
+        let changed = false;
+        if (next.seri !== undefined) { delete next.seri; changed = true; }
+        if (next.paket !== undefined) { delete next.paket; changed = true; }
+        return changed ? next : prev;
+      });
+    }
+    if (prevSeriesRef.current !== null && prevSeriesRef.current !== seriesKey) {
+      setAttrValues((prev) => {
+        const next = { ...prev };
+        let changed = false;
+        if (next.paket !== undefined) { delete next.paket; changed = true; }
+        return changed ? next : prev;
+      });
+    }
+    prevBrandRef.current = brandKey;
+    prevModelRef.current = modelKey;
+    prevSeriesRef.current = seriesKey;
+  }, [isVasita, brandKey, modelKey, seriesKey]);
+
+  useEffect(() => {
+    let active = true;
+    if (!isVasita || !vehicleCategoryKey) {
+      setBrandOptions([]);
+      setBrandLoading(false);
+      return;
+    }
+    setBrandLoading(true);
+    const params = new URLSearchParams();
+    params.set("type", "brands");
+    params.set("category", vehicleCategoryKey);
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!active) return;
+        setBrandOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (active) setBrandOptions([]);
+      })
+      .finally(() => {
+        if (active) setBrandLoading(false);
+      });
+    return () => { active = false; };
+  }, [isVasita, vehicleCategoryKey]);
+
+  useEffect(() => {
+    let active = true;
+    if (!isVasita || brandList.length === 0 || !vehicleCategoryKey) {
+      setModelOptions([]);
+      setModelLoading(false);
+      return;
+    }
+    setModelLoading(true);
+    const params = new URLSearchParams();
+    params.set("type", "models");
+    params.set("category", vehicleCategoryKey);
+    brandList.forEach((b) => params.append("brand", b));
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!active) return;
+        setModelOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (active) setModelOptions([]);
+      })
+      .finally(() => {
+        if (active) setModelLoading(false);
+      });
+    return () => { active = false; };
+  }, [isVasita, brandKey, brandList, vehicleCategoryKey]);
+
+  useEffect(() => {
+    let active = true;
+    if (!isVasita || brandList.length === 0 || modelList.length === 0 || !vehicleCategoryKey) {
+      setSeriesOptions([]);
+      setSeriesLoading(false);
+      return;
+    }
+    setSeriesLoading(true);
+    const params = new URLSearchParams();
+    params.set("type", "series");
+    params.set("category", vehicleCategoryKey);
+    brandList.forEach((b) => params.append("brand", b));
+    modelList.forEach((m) => params.append("model", m));
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!active) return;
+        setSeriesOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (active) setSeriesOptions([]);
+      })
+      .finally(() => {
+        if (active) setSeriesLoading(false);
+      });
+    return () => { active = false; };
+  }, [isVasita, brandKey, modelKey, brandList, modelList, vehicleCategoryKey]);
+
+  useEffect(() => {
+    let active = true;
+    if (!isVasita || brandList.length === 0 || modelList.length === 0 || seriesList.length === 0 || !vehicleCategoryKey) {
+      setTrimOptions([]);
+      setTrimLoading(false);
+      return;
+    }
+    setTrimLoading(true);
+    const params = new URLSearchParams();
+    params.set("type", "trims");
+    params.set("category", vehicleCategoryKey);
+    brandList.forEach((b) => params.append("brand", b));
+    modelList.forEach((m) => params.append("model", m));
+    seriesList.forEach((s) => params.append("series", s));
+    fetch(`/api/vehicle-data?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        if (!active) return;
+        setTrimOptions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (active) setTrimOptions([]);
+      })
+      .finally(() => {
+        if (active) setTrimLoading(false);
+      });
+    return () => { active = false; };
+  }, [isVasita, brandKey, modelKey, seriesKey, brandList, modelList, seriesList, vehicleCategoryKey]);
+
+  const closeDetailsIfNeeded = useCallback((target: EventTarget | null) => {
+    const el = target instanceof HTMLElement ? target : null;
+    const details = el?.closest?.("details");
+    if (details) details.removeAttribute("open");
+  }, []);
+
+  const isAttributeFilled = useCallback((field: AttributeField, values: Record<string, any>) => {
+    if (field.type === "range-number") {
+      const minKey = field.minKey || `${field.slug}Min`;
+      const maxKey = field.maxKey || `${field.slug}Max`;
+      const minVal = values[minKey];
+      const maxVal = values[maxKey];
+      return String(minVal ?? "").trim() !== "" || String(maxVal ?? "").trim() !== "";
+    }
+    if (field.type === "multiselect") {
+      const val = values[field.slug];
+      return Array.isArray(val) && val.length > 0;
+    }
+    if (field.type === "boolean") {
+      return !!values[field.slug];
+    }
+    const val = values[field.slug];
+    if (Array.isArray(val)) return val.length > 0;
+    return String(val ?? "").trim() !== "";
+  }, []);
+
+  const filledAttributeCount = useMemo(() => {
+    return attributeFields.reduce((acc, field) => acc + (isAttributeFilled(field, attrValues) ? 1 : 0), 0);
+  }, [attributeFields, attrValues, isAttributeFilled]);
+
+  const renderAttributeField = (field: AttributeField) => {
+    const label = field.name || field.slug;
+    if (isVasita && (field.slug === "marka" || field.slug === "model" || field.slug === "seri" || field.slug === "paket")) {
+      const optionsRaw =
+        field.slug === "marka"
+          ? (brandOptions.length > 0 ? brandOptions : (field.options || []))
+          : field.slug === "model"
+            ? modelOptions
+            : field.slug === "seri"
+              ? seriesOptions
+              : trimOptions;
+      const options = (optionsRaw || []).map((o) => String(o));
+      const loading =
+        field.slug === "marka"
+          ? brandLoading
+          : field.slug === "model"
+            ? modelLoading
+            : field.slug === "seri"
+              ? seriesLoading
+              : trimLoading;
+      const disabled =
+        (field.slug === "model" && !String(attrValues["marka"] || "").trim()) ||
+        (field.slug === "seri" && !String(attrValues["model"] || "").trim()) ||
+        (field.slug === "paket" && !String(attrValues["seri"] || "").trim());
+      const placeholder = loading
+        ? "Yükleniyor..."
+        : disabled
+          ? field.slug === "model"
+            ? "Önce marka seçiniz"
+            : field.slug === "seri"
+              ? "Önce model seçiniz"
+              : "Önce motor/seri seçiniz"
+          : "Tümü";
+      const valueRaw = attrValues[field.slug];
+      const value = Array.isArray(valueRaw) ? (valueRaw[0] || "") : (valueRaw ?? "");
+      return (
+        <FilterSelect
+          key={field.slug}
+          label={label}
+          value={value}
+          onChange={(val) => updateAttribute(field.slug, val)}
+          options={options}
+          disabled={disabled || loading}
+          placeholder={placeholder}
+        />
+      );
+    }
+    if (field.type === "range-number") {
+      const minKey = field.minKey || `${field.slug}Min`;
+      const maxKey = field.maxKey || `${field.slug}Max`;
+      const minValue = attrValues[minKey] ?? "";
+      const maxValue = attrValues[maxKey] ?? "";
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+            {label}
+          </label>
+          <div className="grid grid-cols-1 gap-3">
+            <input
+              type="number"
+              value={minValue}
+              onChange={(e) => updateAttribute(minKey, e.target.value)}
+              placeholder={field.minLabel || "Min"}
+              min={field.min}
+              max={field.max}
+              className="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+            />
+            <input
+              type="number"
+              value={maxValue}
+              onChange={(e) => updateAttribute(maxKey, e.target.value)}
+              placeholder={field.maxLabel || "Max"}
+              min={field.min}
+              max={field.max}
+              className="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (field.type === "boolean") {
+      const value = !!attrValues[field.slug];
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="flex items-center gap-3 text-sm font-bold text-gray-700">
+            <input
+              type="checkbox"
+              checked={value}
+              onChange={(e) => updateAttribute(field.slug, e.target.checked)}
+              className="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+            />
+            <span>{label}</span>
+          </label>
+        </div>
+      );
+    }
+
+    if (field.type === "multiselect" || field.type === "select") {
+      const value = Array.isArray(attrValues[field.slug]) ? attrValues[field.slug] : attrValues[field.slug] ? [String(attrValues[field.slug])] : [];
+      const options = (field.options || []).map((o) => String(o));
+      if (options.length === 0) {
+        return (
+          <div key={field.slug} className="space-y-2">
+            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+              {label}
+            </label>
+            <div className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 bg-gray-50 text-gray-500">
+              Seçenek yok
+            </div>
+          </div>
+        );
+      }
+      const searchKey = `${field.slug}:${field.type}`;
+      const searchVal = dropdownSearch[searchKey] || "";
+      const showSearch = options.length >= 8;
+      const filteredOptions = showSearch
+        ? options.filter((o) => String(o || "").toLocaleLowerCase("tr").includes(searchVal.toLocaleLowerCase("tr")))
+        : options;
+      const effectiveOptions = filteredOptions.length === 0 && searchVal ? options : filteredOptions;
+      const selectedCount = value.length;
+      const selectedPreview = selectedCount
+        ? value.slice(0, 2).join(", ") + (selectedCount > 2 ? ` +${selectedCount - 2}` : "")
+        : "Seçiniz";
+      const selectedSummary = selectedCount > 0 ? `${selectedCount} / ${options.length} seçili` : "";
+      return (
+        <div key={field.slug} className="space-y-2">
+          <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+            {label}
+          </label>
+          <details className="rounded-xl border border-gray-200 bg-white">
+            <summary className="cursor-pointer select-none px-3 py-2 text-sm font-semibold text-gray-700 flex flex-wrap items-center justify-between gap-2">
+              <span className={selectedCount ? "text-gray-900" : "text-gray-500"}>{selectedPreview}</span>
+              {selectedCount > 0 && (
+                <span className="text-xs text-cyan-600 bg-cyan-50 border border-cyan-100 px-2 py-0.5 rounded-full whitespace-nowrap">
+                  {selectedSummary}
+                </span>
+              )}
+            </summary>
+            <div className="space-y-1 p-2 pt-0">
+              {(showSearch || selectedCount > 0) && (
+                <div className="flex items-center gap-2 pb-2">
+                  {showSearch && (
+                    <input
+                      type="text"
+                      value={searchVal}
+                      onChange={(e) => setDropdownSearch((prev) => ({ ...prev, [searchKey]: e.target.value }))}
+                      placeholder="Seçeneklerde ara..."
+                      className="flex-1 px-3 py-2 text-xs border rounded-lg focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+                    />
+                  )}
+                  {selectedCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => updateAttribute(field.slug, [])}
+                      className="px-3 py-2 text-xs font-bold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                    >
+                      Temizle
+                    </button>
+                  )}
+                </div>
+              )}
+              {effectiveOptions.length === 0 && (
+                <div className="text-xs text-gray-500 px-2 py-2">Aradığınız seçenek bulunamadı.</div>
+              )}
+              {effectiveOptions.map((opt) => {
+                const checked = value.includes(opt);
+                return (
+                  <label key={opt} className="flex items-center gap-2 text-sm px-2 py-2 rounded hover:bg-gray-50 cursor-pointer w-full">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => {
+                        const next = new Set(value.map(String));
+                        if (e.target.checked) next.add(opt);
+                        else next.delete(opt);
+                        updateAttribute(field.slug, Array.from(next));
+                        closeDetailsIfNeeded(e.currentTarget);
+                      }}
+                      className="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                    />
+                    <span className="text-gray-700">{opt}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </details>
+        </div>
+      );
+    }
+
+    const value = attrValues[field.slug] ?? "";
+    return (
+      <div key={field.slug} className="space-y-2">
+        <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">
+          {label}
+        </label>
+        <input
+          type={field.type === "number" ? "number" : "text"}
+          value={value}
+          onChange={(e) => updateAttribute(field.slug, e.target.value)}
+          className="w-full px-4 py-2.5 text-sm border rounded-xl focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all duration-300 border-gray-200 bg-gray-50/30 hover:bg-white hover:border-gray-300"
+        />
+      </div>
+    );
   };
 
   const fetchListings = useCallback(async () => {
@@ -764,22 +1012,13 @@ export default function CategoryClient() {
       if (priceRange[0]) params.set('minPrice', String(priceRange[0]));
       if (priceRange[1]) params.set('maxPrice', String(priceRange[1]));
       params.set('sort', sortBy || 'newest');
-
-      combinedSchema.forEach(f => {
-        if (f.type === 'range-number') {
-          const minVal = filterAttrs[f.minKey!];
-          const maxVal = filterAttrs[f.maxKey!];
-          if (minVal !== undefined && minVal !== '') params.set(f.minKey!, String(minVal));
-          if (maxVal !== undefined && maxVal !== '') params.set(f.maxKey!, String(maxVal));
-        } else if (f.key) {
-          const val = filterAttrs[f.key];
-          if (val !== undefined && val !== '') {
-            if (Array.isArray(val)) {
-                val.forEach(v => params.append(f.key!, String(v)));
-            } else {
-                params.set(f.key!, String(val));
-            }
-          }
+      Object.entries(attrValues).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((v) => {
+            if (v !== undefined && String(v).trim() !== "") params.append(key, String(v));
+          });
+        } else if (value !== undefined && value !== null && String(value).trim() !== "") {
+          params.set(key, String(value));
         }
       });
 
@@ -803,17 +1042,28 @@ export default function CategoryClient() {
     selectedDistrict,
     priceRange,
     sortBy,
-    filterAttrs,
-    combinedSchema,
+    attrValues,
   ]);
 
   useEffect(() => {
-    fetchListings();
+    const t = setTimeout(() => {
+      fetchListings();
+    }, 300);
+    return () => clearTimeout(t);
   }, [fetchListings]);
 
   const { data: session } = useSession();
   const [isAlarmLoading, setIsAlarmLoading] = useState(false);
   const [hasAlarm, setHasAlarm] = useState(false);
+
+  const clearAllFilters = useCallback(() => {
+    setSearchTerm('');
+    setSelectedCity([]);
+    setSelectedDistrict([]);
+    setPriceRange(DEFAULT_PRICE_RANGE);
+    setSortBy('date');
+    setAttrValues({});
+  }, []);
 
   useEffect(() => {
     const checkAlarm = async () => {
@@ -853,110 +1103,33 @@ export default function CategoryClient() {
   }
   
   const toggleFavorite = async (id: string) => {
+    const wasFav = favorites.has(id);
     setFavorites(prev => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
+      if (wasFav) next.delete(id); else next.add(id);
       return next;
     });
     try {
-      if (favorites.has(id)) {
-        await fetch(`/api/favorites?listingId=${id}`, { method: 'DELETE' });
-      } else {
-        await fetch(`/api/favorites`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ listingId: id }) });
+      const res = wasFav
+        ? await fetch(`/api/favorites?listingId=${id}`, { method: 'DELETE' })
+        : await fetch(`/api/favorites`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ listingId: id }) });
+      if (!res.ok) {
+        setFavorites(prev => {
+          const next = new Set(prev);
+          if (wasFav) next.add(id); else next.delete(id);
+          return next;
+        });
       }
-    } catch {}
+    } catch {
+      setFavorites(prev => {
+        const next = new Set(prev);
+        if (wasFav) next.add(id); else next.delete(id);
+        return next;
+      });
+    }
   };
 
-  const getFieldOptions = (field: AttrField) => {
-      // Dynamic options priority
-      if (field.key === 'marka' && brandOptions.length > 0) return brandOptions;
-      if (field.key === 'model' && modelOptions.length > 0) return modelOptions;
-      if (field.key === 'seri' && seriesOptions.length > 0) return seriesOptions;
-      if (field.key === 'paket' && trimOptions.length > 0) return trimOptions;
-      if (field.key === 'donanim' && equipmentOptions.length > 0) return equipmentOptions;
-      const options: (string | { value: string | number; label: string })[] = field.options || [];
-
-      // Sort alphabetically for hierarchical keys and marka
-      if (['marka', 'model', 'seri', 'paket', 'donanim'].includes(field.key || '')) {
-         return [...options].sort((a, b) => {
-             const labelA = typeof a === 'object' ? (a as any).label : a;
-             const labelB = typeof b === 'object' ? (b as any).label : b;
-             return String(labelA).localeCompare(String(labelB), 'tr');
-         });
-      }
-
-      return options;
-  };
-
-  const renderFilters = () => {
-    const priorityKeys = ['marka', 'model', 'seri', 'paket', 'donanim', 'motor'];
-    const priorityAttributes = combinedSchema.filter(f => f.key && priorityKeys.includes(f.key));
-    const otherAttributes = combinedSchema.filter(f => !f.key || !priorityKeys.includes(f.key));
-
-    const renderAttribute = (field: AttrField, i: number) => {
-        let isDisabled = false;
-        
-        // Hiyerarşik alanlar için özel görünürlük ve disabled mantığı
-        // const hierarchicalKeys = ['model', 'seri', 'paket', 'donanim'];
-        
-        // Hiding logic removed to ensure fields are visible (even if disabled)
-        // if (isVasitaOto && hierarchicalKeys.includes(field.key!)) {
-        //    const options = getFieldOptions(field);
-        //    if (options.length === 0) return null;
-        // }
-
-        const isAttrEmpty = (val: any) => !val || (Array.isArray(val) && val.length === 0);
-
-        if (field.key === 'model' && isAttrEmpty(filterAttrs['marka'])) isDisabled = true;
-        if (field.key === 'seri' && isAttrEmpty(filterAttrs['model'])) isDisabled = true;
-        if (field.key === 'paket' && isAttrEmpty(filterAttrs['seri'])) isDisabled = true;
-        if (field.key === 'donanim' && isAttrEmpty(filterAttrs['paket'])) isDisabled = true;
-
-        if (field.type === 'select' || field.type === 'multiselect') {
-             return (
-                <MultiSelect
-                    key={`${field.key}-${i}`}
-                    label={field.label}
-                    value={getArrayValue(filterAttrs[field.key!])}
-                    onChange={(val: string[]) => handleFilterChange(field.key!, val)}
-                    options={getFieldOptions(field)}
-                    disabled={isDisabled}
-                />
-             );
-        } else if (field.type === 'range-number') {
-            return (
-                <FilterRange
-                    key={`${field.minKey}-${field.maxKey}-${i}`}
-                    label={field.label}
-                    minValue={getSingleValue(filterAttrs[field.minKey!])}
-                    maxValue={getSingleValue(filterAttrs[field.maxKey!])}
-                    onMinChange={(val) => handleFilterChange(field.minKey!, val)}
-                    onMaxChange={(val) => handleFilterChange(field.maxKey!, val)}
-                />
-            );
-        } else if (field.type === 'boolean') {
-             return (
-                <FilterSelect
-                    key={`${field.key}-${i}`}
-                    label={field.label}
-                    value={getSingleValue(filterAttrs[field.key!]).toString()}
-                    onChange={(val) => handleFilterChange(field.key!, val)}
-                    options={[{value:'true', label:'Evet'}, {value:'false', label:'Hayır'}]}
-                />
-             );
-        } else {
-            return (
-                <FilterInput
-                    key={`${field.key}-${i}`}
-                    label={field.label}
-                    value={getSingleValue(filterAttrs[field.key!])}
-                    onChange={(val) => handleFilterChange(field.key!, val)}
-                />
-            );
-        }
-    };
-
-    return (
+  const renderFilters = () => (
     <div className="bg-white rounded-2xl p-6 shadow-2xl text-gray-900">
       <div className="mb-6 relative">
         <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -971,6 +1144,125 @@ export default function CategoryClient() {
         />
       </div>
 
+      {(() => {
+        const chips: Array<{ key: string; label: string; onClear: () => void }> = [];
+        const trimmedSearch = searchTerm.trim();
+        if (trimmedSearch) {
+          chips.push({
+            key: 'q',
+            label: `Arama: ${trimmedSearch}`,
+            onClear: () => setSearchTerm(''),
+          });
+        }
+        if (priceRange[0] !== DEFAULT_PRICE_RANGE[0] || priceRange[1] !== DEFAULT_PRICE_RANGE[1]) {
+          chips.push({
+            key: 'price',
+            label: `Fiyat: ${priceRange[0].toLocaleString('tr-TR')} - ${priceRange[1].toLocaleString('tr-TR')}`,
+            onClear: () => setPriceRange(DEFAULT_PRICE_RANGE),
+          });
+        }
+        if (selectedCity.length > 0) {
+          chips.push({
+            key: 'city',
+            label: `Şehir: ${selectedCity.join(', ')}`,
+            onClear: () => { setSelectedCity([]); setSelectedDistrict([]); },
+          });
+        }
+        if (selectedDistrict.length > 0) {
+          chips.push({
+            key: 'district',
+            label: `İlçe: ${selectedDistrict.join(', ')}`,
+            onClear: () => setSelectedDistrict([]),
+          });
+        }
+        if (sortBy && sortBy !== 'date') {
+          const sortLabel = sortBy === 'price-high' ? 'Fiyat Azalan' : sortBy === 'price-low' ? 'Fiyat Artan' : sortBy;
+          chips.push({
+            key: 'sort',
+            label: `Sırala: ${sortLabel}`,
+            onClear: () => setSortBy('date'),
+          });
+        }
+        const usedAttrKeys = new Set<string>();
+        attributeFields.forEach((field) => {
+          if (field.type === "range-number") {
+            const minKey = field.minKey || `${field.slug}Min`;
+            const maxKey = field.maxKey || `${field.slug}Max`;
+            const minVal = attrValues[minKey];
+            const maxVal = attrValues[maxKey];
+            if (String(minVal ?? "").trim() !== "" || String(maxVal ?? "").trim() !== "") {
+              const label = `${field.name || field.slug}: ${minVal || "0"} - ${maxVal || "∞"}`;
+              chips.push({
+                key: `${field.slug}:range`,
+                label,
+                onClear: () => setAttrValues((prev) => {
+                  const next = { ...prev };
+                  delete next[minKey];
+                  delete next[maxKey];
+                  return next;
+                }),
+              });
+            }
+            usedAttrKeys.add(minKey);
+            usedAttrKeys.add(maxKey);
+          } else {
+            const val = attrValues[field.slug];
+            const hasValue = Array.isArray(val) ? val.length > 0 : String(val ?? "").trim() !== "";
+            if (hasValue) {
+              const display = Array.isArray(val) ? val.join(', ') : String(val);
+              chips.push({
+                key: `attr:${field.slug}`,
+                label: `${field.name || field.slug}: ${display}`,
+                onClear: () => setAttrValues((prev) => {
+                  const next = { ...prev };
+                  delete next[field.slug];
+                  return next;
+                }),
+              });
+            }
+            usedAttrKeys.add(field.slug);
+          }
+        });
+        Object.entries(attrValues).forEach(([key, val]) => {
+          if (usedAttrKeys.has(key)) return;
+          const hasValue = Array.isArray(val) ? val.length > 0 : String(val ?? "").trim() !== "";
+          if (!hasValue) return;
+          const display = Array.isArray(val) ? val.join(', ') : String(val);
+          chips.push({
+            key: `attr:${key}`,
+            label: `${key}: ${display}`,
+            onClear: () => setAttrValues((prev) => {
+              const next = { ...prev };
+              delete next[key];
+              return next;
+            }),
+          });
+        });
+        if (chips.length === 0) return null;
+        return (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            {chips.map((chip) => (
+              <button
+                key={chip.key}
+                type="button"
+                onClick={chip.onClear}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-50 text-cyan-700 border border-cyan-100 hover:bg-cyan-100"
+              >
+                <span>{chip.label}</span>
+                <span className="text-cyan-500">×</span>
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="ml-auto text-xs font-bold text-red-600 hover:text-red-700"
+            >
+              Hepsini Temizle
+            </button>
+          </div>
+        );
+      })()}
+
       <div className="mb-6">
         <SavedSearchModal
           searchParams={{
@@ -981,7 +1273,7 @@ export default function CategoryClient() {
             maxPrice: priceRange[1],
             city: selectedCity,
             district: selectedDistrict,
-            filtersJson: filterAttrs
+            filtersJson: Object.keys(attrValues).length > 0 ? attrValues : undefined
           }}
           onSave={() => toast({ title: "Başarılı", description: "Arama kaydedildi." })}
         />
@@ -1067,7 +1359,7 @@ export default function CategoryClient() {
              )}
         </div>
 
-        {/* Standard Filters & Priority Attributes */}
+        {/* Standard Filters */}
         <div className="grid grid-cols-1 gap-4">
             <MultiSelect
               label="Şehir"
@@ -1090,10 +1382,6 @@ export default function CategoryClient() {
                   .sort((a, b) => a.localeCompare(b, 'tr'));
               })()}
             />
-            
-            {/* Priority Attributes (Marka, Model, Seri, Paket...) */}
-            {priorityAttributes.map((field, i) => renderAttribute(field, i))}
-
             <FilterRange
               label={`Fiyat: ${priceRange[0].toLocaleString('tr-TR')} - ${priceRange[1].toLocaleString('tr-TR')} TL`}
               minValue={priceRange[0]}
@@ -1104,12 +1392,70 @@ export default function CategoryClient() {
             />
         </div>
 
-        {/* Other Dynamic Filters */}
-        {otherAttributes.length > 0 && (
-            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-4">
-                <h3 className="text-gray-900 text-sm font-semibold mb-2 opacity-90">Detaylı Filtreler</h3>
-                {otherAttributes.map((field, i) => renderAttribute(field, i + priorityAttributes.length))}
+        {(attributeLoading || attributeLoadError || attributeFields.length > 0) && (
+          <div className="bg-white rounded-xl border-2 border-gray-300 overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-gray-100 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-cyan-50 rounded-xl shrink-0">
+                  <Search className="w-4 h-4 text-cyan-600" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-semibold text-gray-900">Ürün Özellikleri</h3>
+                  <div className="text-xs text-gray-500 leading-4">Uygun seçenekleri işaretleyin</div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
+                {attributeFields.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setAttrValues({})}
+                    className="text-xs font-semibold text-gray-600 hover:text-gray-800"
+                  >
+                    Temizle
+                  </button>
+                )}
+                <div className="text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-100 px-2 py-1 rounded-full shrink-0">
+                  {filledAttributeCount}/{attributeFields.length} seçili
+                </div>
+              </div>
             </div>
+            <div className="p-4 space-y-4">
+              {attributeLoading && (
+                <div className="text-sm text-gray-500 font-medium">Özellikler yükleniyor...</div>
+              )}
+
+              {!attributeLoading && attributeLoadError && (
+                <div className="text-sm text-red-500 font-medium">{attributeLoadError}</div>
+              )}
+
+              {!attributeLoading && !attributeLoadError && attributeFields.length === 0 && (
+                <div className="text-sm text-gray-500 font-medium">Bu kategori için ek özellik bulunmuyor.</div>
+              )}
+
+              {!attributeLoading && !attributeLoadError && attributeFields.length > 0 && (() => {
+                const ordered = attributeFields
+                  .slice()
+                  .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+                const visible = showAllAttributes ? ordered : ordered.slice(0, 6);
+                return (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      {visible.map(renderAttributeField)}
+                    </div>
+                    {ordered.length > 6 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllAttributes((prev) => !prev)}
+                        className="w-full text-sm font-semibold text-cyan-700 hover:text-cyan-800 bg-cyan-50 border border-cyan-100 rounded-xl py-2"
+                      >
+                        {showAllAttributes ? "Daha az göster" : "Tüm özellikleri göster"}
+                      </button>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
         )}
 
         {/* Sort & Clear */}
@@ -1130,8 +1476,7 @@ export default function CategoryClient() {
             </div>
             <button
                 onClick={() => {
-                setSearchTerm(''); setSelectedCity([]); setSelectedDistrict([]); setPriceRange([0, 10000000]);
-                setFilterAttrs({}); setSortBy('date');
+                clearAllFilters();
                 }}
                 className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-all shadow-md mb-[1px]"
                 title="Temizle"
@@ -1142,7 +1487,6 @@ export default function CategoryClient() {
       </div>
     </div>
   );
-  };
 
   const handleCreateAlarm = async () => {
     if (!session) {
@@ -1156,12 +1500,23 @@ export default function CategoryClient() {
 
     const query = searchTerm || titleCaseTR(subcategory ? subcategory.name : category.name);
 
-    const filters: FilterAttrs = {};
+    const filters: {
+      city?: string[];
+      district?: string[];
+      minPrice?: number;
+      maxPrice?: number;
+    } = {};
     if (selectedCity.length > 0) filters.city = selectedCity;
     if (selectedDistrict.length > 0) filters.district = selectedDistrict;
     if (priceRange[0] > 0) filters.minPrice = priceRange[0];
-    if (priceRange[1] < 10000000) filters.maxPrice = priceRange[1];
-    Object.assign(filters, filterAttrs);
+    if (priceRange[1] < DEFAULT_PRICE_RANGE[1]) filters.maxPrice = priceRange[1];
+    Object.entries(attrValues).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        if (value.length > 0) (filters as any)[key] = value;
+      } else if (value !== undefined && value !== null && String(value).trim() !== "") {
+        (filters as any)[key] = value;
+      }
+    });
 
     const hasFilters = Object.keys(filters).length > 0;
     const hasSearchTerm = !!searchTerm && searchTerm.length >= 3;
@@ -1297,13 +1652,10 @@ export default function CategoryClient() {
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Talep Bulunamadı</h3>
                 <p className="text-gray-500">Arama kriterlerinize uygun talep bulunmamaktadır.</p>
                 <button 
-                  onClick={() => {
-                    setSearchTerm(''); setSelectedCity([]); setSelectedDistrict([]); setPriceRange([0, 10000000]);
-                    setFilterAttrs({});
-                  }}
+                  onClick={() => setSearchTerm('')}
                   className="mt-6 px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
                 >
-                  Filtreleri Temizle
+                  Aramayı Temizle
                 </button>
               </div>
             ) : (

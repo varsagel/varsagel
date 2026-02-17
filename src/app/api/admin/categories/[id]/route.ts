@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth, getAdminUserId } from "@/auth";
+import { getAdminUserId } from "@/auth";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const session = await auth();
-  // @ts-ignore
-  if (session?.user?.role !== "ADMIN") {
+  const userId = await getAdminUserId();
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -58,9 +57,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const session = await auth();
-  // @ts-ignore
-  if (session?.user?.role !== "ADMIN") {
+  const userId = await getAdminUserId();
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

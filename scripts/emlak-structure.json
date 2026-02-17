@@ -1251,11 +1251,71 @@
       "subcategories": [
         {
           "name": "Satılık",
-          "slug": "turistik-tesis-satilik"
+          "slug": "turistik-tesis-satilik",
+          "subcategories": [
+            {
+              "name": "Otel",
+              "slug": "turistik-tesis-satilik-otel"
+            },
+            {
+              "name": "Apart Otel",
+              "slug": "turistik-tesis-satilik-apart-otel"
+            },
+            {
+              "name": "Butik Otel",
+              "slug": "turistik-tesis-satilik-butik-otel"
+            },
+            {
+              "name": "Motel",
+              "slug": "turistik-tesis-satilik-motel"
+            },
+            {
+              "name": "Pansiyon",
+              "slug": "turistik-tesis-satilik-pansiyon"
+            },
+            {
+              "name": "Kamp Yeri (Mocamp)",
+              "slug": "turistik-tesis-satilik-kamp-yeri-mocamp"
+            },
+            {
+              "name": "Tatil Köyü",
+              "slug": "turistik-tesis-satilik-tatil-koyu"
+            }
+          ]
         },
         {
           "name": "Kiralık",
-          "slug": "turistik-tesis-kiralik"
+          "slug": "turistik-tesis-kiralik",
+          "subcategories": [
+            {
+              "name": "Otel",
+              "slug": "turistik-tesis-kiralik-otel"
+            },
+            {
+              "name": "Apart Otel",
+              "slug": "turistik-tesis-kiralik-apart-otel"
+            },
+            {
+              "name": "Butik Otel",
+              "slug": "turistik-tesis-kiralik-butik-otel"
+            },
+            {
+              "name": "Motel",
+              "slug": "turistik-tesis-kiralik-motel"
+            },
+            {
+              "name": "Pansiyon",
+              "slug": "turistik-tesis-kiralik-pansiyon"
+            },
+            {
+              "name": "Kamp Yeri (Mocamp)",
+              "slug": "turistik-tesis-kiralik-kamp-yeri-mocamp"
+            },
+            {
+              "name": "Tatil Köyü",
+              "slug": "turistik-tesis-kiralik-tatil-koyu"
+            }
+          ]
         }
       ]
     }

@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 
     const { id: slug } = await context.params
     if (!slug) return NextResponse.json({ error: 'id gerekli' }, { status: 400 })
-    const isCode = /^\d{6}$/.test(slug)
+    const isCode = /^\d{6}$/.test(slug) || /^\d{9}$/.test(slug)
     const listing = await prisma.listing.findFirst({
       where: isCode ? { code: slug } : { id: slug },
       include: {

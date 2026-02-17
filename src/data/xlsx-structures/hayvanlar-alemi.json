@@ -393,6 +393,25 @@
       "slug": "bocekler",
       "subcategories": [],
       "fullSlug": "bocekler"
+    },
+    {
+      "name": "alt kategori",
+      "slug": "alt-kategori",
+      "subcategories": [
+        {
+          "name": "alt kategori",
+          "slug": "alt-kategori",
+          "subcategories": [
+            {
+              "name": "alt kategori",
+              "slug": "alt-kategori",
+              "fullSlug": "alt-kategori/alt-kategori/alt-kategori"
+            }
+          ],
+          "fullSlug": "alt-kategori/alt-kategori"
+        }
+      ],
+      "fullSlug": "alt-kategori"
     }
   ],
   "fullSlug": "hayvanlar-alemi"

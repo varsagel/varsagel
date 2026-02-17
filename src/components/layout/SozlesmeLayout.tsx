@@ -33,7 +33,7 @@ export default function SozlesmeLayout({
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-12">
-          <div className="prose prose-blue max-w-none">
+          <div className="prose prose-blue max-w-none text-gray-800 prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900">
             {children}
           </div>
         </div>

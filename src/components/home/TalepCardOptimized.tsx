@@ -3,13 +3,25 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Heart, MapPin, Hash } from "lucide-react";
+import { Heart, MapPin, Hash } from "lucide-react";
 import BRAND_LOGOS from "@/data/brand-logos.json";
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { getSubcategoryImage } from '@/data/subcategory-images';
+import { useSession } from "next-auth/react";
+import { getCategoryImage, getSubcategoryImage } from '@/data/subcategory-images';
 import { useToast } from "@/components/ui/use-toast";
 import { listingHref } from '@/lib/listing-url';
 import { titleCaseTR } from '@/lib/title-case-tr';
+
+const normalizeImageSrc = (src: string) => {
+  const value = String(src || "").trim();
+  if (!value) return value;
+  if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
 
 interface ListingAttributes {
   marka?: string | string[];
@@ -44,53 +56,6 @@ interface TalepCardProps {
   onToggleFavorite?: (id: string) => void;
   priority?: boolean;
 }
-
-// Memoized time calculation component
-const TimeAgo = React.memo(({ createdAt }: { createdAt: string }) => {
-    const rtf = useMemo(() => new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" }), []);
-    const [now, setNow] = useState<number | null>(null);
-
-    useEffect(() => {
-      setNow(Date.now());
-      const id = window.setInterval(() => setNow(Date.now()), 60_000);
-      return () => window.clearInterval(id);
-    }, []);
-
-    const timeAgo = useMemo(() => {
-      const date = new Date(createdAt);
-      if (now === null) return rtf.format(0, "second");
-      const diffMs = date.getTime() - now;
-      const diffSeconds = Math.round(diffMs / 1000);
-      const absSeconds = Math.abs(diffSeconds);
-      if (absSeconds < 60) return rtf.format(diffSeconds, "second");
-
-      const diffMinutes = Math.round(diffSeconds / 60);
-      const absMinutes = Math.abs(diffMinutes);
-      if (absMinutes < 60) return rtf.format(diffMinutes, "minute");
-
-      const diffHours = Math.round(diffMinutes / 60);
-      const absHours = Math.abs(diffHours);
-      if (absHours < 24) return rtf.format(diffHours, "hour");
-
-      const diffDays = Math.round(diffHours / 24);
-      const absDays = Math.abs(diffDays);
-      if (absDays < 7) return rtf.format(diffDays, "day");
-
-      const diffWeeks = Math.round(diffDays / 7);
-      const absWeeks = Math.abs(diffWeeks);
-      if (absWeeks < 5) return rtf.format(diffWeeks, "week");
-
-      const diffMonths = Math.round(diffDays / 30);
-      const absMonths = Math.abs(diffMonths);
-      if (absMonths < 12) return rtf.format(diffMonths, "month");
-
-      const diffYears = Math.round(diffDays / 365);
-      return rtf.format(diffYears, "year");
-    }, [createdAt, rtf, now]);
-    return <span suppressHydrationWarning>{timeAgo}</span>;
-  });
-
-TimeAgo.displayName = 'TimeAgo';
 
 // Memoized price formatting
 const PriceDisplay = React.memo(({ price }: { price: number }) => {
@@ -207,8 +172,13 @@ function getCategoryPlaceholder(category: string) {
 
 export default function TalepCard({ listing, onToggleFavorite, priority }: TalepCardProps) {
   const [fav, setFav] = useState(listing.isFavorited);
+  const { data: session } = useSession();
   const { toast } = useToast();
   
+  useEffect(() => {
+    setFav(listing.isFavorited);
+  }, [listing.isFavorited]);
+
   const attributes = useMemo(() => {
     if (listing.attributes && typeof listing.attributes === "object") return listing.attributes;
     try {
@@ -265,9 +235,8 @@ export default function TalepCard({ listing, onToggleFavorite, priority }: Talep
     return out.slice(0, 3);
   }, [attributes, listing.category]);
 
-  const handleToggleFavorite = useCallback(() => {
-    // Check if user is logged in by checking if onToggleFavorite is provided
-    if (!onToggleFavorite) {
+  const handleToggleFavorite = useCallback(async () => {
+    if (!session?.user?.id) {
       toast({
         title: "Giriş Yapmalısınız",
         description: "Lütfen üye olun veya giriş yapın.",
@@ -275,13 +244,28 @@ export default function TalepCard({ listing, onToggleFavorite, priority }: Talep
       });
       return;
     }
-    setFav(!fav);
-    onToggleFavorite?.(listing.id);
-  }, [fav, listing.id, onToggleFavorite, toast]);
+    const nextFav = !fav;
+    setFav(nextFav);
+    if (onToggleFavorite) {
+      onToggleFavorite(listing.id);
+      return;
+    }
+    try {
+      const res = nextFav
+        ? await fetch(`/api/favorites`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ listingId: listing.id }) })
+        : await fetch(`/api/favorites?listingId=${listing.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        setFav(!nextFav);
+      }
+    } catch {
+      setFav(!nextFav);
+    }
+  }, [fav, listing.id, onToggleFavorite, session?.user?.id, toast]);
 
   const subcategoryImage = useMemo(() => {
-    return listing.subcategory ? getSubcategoryImage(listing.subcategory) : '/images/placeholder-1.svg';
-  }, [listing.subcategory]);
+    return getSubcategoryImage(listing.subcategory || "", listing.category);
+  }, [listing.category, listing.subcategory]);
+  const categoryImage = useMemo(() => getCategoryImage(listing.category), [listing.category]);
 
   const href = useMemo(() => {
     return listingHref({
@@ -294,15 +278,34 @@ export default function TalepCard({ listing, onToggleFavorite, priority }: Talep
   }, [listing.category, listing.code, listing.id, listing.subcategory, listing.title]);
 
   const [currentSrc, setCurrentSrc] = useState(listing.images?.[0] || subcategoryImage);
+  const displaySrc = useMemo(() => normalizeImageSrc(currentSrc), [currentSrc]);
   const isDefaultImage = useMemo(() => {
-    return currentSrc.startsWith('/images/defaults/') || currentSrc.startsWith('/images/placeholder-');
-  }, [currentSrc]);
+    return displaySrc.startsWith('/images/defaults/') || displaySrc.startsWith('/images/subcategories/');
+  }, [displaySrc]);
   const isRemoteImage = useMemo(() => {
-    return currentSrc.startsWith('http://') || currentSrc.startsWith('https://');
-  }, [currentSrc]);
+    return displaySrc.startsWith('http://') || displaySrc.startsWith('https://');
+  }, [displaySrc]);
+  const isCloudFrontHost = useMemo(() => {
+    if (!isRemoteImage) return false;
+    try {
+      const host = new URL(displaySrc).hostname.toLowerCase();
+      return host.endsWith(".cloudfront.net");
+    } catch {
+      return false;
+    }
+  }, [displaySrc, isRemoteImage]);
+  const isAllowedRemote = useMemo(() => {
+    if (!isRemoteImage) return false;
+    try {
+      const host = new URL(displaySrc).hostname.toLowerCase();
+      return host === 'varsagel.com' || host === 'www.varsagel.com' || host === 'localhost' || host === '127.0.0.1' || host.includes(".s3.") || isCloudFrontHost;
+    } catch {
+      return false;
+    }
+  }, [displaySrc, isRemoteImage, isCloudFrontHost]);
   const isJfifImage = useMemo(() => {
-    return /\.jfif($|\?)/i.test(currentSrc) || /\.jif($|\?)/i.test(currentSrc);
-  }, [currentSrc]);
+    return /\.jfif($|\?)/i.test(displaySrc) || /\.jif($|\?)/i.test(displaySrc);
+  }, [displaySrc]);
 
   useEffect(() => {
     setCurrentSrc(listing.images?.[0] || subcategoryImage);
@@ -311,22 +314,24 @@ export default function TalepCard({ listing, onToggleFavorite, priority }: Talep
   const handleError = () => {
     if (currentSrc === listing.images?.[0] && currentSrc !== subcategoryImage) {
       setCurrentSrc(subcategoryImage);
-    } else if (currentSrc === subcategoryImage) {
-      setCurrentSrc('/images/placeholder-1.svg');
+      return;
+    }
+    if (currentSrc === subcategoryImage && currentSrc !== categoryImage) {
+      setCurrentSrc(categoryImage);
     }
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:shadow-slate-200/60 hover:border-cyan-200 transition-all duration-300 overflow-hidden relative group">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:shadow-slate-200/60 hover:border-cyan-200 hover:ring-2 hover:ring-cyan-200/60 focus-within:ring-2 focus-within:ring-cyan-200/60 transition-all duration-300 overflow-hidden relative group">
       <Link href={href} prefetch={false}>
         <div className="relative h-44 bg-gray-100">
           <Image
-            src={currentSrc}
+            src={displaySrc}
             alt={listing.title}
             onError={handleError}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            unoptimized={isDefaultImage || isRemoteImage || isJfifImage}
+            unoptimized={isDefaultImage || isJfifImage || (isRemoteImage && !isAllowedRemote)}
             quality={isDefaultImage ? 100 : 85}
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             priority={priority}
@@ -367,34 +372,43 @@ export default function TalepCard({ listing, onToggleFavorite, priority }: Talep
 
       <div className="p-4">
         <Link href={href} prefetch={false}>
-          <h3 className="font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-[#1E4355] transition-colors leading-snug">
+          <h3 className="text-sm font-bold text-slate-900 mb-1 line-clamp-2 group-hover:text-[#1E4355] transition-colors leading-snug">
             {listing.title}
           </h3>
         </Link>
 
-        <div className="flex items-start gap-2 text-xs text-slate-600">
-          <MapPin className="h-4 w-4 text-slate-400 mt-0.5" />
-          <span className="line-clamp-1">{locationText}</span>
-        </div>
-
-        <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
-          <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4 text-slate-400" />
-            <TimeAgo createdAt={listing.createdAt} />
+        <div className="mt-1 flex items-center justify-between gap-2">
+          <div className="text-sm font-semibold text-slate-900">
+            <PriceRangeDisplay 
+              minPrice={attributes.minPrice} 
+              maxPrice={attributes.maxPrice} 
+              price={listing.price} 
+            />
           </div>
           {listing.code && (
-            <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500">
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 min-w-0">
               <Hash className="h-3.5 w-3.5 text-slate-400" />
               <span className="truncate max-w-[90px]">{listing.code}</span>
             </div>
           )}
         </div>
 
+        <p className="mt-1 text-xs text-slate-600 line-clamp-1 leading-relaxed">
+          {listing.description}
+        </p>
+
+        <div className="mt-2 flex items-start gap-2 text-xs text-slate-500">
+          <div className="flex items-start gap-1">
+            <MapPin className="h-4 w-4 text-slate-400" />
+            <span className="whitespace-normal break-words leading-relaxed line-clamp-2">{locationText}</span>
+          </div>
+        </div>
+
         {(chips.length > 0 || Object.keys(attributes).length > 0) && (
           <div className="mt-3 pt-3 border-t border-slate-100">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <BrandLogo category={listing.category} attributes={attributes} />
-              <div className="flex flex-wrap gap-1.5 min-w-0">
+              <div className="flex flex-nowrap gap-1.5 min-w-0 overflow-hidden">
                 {chips.map((c) => (
                   <span
                     key={c.label}
@@ -406,13 +420,21 @@ export default function TalepCard({ listing, onToggleFavorite, priority }: Talep
                           : "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-50 text-slate-600 border border-slate-100"
                     }
                   >
-                    <span className="truncate max-w-[150px]">{c.label}</span>
+                    <span className="truncate max-w-[140px]">{c.label}</span>
                   </span>
                 ))}
               </div>
             </div>
           </div>
         )}
+
+        <Link
+          href={href}
+          prefetch={false}
+          className="mt-3 inline-flex w-full items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+        >
+          Detayları Gör
+        </Link>
       </div>
     </div>
   );

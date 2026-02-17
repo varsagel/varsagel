@@ -1,7 +1,7 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { buildListingSlug, parseListingIdentifier } from '@/lib/listing-url';
-import { generateMetadata } from '@/app/talep/[id]/page';
+import { generateMetadata } from '@/app/talep/[...id]/page';
 
 export { generateMetadata };
 

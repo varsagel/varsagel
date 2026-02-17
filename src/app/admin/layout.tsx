@@ -26,15 +26,22 @@ export default async function AdminLayout({
   if (!adminId) redirect('/');
 
   return (
-    <div className="flex min-h-screen bg-gray-50 font-sans">
-      <AdminSidebar />
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">
-          <div className="p-4 md:p-8">
-            {children}
-          </div>
-        </main>
+    <div className="min-h-screen bg-gray-50 font-sans">
+      <div className="flex min-h-screen">
+        <input id="admin-sidebar-toggle" type="checkbox" className="peer sr-only" />
+        <label
+          htmlFor="admin-sidebar-toggle"
+          className="fixed inset-0 z-30 bg-black/40 opacity-0 pointer-events-none transition-opacity peer-checked:opacity-100 peer-checked:pointer-events-auto md:hidden"
+        />
+        <AdminSidebar />
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-x-hidden overflow-y-auto">
+            <div className="p-4 md:p-8">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );

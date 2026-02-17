@@ -10,7 +10,7 @@ async function ensureListingBlockTable() {
       "listingId" TEXT NOT NULL,
       "ownerId" TEXT NOT NULL,
       "blockedUserId" TEXT NOT NULL,
-      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       UNIQUE ("listingId", "blockedUserId")
     );
   `)
@@ -158,4 +158,3 @@ export async function GET(request: NextRequest) {
     token: crypto.randomUUID(),
   })
 }
-

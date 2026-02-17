@@ -1,11 +1,57 @@
 "use client";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { ChevronLeft, Send, User, ShoppingCart, MapPin, Folder, Tag, Info, MessageSquare, CheckCircle } from "lucide-react";
+import { ChevronLeft, Send, User, ShoppingCart, MapPin, Folder, Tag, Info, MessageSquare, CheckCircle, Flag, UserX, UserCheck } from "lucide-react";
 import { humanizeKeyTR } from "@/lib/humanize-key-tr";
+import ReportModal from "@/components/talep/ReportModal";
+import { useToast } from "@/components/ui/use-toast";
+import { getSubcategoryImage } from "@/data/subcategory-images";
+
+const normalizeImageSrc = (src?: string) => {
+  const value = String(src || "").trim();
+  if (!value) return value;
+  if (value.startsWith("http://") || value.startsWith("https://")) return value;
+  if (value.startsWith("data:")) return value;
+  if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
+
+const isPlaceholderImage = (src?: string) => {
+  const value = String(src || "").trim();
+  if (!value) return true;
+  const lower = value.toLowerCase();
+  if (lower.includes("placeholder-image.jpg")) return true;
+  if (lower.includes("/images/placeholder-1.svg")) return true;
+  if (lower.startsWith("data:image/svg")) return true;
+  if (/\.svg($|\?)/i.test(value)) return true;
+  return false;
+};
+
+const isAllowedRemote = (src?: string) => {
+  if (!src || !/^https?:\/\//i.test(src)) return false;
+  try {
+    const host = new URL(src).hostname.toLowerCase();
+    return host === 'varsagel.com' || host === 'www.varsagel.com' || host === 'localhost' || host === '127.0.0.1' || host.includes(".s3.") || host.endsWith(".cloudfront.net");
+  } catch {
+    return false;
+  }
+};
+
+const shouldUnoptimize = (src?: string) => {
+  if (!src) return true;
+  if (src.startsWith("data:")) return true;
+  if (/\.svg($|\?)/i.test(src)) return true;
+  if (/\.jfif($|\?)/i.test(src) || /\.jif($|\?)/i.test(src)) return true;
+  if (/^https?:\/\//i.test(src) && !isAllowedRemote(src)) return true;
+  return false;
+};
 
 export default function ChatPage() {
   const params = useParams();
@@ -14,6 +60,7 @@ export default function ChatPage() {
   const toUserId = searchParams.get('to');
   const { data: session } = useSession();
   const router = useRouter();
+  const { toast } = useToast();
   const [listing, setListing] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
@@ -21,10 +68,25 @@ export default function ChatPage() {
   const [acceptedOffer, setAcceptedOffer] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [hasBlockedOther, setHasBlockedOther] = useState(false);
+  const [isBlockLoading, setIsBlockLoading] = useState(false);
+  const [isUnblockLoading, setIsUnblockLoading] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
   const [highlightIds, setHighlightIds] = useState<Set<string>>(new Set());
   const prevIdsRef = useRef<Set<string>>(new Set());
   const didMarkRef = useRef(false);
+
+  const listingImage = useMemo(() => {
+    if (!listing) return "";
+    const rawImages = Array.isArray(listing.images) ? listing.images : [];
+    const normalized = rawImages.map((img: string) => normalizeImageSrc(img)).filter((img: string) => !isPlaceholderImage(img));
+    if (normalized[0]) return normalized[0];
+    const categoryKey = listing.category?.slug || listing.category?.name || "";
+    const subCategoryKey = listing.subCategory?.slug || listing.subCategory?.name || "";
+    return getSubcategoryImage(subCategoryKey, categoryKey);
+  }, [listing]);
   
   const ATTR_ICONS: Record<string, string> = {
     marka: '🚗',
@@ -86,6 +148,28 @@ export default function ChatPage() {
   useEffect(() => {
     loadListing();
   }, [loadListing]);
+
+  useEffect(() => {
+    if (!listingId || !session?.user?.id) return;
+    fetch(`/api/listings/block?listingId=${encodeURIComponent(listingId)}&blockedUserId=${encodeURIComponent(session.user.id)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data && typeof data.blocked === "boolean") setIsBlocked(data.blocked);
+      })
+      .catch(() => {});
+  }, [listingId, session?.user?.id]);
+
+  const canManageBlock = listing?.owner?.id && session?.user?.id && listing.owner.id === session.user.id;
+
+  useEffect(() => {
+    if (!listingId || !otherUserId || !canManageBlock) return;
+    fetch(`/api/listings/block?listingId=${encodeURIComponent(listingId)}&blockedUserId=${encodeURIComponent(otherUserId)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data && typeof data.blocked === "boolean") setHasBlockedOther(data.blocked);
+      })
+      .catch(() => {});
+  }, [listingId, otherUserId, canManageBlock]);
 
   useEffect(() => {
     if (!otherUserId || !session?.user?.id) return;
@@ -177,7 +261,7 @@ export default function ChatPage() {
   const sendMessage = async () => {
     setError("");
     const content = input.trim();
-    if (!content || !otherUserId) return;
+    if (!content || !otherUserId || isBlocked || hasBlockedOther) return;
     try {
       const res = await fetch('/api/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ listingId, toUserId: otherUserId, content }) });
       const data = await res.json();
@@ -193,6 +277,57 @@ export default function ChatPage() {
   };
 
   const myId = session?.user?.id as string | undefined;
+  const messageDisabled = !otherUserId || isBlocked || hasBlockedOther;
+  const blockNotice = isBlocked
+    ? "Bu talep için mesajlaşmanız engellendi."
+    : hasBlockedOther
+      ? "Bu talep için kullanıcı engellendi. Engeli kaldırınca mesajlaşma açılır."
+      : "";
+
+  const handleBlockUser = async () => {
+    if (!otherUserId) return;
+    setIsBlockLoading(true);
+    try {
+      const res = await fetch("/api/listings/block", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ listingId, blockedUserId: otherUserId }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Engelleme başarısız");
+      }
+      setHasBlockedOther(true);
+    } catch (err: any) {
+      setError(err?.message || "Engelleme başarısız");
+    } finally {
+      setIsBlockLoading(false);
+    }
+  };
+
+  const handleUnblockUser = async () => {
+    if (!otherUserId) return;
+    setIsUnblockLoading(true);
+    try {
+      const res = await fetch(`/api/listings/block?listingId=${encodeURIComponent(listingId)}&blockedUserId=${encodeURIComponent(otherUserId)}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Engel kaldırılamadı");
+      }
+      setHasBlockedOther(false);
+      toast({
+        title: "Başarılı",
+        description: "Engel kaldırıldı, mesajlaşma yeniden açıldı.",
+        variant: "success",
+      });
+    } catch (err: any) {
+      setError(err?.message || "Engel kaldırılamadı");
+    } finally {
+      setIsUnblockLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -209,11 +344,38 @@ export default function ChatPage() {
             </h1>
           </div>
           {listing && (
-            <div className="text-right hidden sm:block">
-              <div className="flex items-center gap-2 justify-end mb-1">
+            <div className="text-right hidden sm:flex flex-col items-end gap-2">
+              <div className="flex items-center gap-2 justify-end">
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${(listing.offers || []).find((o: any)=>o.status==='ACCEPTED') ? 'bg-lime-100 text-lime-800' : 'bg-gray-100 text-gray-800'}`}>
                   {(listing.offers || []).find((o: any)=>o.status==='ACCEPTED') ? 'Teklif Kabul Edildi' : 'Teklif Bekleniyor'}
                 </span>
+                {acceptedOffer && (
+                  <button
+                    onClick={() => setIsReportOpen(true)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-red-600 bg-red-50 border border-red-100 hover:bg-red-100"
+                  >
+                    <Flag className="w-3 h-3" /> Şikayet
+                  </button>
+                )}
+                {acceptedOffer && canManageBlock && otherUserId && (
+                  hasBlockedOther ? (
+                    <button
+                      onClick={handleUnblockUser}
+                      disabled={isUnblockLoading}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-green-700 bg-green-50 border border-green-100 hover:bg-green-100 disabled:opacity-60"
+                    >
+                      <UserCheck className="w-3 h-3" /> Engeli Kaldır
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleBlockUser}
+                      disabled={isBlockLoading}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100 hover:bg-amber-100 disabled:opacity-60"
+                    >
+                      <UserX className="w-3 h-3" /> Engelle
+                    </button>
+                  )
+                )}
               </div>
               {acceptedOffer && (
                 <div className="flex items-center gap-2 justify-end text-xs">
@@ -247,16 +409,17 @@ export default function ChatPage() {
                 <Info className="w-5 h-5 text-cyan-600" />
                 Talep Bilgileri
               </h3>
-              {listing ? (
+                  {listing ? (
                 <div className="space-y-4">
-                   {Array.isArray(listing.images) && listing.images.length > 0 ? (
+                   {listingImage ? (
                     <div className="aspect-video w-full relative rounded-xl overflow-hidden border border-gray-100">
                       <Image 
-                        src={listing.images[0]} 
+                        src={listingImage} 
                         alt={listing.title} 
                         fill 
                         sizes="(max-width: 768px) 100vw, 300px"
-                        className="object-cover" 
+                        className="object-cover"
+                        unoptimized={shouldUnoptimize(listingImage)}
                       />
                     </div>
                   ) : (
@@ -266,21 +429,21 @@ export default function ChatPage() {
                   )}
 
                   <div className="space-y-3">
-                    <h4 className="font-bold text-gray-900 leading-tight">{listing.title}</h4>
+                    <h4 className="font-bold text-gray-900 leading-tight break-words">{listing.title}</h4>
                     
                     <div className="space-y-2 text-sm text-gray-600">
-                      <div className="flex items-start gap-2">
+                      <div className="flex items-start gap-2 min-w-0">
                         <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                        <span>{listing.location?.city}{listing.location?.district ? `, ${listing.location?.district}` : ''}</span>
+                        <span className="min-w-0 break-words">{listing.location?.city}{listing.location?.district ? `, ${listing.location?.district}` : ''}</span>
                       </div>
-                      <div className="flex items-start gap-2">
+                      <div className="flex items-start gap-2 min-w-0">
                         <Folder className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                        <span>{listing.category?.name}{listing.subCategory ? ` • ${listing.subCategory.name}` : ''}</span>
+                        <span className="min-w-0 break-words">{listing.category?.name}{listing.subCategory ? ` • ${listing.subCategory.name}` : ''}</span>
                       </div>
                       {(listing.attributes?.marka || listing.attributes?.model) && (
-                        <div className="flex items-start gap-2">
+                        <div className="flex items-start gap-2 min-w-0">
                           <Tag className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                          <span>{[listing.attributes?.marka, listing.attributes?.model].filter(Boolean).join(' ')}</span>
+                          <span className="min-w-0 break-words">{[listing.attributes?.marka, listing.attributes?.model].filter(Boolean).join(' ')}</span>
                         </div>
                       )}
                     </div>
@@ -341,11 +504,11 @@ export default function ChatPage() {
                           const parts = s.split(',').map(p=>p.trim()).filter(Boolean);
                           const icon = ATTR_ICONS[k] || '•';
                           return (
-                            <div key={k} className="flex items-start gap-2 text-sm group">
+                            <div key={k} className="flex items-start gap-2 text-sm group min-w-0">
                               <span className="text-gray-400 mt-0.5">{icon}</span>
-                              <div>
+                              <div className="min-w-0">
                                 <span className="text-gray-500 text-xs block">{humanizeKeyTR(k)}</span>
-                                <span className="text-gray-900 font-medium">{parts.length > 0 ? parts.join(', ') : s}</span>
+                                <span className="text-gray-900 font-medium break-words">{parts.length > 0 ? parts.join(', ') : s}</span>
                               </div>
                             </div>
                           );
@@ -415,6 +578,11 @@ export default function ChatPage() {
               </div>
               
               <div className="p-4 bg-white border-t border-gray-100">
+                {blockNotice && (
+                  <div className="mb-3 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100 px-3 py-2 rounded-lg">
+                    {blockNotice}
+                  </div>
+                )}
                 <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:ring-2 focus-within:ring-cyan-500/20 focus-within:border-cyan-500 transition-all">
                   <input
                     value={input}
@@ -422,12 +590,13 @@ export default function ChatPage() {
                     placeholder="Mesajınızı yazın..."
                     className="flex-1 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none px-3 py-2"
                     onKeyDown={(e)=> { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+                    disabled={messageDisabled}
                   />
                   <button
                     onClick={sendMessage}
-                    disabled={!input.trim() || !otherUserId}
+                    disabled={!input.trim() || messageDisabled}
                     className={`p-3 rounded-xl transition-all duration-200 flex items-center justify-center ${
-                      (!input.trim() || !otherUserId) 
+                      (!input.trim() || messageDisabled) 
                         ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
                         : 'bg-cyan-600 text-white hover:bg-cyan-700 shadow-lg shadow-cyan-600/20 hover:scale-105 active:scale-95'
                     }`}
@@ -453,19 +622,19 @@ export default function ChatPage() {
                     </div>
                     
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm">
+                      <div className="grid grid-cols-[1fr,auto] gap-2 text-sm items-start">
                         <span className="text-lime-800/70">Teklif Veren</span>
-                        <span className="font-medium text-lime-900">{acceptedOffer.sellerName || 'Teklif Veren'}</span>
+                        <span className="font-medium text-lime-900 text-right break-words">{acceptedOffer.sellerName || 'Teklif Veren'}</span>
                       </div>
                       {acceptedOffer.sellerEmail && (
-                        <div className="flex items-center justify-between text-sm">
+                        <div className="grid grid-cols-[1fr,auto] gap-2 text-sm items-start">
                           <span className="text-lime-800/70">E-posta</span>
-                          <span className="font-medium text-lime-900 truncate max-w-[150px]" title={acceptedOffer.sellerEmail}>{acceptedOffer.sellerEmail}</span>
+                          <span className="font-medium text-lime-900 text-right break-all" title={acceptedOffer.sellerEmail}>{acceptedOffer.sellerEmail}</span>
                         </div>
                       )}
-                      <div className="flex items-center justify-between text-sm">
+                      <div className="grid grid-cols-[1fr,auto] gap-2 text-sm items-start">
                         <span className="text-lime-800/70">Tarih</span>
-                        <span className="font-medium text-lime-900">{new Date(acceptedOffer.createdAt).toLocaleDateString('tr-TR')}</span>
+                        <span className="font-medium text-lime-900 text-right">{new Date(acceptedOffer.createdAt).toLocaleDateString('tr-TR')}</span>
                       </div>
                     </div>
                   </div>
@@ -475,7 +644,7 @@ export default function ChatPage() {
                       <div className="absolute top-0 left-4 -translate-y-1/2 bg-white px-2 text-xs font-bold text-gray-500 flex items-center gap-1">
                         <MessageSquare className="w-3 h-3" /> Teklif Mesajı
                       </div>
-                      <p className="text-gray-600 text-sm italic leading-relaxed mt-1">
+                      <p className="text-gray-600 text-sm italic leading-relaxed mt-1 break-words">
                         "{acceptedOffer.message}"
                       </p>
                     </div>
@@ -490,11 +659,11 @@ export default function ChatPage() {
                           const parts = s.split(',').map(p=>p.trim()).filter(Boolean);
                           const icon = ATTR_ICONS[k] || '•';
                           return (
-                            <div key={k} className="flex items-start gap-2 text-sm">
+                            <div key={k} className="flex items-start gap-2 text-sm min-w-0">
                               <span className="text-gray-400 mt-0.5">{icon}</span>
-                              <div>
+                              <div className="min-w-0">
                                 <span className="text-gray-500 text-xs block">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                <span className="text-gray-900 font-medium">{parts.length > 0 ? parts.join(', ') : s}</span>
+                                <span className="text-gray-900 font-medium break-words">{parts.length > 0 ? parts.join(', ') : s}</span>
                               </div>
                             </div>
                           );
@@ -517,6 +686,14 @@ export default function ChatPage() {
           </div>
         )}
       </div>
+      {listing && (
+        <ReportModal
+          isOpen={isReportOpen}
+          onClose={() => setIsReportOpen(false)}
+          listingId={listing.id}
+          listingTitle={listing.title}
+        />
+      )}
     </div>
   );
 }

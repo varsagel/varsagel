@@ -4,11 +4,11 @@ CREATE TABLE "User" (
     "email" TEXT,
     "name" TEXT,
     "image" TEXT,
-    "emailVerified" DATETIME,
+    "emailVerified" TIMESTAMP(3),
     "passwordHash" TEXT,
     "role" TEXT NOT NULL DEFAULT 'USER',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -16,8 +16,8 @@ CREATE TABLE "Category" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -26,8 +26,8 @@ CREATE TABLE "SubCategory" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "categoryId" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "SubCategory_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -43,8 +43,8 @@ CREATE TABLE "Listing" (
     "categoryId" TEXT NOT NULL,
     "subCategoryId" TEXT,
     "ownerId" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Listing_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Listing_subCategoryId_fkey" FOREIGN KEY ("subCategoryId") REFERENCES "SubCategory" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT "Listing_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -58,8 +58,8 @@ CREATE TABLE "Offer" (
     "price" INTEGER NOT NULL,
     "message" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'PENDING',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Offer_listingId_fkey" FOREIGN KEY ("listingId") REFERENCES "Listing" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Offer_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -86,7 +86,7 @@ CREATE TABLE "Session" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "sessionToken" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "expires" DATETIME NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -94,7 +94,7 @@ CREATE TABLE "Session" (
 CREATE TABLE "VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
-    "expires" DATETIME NOT NULL
+    "expires" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateIndex

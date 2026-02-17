@@ -13,11 +13,18 @@ const priorityForListing = (updatedAt: Date) => {
 }
 
 export async function generateSitemaps() {
-  const total = await prisma.listing.count({ where: { status: 'OPEN' } })
-  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
-  const ids = [{ id: 0 }]
-  for (let i = 1; i <= pages; i++) ids.push({ id: i })
-  return ids
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return [{ id: 0 }]
+  }
+  try {
+    const total = await prisma.listing.count({ where: { status: 'OPEN' } })
+    const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+    const ids = [{ id: 0 }]
+    for (let i = 1; i <= pages; i++) ids.push({ id: i })
+    return ids
+  } catch {
+    return [{ id: 0 }]
+  }
 }
 
 export default async function sitemap(
@@ -39,31 +46,55 @@ export default async function sitemap(
       { url: `${base}/kurumsal/kvkk`, lastModified: now, priority: 0.3 },
     ]
 
+    const pushSubcategories = (categorySlug: string, subs: Array<{ slug: string; fullSlug?: string; subcategories?: any[] }>) => {
+      subs.forEach((sub) => {
+        const slugPath = (sub.fullSlug || sub.slug || "").trim();
+        if (slugPath) {
+          pages.push({ url: `${base}/kategori/${categorySlug}/${slugPath}`, lastModified: now, priority: 0.6 })
+        }
+        if (Array.isArray(sub.subcategories) && sub.subcategories.length > 0) {
+          pushSubcategories(categorySlug, sub.subcategories)
+        }
+      })
+    }
+
     CATEGORIES.forEach(cat => {
       pages.push({ url: `${base}/kategori/${cat.slug}`, lastModified: now, priority: 0.7 })
-      cat.subcategories.forEach(sub => {
-        pages.push({ url: `${base}/kategori/${cat.slug}/${sub.slug}`, lastModified: now, priority: 0.6 })
-      })
+      pushSubcategories(cat.slug, cat.subcategories || [])
     })
 
     return pages
   }
 
+  if (process.env.NEXT_PHASE === 'phase-production-build') return []
+
   const skip = (normalizedId - 1) * PAGE_SIZE
-  const listings = await prisma.listing.findMany({
-    where: { status: 'OPEN' },
-    select: {
-      id: true,
-      code: true,
-      title: true,
-      updatedAt: true,
-      category: { select: { slug: true } },
-      subCategory: { select: { slug: true } },
-    },
-    orderBy: { updatedAt: 'desc' },
-    skip,
-    take: PAGE_SIZE,
-  })
+  let listings: Array<{
+    id: string
+    code: string | null
+    title: string
+    updatedAt: Date
+    category: { slug: string } | null
+    subCategory: { slug: string } | null
+  }> = []
+  try {
+    listings = await prisma.listing.findMany({
+      where: { status: 'OPEN' },
+      select: {
+        id: true,
+        code: true,
+        title: true,
+        updatedAt: true,
+        category: { select: { slug: true } },
+        subCategory: { select: { slug: true } },
+      },
+      orderBy: { updatedAt: 'desc' },
+      skip,
+      take: PAGE_SIZE,
+    })
+  } catch {
+    return []
+  }
 
   return listings.map((listing) => {
     const slug = buildListingSlug({

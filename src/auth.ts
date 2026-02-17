@@ -25,6 +25,7 @@ function fileLog(...args: any[]) {
 }
 
 const providers = [] as any[];
+const authSecret = (process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "").trim();
 
 fileLog("Auth Config Loading...");
 if (!isProd) {
@@ -32,10 +33,15 @@ if (!isProd) {
   console.log("GOOGLE_ID present:", !!process.env.GOOGLE_ID);
   console.log("GOOGLE_SECRET present:", !!process.env.GOOGLE_SECRET);
   console.log("AUTH_SECRET present:", !!process.env.AUTH_SECRET);
+  console.log("NEXTAUTH_SECRET present:", !!process.env.NEXTAUTH_SECRET);
   console.log("NEXTAUTH_URL present:", !!process.env.NEXTAUTH_URL);
   console.log("AUTH_URL present:", !!process.env.AUTH_URL);
 }
 
+
+if (isProd && !authSecret) {
+  console.error("AUTH_SECRET veya NEXTAUTH_SECRET eksik.");
+}
 
 if (!process.env.GOOGLE_ID || !process.env.GOOGLE_SECRET) {
   console.warn("GOOGLE_ID or GOOGLE_SECRET is missing from environment variables.");
@@ -82,7 +88,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma) as any,
   providers,
   session: { strategy: "jwt" },
-  secret: process.env.AUTH_SECRET?.trim(),
+  secret: authSecret || undefined,
   trustHost: true,
   basePath: "/api/auth",
   debug: process.env.NODE_ENV !== "production",
@@ -234,8 +240,11 @@ export async function getAdminUserId() {
   const userId = session?.user?.id as string | undefined;
   if (!userId) return null;
 
+  const SUPER_EMAIL = 'varsagel.com@gmail.com';
+  const sessionEmail = String(session?.user?.email || '').toLowerCase();
+  const isSessionSuper = sessionEmail === SUPER_EMAIL;
   const sessionRole = String(session?.user?.role || '').toUpperCase();
-  if (sessionRole && sessionRole !== 'ADMIN') return null;
+  if (sessionRole && sessionRole !== 'ADMIN' && !isSessionSuper) return null;
 
   const g = globalThis as any;
   if (!g.__varsagel_admin_role_cache) {
@@ -248,8 +257,10 @@ export async function getAdminUserId() {
     return cached.isAdmin ? userId : null;
   }
 
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
-  const isAdmin = (user?.role || '').toUpperCase() === 'ADMIN';
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, email: true } });
+  const email = (user?.email || '').toLowerCase();
+  const isSuper = email === SUPER_EMAIL || isSessionSuper;
+  const isAdmin = (user?.role || '').toUpperCase() === 'ADMIN' || isSuper;
   cache.set(userId, { isAdmin, expiresAt: Date.now() + 30_000 });
   return isAdmin ? userId : null;
 }

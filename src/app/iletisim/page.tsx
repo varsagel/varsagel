@@ -74,7 +74,7 @@ export default function IletisimPage() {
                 <Phone className="w-6 h-6" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Telefon</h3>
-              <p className="text-gray-600 mb-4">Hafta içi 09:00 - 18:00</p>
+              <p className="text-gray-700 mb-4">Hafta içi 09:00 - 18:00</p>
               <a href="tel:+908501234567" className="text-cyan-600 font-medium hover:underline">
                 +90 (850) 123 45 67
               </a>
@@ -85,7 +85,7 @@ export default function IletisimPage() {
                 <Mail className="w-6 h-6" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">E-posta</h3>
-              <p className="text-gray-600 mb-4">7/24 Bize yazabilirsiniz</p>
+              <p className="text-gray-700 mb-4">7/24 Bize yazabilirsiniz</p>
               <a href="mailto:info@varsagel.com" className="text-cyan-600 font-medium hover:underline">
                 info@varsagel.com
               </a>
@@ -96,7 +96,7 @@ export default function IletisimPage() {
                 <MapPin className="w-6 h-6" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Ofis</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-700 mb-4">
                 Maslak Mah. Büyükdere Cad. <br />
                 No: 123 Sarıyer / İstanbul
               </p>

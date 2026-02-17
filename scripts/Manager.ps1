@@ -13,19 +13,23 @@ try {
     # Ignore errors in non-standard environments
 }
 
-# Set the working directory to the project root
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $projectRoot = Split-Path -Parent $scriptPath
 Set-Location $projectRoot
 
-# Ensure logs directory exists
 if (-not (Test-Path "$projectRoot\logs")) {
     New-Item -ItemType Directory -Force -Path "$projectRoot\logs" | Out-Null
 }
 
-# --- UI CONFIGURATION ---
+$panelMode = $env:VARSAGEL_PANEL_MODE
+if ([string]::IsNullOrWhiteSpace($panelMode)) {
+    $panelMode = "production"
+}
+$panelMode = $panelMode.ToLower()
+$isStaging = $panelMode -eq "staging"
+
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Varsagel Yonetim Paneli"
+$form.Text = if ($isStaging) { "Varsagel Gelistirme Paneli" } else { "Varsagel Yonetim Paneli" }
 $form.Size = New-Object System.Drawing.Size(620, 560)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedDialog"
@@ -49,16 +53,14 @@ $colTeal = [System.Drawing.Color]::Teal
 $colWhite = [System.Drawing.Color]::White
 $colMaroon = [System.Drawing.Color]::Maroon
 
-# --- HEADER ---
 $lblHeader = New-Object System.Windows.Forms.Label
-$lblHeader.Text = "Varsagel Kontrol Merkezi"
+$lblHeader.Text = if ($isStaging) { "Varsagel Gelistirme Kontrol Merkezi" } else { "Varsagel Kontrol Merkezi" }
 $lblHeader.Location = New-Object System.Drawing.Point(20, 20)
 $lblHeader.Size = New-Object System.Drawing.Size(540, 30)
 $lblHeader.Font = $fontHeader
 $lblHeader.ForeColor = [System.Drawing.Color]::FromArgb(33, 37, 41)
 $form.Controls.Add($lblHeader)
 
-# --- STATUS SECTION ---
 $grpStatus = New-Object System.Windows.Forms.GroupBox
 $grpStatus.Text = "Durum"
 $grpStatus.Location = New-Object System.Drawing.Point(20, 60)
@@ -81,14 +83,12 @@ $grpStatus.Controls.Add($btnRefresh)
 
 $form.Controls.Add($grpStatus)
 
-# --- ACTIONS SECTION ---
 $grpActions = New-Object System.Windows.Forms.GroupBox
 $grpActions.Text = "Islemler"
 $grpActions.Location = New-Object System.Drawing.Point(20, 130)
 $grpActions.Size = New-Object System.Drawing.Size(560, 260)
 $grpActions.Font = $fontNormal
 
-# Helper to create buttons
 function Create-Button {
     param(
         [string]$text,
@@ -111,27 +111,44 @@ function Create-Button {
     return $btn
 }
 
-# Row 1: Server Control
-$btnDev = Create-Button -text "Gelistirici Modu" -x 20 -y 30 -action { Start-Server "dev" } -color $colGreen
-$grpActions.Controls.Add($btnDev)
+if ($isStaging) {
+    $btnDev = Create-Button -text "Gelistirici Modu" -x 20 -y 30 -action { Start-Server "dev" } -color $colGreen
+    $grpActions.Controls.Add($btnDev)
 
-$btnProd = Create-Button -text "Canli Mod" -x 190 -y 30 -action { Start-Server "start" } -color $colBlue
-$grpActions.Controls.Add($btnProd)
+    $btnStaging = Create-Button -text "Staging Baslat" -x 190 -y 30 -action { Start-Server "staging" } -color $colBlue
+    $grpActions.Controls.Add($btnStaging)
 
-$btnStop = Create-Button -text "Durdur" -x 360 -y 30 -action { Stop-Server } -color $colRed
-$grpActions.Controls.Add($btnStop)
+    $btnStop = Create-Button -text "Durdur" -x 360 -y 30 -action { Stop-Server } -color $colRed
+    $grpActions.Controls.Add($btnStop)
 
-# Row 2: Maintenance
-$btnBuild = Create-Button -text "Build Al" -x 20 -y 85 -action { Run-Command "npm run build" "Build Aliniyor..." } -color $colOrange
-$grpActions.Controls.Add($btnBuild)
+    $btnBuild = Create-Button -text "Build (Staging)" -x 20 -y 85 -action { Run-Command "npm run build:staging" "Build Aliniyor..." } -color $colOrange
+    $grpActions.Controls.Add($btnBuild)
 
-$btnDeploy = Create-Button -text "Deploy / Guncelle" -x 190 -y 85 -action { Start-Deploy } -color $colTeal
-$grpActions.Controls.Add($btnDeploy)
+    $btnDeploy = Create-Button -text "Deploy (Staging)" -x 190 -y 85 -action { Start-Deploy } -color $colTeal
+    $grpActions.Controls.Add($btnDeploy)
 
-$btnClean = Create-Button -text "Onbellegi Temizle" -x 360 -y 85 -action { Clean-Cache } -color $colDark
-$grpActions.Controls.Add($btnClean)
+    $btnClean = Create-Button -text "Onbellegi Temizle" -x 360 -y 85 -action { Clean-Cache } -color $colDark
+    $grpActions.Controls.Add($btnClean)
+} else {
+    $btnDev = Create-Button -text "Gelistirici Modu" -x 20 -y 30 -action { Start-Server "dev" } -color $colGreen
+    $grpActions.Controls.Add($btnDev)
 
-# Row 3: Tools
+    $btnProd = Create-Button -text "Canli Mod" -x 190 -y 30 -action { Start-Server "start" } -color $colBlue
+    $grpActions.Controls.Add($btnProd)
+
+    $btnStop = Create-Button -text "Durdur" -x 360 -y 30 -action { Stop-Server } -color $colRed
+    $grpActions.Controls.Add($btnStop)
+
+    $btnBuild = Create-Button -text "Build Al" -x 20 -y 85 -action { Run-Command "npm run build" "Build Aliniyor..." } -color $colOrange
+    $grpActions.Controls.Add($btnBuild)
+
+    $btnDeploy = Create-Button -text "Deploy / Guncelle" -x 190 -y 85 -action { Start-Deploy } -color $colTeal
+    $grpActions.Controls.Add($btnDeploy)
+
+    $btnClean = Create-Button -text "Onbellegi Temizle" -x 360 -y 85 -action { Clean-Cache } -color $colDark
+    $grpActions.Controls.Add($btnClean)
+}
+
 $btnPrisma = Create-Button -text "Veritabani (Studio)" -x 20 -y 140 -action { Start-Process "cmd.exe" -ArgumentList "/c npx prisma studio" } -color $colPurple
 $grpActions.Controls.Add($btnPrisma)
 
@@ -141,12 +158,15 @@ $grpActions.Controls.Add($btnInstall)
 $btnOpenWeb = Create-Button -text "Siteyi Ac" -x 360 -y 140 -action { Open-Website } -color $colTeal
 $grpActions.Controls.Add($btnOpenWeb)
 
-# Row 4: Logs (New Feature)
-$btnLogs = Create-Button -text "Hata Kayitlari" -x 20 -y 195 -action { Show-Logs } -color $colMaroon
+$logsLabel = "Hata Kayitlari"
+if ($isStaging) { $logsLabel = "Deploy Loglari" }
+$btnLogs = Create-Button -text $logsLabel -x 20 -y 195 -action { Show-Logs } -color $colMaroon
 $grpActions.Controls.Add($btnLogs)
 
 $lblHint = New-Object System.Windows.Forms.Label
-$lblHint.Text = "NOT: Gelistirici modu calisirken acilan siyah pencerede de hatalar gorunur."
+$hintText = "NOT: Gelistirici modu calisirken acilan siyah pencerede de hatalar gorunur."
+if ($isStaging) { $hintText = "NOT: Staging ve gelistirici mod loglarini takip edin." }
+$lblHint.Text = $hintText
 $lblHint.Location = New-Object System.Drawing.Point(20, 250)
 $lblHint.Size = New-Object System.Drawing.Size(500, 40)
 $lblHint.ForeColor = [System.Drawing.Color]::Gray
@@ -165,24 +185,23 @@ $txtOutput.Size = New-Object System.Drawing.Size(560, 90)
 $txtOutput.Font = $fontSmall
 $form.Controls.Add($txtOutput)
 
-# --- FUNCTIONS ---
-
 function Log-Message($msg) {
     $txtOutput.AppendText("[$((Get-Date).ToString('HH:mm:ss'))] $msg`r`n")
     $txtOutput.ScrollToCaret()
 }
 
-# Load environment variables for proper configuration
-$envFile = "$projectRoot\.env.production"
-if (Test-Path $envFile) {
-    Get-Content $envFile | ForEach-Object {
-        if ($_ -match '^([^=]+)=(.*)$') {
-            $name = $matches[1].Trim()
-            $value = $matches[2].Trim().Trim('"', "'")
-            [Environment]::SetEnvironmentVariable($name, $value, "Process")
+$envFiles = if ($isStaging) { @("$projectRoot\.env.staging", "$projectRoot\.env.local") } else { @("$projectRoot\.env.production") }
+foreach ($envFile in $envFiles) {
+    if (Test-Path $envFile) {
+        Get-Content $envFile | ForEach-Object {
+            if ($_ -match '^([^=]+)=(.*)$') {
+                $name = $matches[1].Trim()
+                $value = $matches[2].Trim().Trim('"', "'")
+                [Environment]::SetEnvironmentVariable($name, $value, "Process")
+            }
         }
+        Log-Message "Environment variables loaded from $envFile"
     }
-    Log-Message "Production environment variables loaded from .env.production"
 }
 
 $script:activePort = 0
@@ -190,73 +209,114 @@ $script:activePort = 0
 function Update-Status {
     $portHTTP = 3000
     $portAlt = 3004
+    $portStaging = 3006
     $portHTTPS = 443
     
     $connHTTP = Get-NetTCPConnection -LocalPort $portHTTP -State Listen -ErrorAction SilentlyContinue
     $connAlt = Get-NetTCPConnection -LocalPort $portAlt -State Listen -ErrorAction SilentlyContinue
+    $connStaging = Get-NetTCPConnection -LocalPort $portStaging -State Listen -ErrorAction SilentlyContinue
     $connHTTPS = Get-NetTCPConnection -LocalPort $portHTTPS -State Listen -ErrorAction SilentlyContinue
     
-    if ($connAlt) {
-        $script:activePort = 3004
-        $lblStatus.Text = "[ON] SUNUCU CALISIYOR (Port: 3004 - Dev/Alt)"
-        $lblStatus.ForeColor = $colGreen
-    } elseif ($connHTTP) {
-        $script:activePort = 3000
-        $lblStatus.Text = "[ON] SUNUCU CALISIYOR (Port: 3000 - Dev)"
-        $lblStatus.ForeColor = $colGreen
-    } elseif ($connHTTPS) {
-        $script:activePort = 443
-        $lblStatus.Text = "[ON] SUNUCU CALISIYOR (Port: 443 - Production HTTPS)"
-        $lblStatus.ForeColor = $colGreen
+    if ($isStaging) {
+        if ($connStaging) {
+            $script:activePort = 3006
+            $lblStatus.Text = "[ON] STAGING CALISIYOR (Port: 3006)"
+            $lblStatus.ForeColor = $colGreen
+        } elseif ($connAlt) {
+            $script:activePort = 3004
+            $lblStatus.Text = "[ON] DEV CALISIYOR (Port: 3004)"
+            $lblStatus.ForeColor = $colGreen
+        } elseif ($connHTTP) {
+            $script:activePort = 3000
+            $lblStatus.Text = "[ON] DEV CALISIYOR (Port: 3000)"
+            $lblStatus.ForeColor = $colGreen
+        } else {
+            $script:activePort = 0
+            $lblStatus.Text = "[OFF] SUNUCU DURDU"
+            $lblStatus.ForeColor = $colRed
+        }
     } else {
-        $script:activePort = 0
-        $lblStatus.Text = "[OFF] SUNUCU DURDU"
-        $lblStatus.ForeColor = $colRed
+        if ($connAlt) {
+            $script:activePort = 3004
+            $lblStatus.Text = "[ON] SUNUCU CALISIYOR (Port: 3004 - Dev/Alt)"
+            $lblStatus.ForeColor = $colGreen
+        } elseif ($connHTTP) {
+            $script:activePort = 3000
+            $lblStatus.Text = "[ON] SUNUCU CALISIYOR (Port: 3000 - Dev)"
+            $lblStatus.ForeColor = $colGreen
+        } elseif ($connHTTPS) {
+            $script:activePort = 443
+            $lblStatus.Text = "[ON] SUNUCU CALISIYOR (Port: 443 - Production HTTPS)"
+            $lblStatus.ForeColor = $colGreen
+        } else {
+            $script:activePort = 0
+            $lblStatus.Text = "[OFF] SUNUCU DURDU"
+            $lblStatus.ForeColor = $colRed
+        }
     }
 }
 
 function Open-Website {
-    if ($script:activePort -eq 3004) {
-        Start-Process "http://localhost:3004"
-    } elseif ($script:activePort -eq 3000) {
-        Start-Process "http://localhost:3000"
-    } elseif ($script:activePort -eq 443) {
-        # Production mode - use production domain
-        Start-Process "https://www.varsagel.com"
+    if ($isStaging) {
+        if ($script:activePort -eq 3006) {
+            Start-Process "http://localhost:3006"
+        } elseif ($script:activePort -eq 3004) {
+            Start-Process "http://localhost:3004"
+        } elseif ($script:activePort -eq 3000) {
+            Start-Process "http://localhost:3000"
+        } else {
+            Start-Process "https://staging.varsagel.com"
+        }
     } else {
-        # Default fallback to production
-        Start-Process "https://www.varsagel.com"
+        if ($script:activePort -eq 3004) {
+            Start-Process "http://localhost:3004"
+        } elseif ($script:activePort -eq 3000) {
+            Start-Process "http://localhost:3000"
+        } elseif ($script:activePort -eq 443) {
+            Start-Process "https://www.varsagel.com"
+        } else {
+            Start-Process "https://www.varsagel.com"
+        }
     }
 }
 
 function Start-Server($mode) {
     Update-Status
-    # Check if really running
-    if ($script:activePort -ne 0) {
-        Log-Message "HATA: Sunucu zaten calisiyor (Port: $script:activePort). Once durdurun."
-        [System.Windows.Forms.MessageBox]::Show("Sunucu zaten calisiyor. Lutfen once durdurun.", "Uyari", "OK", "Warning")
-        return
+    if ($mode -eq "start" -or $mode -eq "staging") {
+        if ($script:activePort -ne 0) {
+            Log-Message "Sunucu tekrar baslatiliyor, acik sunucular kapatiliyor..."
+            Stop-Server
+            Start-Sleep -Seconds 2
+            Update-Status
+        }
+    } else {
+        # Check if really running
+        if ($script:activePort -ne 0) {
+            Log-Message "HATA: Sunucu zaten calisiyor (Port: $script:activePort). Once durdurun."
+            [System.Windows.Forms.MessageBox]::Show("Sunucu zaten calisiyor. Lutfen once durdurun.", "Uyari", "OK", "Warning")
+            return
+        }
     }
 
-    if ($mode -eq "start") {
-        # Check if build is needed
+    if ($mode -eq "start" -or $mode -eq "staging") {
+        $buildCmd = if ($mode -eq "staging") { "npm run build:staging" } else { "npm run build" }
+        $buildLabel = if ($mode -eq "staging") { "Staging build" } else { "Production build" }
         if (-not (Test-Path "$projectRoot\.next")) {
-            Log-Message "Production build bulunamadi. Build aliniyor..."
-            $result = [System.Windows.Forms.MessageBox]::Show("Production build bulunamadi. Once build alinmasi gerekiyor.`n`nSimdi Build alinsin mi?", "Build Gerekli", "YesNo", "Question")
+            Log-Message "$buildLabel bulunamadi. Build aliniyor..."
+            $result = [System.Windows.Forms.MessageBox]::Show("$buildLabel bulunamadi. Once build alinmasi gerekiyor.`n`nSimdi Build alinsin mi?", "Build Gerekli", "YesNo", "Question")
             if ($result -eq "Yes") {
-                 Run-Command "npm run build" "Build Aliniyor..."
-                 Log-Message "Build islemi baslatildi. Lutfen build penceresi kapanana kadar bekleyin, sonra tekrar Canli Mod'a tiklayin."
+                 Run-Command $buildCmd "Build Aliniyor..."
+                 Log-Message "Build islemi baslatildi. Lutfen build penceresi kapanana kadar bekleyin, sonra tekrar baslatin."
                  return
             } else {
                 Log-Message "Build islemi iptal edildi."
                 return
             }
         } else {
-            # Ask for build confirmation even if .next exists
             $result = [System.Windows.Forms.MessageBox]::Show("Uygulamada degisiklik yaptiysaniz once Build (Derleme) almaniz gerekir.`n`nSimdi Build alinsin mi?", "Build Onayi", "YesNo", "Question")
             if ($result -eq "Yes") {
-                 Run-Command "npm run build" "Build Aliniyor..."
-                 Log-Message "Build islemi baslatildi. Lutfen build penceresi kapanana kadar bekleyin, sonra tekrar Canli Mod'a tiklayin."
+                 Run-Command $buildCmd "Build Aliniyor..."
+                 Log-Message "Build islemi baslatildi. Lutfen build penceresi kapanana kadar bekleyin, sonra tekrar baslatin."
                  return
             }
         }
@@ -282,11 +342,11 @@ function Start-Server($mode) {
 
     # Run command with proper environment setup
     if ($mode -eq "start") {
-        # Production mode - use proper environment variables
-        $cmd = "npm run $mode"
+        $cmd = "npm run start"
+    } elseif ($mode -eq "staging") {
+        $cmd = "npm run start:staging"
     } else {
-        # Dev mode - use PORT=3004 for development
-        $cmd = "set PORT=3004 && npm run $mode"
+        $cmd = "set PORT=3004 && npm run dev"
     }
     Start-Process "cmd.exe" -ArgumentList "/k", "title Varsagel Server && $cmd"
     
@@ -297,7 +357,7 @@ function Start-Server($mode) {
 
 function Stop-Server {
     Log-Message "Sunucu durduruluyor..."
-    $ports = @(443, 3000, 3004)
+    $ports = if ($isStaging) { @(3006, 3000, 3004) } else { @(443, 3000, 3004) }
     
     # First, try to kill Node.js processes (most common for Next.js)
     Get-Process | Where-Object { $_.ProcessName -eq "node" } | ForEach-Object {
@@ -371,12 +431,14 @@ function Start-Deploy {
     if ($result -eq "Yes") {
         Log-Message "Deploy islemi baslatiliyor..."
         
-        # Stop existing server first
         Stop-Server
         
-        # Run the deploy script in a new window so user can see progress
         $deployScript = "$projectRoot\scripts\deploy.ps1"
-        Start-Process "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$deployScript`""
+        if ($isStaging) {
+            Start-Process "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$deployScript`" -Target staging -Action deploy"
+        } else {
+            Start-Process "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$deployScript`""
+        }
         
         Log-Message "Deploy penceresi acildi. Lutfen islem bitene kadar bekleyin."
     }
@@ -384,7 +446,10 @@ function Start-Deploy {
 
 function Run-Command($command, $desc) {
     Log-Message "$desc"
-    Start-Process "cmd.exe" -ArgumentList "/c", "$command", "&", "pause"
+    $cmd = $command
+    if ($cmd -match '^\s*env\s*$') { $cmd = 'Get-ChildItem Env:' }
+    elseif ($cmd -match '^\s*ls\s+-la\s*$') { $cmd = 'Get-ChildItem -Force' }
+    Start-Process "powershell.exe" -ArgumentList "-NoProfile", "-NoExit", "-Command", $cmd
 }
 
 function Clean-Cache {
@@ -406,14 +471,13 @@ function Clean-Cache {
 }
 
 function Show-Logs {
-    $logPath = "$projectRoot\logs\error.log"
+    $logPath = if ($isStaging) { "$projectRoot\logs\deploy-staging.log" } else { "$projectRoot\logs\error.log" }
     if (Test-Path $logPath) {
-        Log-Message "Hata kayitlari aciliyor..."
-        # Open with notepad or default viewer
+        Log-Message "Loglar aciliyor..."
         Start-Process "notepad.exe" -ArgumentList $logPath
     } else {
-        Log-Message "Henuz bir hata kaydi (logs/error.log) bulunamadi."
-        [System.Windows.Forms.MessageBox]::Show("Henuz bir hata kaydi olusmamis.", "Bilgi", "OK", "Information")
+        Log-Message "Henuz bir log kaydi bulunamadi."
+        [System.Windows.Forms.MessageBox]::Show("Henuz bir log kaydi olusmamis.", "Bilgi", "OK", "Information")
     }
 }
 

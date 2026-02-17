@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { MessageSquare, Reply } from "lucide-react";
+import { MessageSquare, Reply, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -23,6 +23,7 @@ export default function QuestionsSection({ listingId, isOwner = false }: { listi
   
   const [replyTexts, setReplyTexts] = useState<Record<string, string>>({});
   const [replyingId, setReplyingId] = useState<string | null>(null);
+  const isAdmin = String(session?.data?.user?.role || "").toUpperCase() === "ADMIN" || String(session?.data?.user?.email || "").toLowerCase() === "varsagel.com@gmail.com";
 
   const load = useCallback(async () => {
     try {
@@ -98,6 +99,24 @@ export default function QuestionsSection({ listingId, isOwner = false }: { listi
     }
   };
 
+  const deleteQuestion = async (questionId: string) => {
+    if (!confirm("Bu soruyu silmek istediğinize emin misiniz?")) return;
+    try {
+      const r = await fetch(`/api/talepler/${listingId}/questions?questionId=${encodeURIComponent(questionId)}`, {
+        method: "DELETE"
+      });
+      if (r.ok) {
+        await load();
+        toast({ title: "Başarılı", description: "Soru silindi.", variant: "success" });
+      } else {
+        const data = await r.json();
+        toast({ title: "Hata", description: data.error || "Bir hata oluştu", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Hata", description: "Bir hata oluştu", variant: "destructive" });
+    }
+  };
+
   return (
     <div id="questions-section" className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mt-8">
       <div className="flex items-center gap-2 mb-3">
@@ -111,12 +130,21 @@ export default function QuestionsSection({ listingId, isOwner = false }: { listi
           <div className="text-sm text-gray-500">Henüz soru yok. {isOwner ? "Talebinizle ilgili sorular burada görünecek." : "İlk soruyu sen sor."}</div>
         ) : items.map((q) => (
           <div key={q.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50">
-            <div className="flex justify-between items-start">
-                 <div>
-                    <div className="text-sm font-semibold text-gray-900">{q.user?.name || "Misafir"}</div>
-                    <div className="text-sm text-gray-700 mt-1">{q.body}</div>
-                    <div className="text-xs text-gray-400 mt-1">{new Date(q.createdAt).toLocaleString("tr-TR")}</div>
-                 </div>
+            <div className="flex justify-between items-start gap-3">
+              <div>
+                <div className="text-sm font-semibold text-gray-900">{q.user?.name || "Misafir"}</div>
+                <div className="text-sm text-gray-700 mt-1">{q.body}</div>
+                <div className="text-xs text-gray-400 mt-1">{new Date(q.createdAt).toLocaleString("tr-TR")}</div>
+              </div>
+              {isAdmin && (
+                <button
+                  onClick={() => deleteQuestion(q.id)}
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                  title="Soruyu sil"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
             {q.answer && (

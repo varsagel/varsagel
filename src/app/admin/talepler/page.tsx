@@ -20,9 +20,9 @@ export default async function AdminListingsPage({ searchParams }: { searchParams
   }
   if (searchQuery) {
     whereClause.OR = [
-      { title: { contains: searchQuery, mode: "insensitive" } },
-      { description: { contains: searchQuery, mode: "insensitive" } },
-      { owner: { email: { contains: searchQuery, mode: "insensitive" } } },
+      { title: { contains: searchQuery } },
+      { description: { contains: searchQuery } },
+      { owner: { email: { contains: searchQuery } } },
     ];
   }
 

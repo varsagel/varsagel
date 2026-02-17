@@ -20,6 +20,14 @@ function trSlug(str) {
     .replace(/^-|-$/g, '');
 }
 
+function normalizeLabel(label) {
+  const l = String(label || '').trim();
+  if (!l) return '';
+  const n = l.toLocaleLowerCase('tr');
+  if (n === 'modeller' || n === 'model') return 'Model';
+  return l;
+}
+
 function isMinMaxLabel(text) {
   const s = String(text || '').trim();
   if (!s) return false;
@@ -50,16 +58,25 @@ function getOrCreateNested(parent, name, currentPath) {
   return { node: child, path: fullSlug };
 }
 
-function addSelectOption(selectMap, categoryKey, label, option) {
-  const l = String(label || '').trim();
+function getOrderState(orderState, categoryKey) {
+  if (!orderState[categoryKey]) orderState[categoryKey] = { next: 0 };
+  return orderState[categoryKey];
+}
+
+function addSelectOption(selectMap, orderState, categoryKey, label, option) {
+  const l = normalizeLabel(label);
   const o = String(option || '').trim();
   if (!l || !o) return;
   if (!selectMap[categoryKey]) selectMap[categoryKey] = {};
-  if (!selectMap[categoryKey][l]) selectMap[categoryKey][l] = new Set();
-  selectMap[categoryKey][l].add(o);
+  const key = trSlug(l) || l;
+  if (!selectMap[categoryKey][key]) {
+    const state = getOrderState(orderState, categoryKey);
+    selectMap[categoryKey][key] = { label: l, options: new Set(), order: state.next++ };
+  }
+  selectMap[categoryKey][key].options.add(o);
 }
 
-function addRangeField(rangeMap, categoryKey, minLabel, maxLabel) {
+function addRangeField(rangeMap, orderState, categoryKey, minLabel, maxLabel) {
   const minL = String(minLabel || '').trim();
   const maxL = String(maxLabel || '').trim();
   if (!minL || !maxL) return;
@@ -71,7 +88,16 @@ function addRangeField(rangeMap, categoryKey, minLabel, maxLabel) {
   if (!base) return;
 
   if (!rangeMap[categoryKey]) rangeMap[categoryKey] = {};
-  rangeMap[categoryKey][base] = { minLabel: minL, maxLabel: maxL };
+  const baseLabel = normalizeLabel(base);
+  const key = trSlug(baseLabel) || baseLabel;
+  if (!rangeMap[categoryKey][key]) {
+    const state = getOrderState(orderState, categoryKey);
+    rangeMap[categoryKey][key] = { baseLabel, minLabel: minL, maxLabel: maxL, order: state.next++ };
+  } else {
+    const existing = rangeMap[categoryKey][key];
+    if (minL) existing.minLabel = minL;
+    if (maxL) existing.maxLabel = maxL;
+  }
 }
 
 function main() {
@@ -95,6 +121,7 @@ function main() {
   const selectMap = {};
   const rangeMap = {};
   const pendingLabelByCategory = {};
+  const orderState = {};
 
   for (let i = 1; i < data.length; i++) {
     const row = data[i];
@@ -120,47 +147,47 @@ function main() {
     const a9 = String(row[9] || '').trim();
 
     if (!a6 && !a7 && a8 && a9) {
-      addRangeField(rangeMap, categoryKey, a8, a9);
+      addRangeField(rangeMap, orderState, categoryKey, a8, a9);
       continue;
     }
 
     if (a6 && isMinMaxLabel(a6) && a7 && isMinMaxLabel(a7)) {
-      addRangeField(rangeMap, categoryKey, a6, a7);
+      addRangeField(rangeMap, orderState, categoryKey, a6, a7);
       continue;
     }
 
     if (a7 && isMinMaxLabel(a7) && a8 && isMinMaxLabel(a8)) {
-      addRangeField(rangeMap, categoryKey, a7, a8);
+      addRangeField(rangeMap, orderState, categoryKey, a7, a8);
     }
 
     if (a8 && a9 && isMinMaxLabel(a8) && isMinMaxLabel(a9)) {
-      addRangeField(rangeMap, categoryKey, a8, a9);
+      addRangeField(rangeMap, orderState, categoryKey, a8, a9);
     }
 
     if (!a6 && !a7 && a8 && !a9) {
       const pending = pendingLabelByCategory[categoryKey];
-      if (pending) addSelectOption(selectMap, categoryKey, pending, a8);
+      if (pending) addSelectOption(selectMap, orderState, categoryKey, pending, a8);
       continue;
     }
 
     if (a6 && a7 && !isMinMaxLabel(a7)) {
-      addSelectOption(selectMap, categoryKey, a6, a7);
+      addSelectOption(selectMap, orderState, categoryKey, a6, a7);
       continue;
     }
 
     if (a7 && a8 && !isMinMaxLabel(a8)) {
-      addSelectOption(selectMap, categoryKey, a7, a8);
-      pendingLabelByCategory[categoryKey] = a7;
+      addSelectOption(selectMap, orderState, categoryKey, a7, a8);
+      pendingLabelByCategory[categoryKey] = normalizeLabel(a7);
       continue;
     }
 
     if (!a6 && a7 && !a8 && !a9) {
-      pendingLabelByCategory[categoryKey] = a7;
+      pendingLabelByCategory[categoryKey] = normalizeLabel(a7);
       continue;
     }
 
     if (a6 && !a7 && !a8 && !a9) {
-      pendingLabelByCategory[categoryKey] = a6;
+      pendingLabelByCategory[categoryKey] = normalizeLabel(a6);
       continue;
     }
   }
@@ -173,33 +200,53 @@ function main() {
     const fields = [];
 
     const selects = selectMap[categoryKey] || {};
-    Object.entries(selects).forEach(([label, set]) => {
-      const options = Array.from(set).map((v) => String(v)).filter(Boolean);
+    Object.entries(selects).forEach(([labelKey, meta]) => {
+      const options = Array.from(meta.options).map((v) => String(v)).filter(Boolean);
       if (options.length === 0) return;
       fields.push({
         type: 'select',
-        key: trSlug(label),
-        label,
+        key: trSlug(meta.label),
+        label: meta.label,
         options: options.sort((a, b) => a.localeCompare(b, 'tr')),
+        order: meta.order
       });
     });
 
     const ranges = rangeMap[categoryKey] || {};
-    Object.entries(ranges).forEach(([baseLabel, meta]) => {
-      const baseKey = trSlug(baseLabel);
+    Object.entries(ranges).forEach(([baseKey, meta]) => {
+      const baseLabel = meta.baseLabel;
+      const key = trSlug(baseLabel);
+      if (!key) return;
       if (!baseKey) return;
       fields.push({
         type: 'range-number',
         label: baseLabel,
-        minKey: `${baseKey}Min`,
-        maxKey: `${baseKey}Max`,
+        minKey: `${key}Min`,
+        maxKey: `${key}Max`,
         minLabel: meta.minLabel,
         maxLabel: meta.maxLabel,
+        order: meta.order
       });
     });
 
-    fields.sort((a, b) => String(a.label).localeCompare(String(b.label), 'tr'));
-    if (fields.length > 0) attributesOutput[categoryKey] = fields;
+    const hasModel = fields.some((f) => String(f.key || '').toLowerCase() === 'model');
+    const markaField = fields.find((f) => String(f.key || '').toLowerCase() === 'marka' && f.type === 'select');
+    if (!hasModel && markaField) {
+      fields.push({
+        type: 'text',
+        key: 'model',
+        label: 'Model',
+        order: (markaField.order ?? 0) + 0.1
+      });
+    }
+
+    fields.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    if (fields.length > 0) {
+      attributesOutput[categoryKey] = fields.map((f) => {
+        const { order, ...rest } = f;
+        return rest;
+      });
+    }
   }
 
   fs.writeFileSync(OUTPUT_ATTRIBUTES_PATH, JSON.stringify(attributesOutput, null, 2));

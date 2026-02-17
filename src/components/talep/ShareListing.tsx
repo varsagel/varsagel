@@ -7,18 +7,26 @@ import { useToast } from '@/components/ui/use-toast';
 interface ShareListingProps {
   title: string;
   id: string;
+  slug?: string;
 }
 
-export default function ShareListing({ title, id }: ShareListingProps) {
+export default function ShareListing({ title, id, slug }: ShareListingProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
 
   const getUrl = () => {
-    if (typeof window !== 'undefined') {
-      return `${window.location.origin}/talep/${id}`;
-    }
-    return `${process.env.NEXT_PUBLIC_SITE_URL || 'https://varsagel.com'}/talep/${id}`;
+    const baseUrl = (() => {
+      if (typeof window !== "undefined") {
+        const host = window.location.hostname.toLowerCase();
+        if (host === "localhost" || host === "127.0.0.1") return window.location.origin;
+      }
+      const envBase = (process.env.NEXT_PUBLIC_SITE_URL || "").trim().replace(/\/+$/, "");
+      if (envBase) return envBase;
+      return "https://www.varsagel.com";
+    })();
+    const slugPart = slug || id;
+    return `${baseUrl}/talep/${slugPart}`;
   };
 
   const handleCopy = async () => {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { auth } from '@/auth'
+import { auth, getAdminUserId } from '@/auth'
 import { revalidatePath } from "next/cache";
 import { sendEmail, emailTemplates } from "@/lib/email";
 
@@ -28,8 +28,9 @@ export async function GET(request: NextRequest) {
     const slug = (searchParams.get('id') || '').trim()
     if (!slug) return NextResponse.json({ error: 'id gerekli' }, { status: 400 })
     
-    const isCode = /^\d{6}$/.test(slug)
+    const isCode = /^\d{6}$/.test(slug) || /^\d{9}$/.test(slug)
     const session = await auth();
+    const adminId = await getAdminUserId();
 
     const listing = await prisma.listing.findFirst({
       where: isCode ? { code: slug } : { id: slug },
@@ -47,17 +48,18 @@ export async function GET(request: NextRequest) {
 
     if (!listing) return NextResponse.json({ error: 'Bulunamadı' }, { status: 404 })
 
+    const accepted = await prisma.offer.findFirst({ where: { listingId: listing.id, status: 'ACCEPTED' }, include: { seller: { select: { id: true, name: true } } }, orderBy: { updatedAt: 'desc' } })
+
     // If not OPEN, check permissions
     if (listing.status !== 'OPEN') {
        let authorized = false;
        if (session?.user?.id) {
           if (listing.ownerId === session.user.id) {
              authorized = true;
-          } else {
-             const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { role: true } });
-             if ((user?.role || '').toUpperCase() === 'ADMIN') {
-                authorized = true;
-             }
+          } else if (adminId) {
+             authorized = true;
+          } else if (accepted?.sellerId && accepted.sellerId === session.user.id) {
+             authorized = true;
           }
        }
        
@@ -65,8 +67,6 @@ export async function GET(request: NextRequest) {
           return NextResponse.json({ error: 'Bulunamadı' }, { status: 404 });
        }
     }
-
-    const accepted = await prisma.offer.findFirst({ where: { listingId: listing.id, status: 'ACCEPTED' }, include: { seller: { select: { id: true, name: true } } }, orderBy: { updatedAt: 'desc' } })
     const images = parseJsonArray(listing.imagesJson)
     const price = listing.budget ? Number(listing.budget as any) : null
     const attributes = parseJsonObject(listing.attributesJson)
@@ -85,6 +85,7 @@ export async function GET(request: NextRequest) {
       createdAt: listing.createdAt,
       images,
       attributes,
+      attributesJson: listing.attributesJson,
       offers: listing.offers.map((o: any) => ({ id: o.id, price: Number(o.price as any), message: o.body, createdAt: o.createdAt, status: o.status, sellerId: o.sellerId, sellerName: o.seller?.name || 'Teklif Veren' })),
       acceptedOffer: accepted ? { id: accepted.id, price: Number(accepted.price as any), message: accepted.body, createdAt: accepted.createdAt, sellerId: accepted.sellerId, sellerName: accepted.seller?.name || 'Teklif Veren', attributes: parseJsonObject(accepted.attributesJson || null) } : null,
     })
@@ -108,11 +109,8 @@ export async function DELETE(request: NextRequest) {
     const listing = await prisma.listing.findUnique({ where: { id } });
     if (!listing) return NextResponse.json({ error: 'Talep bulunamadı' }, { status: 404 });
 
-    const currentUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { role: true }
-    });
-    const isAdmin = (currentUser?.role || '').toUpperCase() === 'ADMIN';
+    const adminId = await getAdminUserId();
+    const isAdmin = !!adminId;
 
     if (listing.ownerId !== session.user.id && !isAdmin) {
       return NextResponse.json({ error: 'Bu talebi silme yetkiniz yok' }, { status: 403 });
@@ -150,11 +148,8 @@ export async function PATCH(request: NextRequest) {
     const listing = await prisma.listing.findUnique({ where: { id } });
     if (!listing) return NextResponse.json({ error: 'Talep bulunamadı' }, { status: 404 });
 
-    const currentUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { role: true }
-    });
-    const isAdmin = (currentUser?.role || '').toUpperCase() === 'ADMIN';
+    const adminId = await getAdminUserId();
+    const isAdmin = !!adminId;
 
     if (listing.ownerId !== session.user.id && !isAdmin) {
       return NextResponse.json({ error: 'Bu talebi düzenleme yetkiniz yok' }, { status: 403 });

@@ -18,16 +18,28 @@ export async function POST(request: NextRequest) {
   const listingId = (body?.listingId as string || '').trim()
   if (!listingId) return NextResponse.json({ error: 'listingId gerekli' }, { status: 400 })
 
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });
+  if (!user) return NextResponse.json({ error: 'Kullanıcı bulunamadı' }, { status: 404 })
+
   const listing = await prisma.listing.findUnique({ where: { id: listingId }, select: { ownerId: true, status: true } });
+  if (!listing) return NextResponse.json({ error: 'Talep bulunamadı' }, { status: 404 });
   if (listing?.ownerId === userId) {
     return NextResponse.json({ error: 'Kendi talebinizi favoriye ekleyemezsiniz' }, { status: 403 });
   }
-  if (!listing || listing.status !== "OPEN") {
+  if (listing.status !== "OPEN") {
     return NextResponse.json({ error: 'Bu talep henüz yayında değil' }, { status: 403 });
   }
 
-  await prisma.favorite.create({ data: { userId, listingId } }).catch(() => {})
-  return NextResponse.json({ ok: true })
+  try {
+    await prisma.favorite.upsert({
+      where: { userId_listingId: { userId, listingId } },
+      create: { userId, listingId },
+      update: {},
+    })
+    return NextResponse.json({ ok: true })
+  } catch {
+    return NextResponse.json({ error: 'Favori eklenemedi' }, { status: 500 })
+  }
 }
 
 export async function DELETE(request: NextRequest) {

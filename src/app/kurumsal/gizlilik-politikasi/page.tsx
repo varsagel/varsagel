@@ -59,10 +59,9 @@ export default function PrivacyPage() {
         Gizlilik politikamızla ilgili sorularınız için <a href="mailto:info@varsagel.com" className="text-cyan-600 hover:underline">info@varsagel.com</a> adresinden bize ulaşabilirsiniz.
       </p>
 
-      <p className="text-sm text-gray-500 mt-8">
+      <p className="text-sm text-gray-600 mt-8">
         Son Güncelleme: {new Date().toLocaleDateString('tr-TR')}
       </p>
     </SozlesmeLayout>
   );
 }
-

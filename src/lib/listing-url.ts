@@ -68,10 +68,10 @@ export function parseListingIdentifier(param: string): ListingIdentifier {
   const raw = decodeURIComponent(String(param || '')).trim()
   if (!raw) return {}
 
-  if (/^\d{6}$/.test(raw)) return { code: raw }
+  if (/^\d{6}$/.test(raw) || /^\d{9}$/.test(raw)) return { code: raw }
   if (/^c[a-z0-9]{24}$/.test(raw)) return { id: raw }
 
-  const codeMatch = raw.match(/-(\d{6})$/)
+  const codeMatch = raw.match(/-(\d{6}|\d{9})$/)
   if (codeMatch) return { code: codeMatch[1] }
 
   const idMatch = raw.match(/-(c[a-z0-9]{24})$/)

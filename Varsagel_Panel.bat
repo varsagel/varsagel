@@ -1,6 +1,6 @@
 @echo off
-title Varsagel Yonetim Paneli Baslatiliyor...
-echo Varsagel Yonetim Paneli yukleniyor, lutfen bekleyin...
+title Varsagel Gelistirme Paneli Baslatiliyor...
+echo Varsagel Gelistirme Paneli yukleniyor, lutfen bekleyin...
 
 cd /d "%~dp0"
 
@@ -11,7 +11,7 @@ if not exist "scripts\Manager.ps1" (
     exit
 )
 
-:: Run the PowerShell script with Bypass policy to avoid permission issues
+set VARSAGEL_PANEL_MODE=staging
 PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& 'scripts\Manager.ps1'"
 
 if %errorlevel% neq 0 (

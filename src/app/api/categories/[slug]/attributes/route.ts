@@ -25,12 +25,6 @@ export async function GET(
       slug,
     ].filter(Boolean);
 
-    const normalize = (raw: any): string =>
-      String(raw || "")
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "")
-        .trim();
-
     const normalizeKey = (raw: string): string => {
       const k = String(raw || "").trim();
       if (slug === "vasita") {
@@ -64,6 +58,10 @@ export async function GET(
         maxLabel: f.maxLabel,
       }));
       break;
+    }
+
+    if (overrideMapped && overrideMapped.length > 0) {
+      return NextResponse.json(overrideMapped);
     }
 
     let dbMapped: any[] | null = null;
@@ -101,7 +99,7 @@ export async function GET(
         });
 
         if (attrs.length > 0) {
-          dbMapped = attrs.map((a) => ({
+          dbMapped = attrs.map((a: (typeof attrs)[number]) => ({
             id: a.id,
             name: a.name,
             slug: a.slug,
@@ -117,40 +115,6 @@ export async function GET(
         }
       }
     } catch {}
-
-    if (overrideMapped && overrideMapped.length > 0) {
-      if (!dbMapped || dbMapped.length === 0) return NextResponse.json(overrideMapped);
-
-      const dbBySlug = new Map<string, any>();
-      for (const a of dbMapped) dbBySlug.set(normalize(a.slug), a);
-
-      const merged = overrideMapped.map((o) => {
-        const db = dbBySlug.get(normalize(o.slug));
-        if (!db) return o;
-        return {
-          ...o,
-          required: db.required,
-          showInOffer: db.showInOffer,
-          showInRequest: db.showInRequest,
-          subCategoryId: db.subCategoryId,
-          subCategory: db.subCategory,
-          type: o.type || db.type,
-          optionsJson: o.optionsJson || db.optionsJson,
-        };
-      });
-
-      const seen = new Set(merged.map((o) => normalize(o.slug)));
-      const missingRequired = dbMapped.filter((a) => a.required && !seen.has(normalize(a.slug)));
-      const missingOptional = dbMapped.filter((a) => !a.required && !seen.has(normalize(a.slug)));
-
-      const out = [
-        ...missingRequired.sort((a, b) => (a.order || 0) - (b.order || 0)),
-        ...merged,
-        ...missingOptional.sort((a, b) => (a.order || 0) - (b.order || 0)),
-      ];
-
-      return NextResponse.json(out);
-    }
 
     if (dbMapped && dbMapped.length > 0) return NextResponse.json(dbMapped);
 

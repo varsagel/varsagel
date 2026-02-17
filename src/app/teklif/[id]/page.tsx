@@ -227,6 +227,12 @@ export default async function OfferDetailsPage({ params }: { params: Promise<{ i
                </Link>
             </div>
           )}
+
+          {isOwner && offer.status === 'ACCEPTED' && (
+            <div className="mt-6 pt-6 border-t border-gray-100">
+              <OfferActions offerId={offer.id} mode="reopen" />
+            </div>
+          )}
         </div>
 
         <SafetyTips listingId={offer.listing.id} listingTitle={offer.listing.title} isAuthenticated={true} />

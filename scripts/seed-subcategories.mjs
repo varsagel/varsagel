@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const OWNER_EMAIL = 'talepsahibi@gmail.com';
+const OWNER_EMAIL = process.env.SEED_OWNER_EMAIL || 'talepsahibi@gmail.com';
 
 // Dummy data helpers
 const CITIES = ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya'];
@@ -24,7 +24,11 @@ async function main() {
   });
 
   if (!user) {
-    console.error(`Kullanıcı ${OWNER_EMAIL} bulunamadı! Lütfen check-data.mjs çalıştırın veya kullanıcının var olduğundan emin olun.`);
+    user = await prisma.user.findFirst({ orderBy: { createdAt: 'asc' } });
+  }
+
+  if (!user) {
+    console.error(`Kullanıcı bulunamadı! Önce bir kullanıcı oluşturun.`);
     process.exit(1);
   }
   console.log(`Kullanıcı seçildi: ${user.name} (${user.id})`);
@@ -46,31 +50,29 @@ async function main() {
     for (const subCategory of category.subcategories) {
         console.log(`Alt kategori için talepler oluşturuluyor: ${subCategory.name} (${category.name})`);
         
-        // Create 2 listings for each subcategory
-        for (let i = 1; i <= 2; i++) {
-          const title = `${subCategory.name} - Örnek Talep ${i}`;
-          const description = `Bu, ${category.name} > ${subCategory.name} kategorisinde oluşturulmuş ${i}. örnek taleptir. Detaylı bilgi için iletişime geçiniz.`;
+        const title = `${subCategory.name} - Örnek Talep`;
+        const description = `Bu, ${category.name} > ${subCategory.name} kategorisinde oluşturulmuş örnek taleptir. Detaylı bilgi için iletişime geçiniz.`;
           
           // Generate dummy attributes based on category
           let attributes = {};
           if (category.slug === 'vasita') {
               attributes = {
-                  marka: i === 1 ? 'BMW' : 'Mercedes',
-                  model: i === 1 ? '320i' : 'C180',
-                  yil: 2020 + i,
+                  marka: 'BMW',
+                  model: '320i',
+                  yil: 2021,
                   yakit: 'Benzin',
                   vites: 'Otomatik'
               };
           } else if (category.slug === 'emlak') {
               attributes = {
                   odaSayisi: '3+1',
-                  metrekare: 120 + (i * 10),
+                  metrekare: 120,
                   isitma: 'Doğalgaz',
                   binaYasi: 5
               };
           } else if (category.slug === 'alisveris') {
               attributes = {
-                  marka: i === 1 ? 'Apple' : 'Samsung',
+                  marka: 'Apple',
                   durum: 'İkinci El'
               };
           } else {
@@ -87,13 +89,13 @@ async function main() {
             budget: BigInt(getRandomInt(1000, 1000000)),
             city: getRandomItem(CITIES),
             district: getRandomItem(DISTRICTS),
-            status: 'OPEN',
+            status: 'PENDING',
             imagesJson: JSON.stringify([]),
             attributesJson: JSON.stringify(attributes),
             categoryId: category.id,
             subCategoryId: subCategory.id,
             ownerId: user.id,
-            code: `${category.slug.substring(0, 3).toUpperCase()}-${subCategory.slug.substring(0, 3).toUpperCase()}-${Date.now()}-${i}`
+            code: `${category.slug.substring(0, 3).toUpperCase()}-${subCategory.slug.substring(0, 3).toUpperCase()}-${Date.now()}`
           };
     
           const listing = await prisma.listing.create({
@@ -101,7 +103,6 @@ async function main() {
           });
     
           console.log(`  Talep oluşturuldu: ${listing.title} (ID: ${listing.id})`);
-        }
     }
   }
 }

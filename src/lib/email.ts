@@ -1,12 +1,19 @@
 import nodemailer from 'nodemailer';
 
+const smtpPort = parseInt(process.env.SMTP_PORT || '587');
+const smtpSecure =
+  String(process.env.SMTP_SECURE || '').toLowerCase() === 'true' || smtpPort === 465;
+
+const smtpUser = (process.env.SMTP_USER || '').trim();
+const smtpPass = (process.env.SMTP_PASS || '').replace(/\s+/g, '');
+
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: false, // true for 465, false for other ports
+  port: smtpPort,
+  secure: smtpSecure,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: smtpUser,
+    pass: smtpPass,
   },
 });
 
@@ -14,7 +21,7 @@ const DEFAULT_FROM = '"Varsagel" <info@varsagel.com>';
 
 export async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
   // If SMTP creds are missing, just log (for development)
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  if (!smtpUser || !smtpPass) {
     console.log('--- MOCK EMAIL SEND ---');
     console.log('To:', to);
     console.log('Subject:', subject);
@@ -36,7 +43,15 @@ export async function sendEmail({ to, subject, html }: { to: string; subject: st
   }
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://varsagel.com';
+const SITE_URL =
+  // Prefer server-side canonical origins first
+  (process.env.CANONICAL_URL?.trim() || '') ||
+  (process.env.NEXTAUTH_URL?.trim() || '') ||
+  (process.env.AUTH_URL?.trim() || '') ||
+  // Fallback to public site URL
+  (process.env.NEXT_PUBLIC_SITE_URL?.trim() || '') ||
+  // Final default
+  'https://www.varsagel.com';
 
 export const emailTemplates = {
   listingPublished: (userName: string, listingTitle: string, listingId: string) => `
@@ -72,11 +87,11 @@ export const emailTemplates = {
     <br>
     <p>Varsagel Ekibi</p>
   `,
-  verificationEmail: (to: string, token: string) => `
+  verificationEmail: (to: string, token: string, baseUrl?: string) => `
     <h2>E-posta Adresinizi Doğrulayın</h2>
     <p>Merhaba,</p>
     <p>Varsagel hesabınızı doğrulamak için lütfen aşağıdaki bağlantıya tıklayın:</p>
-    <p><a href="${SITE_URL}/dogrula?token=${token}">E-postamı Doğrula</a></p>
+    <p><a href="${(baseUrl || SITE_URL)}/dogrula?token=${token}">E-postamı Doğrula</a></p>
     <p>Bu bağlantı 24 saat geçerlidir.</p>
     <br>
     <p>Varsagel Ekibi</p>
@@ -91,9 +106,9 @@ export const emailTemplates = {
   `
 };
 
-export async function sendVerificationEmail(to: string, token: string) {
+export async function sendVerificationEmail(to: string, token: string, baseUrl?: string) {
   const subject = "E-posta Adresinizi Doğrulayın";
-  const html = emailTemplates.verificationEmail(to, token);
+  const html = emailTemplates.verificationEmail(to, token, baseUrl);
   await sendEmail({ to, subject, html });
 }
 

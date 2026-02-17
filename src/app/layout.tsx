@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/Providers";
 import RSCHandler from "@/components/RSCHandler";
+import CookieConsent from "@/components/layout/CookieConsent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -132,10 +134,13 @@ export default async function RootLayout({
   const content = (
     <Providers>
       <RSCHandler />
-      <Header />
+      <Suspense fallback={<div className="h-16" />}>
+        <Header />
+      </Suspense>
       <main className="flex-grow pt-16">{children}</main>
       <Footer />
       <Toaster />
+      <CookieConsent />
     </Providers>
   );
 
@@ -162,54 +167,6 @@ export default async function RootLayout({
           }}
         />
         {content}
-        <div
-          id="cookie-consent"
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-white border-t border-gray-200 shadow-2xl hidden"
-        >
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-1 flex-1">
-              <h3 className="font-semibold text-gray-900">Çerez Politikası</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Size daha iyi bir deneyim sunmak, site trafiğini analiz etmek ve içerikleri
-                kişiselleştirmek için çerezleri kullanıyoruz. Daha fazla bilgi için{" "}
-                <a
-                  href="/kurumsal/gizlilik-politikasi"
-                  className="text-cyan-600 hover:underline font-medium"
-                >
-                  Gizlilik Politikası
-                </a>{" "}
-                ve{" "}
-                <a href="/kurumsal/kvkk" className="text-cyan-600 hover:underline font-medium">
-                  KVKK Aydınlatma Metni
-                </a>
-                ni inceleyebilirsiniz.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <button
-                id="cookie-decline"
-                type="button"
-                className="flex-1 md:flex-none whitespace-nowrap inline-flex items-center justify-center border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium h-10 px-4 py-2 rounded-md text-sm transition-colors"
-              >
-                Reddet
-              </button>
-              <button
-                id="cookie-accept"
-                type="button"
-                className="flex-1 md:flex-none whitespace-nowrap inline-flex items-center justify-center bg-cyan-600 text-white hover:bg-cyan-700 font-medium h-10 px-4 py-2 rounded-md text-sm transition-colors"
-              >
-                Kabul Et
-              </button>
-            </div>
-          </div>
-        </div>
-        <script
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: `(() => { try { const k = 'cookie-consent'; const el = document.getElementById('cookie-consent'); if (!el) return; const hide = () => { el.classList.add('hidden'); }; const show = () => { el.classList.remove('hidden'); }; const set = (v) => { try { localStorage.setItem(k, v); } catch {} hide(); }; const accept = document.getElementById('cookie-accept'); const decline = document.getElementById('cookie-decline'); if (accept) accept.addEventListener('click', () => set('accepted')); if (decline) decline.addEventListener('click', () => set('declined')); const existing = (() => { try { return localStorage.getItem(k); } catch { return null; } })(); if (!existing) { setTimeout(show, 1000); } } catch {} })();`,
-          }}
-        />
       </body>
     </html>
   );

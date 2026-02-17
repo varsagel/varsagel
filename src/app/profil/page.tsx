@@ -113,6 +113,8 @@ type ApiOffer = {
   counterpartName?: string | null;
   counterpartEmail?: string | null;
   rejectionReason?: string | null;
+  images?: string[];
+  attributes?: Attributes;
 };
 
 type Mesaj = {
@@ -222,7 +224,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (status === "loading") return;
     if (!session) {
-      router.push("/");
+      router.push(`/giris?callbackUrl=${encodeURIComponent("/profil")}`);
       return;
     }
 
@@ -234,6 +236,9 @@ export default function ProfilePage() {
     if (activeTab === "verdigim-teklifler") {
       fetchVerdigimTeklifler();
     } else if (activeTab === "aldigim-teklifler") {
+      fetchAldigimTeklifler();
+    } else if (activeTab === "taleplerim") {
+      fetchUserListings();
       fetchAldigimTeklifler();
     } else if (activeTab === "favoriler") {
       fetchFavoriler();
@@ -412,7 +417,9 @@ export default function ProfilePage() {
           kullanici: o.counterpartName || '',
           telefon: '',
           email: o.counterpartEmail || '',
-          rejectionReason: o.rejectionReason ?? null
+          rejectionReason: o.rejectionReason ?? null,
+          images: Array.isArray(o.images) ? o.images : [],
+          attributes: o.attributes || {}
         }))
         setVerdigimTeklifler(mapped)
       }
@@ -442,7 +449,9 @@ export default function ProfilePage() {
           kullanici: o.counterpartName || '',
           telefon: '',
           email: o.counterpartEmail || '',
-          rejectionReason: o.rejectionReason
+          rejectionReason: o.rejectionReason,
+          images: Array.isArray(o.images) ? o.images : [],
+          attributes: o.attributes || {}
         }))
         setAldigimTeklifler(mapped)
       }
@@ -456,7 +465,7 @@ export default function ProfilePage() {
   const fetchFavoriler = async () => {
     setIsLoadingFavoriler(true)
     try {
-      const favRes = await fetch('/api/favorites')
+      const favRes = await fetch('/api/favorites', { cache: 'no-store' })
       if (!favRes.ok) {
         setFavoriler([])
       } else {
@@ -464,7 +473,7 @@ export default function ProfilePage() {
         if (ids.length === 0) {
           setFavoriler([])
         } else {
-          const listRes = await fetch(`/api/talepler?ids=${ids.join(',')}`)
+          const listRes = await fetch(`/api/talepler?ids=${ids.join(',')}`, { cache: 'no-store' })
           if (listRes.ok) {
             const data = await listRes.json()
             const rawListings = (Array.isArray(data) ? data : (data.data || [])) as RawListing[];
@@ -561,6 +570,25 @@ export default function ProfilePage() {
       toast({ title: 'Hata', description: 'Hata oluştu', variant: 'destructive' });
     }
   }
+
+  const handleOfferReopen = async (offerId: string) => {
+    const ok = typeof window !== "undefined" ? window.confirm("Talebi yeniden yayına almak için admin onayına gönderilsin mi?") : true;
+    if (!ok) return;
+    try {
+      const body = { offerId, action: "reopen" };
+      const res = await fetch("/api/offers", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (res.ok) {
+        fetchAldigimTeklifler();
+        fetchUserListings();
+        toast({ title: "Başarılı", description: "Talep admin onayına gönderildi", variant: "success" });
+      } else {
+        const data = await res.json();
+        toast({ title: "Hata", description: data.error || "İşlem başarısız", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Hata", description: "Hata oluştu", variant: "destructive" });
+    }
+  };
 
   const confirmReject = async () => {
     if (!rejectOfferId) return;
@@ -670,6 +698,7 @@ export default function ProfilePage() {
       onDeleteTalep={handleDelete}
       onOfferUpdate={handleOfferUpdate}
       onOfferAction={handleOfferAction}
+      onOfferReopen={handleOfferReopen}
       onBlockUser={handleBlockUser}
       onRemoveFavorite={handleRemoveFavorite}
       setBildirimler={setBildirimler}

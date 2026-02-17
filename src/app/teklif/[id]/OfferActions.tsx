@@ -3,7 +3,7 @@
 // Component for accepting/rejecting offers
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, X, Loader2 } from 'lucide-react';
+import { Check, X, Loader2, RefreshCw } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -12,14 +12,14 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 
-export default function OfferActions({ offerId }: { offerId: string }) {
+export default function OfferActions({ offerId, mode = 'decision' }: { offerId: string; mode?: 'decision' | 'reopen' }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const [error, setError] = useState('');
 
-  const handleAction = async (action: 'accept' | 'reject', reason?: string) => {
+  const handleAction = async (action: 'accept' | 'reject' | 'reopen', reason?: string) => {
     setLoading(true);
     setError('');
     try {
@@ -46,6 +46,25 @@ export default function OfferActions({ offerId }: { offerId: string }) {
       setLoading(false);
     }
   };
+
+  if (mode === 'reopen') {
+    return (
+      <div className="space-y-3">
+        <button
+          onClick={() => {
+            const ok = typeof window !== 'undefined' ? window.confirm('Talebi yeniden yayına almak için admin onayına gönderilsin mi?') : true;
+            if (ok) handleAction('reopen');
+          }}
+          disabled={loading}
+          className="w-full bg-amber-500 text-white py-3 px-4 rounded-xl font-bold hover:bg-amber-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+        >
+          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
+          Admin Onayına Gönder
+        </button>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+      </div>
+    );
+  }
 
   return (
     <>

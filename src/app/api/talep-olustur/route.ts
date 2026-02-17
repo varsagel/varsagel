@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
       
       // Alternatif: Listing sayısını alıp +1 yapabiliriz (race condition riski var ama MVP için ok)
       // Veya UUID kullanıyoruz zaten id olarak, code sadece gösterim içinse rastgele sayı üretebiliriz.
-      const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const randomCode = Math.floor(100000000 + Math.random() * 900000000).toString();
       
       return tx.listing.create({
       data: {

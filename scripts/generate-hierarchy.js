@@ -5,6 +5,86 @@ const XLSX = require('xlsx');
 
 const EXCEL_PATH = path.join('c:\\varsagel\\varsagel\\kategoriler\\VASITA KATEGORİ ÇALIŞMASI.xlsx');
 const OUTPUT_PATH = path.join(__dirname, '../src/data/vehicle-hierarchy.json');
+const OUTPUT_VASITA_STRUCTURE = path.join(__dirname, '../src/data/vasita-structure.json');
+
+function slugify(input) {
+  const base = String(input || "")
+    .trim()
+    .replace(/&/g, " ve ")
+    .replace(/\//g, " ")
+    .replace(/İ/g, "I")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/\p{M}+/gu, "")
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c");
+
+  const s = base
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  return s || "kategori";
+}
+
+function findOrCreate(parentArray, name, parentSlug) {
+  if (!name) return null;
+  const rawSlug = slugify(name);
+  const slug = parentSlug ? `${parentSlug}-${rawSlug}` : rawSlug;
+  let node = parentArray.find((n) => n.slug === slug);
+  if (!node) {
+    node = { name, slug, subcategories: [] };
+    parentArray.push(node);
+  }
+  return node;
+}
+
+function clean(node) {
+  if (node.subcategories && node.subcategories.length === 0) {
+    delete node.subcategories;
+  } else if (node.subcategories) {
+    node.subcategories.forEach(clean);
+  }
+}
+
+function generateVasitaStructure(rows) {
+  const root = {
+    name: "VASITA",
+    slug: "vasita",
+    icon: "🚗",
+    subcategories: [],
+  };
+
+  let lastL1 = null;
+  let lastL2 = null;
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const l1 = row?.[1];
+    const l2 = row?.[2];
+    const l3 = row?.[3];
+
+    if (l1) {
+      lastL1 = findOrCreate(root.subcategories, String(l1).trim(), null);
+      lastL2 = null;
+    }
+
+    if (l2 && lastL1) {
+      lastL2 = findOrCreate(lastL1.subcategories, String(l2).trim(), lastL1.slug);
+    }
+
+    if (l3 && lastL2) {
+      const leaf = findOrCreate(lastL2.subcategories, String(l3).trim(), lastL2.slug);
+      if (leaf?.subcategories && leaf.subcategories.length === 0) delete leaf.subcategories;
+    }
+  }
+
+  clean(root);
+  return root;
+}
 
 function generateHierarchy() {
   console.log('Reading Excel file...');
@@ -91,6 +171,10 @@ function generateHierarchy() {
 
     fs.writeFileSync(OUTPUT_PATH, JSON.stringify(hierarchy, null, 2));
     console.log(`Hierarchy generated at ${OUTPUT_PATH}`);
+
+    const vasitaStructure = generateVasitaStructure(rows);
+    fs.writeFileSync(OUTPUT_VASITA_STRUCTURE, JSON.stringify(vasitaStructure, null, 2));
+    console.log(`Structure generated at ${OUTPUT_VASITA_STRUCTURE}`);
     
     // Log stats
     const brands = Object.keys(hierarchy);

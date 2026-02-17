@@ -13,6 +13,39 @@ type Props = {
   initialImages: string[];
 };
 
+const MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
+const VALID_IMAGE_EXTS = new Set([
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "gif",
+  "bmp",
+  "tif",
+  "tiff",
+  "apng",
+  "ico",
+  "avif",
+  "heic",
+  "heif",
+  "jfif",
+  "jif",
+]);
+
+const validateImageFile = (file: File) => {
+  if (!file) return "Dosya seçilmedi";
+  if (file.size <= 0) return "Seçilen dosya boş";
+  if (file.size > MAX_UPLOAD_SIZE) {
+    return `Dosya çok büyük (${(file.size / 1024 / 1024).toFixed(2)}MB). Maksimum 20MB.`;
+  }
+  const type = String(file.type || "").toLowerCase();
+  if (type.startsWith("image/")) return null;
+  const ext = file.name.split(".").pop()?.toLowerCase() || "";
+  if (ext && VALID_IMAGE_EXTS.has(ext)) return null;
+  const allowed = Array.from(VALID_IMAGE_EXTS).join(", ");
+  return `Geçersiz dosya tipi (${type || ext || "bilinmiyor"}). Kabul edilenler: ${allowed}.`;
+};
+
 async function safeJson(res: Response) {
   const raw = await res.text();
   try {
@@ -43,6 +76,18 @@ export default function OfferEditClient({ offerId, initialPrice, initialMessage,
       return false;
     }
   };
+  const normalizeImageSrc = (src: string) => {
+    const value = String(src || "").trim();
+    if (!value) return value;
+    if (value.startsWith("http://") || value.startsWith("https://")) return value;
+    if (value.startsWith("data:")) return value;
+    if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  };
   const toProxyImageSrc = (src: string) => {
     const raw = String(src || '').trim();
     if (!raw) return raw;
@@ -67,6 +112,10 @@ export default function OfferEditClient({ offerId, initialPrice, initialMessage,
   }, [price, message, saving, uploading]);
 
   const uploadOne = async (file: File) => {
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      throw new Error(validationError);
+    }
     const fd = new FormData();
     const ext = file.name.split(".").pop() || "jpg";
     const safeName = `image-${Date.now()}.${ext}`;
@@ -212,14 +261,14 @@ export default function OfferEditClient({ offerId, initialPrice, initialMessage,
                     {images.map((img, idx) => (
                       <div key={`${img}-${idx}`} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
                         {(() => {
-                          const displaySrc = toProxyImageSrc(img);
+                          const displaySrc = toProxyImageSrc(normalizeImageSrc(img));
                           const unoptimized =
                             displaySrc.startsWith('/api/upload') ||
-                            img.startsWith('/uploads/') ||
-                            /\.jfif($|\?)/i.test(img) ||
-                            /\.jif($|\?)/i.test(img) ||
-                            isS3Image(img) ||
-                            isCloudFrontImage(img);
+                            displaySrc.startsWith('/uploads/') ||
+                            /\.jfif($|\?)/i.test(displaySrc) ||
+                            /\.jif($|\?)/i.test(displaySrc) ||
+                            isS3Image(displaySrc) ||
+                            isCloudFrontImage(displaySrc);
                           return (
                             <Image src={displaySrc} alt={`Görsel ${idx + 1}`} fill className="object-cover" unoptimized={unoptimized} />
                           );

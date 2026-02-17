@@ -6,13 +6,41 @@ import { z } from 'zod';
 
 const patchSchema = z.object({
   offerId: z.string().min(1),
-  action: z.enum(['accept', 'reject', 'withdraw', 'update']),
+  action: z.enum(['accept', 'reject', 'withdraw', 'update', 'reopen']),
   rejectionReason: z.string().optional(),
 });
 
 const ensureUploadsClean = async (urls: string[]) => {
   if (urls.length === 0) return { ok: true as const };
   return { ok: true as const };
+};
+
+const parseJsonArray = (raw: any): string[] => {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.map((x) => String(x)).filter(Boolean);
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.map((x) => String(x)).filter(Boolean) : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+};
+
+const parseJsonObject = (raw: any): Record<string, any> => {
+  if (!raw) return {};
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) return raw;
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  return {};
 };
 
 export async function GET(request: NextRequest) {
@@ -63,6 +91,8 @@ export async function GET(request: NextRequest) {
       category: o.listing?.category?.slug || '',
       location: { city: o.listing?.city || '', district: o.listing?.district || '' },
       rejectionReason: o.rejectionReason || null,
+      images: parseJsonArray(o.imagesJson),
+      attributes: parseJsonObject(o.attributesJson),
     }))
 
     return NextResponse.json(formatted)
@@ -98,6 +128,7 @@ export async function PATCH(request: NextRequest) {
     if (action === 'accept') {
       if (offer.listing.ownerId !== userId) return NextResponse.json({ error: 'Yetkisiz' }, { status: 403 })
       const updated = await prisma.offer.update({ where: { id: offerId }, data: { status: 'ACCEPTED' } })
+      await prisma.listing.update({ where: { id: offer.listingId }, data: { status: 'CLOSED' } })
       
       // Create system message to start conversation
       await prisma.message.create({
@@ -146,6 +177,43 @@ export async function PATCH(request: NextRequest) {
           ...(rejectionReason ? { rejectionReason: rejectionReason.trim() } : {})
         } 
       })
+      await prisma.listing.update({ where: { id: offer.listingId }, data: { status: 'OPEN' } })
+      await prisma.notification.create({
+        data: {
+          userId: offer.sellerId,
+          type: 'offer_rejected',
+          title: 'Teklif reddedildi',
+          body: `Teklifiniz reddedildi. Sebep: ${rejectionReason}`,
+          dataJson: JSON.stringify({ listingId: offer.listingId, offerId }),
+        },
+      })
+
+      if (offer.seller?.email) {
+        await sendEmail({
+          to: offer.seller.email,
+          subject: `Teklifiniz Reddedildi: ${offer.listing.title}`,
+          html: emailTemplates.offerStatusChanged(offer.seller.name || 'Kullanıcı', offer.listing.title, 'REJECTED', offer.listingId)
+        });
+      }
+
+      return NextResponse.json({ ok: true, status: updated.status })
+    }
+
+    if (action === 'reopen') {
+      if (offer.listing.ownerId !== userId) return NextResponse.json({ error: 'Yetkisiz' }, { status: 403 })
+      if (offer.status !== 'ACCEPTED') return NextResponse.json({ error: 'Sadece kabul edilen teklifler için geçerli' }, { status: 400 })
+      const rejectionReason =
+        typeof body.rejectionReason === 'string' && body.rejectionReason.trim().length > 0
+          ? body.rejectionReason.trim()
+          : 'Anlaşma sağlanamadı';
+      const updated = await prisma.offer.update({
+        where: { id: offerId },
+        data: {
+          status: 'REJECTED',
+          rejectionReason
+        }
+      })
+      await prisma.listing.update({ where: { id: offer.listingId }, data: { status: 'PENDING' } })
       await prisma.notification.create({
         data: {
           userId: offer.sellerId,

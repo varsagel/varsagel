@@ -1,18 +1,13 @@
-"use client";
-
-// Force rebuild 3
 import Link from "next/link";
 import Image from "next/image";
-import { useMemo, useState, useEffect } from "react";
 import FavoriteButton from '@/components/ui/FavoriteButton';
-import { getSubcategoryImage } from '@/data/subcategory-images';
+import { getCategoryImage, getSubcategoryImage } from '@/data/subcategory-images';
 import BRAND_LOGOS from "@/data/brand-logos.json";
-import { Clock, Eye, MapPin } from "lucide-react";
+import { Eye, MapPin } from "lucide-react";
 import { listingHref } from '@/lib/listing-url';
 import { titleCaseTR } from '@/lib/title-case-tr';
 
 // Formatters moved outside to avoid recreation on every render
-const rtf = new Intl.RelativeTimeFormat("tr-TR", { numeric: "auto" });
 const tryFormatter = new Intl.NumberFormat("tr-TR", {
   style: "currency",
   currency: "TRY",
@@ -20,45 +15,20 @@ const tryFormatter = new Intl.NumberFormat("tr-TR", {
   maximumFractionDigits: 0,
 });
 
-function formatTimeAgoLocal(createdAt: string) {
-  // Return a static string during SSR to prevent hydration mismatch
-  if (typeof window === 'undefined') {
-    return ""; // Or return a static date format if preferred
-  }
-
-  const date = new Date(createdAt);
-  const diffMs = date.getTime() - Date.now();
-  const diffSeconds = Math.round(diffMs / 1000);
-  const absSeconds = Math.abs(diffSeconds);
-  if (absSeconds < 60) return rtf.format(diffSeconds, "second");
-
-  const diffMinutes = Math.round(diffSeconds / 60);
-  const absMinutes = Math.abs(diffMinutes);
-  if (absMinutes < 60) return rtf.format(diffMinutes, "minute");
-
-  const diffHours = Math.round(diffMinutes / 60);
-  const absHours = Math.abs(diffHours);
-  if (absHours < 24) return rtf.format(diffHours, "hour");
-
-  const diffDays = Math.round(diffHours / 24);
-  const absDays = Math.abs(diffDays);
-  if (absDays < 7) return rtf.format(diffDays, "day");
-
-  const diffWeeks = Math.round(diffDays / 7);
-  const absWeeks = Math.abs(diffWeeks);
-  if (absWeeks < 5) return rtf.format(diffWeeks, "week");
-
-  const diffMonths = Math.round(diffDays / 30);
-  const absMonths = Math.abs(diffMonths);
-  if (absMonths < 12) return rtf.format(diffMonths, "month");
-
-  const diffYears = Math.round(diffDays / 365);
-  return rtf.format(diffYears, "year");
-}
-
 function formatTryLocal(price: number) {
   return tryFormatter.format(price);
 }
+
+const normalizeImageSrc = (src: string) => {
+  const value = String(src || "").trim();
+  if (!value) return value;
+  if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
 
 export interface ListingItem {
   id: string;
@@ -112,117 +82,85 @@ function BrandBadge({ category, subcategory, attributes }: { category: string; s
   );
 }
 
-export default function ListingCard({ listing, priority, isAuthenticated }: { listing: ListingItem; priority?: boolean; isAuthenticated: boolean }) {
-  const href = useMemo(() => {
-    return listingHref({
-      id: listing.id,
-      code: listing.code,
-      title: listing.title,
-      category: listing.category,
-      subcategory: listing.subcategory,
-    });
-  }, [listing.category, listing.code, listing.id, listing.subcategory, listing.title]);
+export default function ListingCard({ listing, priority }: { listing: ListingItem; priority?: boolean }) {
+  const href = listingHref({
+    id: listing.id,
+    code: listing.code,
+    title: listing.title,
+    category: listing.category,
+    subcategory: listing.subcategory,
+  });
 
-  const subcategoryImage = useMemo(() => {
-    return listing.subcategory ? getSubcategoryImage(listing.subcategory) : '/images/placeholder-1.svg';
-  }, [listing.subcategory]);
-
-  const [currentSrc, setCurrentSrc] = useState(listing.images?.[0] || subcategoryImage);
-  const isDefaultImage = useMemo(() => {
-    return currentSrc.startsWith('/images/defaults/') || currentSrc.startsWith('/images/placeholder-');
-  }, [currentSrc]);
-  const isRemoteImage = useMemo(() => {
-    return currentSrc.startsWith('http://') || currentSrc.startsWith('https://');
-  }, [currentSrc]);
-  const isS3Host = useMemo(() => {
-    if (!isRemoteImage) return false;
+  const subcategoryImage = getSubcategoryImage(listing.subcategory || "", listing.category);
+  const categoryImage = getCategoryImage(listing.category);
+  const initialSrc = listing.images?.[0] || subcategoryImage || categoryImage || "";
+  const displaySrc = normalizeImageSrc(initialSrc);
+  const isDefaultImage = displaySrc.startsWith('/images/defaults/') || displaySrc.startsWith('/images/subcategories/');
+  const isRemoteImage = displaySrc.startsWith('http://') || displaySrc.startsWith('https://');
+  const isJfifImage = /\.jfif($|\?)/i.test(displaySrc) || /\.jif($|\?)/i.test(displaySrc);
+  let isS3Host = false;
+  let isCloudFrontHost = false;
+  let isAllowedRemote = false;
+  if (isRemoteImage) {
     try {
-      const host = new URL(currentSrc).hostname.toLowerCase();
-      return host.includes(".s3.");
+      const host = new URL(displaySrc).hostname.toLowerCase();
+      isS3Host = host.includes(".s3.");
+      isCloudFrontHost = host.endsWith(".cloudfront.net");
+      isAllowedRemote =
+        host === 'varsagel.com' ||
+        host === 'www.varsagel.com' ||
+        host === 'localhost' ||
+        host === '127.0.0.1' ||
+        isS3Host ||
+        isCloudFrontHost;
     } catch {
-      return false;
+      isAllowedRemote = false;
     }
-  }, [currentSrc, isRemoteImage]);
-  const isAllowedRemote = useMemo(() => {
-    if (!isRemoteImage) return false;
-    try {
-      const host = new URL(currentSrc).hostname.toLowerCase();
-      return host === 'varsagel.com' || host === 'www.varsagel.com' || host === 'localhost' || host === '127.0.0.1' || isS3Host;
-    } catch {
-      return false;
-    }
-  }, [currentSrc, isRemoteImage, isS3Host]);
-  const isJfifImage = useMemo(() => {
-    return /\.jfif($|\?)/i.test(currentSrc) || /\.jif($|\?)/i.test(currentSrc);
-  }, [currentSrc]);
+  }
 
-  useEffect(() => {
-    setCurrentSrc(listing.images?.[0] || subcategoryImage);
-  }, [listing.images, subcategoryImage]);
+  const minPrice = listing.attributes?.minPrice;
+  const maxPrice = listing.attributes?.maxPrice;
+  let priceText = formatTryLocal(listing.price);
+  if (minPrice && maxPrice) {
+    const min = typeof minPrice === 'string' ? parseFloat(minPrice) : minPrice;
+    const max = typeof maxPrice === 'string' ? parseFloat(maxPrice) : maxPrice;
+    priceText = `${formatTryLocal(min)} - ${formatTryLocal(max)}`;
+  } else if (minPrice) {
+    const min = typeof minPrice === 'string' ? parseFloat(minPrice) : minPrice;
+    priceText = `En Az ${formatTryLocal(min)}`;
+  } else if (maxPrice) {
+    const max = typeof maxPrice === 'string' ? parseFloat(maxPrice) : maxPrice;
+    priceText = `En Çok ${formatTryLocal(max)}`;
+  }
 
-  const handleError = () => {
-    if (currentSrc === listing.images?.[0] && currentSrc !== subcategoryImage) {
-        setCurrentSrc(subcategoryImage);
-    } else if (currentSrc === subcategoryImage) {
-        // If the default image fails (e.g. user hasn't uploaded it yet), show placeholder
-        setCurrentSrc('/images/placeholder-1.svg');
-    }
-  };
-  
-  const [timeAgo, setTimeAgo] = useState("");
+  const s = String(listing.status || "").toLowerCase();
+  const statusBadge =
+    s === "active"
+      ? { label: "Aktif", className: "bg-emerald-500/95 text-white border border-white/30" }
+      : s === "pending"
+        ? { label: "Onay Bekliyor", className: "bg-amber-500/95 text-white border border-white/30" }
+        : s === "sold"
+          ? { label: "Kapandı", className: "bg-slate-700/95 text-white border border-white/20" }
+          : null;
 
-  useEffect(() => {
-    setTimeAgo(formatTimeAgoLocal(listing.createdAt));
-  }, [listing.createdAt]);
-  
-  const priceText = useMemo(() => {
-    const minPrice = listing.attributes?.minPrice;
-    const maxPrice = listing.attributes?.maxPrice;
-    
-    if (minPrice && maxPrice) {
-      const min = typeof minPrice === 'string' ? parseFloat(minPrice) : minPrice;
-      const max = typeof maxPrice === 'string' ? parseFloat(maxPrice) : maxPrice;
-      return `${formatTryLocal(min)} - ${formatTryLocal(max)}`;
-    } else if (minPrice) {
-      const min = typeof minPrice === 'string' ? parseFloat(minPrice) : minPrice;
-      return `En Az ${formatTryLocal(min)}`;
-    } else if (maxPrice) {
-      const max = typeof maxPrice === 'string' ? parseFloat(maxPrice) : maxPrice;
-      return `En Çok ${formatTryLocal(max)}`;
-    }
-    
-    return formatTryLocal(listing.price);
-  }, [listing.price, listing.attributes?.minPrice, listing.attributes?.maxPrice]);
-
-  const statusBadge = useMemo(() => {
-    const s = String(listing.status || "").toLowerCase();
-    if (s === "active") return { label: "Aktif", className: "bg-emerald-500/95 text-white border border-white/30" };
-    if (s === "pending") return { label: "Onay Bekliyor", className: "bg-amber-500/95 text-white border border-white/30" };
-    if (s === "sold") return { label: "Kapandı", className: "bg-slate-700/95 text-white border border-white/20" };
-    return null;
-  }, [listing.status]);
-
-  const locationText = useMemo(() => {
-    const parts: string[] = [];
-    const mahalle = typeof (listing.attributes as any)?.mahalle === "string" ? String((listing.attributes as any)?.mahalle).trim() : "";
-    if (listing.category === "emlak" && mahalle) parts.push(mahalle);
-    if (listing.location?.district) parts.push(listing.location.district);
-    if (listing.location?.city) parts.push(listing.location.city);
-    return parts.filter(Boolean).join(", ");
-  }, [listing.attributes, listing.category, listing.location?.city, listing.location?.district]);
+  const parts: string[] = [];
+  const mahalle = typeof (listing.attributes as any)?.mahalle === "string" ? String((listing.attributes as any)?.mahalle).trim() : "";
+  if (listing.category === "emlak" && mahalle) parts.push(mahalle);
+  if (listing.location?.district) parts.push(listing.location.district);
+  if (listing.location?.city) parts.push(listing.location.city);
+  const locationText = parts.filter(Boolean).join(", ");
 
   return (
     <div className="group bg-white rounded-xl border border-slate-200 hover:border-[#85C0CA] shadow-sm hover:shadow-lg hover:shadow-[#3E849E]/10 transition-all duration-300 overflow-hidden relative flex flex-col h-full">
-      <Link href={href} className="block relative aspect-[4/3] overflow-hidden bg-slate-100">
+      <Link href={href} prefetch={false} className="block relative aspect-[4/3] overflow-hidden bg-slate-100">
         <Image
-          src={currentSrc}
+          src={displaySrc}
           alt={listing.title}
-          onError={handleError}
           priority={priority}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
-          unoptimized={isDefaultImage || isJfifImage || isS3Host || (isRemoteImage && !isAllowedRemote)}
-          quality={isDefaultImage ? 100 : 85}
+          unoptimized={isDefaultImage || isJfifImage || (isRemoteImage && !isAllowedRemote)}
+          quality={isDefaultImage ? 90 : 75}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         
@@ -248,11 +186,11 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
       </Link>
       
       <div className="absolute top-2 left-2 z-10">
-        <FavoriteButton listingId={listing.id} isAuthenticated={isAuthenticated} isFavorited={listing.isFavorited} />
+        <FavoriteButton listingId={listing.id} isFavorited={listing.isFavorited} />
       </div>
 
       <div className="p-4 flex flex-col flex-1">
-        <Link href={href} className="block flex-1">
+        <Link href={href} prefetch={false} className="block flex-1">
           <h3 className="font-semibold text-slate-900 mb-2 text-sm leading-snug line-clamp-2 group-hover:text-[#1E4355] transition-colors">
             {listing.title}
           </h3>
@@ -266,15 +204,9 @@ export default function ListingCard({ listing, priority, isAuthenticated }: { li
                 {locationText}
               </span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                <Eye className="w-3.5 h-3.5 text-slate-400" />
-                <span className="tabular-nums">{listing.viewCount ?? 0}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
-                <span suppressHydrationWarning>{timeAgo}</span>
-              </div>
+            <div className="flex items-center gap-1">
+              <Eye className="w-3.5 h-3.5 text-slate-400" />
+              <span className="tabular-nums">{listing.viewCount ?? 0}</span>
             </div>
           </div>
 
